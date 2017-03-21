@@ -1,3 +1,18 @@
-<h1>
-  {{title}}
-</h1>
+<md-toolbar color="primary">
+  <span>OpenTournament</span>
+
+  <span class="spacer"></span>
+  <div *ngIf="(userName$ | async) === undefined">
+   <a (click)="login()">Login</a>
+  </div>
+  <div *ngIf="(userName$ | async) !== undefined">
+    Welcome {{userName$ | async}} <a (click)="logout()">Logout</a>
+  </div>
+</md-toolbar>
+
+<div class="app-content">
+  <md-card>
+    <router-outlet></router-outlet>
+  </md-card>
+</div>
+<!--<tournament-list></tournament-list>-->
