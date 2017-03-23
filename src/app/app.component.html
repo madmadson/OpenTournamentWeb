@@ -1,18 +1,13 @@
 <md-toolbar color="primary">
   <span>OpenTournament</span>
-
   <span class="spacer"></span>
-  <div *ngIf="(userName$ | async) === undefined">
-   <a (click)="login()">Login</a>
-  </div>
-  <div *ngIf="(userName$ | async) !== undefined">
-    Welcome {{userName$ | async}} <a (click)="logout()">Logout</a>
-  </div>
+  <span *ngIf="(uiState.loggedIn)" class="user-welcome-panel">Welcome {{uiState.currentUserName}}</span>
+  <img *ngIf="(uiState.currentUserImage)" class="avatar" src="{{uiState.currentUserImage}}">
+  <img *ngIf="(!uiState.currentUserImage)" class="avatar" src="../assets/icon_final_small.png">
+  <a *ngIf="(uiState.loggedIn)" class="logout-anchor" (click)="logout()">Logout</a>
 </md-toolbar>
 
 <div class="app-content">
-  <md-card>
-    <router-outlet></router-outlet>
-  </md-card>
+  <router-outlet></router-outlet>
 </div>
 <!--<tournament-list></tournament-list>-->

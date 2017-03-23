@@ -8,6 +8,33 @@
   padding: 20px;
 }
 
-.app-content md-card {
-  margin: 20px;
+.user-welcome-panel{
+  color: white;
+  margin-right: 20px;
 }
+
+.avatar {
+  margin-right: 1em;
+  width: 45px;
+  height: 45px;
+
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+
+  -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 4px #999, 0 2px 2px 2px rgba(0,0,0,.1);
+  -moz-box-shadow: 0 0 0 1px #fff, 0 0 0 4px #999, 0 2px 2px 2px rgba(0,0,0,.1);
+  box-shadow: 0 0 0 1px #fff, 0 0 0 4px #999, 0 2px 2px 2px rgba(0,0,0,.1);
+}
+
+.logout-anchor{
+
+}
+
+.logout-anchor:hover{
+  cursor: pointer;
+  color: deepskyblue;
+
+}
+
+

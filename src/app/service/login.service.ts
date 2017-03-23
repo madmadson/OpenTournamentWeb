@@ -1,31 +1,33 @@
 import {Injectable} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "../store/application-state";
-import {SaveUserDataAction, DeleteUserDataAction} from "../store/actions";
+import {SaveUserDataAction} from "../store/actions";
 import {AuthProviders, AuthMethods, AngularFire} from "angularfire2";
 import {Subscription} from "rxjs";
+import {Router} from "@angular/router";
+import {RouterMethodCall} from "@ngrx/router-store";
 
 
 @Injectable()
 export class LoginService {
-  private subscription: Subscription;
+  private authSubscription: Subscription;
 
-  constructor(protected afService: AngularFire, private store: Store<ApplicationState>) {
+  constructor(protected afService: AngularFire, private store: Store<ApplicationState>, private  router: Router) {
   }
 
-  login(loginProvider: string) {
+  login(loginProvider?: string) {
 
-    console.log("Social Login for provider: " + loginProvider);
-    this.socialLogin(loginProvider);
+    console.log("Login for provider: " + loginProvider);
+    this.loginWithProvider(loginProvider);
 
-    this.subscription = this.afService.auth.subscribe(
+    this.authSubscription = this.afService.auth.subscribe(
       (auth) => {
         if (auth == null) {
           console.log("Not Logged in.");
         }
         else {
           console.log("Successfully Logged in.");
-          this.store.dispatch(new SaveUserDataAction({uid: auth.auth.uid, displayName: auth.auth.displayName}));
+          this.store.dispatch(new SaveUserDataAction({uid: auth.auth.uid, displayName: auth.auth.displayName, photoURL: auth.auth.photoURL}));
 
         }
       }
@@ -36,25 +38,41 @@ export class LoginService {
 
     console.log("Logout: ");
 
-    this.subscription.unsubscribe();
-
+    this.authSubscription.unsubscribe();
     this.afService.auth.logout().then();
+    this.router.navigate(["login-page"]);
 
-    this.store.dispatch(new DeleteUserDataAction());
   }
 
-  private socialLogin(loginProvider) {
+  private loginWithProvider(loginProvider?: string) {
     let provider;
+    let method;
     if (loginProvider === 'google') {
       provider = AuthProviders.Google;
+      method = AuthMethods.Popup;
     }
     else if (loginProvider === 'facebook') {
       provider = AuthProviders.Facebook;
+      method = AuthMethods.Popup;
+    }
+    else {
+      provider = AuthProviders.Anonymous;
+      method = AuthMethods.Anonymous;
     }
 
     this.afService.auth.login({
       provider: provider,
-      method: AuthMethods.Popup,
+      method: method,
     });
+  }
+
+  routeToLoginPageWhenUnauthenticated(actionPayload:RouterMethodCall) {
+
+    if(actionPayload.path !== "/login-page") {
+      if (this.authSubscription === undefined) {
+        console.log("redirect to login page");
+        this.router.navigate(["login-page"]);
+      }
+    }
   }
 }

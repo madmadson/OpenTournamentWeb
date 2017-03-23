@@ -2,14 +2,17 @@ import {Action} from "@ngrx/store";
 import {UserData} from "../../../shared/model/userData";
 
 
-export const SOCIAL_LOGIN_ACTION: string = 'SOCIAL_LOGIN_ACTION';
-
-export class SocialLoginAction implements Action{
-
-  readonly type: string = 'SOCIAL_LOGIN_ACTION';
+export const ANONYMOUS_LOGIN_ACTION: string = 'ANONYMOUS_LOGIN_ACTION';
 
 
-  constructor(public payload:string ) {
+
+export const LOGIN_ACTION: string = 'LOGIN_ACTION';
+
+export class LoginAction implements Action{
+
+  readonly type: string = 'LOGIN_ACTION';
+
+  constructor(public payload?:string ) {
   }
 }
 
@@ -30,19 +33,6 @@ export class LogoutAction implements Action{
 
   readonly type: string = 'LOGOUT_ACTION';
 
-
   constructor() {
   }
 }
-
-export const DELETE_USERDATA_ACTION: string = 'DELETE_USERDATA_ACTION';
-
-export class DeleteUserDataAction implements Action{
-
-  readonly type: string = 'DELETE_USERDATA_ACTION';
-
-
-  constructor() {
-  }
-}
-

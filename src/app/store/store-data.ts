@@ -7,5 +7,5 @@ export interface StoreData {
 
 export const INITIAL_STORE_DATA = {
 
-  userData: {uid: "1", displayName: "Hans"}
+  userData: {uid: "1", displayName: "Hans", photoURL:"/"}
 };

@@ -4,5 +4,6 @@
 export interface UserData{
 
   uid:string;
-  displayName:string
+  displayName:string;
+  photoURL: string;
 }

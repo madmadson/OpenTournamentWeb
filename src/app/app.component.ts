@@ -1,31 +1,44 @@
-import {Component} from "@angular/core";
-import {Router} from "@angular/router";
+import {Component, OnDestroy} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "./store/application-state";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {LogoutAction} from "./store/actions";
+import {UiState} from "./store/ui-state";
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
 
-  userName$: Observable<String>;
+  private subscription: Subscription;
 
-  constructor( private store: Store<ApplicationState>, private router: Router) {
+  currentUserName$: Observable<String>;
 
-    this.userName$ = store.select(state => state.uiState.currentUserName);
+  uiState: UiState;
 
+
+  constructor(private store: Store<ApplicationState>) {
+
+    this.currentUserName$ = store.select(state => state.uiState.currentUserName);
+
+    this.subscription = store.select(state => state.uiState).subscribe(uiState => {
+        console.log("new state" + JSON.stringify(uiState));
+        this.uiState = _.cloneDeep(uiState);
+      }
+    );
 
   }
 
-  login(){
-    this.router.navigate(["login-page"]);
+  ngOnDestroy(): void {
+
+    this.subscription.unsubscribe();
   }
 
-  logout(){
+
+  logout() {
 
     this.store.dispatch(new LogoutAction());
   }

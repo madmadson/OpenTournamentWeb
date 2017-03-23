@@ -1,14 +1,16 @@
 
 export interface UiState{
 
-  currentUserId: number;
+  currentUserId: string;
   currentUserName: string;
-
+  currentUserImage: string;
+  loggedIn: boolean;
 }
-
 
 export const INITIAL_UI_STATE: UiState = {
 
     currentUserId: undefined,
-    currentUserName: undefined
+    currentUserName: undefined,
+    currentUserImage: undefined,
+    loggedIn: false
 };

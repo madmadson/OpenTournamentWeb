@@ -20,13 +20,15 @@ import {uiState} from "./store/reducers/uiStateReducer";
 import {storeData} from "./store/reducers/uiStoreDataReducer";
 import {storeFreeze} from "ngrx-store-freeze";
 import {EffectsModule} from "@ngrx/effects";
-import {LoginEffectService} from "./store/effects/social-login-effect.service";
+import {LoginEffectService} from "./store/effects/login-effect.service";
 import {LoginService} from "./service/login.service";
+import {routerReducer, RouterStoreModule} from "@ngrx/router-store";
 
 
 const reducers = {
   uiState: uiState,
-  storeData: storeData
+  storeData: storeData,
+  router: routerReducer
 };
 
 const developmentReducer: ActionReducer<ApplicationState> = compose(storeFreeze, combineReducers)(reducers);
@@ -77,6 +79,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     EffectsModule.run(LoginEffectService),
     StoreModule.provideStore(storeReducer, INITIAL_APPLICATION_STATE),
+    RouterStoreModule.connectRouter(),
     StoreDevtoolsModule.instrumentOnlyWithExtension()
   ],
   providers: [LoginService],
