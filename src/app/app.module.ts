@@ -5,7 +5,7 @@ import {HttpModule} from "@angular/http";
 import {MaterialModule} from "@angular/material";
 import {RouterModule, Routes} from "@angular/router";
 import {AppComponent} from "./app.component";
-import {TournamentListComponent} from "./tournament-list/tournament-list.component";
+import {TournamentListComponent} from "./tournament/tournament-list/tournament-list.component";
 import {AngularFireModule, AuthProviders, AuthMethods} from "angularfire2";
 import {GameEditComponent} from "./game-edit/game-edit.component";
 import {LoginPageComponent} from "./login-page/login-page.component";
@@ -20,9 +20,15 @@ import {uiState} from "./store/reducers/uiStateReducer";
 import {storeData} from "./store/reducers/uiStoreDataReducer";
 import {storeFreeze} from "ngrx-store-freeze";
 import {EffectsModule} from "@ngrx/effects";
-import {LoginEffectService} from "./store/effects/login-effect.service";
-import {LoginService} from "./service/login.service";
+import {AuthEffectService} from "./store/effects/auth-effect.service";
+import {TournamentEffectService} from "./store/effects/tournament-effect.service";
+import {LoginService} from "./service/auth.service";
+import {TournamentService} from "./service/tournament.service";
 import {routerReducer, RouterStoreModule} from "@ngrx/router-store";
+import {TournamentEditComponent} from "./tournament/tournament-edit/tournament-edit.component";
+import {MomentModule} from "angular2-moment";
+import {TournamentItemComponent} from "./tournament/tournament-item/tournament-item.component";
+import {TournamentOverviewComponent} from "./tournament/tournament-overview/tournament-overview.component";
 
 
 const reducers = {
@@ -58,7 +64,8 @@ const fbAuthConfig = {
 
 const routes: Routes = [
   { path: 'home', component: HomePageComponent },
-  { path: 'login-page', component: LoginPageComponent }
+  { path: 'login-page', component: LoginPageComponent },
+  { path: 'game', component: GameEditComponent },
 ];
 
 @NgModule({
@@ -67,7 +74,10 @@ const routes: Routes = [
     TournamentListComponent,
     GameEditComponent,
     LoginPageComponent,
-    HomePageComponent
+    HomePageComponent,
+    TournamentEditComponent,
+    TournamentItemComponent,
+    TournamentOverviewComponent
   ],
   imports: [
     BrowserModule,
@@ -77,12 +87,14 @@ const routes: Routes = [
     MaterialModule,
     AngularFireModule.initializeApp(fbConfig, fbAuthConfig),
     ReactiveFormsModule,
-    EffectsModule.run(LoginEffectService),
+    EffectsModule.run(AuthEffectService),
+    EffectsModule.run(TournamentEffectService),
     StoreModule.provideStore(storeReducer, INITIAL_APPLICATION_STATE),
     RouterStoreModule.connectRouter(),
-    StoreDevtoolsModule.instrumentOnlyWithExtension()
+    StoreDevtoolsModule.instrumentOnlyWithExtension(),
+    MomentModule
   ],
-  providers: [LoginService],
+  providers: [LoginService, TournamentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

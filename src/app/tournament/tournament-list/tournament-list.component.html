@@ -1,0 +1,11 @@
+
+<div class="container">
+  <md-card>
+    <ul class="tournament-list" #list>
+      <li class="tournament-list-item" *ngFor="let tournament of tournaments">
+        <tournament-item [tournament]=tournament></tournament-item>
+      </li>
+    </ul>
+  </md-card>
+</div>
+

@@ -1,10 +1,5 @@
 import {Action} from "@ngrx/store";
-import {UserData} from "../../../shared/model/userData";
-
-
-export const ANONYMOUS_LOGIN_ACTION: string = 'ANONYMOUS_LOGIN_ACTION';
-
-
+import {UserData} from "../../../../shared/model/userData";
 
 export const LOGIN_ACTION: string = 'LOGIN_ACTION';
 

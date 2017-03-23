@@ -2,7 +2,7 @@ import {Component, OnDestroy} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "./store/application-state";
 import {Observable, Subscription} from "rxjs";
-import {LogoutAction} from "./store/actions";
+import {LogoutAction} from "./store/actions/auth-actions";
 import {UiState} from "./store/ui-state";
 import * as _ from "lodash";
 

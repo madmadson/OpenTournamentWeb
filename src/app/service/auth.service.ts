@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
+import {Injectable, OnDestroy} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "../store/application-state";
-import {SaveUserDataAction} from "../store/actions";
+import {SaveUserDataAction} from "../store/actions/auth-actions";
 import {AuthProviders, AuthMethods, AngularFire} from "angularfire2";
 import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
@@ -9,7 +9,8 @@ import {RouterMethodCall} from "@ngrx/router-store";
 
 
 @Injectable()
-export class LoginService {
+export class LoginService implements OnDestroy{
+
   private authSubscription: Subscription;
 
   constructor(protected afService: AngularFire, private store: Store<ApplicationState>, private  router: Router) {
@@ -74,5 +75,10 @@ export class LoginService {
         this.router.navigate(["login-page"]);
       }
     }
+  }
+
+  ngOnDestroy(): void {
+
+    this.authSubscription.unsubscribe();
   }
 }
