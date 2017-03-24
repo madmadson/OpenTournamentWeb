@@ -1,0 +1,11 @@
+<h2>Tournament Overview</h2>
+
+<md-card class="tournament-list-card">
+  <md-list class="tournament-list" *ngFor="let groupedTournaments of allTournaments$ | async">
+    <h3 md-subheader>{{groupedTournaments.monthYear}}</h3>
+    <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
+    <md-divider></md-divider>
+  </md-list>
+</md-card>
+
+
