@@ -1,11 +1,20 @@
 
-<div class="container">
-  <md-card>
-    <ul class="tournament-list" #list>
-      <li class="tournament-list-item" *ngFor="let tournament of tournaments">
-        <tournament-item [tournament]=tournament></tournament-item>
-      </li>
-    </ul>
-  </md-card>
-</div>
+
+<md-list-item *ngFor="let tournament of tournaments">
+  <md-icon md-list-avatar *ngIf="tournament.teamSize === 1">person</md-icon>
+  <md-icon md-list-avatar *ngIf="tournament.teamSize > 1">group</md-icon>
+  <h3 md-line>{{tournament.name}}</h3>
+  <p class="tournament-card-lines" md-line *ngIf="tournament.beginDate === tournament.endDate">
+    {{tournament.beginDate | amDateFormat:'L'}}
+  </p>
+  <p class="tournament-card-lines" md-line *ngIf="tournament.beginDate !== tournament.endDate">
+    {{tournament.beginDate | amDateFormat:'L'}}  -
+    {{tournament.endDate | amDateFormat:'L'}}
+  </p>
+  <p class="tournament-card-lines" md-line>  {{tournament.location}}</p>
+  <div class="md-secondary">?/{{tournament.maxParticipants}}</div>
+</md-list-item>
+
+
+
 

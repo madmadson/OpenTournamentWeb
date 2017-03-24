@@ -1,8 +1,19 @@
+export interface TournamentListVM{
+
+  monthYear: number;
+  tournaments: TournamentVM[];
+
+}
+
 export interface TournamentVM{
 
-  id:String;
   name:String;
-  timestamp:number;
-  month: number;
-  year: number;
+  location: String;
+  beginDate:String;
+  endDate:String;
+  maxParticipants: number;
+  teamSize: number;
+  actualRound: number;
 }
+
+

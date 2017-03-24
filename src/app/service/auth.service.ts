@@ -72,7 +72,7 @@ export class LoginService implements OnDestroy{
     if(actionPayload.path !== "/login-page") {
       if (this.authSubscription === undefined) {
         console.log("redirect to login page");
-        this.router.navigate(["login-page"]);
+        //this.router.navigate(["login-page"]);
       }
     }
   }

@@ -27,7 +27,6 @@ import {TournamentService} from "./service/tournament.service";
 import {routerReducer, RouterStoreModule} from "@ngrx/router-store";
 import {TournamentEditComponent} from "./tournament/tournament-edit/tournament-edit.component";
 import {MomentModule} from "angular2-moment";
-import {TournamentItemComponent} from "./tournament/tournament-item/tournament-item.component";
 import {TournamentOverviewComponent} from "./tournament/tournament-overview/tournament-overview.component";
 
 
@@ -76,7 +75,7 @@ const routes: Routes = [
     LoginPageComponent,
     HomePageComponent,
     TournamentEditComponent,
-    TournamentItemComponent,
+
     TournamentOverviewComponent
   ],
   imports: [
