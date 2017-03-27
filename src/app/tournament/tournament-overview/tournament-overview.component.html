@@ -1,4 +1,4 @@
-<h2>Tournament Overview</h2>
+<h1 class="tournament-heading">Online Tournaments ({{(allTournaments$| async) ?.length}})</h1>
 
 <md-card class="tournament-list-card">
   <md-list class="tournament-list" *ngFor="let groupedTournaments of allTournaments$ | async">

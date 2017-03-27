@@ -6,13 +6,13 @@ import {MaterialModule} from "@angular/material";
 import {RouterModule, Routes} from "@angular/router";
 import {AppComponent} from "./app.component";
 import {TournamentListComponent} from "./tournament/tournament-list/tournament-list.component";
-import {AngularFireModule, AuthProviders, AuthMethods} from "angularfire2";
+import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
 import {GameEditComponent} from "./game-edit/game-edit.component";
 import {LoginPageComponent} from "./login-page/login-page.component";
 import {HomePageComponent} from "./home-page/home-page.component";
-import {StoreModule, combineReducers, ActionReducer} from "@ngrx/store";
+import {ActionReducer, combineReducers, StoreModule} from "@ngrx/store";
 import "rxjs/Rx";
-import {INITIAL_APPLICATION_STATE, ApplicationState} from "./store/application-state";
+import {ApplicationState, INITIAL_APPLICATION_STATE} from "./store/application-state";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {compose} from "@ngrx/core/compose";
 import {environment} from "../environments/environment";
@@ -29,7 +29,6 @@ import {TournamentEditComponent} from "./tournament/tournament-edit/tournament-e
 import {MomentModule} from "angular2-moment";
 import {TournamentOverviewComponent} from "./tournament/tournament-overview/tournament-overview.component";
 
-
 const reducers = {
   uiState: uiState,
   storeData: storeData,
@@ -42,18 +41,17 @@ const productionReducer: ActionReducer<ApplicationState> = combineReducers(reduc
 export function storeReducer(state: any, action: any) {
   if (environment.production) {
     return productionReducer(state, action);
-  }
-  else {
+  } else {
     return developmentReducer(state, action);
   }
 }
 
-let fbConfig = {
-  apiKey: "AIzaSyAMFwFtLKudN3GfqikkimvZOvWzXbTaJ-o",
-  authDomain: "devopentournament.firebaseapp.com",
-  databaseURL: "https://devopentournament.firebaseio.com",
-  storageBucket: "devopentournament.appspot.com",
-  messagingSenderId: "965241334913"
+const fbConfig = {
+  apiKey: 'AIzaSyAMFwFtLKudN3GfqikkimvZOvWzXbTaJ-o',
+  authDomain: 'devopentournament.firebaseapp.com',
+  databaseURL: 'https://devopentournament.firebaseio.com',
+  storageBucket: 'devopentournament.appspot.com',
+  messagingSenderId: '965241334913'
 };
 
 const fbAuthConfig = {
@@ -64,6 +62,7 @@ const fbAuthConfig = {
 const routes: Routes = [
   { path: 'home', component: HomePageComponent },
   { path: 'login-page', component: LoginPageComponent },
+  { path: 'tournaments', component: TournamentOverviewComponent },
   { path: 'game', component: GameEditComponent },
 ];
 
@@ -75,7 +74,6 @@ const routes: Routes = [
     LoginPageComponent,
     HomePageComponent,
     TournamentEditComponent,
-
     TournamentOverviewComponent
   ],
   imports: [

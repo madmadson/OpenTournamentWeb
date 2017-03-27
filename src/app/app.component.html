@@ -1,22 +1,46 @@
-<md-toolbar color="primary">
-  <span>OpenTournament</span>
-  <span class="spacer"></span>
-  <span *ngIf="(uiState.loggedIn)" class="user-welcome-panel">{{uiState.currentUserName}}</span>
-  <img *ngIf="(uiState.currentUserImage)" class="avatar" src="{{uiState.currentUserImage}}">
-  <img *ngIf="(!uiState.currentUserImage)" class="avatar" src="../assets/icon_final_small.png">
-  <a *ngIf="(uiState.loggedIn)" class="logout-anchor" (click)="logout()">Logout</a>
-</md-toolbar>
+<md-sidenav-container class="god-container">
+  <md-sidenav #sidenav class="sidenav-content">
+    <nav>
+      <img src="./assets/logo3.png" alt="logo" class="nav-img-logo">
+      <hr>
+      <div class="nav-container">
+        <md-icon class="nav-icon">home</md-icon>
+        <a class="nav-link" (click)="sidenav.close()" routerLink="/home">Home</a>
+      </div>
+      <div class="nav-container">
+      <img src="../assets/my_crown_small.png" class="nav-icon">
+        <a class="nav-link" (click)="sidenav.close()">My Tournaments</a>
+      </div>
+      <div class="nav-container">
+        <md-icon class="nav-icon">play_arrow</md-icon>
+        <a class="nav-link" (click)="sidenav.close()" routerLink="/tournaments">Tournaments</a>
+      </div>
+      <div class="nav-container">
+        <md-icon class="nav-icon">face</md-icon>
+        <a class="nav-link" (click)="sidenav.close()">Players</a>
+      </div>
+      <div class="nav-impress">
+        <md-icon class="nav-icon">attachment</md-icon>
+        <a class="nav-link" (click)="sidenav.close()">Impressum</a>
+      </div>
+    </nav>
+  </md-sidenav>
+  <md-toolbar color="primary">
+    <div>
+      <button class="app-icon-button" (click)="sidenav.open()">
+        <i class="material-icons  app-toolbar-menu">menu</i>
+      </button>
+    </div>
+    <span class="app-name-label">OpenTournament</span>
+    <span class="spacer"></span>
+    <span *ngIf="(uiState.loggedIn)" class="user-welcome-panel">{{uiState.currentUserName}}</span>
+    <img *ngIf="(uiState.currentUserImage)" class="avatar" src="{{uiState.currentUserImage}}">
+    <img *ngIf="(!uiState.currentUserImage)" class="avatar" src="../assets/icon_final_small.png">
+    <a *ngIf="(uiState.loggedIn)" class="logout-anchor" (click)="logout()">Logout</a>
+  </md-toolbar>
 
-<div class="app-content">
+  <div class="app-content">
 
-  <ul *ngIf="(uiState.loggedIn)">
-    <li class="menu-entry">
-      <a routerLink="home" href="/">Home</a>
-    </li>
-    <li class="menu-entry">
-      <a routerLink="game" href="/">Game</a>
-    </li>
-  </ul>
-
-  <router-outlet></router-outlet>
-</div>
+    <router-outlet></router-outlet>
+  </div>
+</md-sidenav-container>

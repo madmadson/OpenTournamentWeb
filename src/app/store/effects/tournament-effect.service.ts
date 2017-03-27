@@ -13,12 +13,12 @@ export class TournamentEffectService {
 
   @Effect({dispatch: false}) subscribe = this.actions$
     .ofType(TOURNAMENTS_SUBSCRIBE_ACTION)
-    .debug("TOURNAMENTS_SUBSCRIBE_ACTION")
+    .debug('TOURNAMENTS_SUBSCRIBE_ACTION')
     .map(action => this.tournamentService.subscribeOnTournaments());
 
   @Effect({dispatch: false}) unsubscribe = this.actions$
     .ofType(TOURNAMENTS_UNSUBSCRIBE_ACTION)
-    .debug("TOURNAMENTS_UNSUBSCRIBE_ACTION")
+    .debug('TOURNAMENTS_UNSUBSCRIBE_ACTION')
     .map(action => this.tournamentService.unsubscribeOnTournaments());
 
 

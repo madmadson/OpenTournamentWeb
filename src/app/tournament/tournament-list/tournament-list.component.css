@@ -3,3 +3,9 @@
 .tournament-card-lines{
   padding: 3em;
 }
+
+
+.tournament-list-item:hover{
+  background-color: deepskyblue;
+  cursor: pointer;
+}
