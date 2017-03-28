@@ -1,0 +1,9 @@
+.tournament-heading{
+  text-align: center;
+}
+
+.createButton{
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+}

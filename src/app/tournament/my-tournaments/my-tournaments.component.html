@@ -1,0 +1,11 @@
+<h1 class="tournament-heading">My organized Tournaments ({{(allTournaments$| async) ?.length}})</h1>
+
+<md-card class="tournament-list-card">
+  <md-list class="tournament-list" *ngFor="let groupedTournaments of groupedTournaments$ | async">
+    <h3 md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h3>
+    <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
+    <md-divider></md-divider>
+  </md-list>
+</md-card>
+
+<button md-fab class="createButton" (click)="createTournament()"><md-icon>add</md-icon></button>

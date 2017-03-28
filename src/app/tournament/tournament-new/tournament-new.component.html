@@ -1,0 +1,15 @@
+<form [formGroup]="tournamentForm" (ngSubmit)="onSubmit()" novalidate>
+
+
+  <button md-raised-button type="submit"
+          [disabled]="tournamentForm.pristine">Save
+  </button>
+  <button md-raised-button type="reset" (click)="revert()"
+          [disabled]="tournamentForm.pristine">Revert
+  </button>
+  <div class="form-group">
+    <label class="center-block">Name:
+      <input class="form-control" formControlName="name">
+    </label>
+  </div>
+</form>
