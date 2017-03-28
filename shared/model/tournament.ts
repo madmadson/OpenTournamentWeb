@@ -8,20 +8,20 @@ export class Tournament {
   maxParticipants: number;
   teamSize: number;
   actualRound: number;
-
+  creatorUid: string;
 
   static fromJson({actualRound,
                     beginDate, endDate,
-                    location, maxParticipants, name, teamSize}): Tournament {
+                    location, maxParticipants, name, teamSize, creatorUid}): Tournament {
     return new Tournament(
       name, location,
       beginDate, endDate,
-      maxParticipants, teamSize, actualRound);
+      maxParticipants, teamSize, actualRound, creatorUid);
   }
 
   constructor(name: string, location: string,
               beginDate: string, endDate: string,
-              maxParticipants: number, teamSize: number, actualRound: number) {
+              maxParticipants: number, teamSize: number, actualRound: number, creatorUid: string) {
     this.name = name;
     this.location = location;
     this.beginDate = beginDate;
@@ -29,9 +29,8 @@ export class Tournament {
     this.maxParticipants = maxParticipants;
     this.teamSize = teamSize;
     this.actualRound = actualRound;
+    this.creatorUid = creatorUid;
   }
-
-
 }
 
 

@@ -3,7 +3,6 @@ import {NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {MaterialModule} from "@angular/material";
-import {RouterModule, Routes} from "@angular/router";
 import {AppComponent} from "./app.component";
 import {TournamentListComponent} from "./tournament/tournament-list/tournament-list.component";
 import {AngularFireModule, AuthMethods, AuthProviders} from "angularfire2";
@@ -28,6 +27,13 @@ import {routerReducer, RouterStoreModule} from "@ngrx/router-store";
 import {TournamentEditComponent} from "./tournament/tournament-edit/tournament-edit.component";
 import {MomentModule} from "angular2-moment";
 import {TournamentOverviewComponent} from "./tournament/tournament-overview/tournament-overview.component";
+
+import {MyTournamentsComponent} from "./tournament/my-tournaments/my-tournaments.component";
+import {PageNotFoundComponent} from "./not-found.component";
+import {AppRoutingModule} from "./app-routing.module";
+
+import "hammerjs";
+import {TournamentNewComponent} from "./tournament/tournament-new/tournament-new.component";
 
 const reducers = {
   uiState: uiState,
@@ -59,28 +65,12 @@ const fbAuthConfig = {
   method: AuthMethods.Anonymous,
 };
 
-const routes: Routes = [
-  { path: 'home', component: HomePageComponent },
-  { path: 'login-page', component: LoginPageComponent },
-  { path: 'tournaments', component: TournamentOverviewComponent },
-  { path: 'game', component: GameEditComponent },
-];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TournamentListComponent,
-    GameEditComponent,
-    LoginPageComponent,
-    HomePageComponent,
-    TournamentEditComponent,
-    TournamentOverviewComponent
-  ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(routes),
     MaterialModule,
     AngularFireModule.initializeApp(fbConfig, fbAuthConfig),
     ReactiveFormsModule,
@@ -89,7 +79,20 @@ const routes: Routes = [
     StoreModule.provideStore(storeReducer, INITIAL_APPLICATION_STATE),
     RouterStoreModule.connectRouter(),
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
-    MomentModule
+    MomentModule,
+    AppRoutingModule
+  ],
+  declarations: [
+    AppComponent,
+    TournamentListComponent,
+    GameEditComponent,
+    LoginPageComponent,
+    HomePageComponent,
+    TournamentEditComponent,
+    TournamentOverviewComponent,
+    MyTournamentsComponent,
+    PageNotFoundComponent,
+    TournamentNewComponent
   ],
   providers: [LoginService, TournamentService],
   bootstrap: [AppComponent]

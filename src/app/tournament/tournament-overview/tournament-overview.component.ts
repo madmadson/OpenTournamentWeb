@@ -14,13 +14,15 @@ import * as moment from "moment";
 })
 export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
-  allTournaments$: Observable<TournamentListVM[]>;
+    groupedTournaments$: Observable<TournamentListVM[]>;
+    allTournaments$: Observable<any[]>;
 
   constructor(private store: Store<ApplicationState>) {
 
-    this.allTournaments$ = store.select(
+    this.allTournaments$ = store.select(state => state.storeData.tournaments);
+
+    this.groupedTournaments$ = store.select(
       state => {
-        console.log('tournaments: ' + JSON.stringify(state.storeData.tournaments));
         return _.chain(state.storeData.tournaments)
           .groupBy(function (tournament) {
             return moment(tournament.beginDate).format('MMMM YYYY');

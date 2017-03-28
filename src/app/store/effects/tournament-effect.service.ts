@@ -1,7 +1,11 @@
 import {Injectable} from "@angular/core";
 import {Actions, Effect} from "@ngrx/effects";
 import {TournamentService} from "../../service/tournament.service";
-import {TOURNAMENTS_SUBSCRIBE_ACTION, TOURNAMENTS_UNSUBSCRIBE_ACTION} from "../actions/tournament-actions";
+import {
+  TOURNAMENT_LOAD_ACTION,
+  TOURNAMENTS_SUBSCRIBE_ACTION,
+  TOURNAMENTS_UNSUBSCRIBE_ACTION
+} from "../actions/tournament-actions";
 
 @Injectable()
 export class TournamentEffectService {
@@ -18,6 +22,11 @@ export class TournamentEffectService {
 
   @Effect({dispatch: false}) unsubscribe = this.actions$
     .ofType(TOURNAMENTS_UNSUBSCRIBE_ACTION)
+    .debug('TOURNAMENTS_UNSUBSCRIBE_ACTION')
+    .map(action => this.tournamentService.unsubscribeOnTournaments());
+
+  @Effect({dispatch: false}) loadTournament = this.actions$
+    .ofType(TOURNAMENT_LOAD_ACTION)
     .debug('TOURNAMENTS_UNSUBSCRIBE_ACTION')
     .map(action => this.tournamentService.unsubscribeOnTournaments());
 

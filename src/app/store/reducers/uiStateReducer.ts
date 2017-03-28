@@ -1,6 +1,6 @@
-import {UiState, INITIAL_UI_STATE} from "../ui-state";
+import {INITIAL_UI_STATE, UiState} from "../ui-state";
 import {Action} from "@ngrx/store";
-import {STORE_USERDATA_ACTION, LOGOUT_ACTION} from "../actions/auth-actions";
+import {LOGOUT_ACTION, STORE_USERDATA_ACTION} from "../actions/auth-actions";
 
 
 export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiState {
@@ -9,12 +9,12 @@ export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiS
 
     case STORE_USERDATA_ACTION:
 
-      return handleStoreData(state,action);
+      return handleStoreData(state, action);
 
 
     case LOGOUT_ACTION:
 
-      return handleLogout(state,action);
+      return handleLogout(state, action);
 
     default:
       return state;
@@ -22,16 +22,16 @@ export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiS
   }
 }
 
-function handleStoreData(state:UiState, action: Action): UiState {
+function handleStoreData(state: UiState, action: Action): UiState {
   const newState = Object.assign({}, state);
 
 
-  console.log("login action: " + JSON.stringify(action.payload));
+  console.log('login action: ' + JSON.stringify(action.payload));
 
-  if(action.payload.displayName !== null){
+  if (action.payload.displayName !== null) {
     newState.currentUserName = action.payload.displayName;
-  }else{
-    newState.currentUserName = "Anonymous";
+  } else {
+    newState.currentUserName = 'Anonymous';
   }
   newState.currentUserImage = action.payload.photoURL;
   newState.currentUserId = action.payload.uid;
