@@ -35,7 +35,6 @@
     "install": "^0.8.7",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
-    // replace me with material2 datepicker when ready :)
     "ng2-datepicker": "^1.8.3",
     "ngrx-store-freeze": "^0.1.9",
     "ngrx-store-localstorage": "^0.1.5",
