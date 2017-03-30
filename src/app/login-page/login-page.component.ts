@@ -1,10 +1,10 @@
-import {Component, OnInit, OnDestroy} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "../store/application-state";
 import {LoginAction} from "../store/actions/auth-actions";
 import {Router} from "@angular/router";
-import {Subscription} from "rxjs";
-import {FormGroup, Validators, FormBuilder} from "@angular/forms";
+import {Subscription} from "rxjs/Subscription";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MdSnackBar} from "@angular/material";
 
 @Component({
@@ -18,15 +18,18 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   loginForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private store: Store<ApplicationState>, private  router: Router,public snackBar: MdSnackBar) {
+  constructor(private formBuilder: FormBuilder,
+              private store: Store<ApplicationState>,
+              private  router: Router,
+              private snackBar: MdSnackBar) {
     this.createForm();
 
-    this.subscription = store.select(state => state.uiState.currentUserName).subscribe(res => {
-      if(res !== undefined){
-        this.router.navigate(["home"]);
+    this.subscription = store.select(state => state.uiState.loggedIn).subscribe(res => {
+      if (res !== false) {
+        this.router.navigate(['home']);
       }
      }
-   )
+   );
   }
   createForm() {
     this.loginForm = this.formBuilder.group({
@@ -49,13 +52,13 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   }
   onSubmit() {
-    this.snackBar.open("Login", "", {
+    this.snackBar.open('Login', '', {
       duration: 2000,
     });
   }
 
-  register(){
-    this.snackBar.open("Register", "", {
+  register() {
+    this.snackBar.open('Register', '', {
       duration: 2000,
     });
   }

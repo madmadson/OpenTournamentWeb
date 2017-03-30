@@ -1,32 +1,32 @@
 import {Action} from "@ngrx/store";
 import {UserData} from "../../../../shared/model/userData";
 
-export const LOGIN_ACTION: string = 'LOGIN_ACTION';
+export const LOGIN_ACTION = 'LOGIN_ACTION';
 
 export class LoginAction implements Action{
 
-  readonly type: string = 'LOGIN_ACTION';
+  readonly type = 'LOGIN_ACTION';
 
-  constructor(public payload?:string ) {
+  constructor(public payload?: string ) {
   }
 }
 
-export const STORE_USERDATA_ACTION: string = 'STORE_USERDATA_ACTION';
+export const STORE_USERDATA_ACTION = 'STORE_USERDATA_ACTION';
 
 export class SaveUserDataAction implements Action{
 
-  readonly type: string = 'STORE_USERDATA_ACTION';
+  readonly type = 'STORE_USERDATA_ACTION';
 
 
-  constructor(public payload:UserData ) {
+  constructor(public payload: UserData ) {
   }
 }
 
-export const LOGOUT_ACTION: string = 'LOGOUT_ACTION';
+export const LOGOUT_ACTION = 'LOGOUT_ACTION';
 
 export class LogoutAction implements Action{
 
-  readonly type: string = 'LOGOUT_ACTION';
+  readonly type = 'LOGOUT_ACTION';
 
   constructor() {
   }

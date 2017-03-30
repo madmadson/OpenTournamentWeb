@@ -2,14 +2,13 @@ import {Injectable, OnDestroy} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "../store/application-state";
 import {SaveUserDataAction} from "../store/actions/auth-actions";
-import {AuthProviders, AuthMethods, AngularFire} from "angularfire2";
-import {Subscription} from "rxjs";
+import {AngularFire, AuthMethods, AuthProviders} from "angularfire2";
+import {Subscription} from "rxjs/Subscription";
 import {Router} from "@angular/router";
-import {RouterMethodCall} from "@ngrx/router-store";
 
 
 @Injectable()
-export class LoginService implements OnDestroy{
+export class LoginService implements OnDestroy {
 
   private authSubscription: Subscription;
 
@@ -18,17 +17,19 @@ export class LoginService implements OnDestroy{
 
   login(loginProvider?: string) {
 
-    console.log("Login for provider: " + loginProvider);
+    console.log('Login for provider: ' + loginProvider);
     this.loginWithProvider(loginProvider);
 
     this.authSubscription = this.afService.auth.subscribe(
       (auth) => {
         if (auth == null) {
-          console.log("Not Logged in.");
-        }
-        else {
-          console.log("Successfully Logged in.");
-          this.store.dispatch(new SaveUserDataAction({uid: auth.auth.uid, displayName: auth.auth.displayName, photoURL: auth.auth.photoURL}));
+          console.log('Not Logged in.');
+        } else {
+          console.log('Successfully Logged in.');
+          this.store.dispatch(
+            new SaveUserDataAction(
+              {uid: auth.auth.uid, displayName: auth.auth.displayName, photoURL: auth.auth.photoURL}
+              ));
 
         }
       }
@@ -37,11 +38,11 @@ export class LoginService implements OnDestroy{
 
   logout() {
 
-    console.log("Logout: ");
+    console.log('Logout: ');
 
     this.authSubscription.unsubscribe();
     this.afService.auth.logout().then();
-    this.router.navigate(["login-page"]);
+    this.router.navigate(['login-page']);
 
   }
 
@@ -51,12 +52,10 @@ export class LoginService implements OnDestroy{
     if (loginProvider === 'google') {
       provider = AuthProviders.Google;
       method = AuthMethods.Popup;
-    }
-    else if (loginProvider === 'facebook') {
+    } else if (loginProvider === 'facebook') {
       provider = AuthProviders.Facebook;
       method = AuthMethods.Popup;
-    }
-    else {
+    } else {
       provider = AuthProviders.Anonymous;
       method = AuthMethods.Anonymous;
     }
@@ -67,15 +66,15 @@ export class LoginService implements OnDestroy{
     });
   }
 
-  routeToLoginPageWhenUnauthenticated(actionPayload:RouterMethodCall) {
-
-    if(actionPayload.path !== "/login-page") {
-      if (this.authSubscription === undefined) {
-        console.log("redirect to login page");
-        //this.router.navigate(["login-page"]);
-      }
-    }
-  }
+  // routeToLoginPageWhenUnauthenticated(actionPayload: RouterMethodCall) {
+  //
+  //   if (actionPayload.path !== '/login-page') {
+  //     if (this.authSubscription === undefined) {
+  //       console.log('redirect to login page');
+  //       //this.router.navigate(["login-page"]);
+  //     }
+  //   }
+  // }
 
   ngOnDestroy(): void {
 

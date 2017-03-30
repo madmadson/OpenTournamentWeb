@@ -5,7 +5,8 @@ import {AngularFire, FirebaseRef} from "angularfire2";
 import {
   TournamentAddedAction,
   TournamentChangedAction,
-  TournamentDeletedAction
+  TournamentDeletedAction,
+  TournamentsClearAction
 } from "../store/actions/tournament-actions";
 import {Tournament} from "../../../shared/model/tournament";
 
@@ -20,30 +21,35 @@ export class TournamentService implements OnDestroy {
 
   subscribeOnTournaments() {
 
-    const that = this;
+    if (!this.query) {
+      console.log('subscribe on tournaments');
+      this.store.dispatch(new TournamentsClearAction());
 
-    this.query = this.fb.database().ref('tournaments').orderByChild('beginDate');
+      const that = this;
 
-    this.query.on('child_added', function(snapshot) {
-      const tournament: Tournament = Tournament.fromJson(snapshot.val());
-      tournament.id = snapshot.key;
+      this.query = this.fb.database().ref('tournaments').orderByChild('beginDate');
 
-      that.store.dispatch(new TournamentAddedAction(tournament));
+      this.query.on('child_added', function(snapshot) {
+        const tournament: Tournament = Tournament.fromJson(snapshot.val());
+        tournament.id = snapshot.key;
 
-    });
+        that.store.dispatch(new TournamentAddedAction(tournament));
 
-    this.query.on('child_changed', function(snapshot) {
-
-      const tournament: Tournament = Tournament.fromJson(snapshot.val());
-      tournament.id = snapshot.key;
-
-      that.store.dispatch(new TournamentChangedAction(tournament));
       });
 
-    this.query.on('child_removed', function(snapshot) {
+      this.query.on('child_changed', function(snapshot) {
 
-      that.store.dispatch(new TournamentDeletedAction(snapshot.key));
-    });
+        const tournament: Tournament = Tournament.fromJson(snapshot.val());
+        tournament.id = snapshot.key;
+
+        that.store.dispatch(new TournamentChangedAction(tournament));
+        });
+
+      this.query.on('child_removed', function(snapshot) {
+
+        that.store.dispatch(new TournamentDeletedAction(snapshot.key));
+      });
+    }
 
   }
 
@@ -59,7 +65,7 @@ export class TournamentService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    this.store.dispatch(new TournamentsClearAction());
     this.query.off();
   }
 }

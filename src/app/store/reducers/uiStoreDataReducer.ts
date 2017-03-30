@@ -3,12 +3,17 @@ import {Action} from "@ngrx/store";
 import {
   TOURNAMENT_ADDED_ACTION,
   TOURNAMENT_CHANGED_ACTION,
-  TOURNAMENT_DELETED_ACTION
+  TOURNAMENT_DELETED_ACTION,
+  TOURNAMENTS_CLEAR_ACTION
 } from "../actions/tournament-actions";
 import * as _ from "lodash";
 
 export function storeData(state: StoreData, action: Action): StoreData {
   switch (action.type) {
+
+    case TOURNAMENTS_CLEAR_ACTION:
+
+      return handleTournamentClearData(state, action);
 
     case TOURNAMENT_ADDED_ACTION:
 
@@ -27,6 +32,13 @@ export function storeData(state: StoreData, action: Action): StoreData {
   }
 }
 
+function handleTournamentClearData(state: StoreData, action: Action): StoreData {
+  const newStoreState = _.cloneDeep(state);
+
+  newStoreState.tournaments = [];
+
+  return newStoreState;
+}
 
 function handleTournamentAddedData(state: StoreData, action: Action): StoreData {
   const newStoreState = _.cloneDeep(state);

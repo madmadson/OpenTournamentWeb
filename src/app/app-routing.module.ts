@@ -12,13 +12,13 @@ import {TournamentNewComponent} from "./tournament/tournament-new/tournament-new
 
 const routes: Routes = [
   {path: 'home', component: HomePageComponent},
-  {path: 'login-page', component: LoginPageComponent},
+  {path: 'login', component: LoginPageComponent},
   {path: 'tournaments', component: TournamentOverviewComponent},
   {path: 'my-tournaments', component: MyTournamentsComponent},
   {path: 'tournament/:id', component: TournamentEditComponent},
   {path: 'tournament-new', component: TournamentNewComponent},
   {path: 'game', component: GameEditComponent},
-  {path: '', redirectTo: '/login-page', pathMatch: 'full'},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: '**', component: PageNotFoundComponent}
 ];
 @NgModule({
