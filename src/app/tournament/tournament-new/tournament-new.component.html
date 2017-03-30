@@ -1,15 +1,52 @@
-<form [formGroup]="tournamentForm" (ngSubmit)="onSubmit()" novalidate>
+<md-card>
+  <h2>New Tournament</h2>
+  <form [formGroup]="tournamentForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-button form-input">
+      <button md-raised-button type="submit" class="save-button"
+              [disabled]="tournamentForm.pristine">Save
+      </button>
+      <button md-raised-button type="reset" class="reset-button" (click)="revert()"
+              [disabled]="tournamentForm.pristine">Revert
+      </button>
+    </div>
+    <div class="form-group">
+      <md-input-container class="form-input">
+        <input mdInput placeholder="TournamentName" formControlName="name">
+      </md-input-container>
+      <md-input-container class="form-input">
+        <input mdInput placeholder="Location" formControlName="location">
+      </md-input-container>
+    </div>
 
+    <md-input-container class="form-input">
+      <input mdInput placeholder="Start"
+             formControlName="beginDate"
+             [ngModel]="beginDate | date: 'dd.MM.yy HH.mm'"
+             [mode]="'dropdown'"
+             [dateTimePicker]="beginDate"
+             (dateTimePickerChange)="setBeginDate($event)"
+             readonly/>
+    </md-input-container>
+    <md-input-container class="form-input">
+      <input mdInput placeholder="End"
+             formControlName="endDate"
+             [ngModel]="endDate | date: 'dd.MM.yy HH.mm'"
+             [mode]="'dropdown'"
+             [dateTimePicker]="endDate"
+             (dateTimePickerChange)="setEndDate($event)"
+             readonly/>
+    </md-input-container>
 
-  <button md-raised-button type="submit"
-          [disabled]="tournamentForm.pristine">Save
-  </button>
-  <button md-raised-button type="reset" (click)="revert()"
-          [disabled]="tournamentForm.pristine">Revert
-  </button>
-  <div class="form-group">
-    <label class="center-block">Name:
-      <input class="form-control" formControlName="name">
-    </label>
-  </div>
-</form>
+    <div class="form-input">
+      <md-checkbox (click)="toggleTeamTournament()">TeamTournament</md-checkbox>
+    </div>
+    <md-input-container *ngIf="isTeamTournament" class="form-input">
+      <input mdInput  formControlName="teamSize" type="number" placeholder="TeamSize" min="2" max="8" value="3">
+    </md-input-container>
+    <md-input-container class="form-input">
+      <input mdInput type="number" placeholder="MaxParticipants" formControlName="maxParticipants">
+    </md-input-container>
+  </form>
+  <p>Form value: {{ tournamentForm.value | json }}</p>
+  <p>Form status: {{ tournamentForm.status | json }}</p>
+</md-card>

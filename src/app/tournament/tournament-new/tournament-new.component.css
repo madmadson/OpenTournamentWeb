@@ -1,0 +1,20 @@
+
+.form-button{
+  display: flex;
+  justify-content: space-between;
+}
+
+.save-button{
+  margin: 5px;
+  padding: 5px;
+}
+
+.reset-button{
+  margin: 5px;
+  padding: 5px;
+}
+
+.form-input{
+  width: 100%;
+  padding-bottom: 10px;
+}

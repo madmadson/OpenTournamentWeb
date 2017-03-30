@@ -1,9 +1,8 @@
 
 
-.tournament-card-lines{
-  padding: 3em;
+.md-secondary{
+  padding-left: 20em;
 }
-
 
 .tournament-list-item:hover{
   background-color: deepskyblue;

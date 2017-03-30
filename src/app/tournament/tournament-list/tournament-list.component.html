@@ -3,15 +3,15 @@
 <md-list-item *ngFor="let tournament of tournaments" class="tournament-list-item">
   <md-icon md-list-avatar *ngIf="tournament.teamSize === 1">person</md-icon>
   <md-icon md-list-avatar *ngIf="tournament.teamSize > 1">group</md-icon>
-  <h3 md-line>{{tournament.name}}</h3>
+  <h2 md-line style="padding-bottom: 10px; font-weight: bold; ">{{tournament.name}}</h2>
   <p class="tournament-card-lines" md-line *ngIf="tournament.beginDate === tournament.endDate">
-    {{tournament.beginDate | amDateFormat:'L'}}
+    {{tournament.beginDate | date:'MM/d/yy HH:mm'}}
   </p>
-  <p class="tournament-card-lines" md-line *ngIf="tournament.beginDate !== tournament.endDate">
-    {{tournament.beginDate | amDateFormat:'L'}}  -
-    {{tournament.endDate | amDateFormat:'L'}}
+  <p class="tournament-card-lines" md-line  *ngIf="tournament.beginDate !== tournament.endDate">
+    {{tournament.beginDate | date:'MM/d/yy HH:mm'}}  -
+    {{tournament.endDate | date:'MM/d/yy HH:mm'}}
   </p>
-  <p class="tournament-card-lines" md-line>  {{tournament.location}}</p>
+  <p class="tournament-card-lines" md-line style="padding-top: 5px;">{{tournament.location}}</p>
   <div class="md-secondary">?/{{tournament.maxParticipants}}</div>
 </md-list-item>
 

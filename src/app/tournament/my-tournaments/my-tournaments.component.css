@@ -2,8 +2,9 @@
   text-align: center;
 }
 
-.createButton{
-  position: fixed;
-  bottom: 12px;
-  right: 12px;
+.create-action{
+  display: inline-block;
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
 }

@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {ApplicationState} from "../../store/application-state";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs/Observable";
 import {TournamentListVM} from "../tournament.vm";
-import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from "../../store/actions/tournament-actions";
+
 import * as _ from "lodash";
 import * as moment from "moment";
 
@@ -12,7 +12,7 @@ import * as moment from "moment";
   templateUrl: 'tournament-overview.component.html',
   styleUrls: ['tournament-overview.component.css']
 })
-export class TournamentOverviewComponent implements OnInit, OnDestroy {
+export class TournamentOverviewComponent  {
 
     groupedTournaments$: Observable<TournamentListVM[]>;
     allTournaments$: Observable<any[]>;
@@ -33,13 +33,5 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
           .value();
       });
 
-  }
-
-  ngOnInit() {
-    this.store.dispatch(new TournamentsSubscribeAction());
-  }
-
-  ngOnDestroy(): void {
-    this.store.dispatch(new TournamentsUnsubscribeAction());
   }
 }

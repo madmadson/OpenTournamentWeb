@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "./store/application-state";
-import {Observable, Subscription} from "rxjs";
+import {Observable} from "rxjs/Observable";
+import {Subscription} from "rxjs/Subscription";
 import {LogoutAction} from "./store/actions/auth-actions";
 import {UiState} from "./store/ui-state";
 import * as _ from "lodash";
-import {TournamentsSubscribeAction} from "./store/actions/tournament-actions";
+import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from "./store/actions/tournament-actions";
 import {Router} from "@angular/router";
 
 @Component({
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
 
     this.subscription.unsubscribe();
+    this.store.dispatch(new TournamentsUnsubscribeAction());
   }
 
 
