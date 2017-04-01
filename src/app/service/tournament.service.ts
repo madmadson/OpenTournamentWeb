@@ -9,6 +9,7 @@ import {
   TournamentsClearAction
 } from "../store/actions/tournament-actions";
 import {Tournament} from "../../../shared/model/tournament";
+import {TournamentVM} from "../tournament/tournament.vm";
 
 @Injectable()
 export class TournamentService implements OnDestroy {
@@ -67,6 +68,14 @@ export class TournamentService implements OnDestroy {
   ngOnDestroy(): void {
     this.store.dispatch(new TournamentsClearAction());
     this.query.off();
+  }
+
+  pushTournaments(payload: TournamentVM) {
+
+    const newTournament = Tournament.fromTournamentVM(payload);
+
+    const tournaments = this.afService.database.list('tournaments');
+    tournaments.push(newTournament);
   }
 }
 

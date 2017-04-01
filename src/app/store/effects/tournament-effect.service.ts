@@ -3,6 +3,7 @@ import {Actions, Effect} from "@ngrx/effects";
 import {TournamentService} from "../../service/tournament.service";
 import {
   TOURNAMENT_LOAD_ACTION,
+  TOURNAMENT_PUSH_ACTION,
   TOURNAMENTS_SUBSCRIBE_ACTION,
   TOURNAMENTS_UNSUBSCRIBE_ACTION
 } from "../actions/tournament-actions";
@@ -30,7 +31,10 @@ export class TournamentEffectService {
     .debug('TOURNAMENTS_UNSUBSCRIBE_ACTION')
     .map(action => this.tournamentService.unsubscribeOnTournaments());
 
-
+  @Effect({dispatch: false}) pushTournament = this.actions$
+    .ofType(TOURNAMENT_PUSH_ACTION)
+    .debug('TOURNAMENT_PUSH_ACTION')
+    .map(action => this.tournamentService.pushTournaments(action.payload));
 
 
 }

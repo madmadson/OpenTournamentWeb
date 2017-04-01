@@ -35,6 +35,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import "hammerjs";
 import {TournamentNewComponent} from "./tournament/tournament-new/tournament-new.component";
 import {DateTimePickerModule} from "ng2-date-time-picker";
+import {CustomFormsModule} from "ng2-validation";
 
 const reducers = {
   uiState: uiState,
@@ -82,7 +83,8 @@ const fbAuthConfig = {
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
     MomentModule,
     AppRoutingModule,
-    DateTimePickerModule
+    DateTimePickerModule,
+    CustomFormsModule
   ],
   declarations: [
     AppComponent,

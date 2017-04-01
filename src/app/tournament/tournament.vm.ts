@@ -7,8 +7,8 @@ export interface TournamentListVM {
 
 export interface TournamentVM {
 
-  name: String;
-  location: String;
+  name: string;
+  location: string;
   beginDate: String;
   endDate: String;
   maxParticipants: number;

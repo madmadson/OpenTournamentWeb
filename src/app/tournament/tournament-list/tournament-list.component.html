@@ -1,7 +1,7 @@
 
 
 <md-list-item *ngFor="let tournament of tournaments" class="tournament-list-item">
-  <md-icon md-list-avatar *ngIf="tournament.teamSize === 1">person</md-icon>
+  <md-icon md-list-avatar *ngIf="tournament.teamSize == ''">person</md-icon>
   <md-icon md-list-avatar *ngIf="tournament.teamSize > 1">group</md-icon>
   <h2 md-line style="padding-bottom: 10px; font-weight: bold; ">{{tournament.name}}</h2>
   <p class="tournament-card-lines" md-line *ngIf="tournament.beginDate === tournament.endDate">

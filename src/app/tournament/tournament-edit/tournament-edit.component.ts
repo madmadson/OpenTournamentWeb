@@ -21,7 +21,7 @@ export class TournamentEditComponent implements OnInit, OnDestroy {
   constructor(private store: Store<ApplicationState>,
     private route: ActivatedRoute) {
 
-    this.tournament$ = store.select(state => state.storeData.actualTournament);
+    // this.tournament$ = store.select(state => state.storeData.actualTournament);
   }
 
   ngOnInit() {
