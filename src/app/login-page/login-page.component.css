@@ -1,9 +1,7 @@
 
 .login-container{
-  justify-content: center;
   padding: 30px;
   max-width: 350px;
-  width: 100% !important;
   margin: 0 auto;
 }
 

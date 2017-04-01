@@ -5,6 +5,8 @@
 .create-action{
   display: inline-block;
   position: absolute;
-  bottom: -30px;
-  right: -30px;
+  top: 5px;
+  right: 5px;
 }
+
+
