@@ -42,7 +42,7 @@ export class LoginService implements OnDestroy {
 
     this.authSubscription.unsubscribe();
     this.afService.auth.logout().then();
-    this.router.navigate(['login-page']);
+    this.router.navigate(['login']);
 
   }
 

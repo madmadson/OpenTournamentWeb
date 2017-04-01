@@ -24,7 +24,7 @@ export class SaveUserDataAction implements Action{
 
 export const LOGOUT_ACTION = 'LOGOUT_ACTION';
 
-export class LogoutAction implements Action{
+export class LogoutAction implements Action {
 
   readonly type = 'LOGOUT_ACTION';
 

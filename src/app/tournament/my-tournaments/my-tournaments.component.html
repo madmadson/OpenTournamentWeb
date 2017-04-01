@@ -3,6 +3,8 @@
 
 <md-card class="tournament-list-card">
   <button md-fab class="create-action" (click)="createTournament()"><md-icon>add</md-icon></button>
+
+  <span *ngIf="(groupedTournaments$ | async).length == 0">No Tournaments found</span>
   <md-list class="tournament-list" *ngFor="let groupedTournaments of groupedTournaments$ | async">
     <h3 md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h3>
     <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>

@@ -1,18 +1,15 @@
 import {Component, OnInit} from "@angular/core";
 import {TournamentVM} from "../tournament.vm";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-
 import {MdSnackBar} from "@angular/material";
-
-
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "../../store/application-state";
-
-
-import * as moment from "moment";
 import {composeValidators} from "@angular/forms/src/directives/shared";
 import {CustomValidators} from "ng2-validation";
 import {TournamentPushAction} from "../../store/actions/tournament-actions";
+import {Router} from "@angular/router";
+
+import * as moment from "moment";
 
 
 @Component({
@@ -51,7 +48,11 @@ export class TournamentNewComponent implements OnInit {
     }
   };
 
-  constructor(private formBuilder: FormBuilder, private store: Store<ApplicationState>, public snackBar: MdSnackBar) {
+  constructor(
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private store: Store<ApplicationState>,
+    public snackBar: MdSnackBar) {
 
   }
 
@@ -207,7 +208,7 @@ export class TournamentNewComponent implements OnInit {
       actualRound: 0,
       maxParticipants: formModel.maxParticipants as number,
       teamSize: formModel.teamSize as number,
-      creatorUid: '123'
+      creatorUid: this.creatorId
     };
     return saveTournament;
   }
@@ -222,7 +223,7 @@ export class TournamentNewComponent implements OnInit {
       duration: 2000,
     });
 
-
+    this.router.navigate(['/my-tournaments']);
   }
 
 
