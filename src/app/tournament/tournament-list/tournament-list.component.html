@@ -5,11 +5,11 @@
   <md-icon md-list-avatar *ngIf="tournament.teamSize > 1">group</md-icon>
   <h2 md-line style="padding-bottom: 10px; font-weight: bold; ">{{tournament.name}}</h2>
   <p class="tournament-card-lines" md-line
-     *ngIf="(tournament.beginDate | date:'MM/d/yy')=== (tournament.endDate | date:'MM/d/yy')">
+     *ngIf="(tournament.beginDate | date:'MM/d/yy') === (tournament.endDate | date:'MM/d/yy')">
     {{tournament.beginDate | date:'MM/d/yy HH:mm'}} - {{tournament.beginDate | date:'HH:mm'}}
   </p>
   <p class="tournament-card-lines" md-line
-     *ngIf="tournament.beginDate !== tournament.endDate">
+     *ngIf="(tournament.beginDate | date:'MM/d/yy') !== (tournament.endDate | date:'MM/d/yy')">
     {{tournament.beginDate | date:'MM/d/yy HH:mm'}}  -
     {{tournament.endDate | date:'MM/d/yy HH:mm'}}
   </p>

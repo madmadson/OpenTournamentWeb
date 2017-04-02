@@ -24,9 +24,11 @@ export class LoginPageComponent implements OnInit, OnDestroy {
               private snackBar: MdSnackBar) {
     this.createForm();
 
-    this.subscription = store.select(state => state.uiState.loggedIn).subscribe(res => {
-      if (res !== false) {
-        this.router.navigate(['home']);
+    this.subscription = store.select(state => state.uiState).subscribe(uiState => {
+      if (uiState.loggedIn !== false) {
+
+        console.log('redirect loginPage: ' + JSON.stringify(uiState.redirectUrl));
+        this.router.navigate([uiState.redirectUrl ? uiState.redirectUrl : '/home']);
       }
      }
    );

@@ -31,3 +31,13 @@ export class LogoutAction implements Action {
   constructor() {
   }
 }
+
+export const ADD_REDIRECT_LOGIN_ACTION = 'ADD_REDIRECT_LOGIN_ACTION';
+
+export class AddRedirectUrlAction implements Action {
+
+  readonly type = 'ADD_REDIRECT_LOGIN_ACTION';
+
+  constructor(public payload: string) {
+  }
+}

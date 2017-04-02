@@ -8,13 +8,14 @@ import {PageNotFoundComponent} from "./not-found.component";
 import {MyTournamentsComponent} from "./tournament/my-tournaments/my-tournaments.component";
 import {TournamentEditComponent} from "./tournament/tournament-edit/tournament-edit.component";
 import {TournamentNewComponent} from "./tournament/tournament-new/tournament-new.component";
+import {AuthGuard} from "./auth-guard.service";
 
 
 const routes: Routes = [
   {path: 'home', component: HomePageComponent},
   {path: 'login', component: LoginPageComponent},
   {path: 'tournaments', component: TournamentOverviewComponent},
-  {path: 'my-tournaments', component: MyTournamentsComponent},
+  {path: 'my-tournaments', component: MyTournamentsComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'tournament/:id', component: TournamentEditComponent},
   {path: 'tournament-new', component: TournamentNewComponent},
   {path: 'game', component: GameEditComponent},

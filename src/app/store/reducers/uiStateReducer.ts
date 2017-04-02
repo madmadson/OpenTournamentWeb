@@ -1,6 +1,6 @@
 import {INITIAL_UI_STATE, UiState} from "../ui-state";
 import {Action} from "@ngrx/store";
-import {LOGOUT_ACTION, STORE_USERDATA_ACTION} from "../actions/auth-actions";
+import {ADD_REDIRECT_LOGIN_ACTION, LOGOUT_ACTION, STORE_USERDATA_ACTION} from "../actions/auth-actions";
 
 
 export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiState {
@@ -15,6 +15,10 @@ export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiS
     case LOGOUT_ACTION:
 
       return handleLogout(state, action);
+
+    case ADD_REDIRECT_LOGIN_ACTION:
+
+      return handleAddRedirectLoginAction(state, action);
 
     default:
       return state;
@@ -49,6 +53,18 @@ function handleLogout(state: UiState, action: Action) {
   newState.currentUserId = undefined;
   newState.currentUserImage = undefined;
   newState.loggedIn = false;
+  newState.redirectUrl = undefined;
+
+  return newState;
+}
+
+function handleAddRedirectLoginAction(state: UiState, action: Action) {
+
+  const newState = Object.assign({}, state);
+
+  console.log('redirect action: ' + JSON.stringify(action.payload));
+
+  newState.redirectUrl = action.payload;
 
   return newState;
 }

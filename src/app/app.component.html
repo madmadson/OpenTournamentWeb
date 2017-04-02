@@ -8,7 +8,7 @@
         <md-icon class="nav-icon">home</md-icon>
         <a class="nav-link" (click)="sidenav.close()" routerLink="/home">Home</a>
       </div>
-      <div class="nav-container">
+      <div *ngIf="(uiState.loggedIn)" class="nav-container">
         <img src="../assets/my_crown_small.png" class="nav-icon">
         <a class="nav-link" (click)="sidenav.close()" routerLink="/my-tournaments">My Tournaments</a>
       </div>

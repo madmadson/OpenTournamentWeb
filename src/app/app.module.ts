@@ -36,6 +36,7 @@ import "hammerjs";
 import {TournamentNewComponent} from "./tournament/tournament-new/tournament-new.component";
 import {DateTimePickerModule} from "ng2-date-time-picker";
 import {CustomFormsModule} from "ng2-validation";
+import {AuthGuard} from "./auth-guard.service";
 
 const reducers = {
   uiState: uiState,
@@ -98,7 +99,7 @@ const fbAuthConfig = {
     PageNotFoundComponent,
     TournamentNewComponent
   ],
-  providers: [LoginService, TournamentService],
+  providers: [LoginService, TournamentService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

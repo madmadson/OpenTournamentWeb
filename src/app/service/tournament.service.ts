@@ -31,7 +31,7 @@ export class TournamentService implements OnDestroy {
       this.query = this.fb.database().ref('tournaments').orderByChild('beginDate');
 
       this.query.on('child_added', function(snapshot) {
-        console.log('addMe');
+
         const tournament: Tournament = Tournament.fromJson(snapshot.val());
         tournament.id = snapshot.key;
 
@@ -40,7 +40,7 @@ export class TournamentService implements OnDestroy {
       });
 
       this.query.on('child_changed', function(snapshot) {
-        console.log('changeMe');
+
         const tournament: Tournament = Tournament.fromJson(snapshot.val());
         tournament.id = snapshot.key;
 
