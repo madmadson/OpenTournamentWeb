@@ -6,7 +6,7 @@ import {Store} from "@ngrx/store";
 import {ApplicationState} from "../../store/application-state";
 import {composeValidators} from "@angular/forms/src/directives/shared";
 import {CustomValidators} from "ng2-validation";
-import {TournamentPushAction} from "../../store/actions/tournament-actions";
+import {TournamentPushAction} from "../../store/actions/tournaments-actions";
 import {Router} from "@angular/router";
 
 import * as moment from "moment";
@@ -200,7 +200,8 @@ export class TournamentNewComponent implements OnInit {
   prepareSaveTournament(): TournamentVM {
     const formModel = this.tournamentForm.value;
 
-    const saveTournament: TournamentVM = {
+    return  {
+      id: undefined,
       name: formModel.name as string,
       location: formModel.location as string,
       beginDate: formModel.beginDate as string,
@@ -208,9 +209,9 @@ export class TournamentNewComponent implements OnInit {
       actualRound: 0,
       maxParticipants: formModel.maxParticipants as number,
       teamSize: formModel.teamSize as number,
-      creatorUid: this.creatorId
+      creatorUid: this.creatorId,
+      blub: ''
     };
-    return saveTournament;
   }
 
 

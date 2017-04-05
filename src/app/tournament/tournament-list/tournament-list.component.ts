@@ -1,5 +1,6 @@
 import {Component, Input} from "@angular/core";
 import {TournamentVM} from "../tournament.vm";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'tournament-list',
@@ -11,7 +12,11 @@ export class TournamentListComponent  {
   @Input()
   tournaments: TournamentVM[];
 
-  constructor() {
+  constructor(private router: Router) {
 
+  }
+
+  onSelect(tournament: TournamentVM) {
+    this.router.navigate(['/tournament', tournament.id]);
   }
 }

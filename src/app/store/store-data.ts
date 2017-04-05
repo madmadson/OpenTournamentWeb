@@ -17,7 +17,7 @@ export const INITIAL_STORE_DATA = {
 
   tournaments: [],
 
-  actualTournament: {
+    actualTournament: {
     id: '123',
     name: 'InitialTournament',
     location: 'Karlsruhe',

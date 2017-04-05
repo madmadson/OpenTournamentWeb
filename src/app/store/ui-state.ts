@@ -1,5 +1,5 @@
 
-export interface UiState{
+export interface UiState {
 
   currentUserId: string;
   currentUserName: string;

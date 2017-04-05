@@ -8,9 +8,9 @@ import * as _ from "lodash";
 import * as moment from "moment";
 
 @Component({
-  selector: 'tournament-overview',
-  templateUrl: 'tournament-overview.component.html',
-  styleUrls: ['tournament-overview.component.css']
+  selector: 'tournament-list-overview',
+  templateUrl: 'tournament-list-overview.component.html',
+  styleUrls: ['tournament-list-overview.component.css']
 })
 export class TournamentOverviewComponent  {
 
@@ -32,6 +32,5 @@ export class TournamentOverviewComponent  {
           })
           .value();
       });
-
   }
 }

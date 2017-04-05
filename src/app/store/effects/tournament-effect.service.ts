@@ -1,12 +1,9 @@
 import {Injectable} from "@angular/core";
 import {Actions, Effect} from "@ngrx/effects";
+
+import {REGISTRATION_PUSH_ACTION, TOURNAMENT_SUBSCRIBE_ACTION} from "../actions/tournament-actions";
 import {TournamentService} from "../../service/tournament.service";
-import {
-  TOURNAMENT_LOAD_ACTION,
-  TOURNAMENT_PUSH_ACTION,
-  TOURNAMENTS_SUBSCRIBE_ACTION,
-  TOURNAMENTS_UNSUBSCRIBE_ACTION
-} from "../actions/tournament-actions";
+
 
 @Injectable()
 export class TournamentEffectService {
@@ -17,24 +14,12 @@ export class TournamentEffectService {
   ) { }
 
   @Effect({dispatch: false}) subscribe = this.actions$
-    .ofType(TOURNAMENTS_SUBSCRIBE_ACTION)
-    .debug('TOURNAMENTS_SUBSCRIBE_ACTION')
-    .map(action => this.tournamentService.subscribeOnTournaments());
+    .ofType(TOURNAMENT_SUBSCRIBE_ACTION)
+    .debug('TOURNAMENT_SUBSCRIBE_ACTION')
+    .map(action => this.tournamentService.subscribeOnTournament(action.payload));
 
-  @Effect({dispatch: false}) unsubscribe = this.actions$
-    .ofType(TOURNAMENTS_UNSUBSCRIBE_ACTION)
-    .debug('TOURNAMENTS_UNSUBSCRIBE_ACTION')
-    .map(action => this.tournamentService.unsubscribeOnTournaments());
-
-  @Effect({dispatch: false}) loadTournament = this.actions$
-    .ofType(TOURNAMENT_LOAD_ACTION)
-    .debug('TOURNAMENTS_UNSUBSCRIBE_ACTION')
-    .map(action => this.tournamentService.unsubscribeOnTournaments());
-
-  @Effect({dispatch: false}) pushTournament = this.actions$
-    .ofType(TOURNAMENT_PUSH_ACTION)
-    .debug('TOURNAMENT_PUSH_ACTION')
-    .map(action => this.tournamentService.pushTournaments(action.payload));
-
-
+  @Effect({dispatch: false}) pushRegistartion = this.actions$
+    .ofType(REGISTRATION_PUSH_ACTION)
+    .debug('REGISTRATION_PUSH_ACTION')
+    .map(action => this.tournamentService.pushRegistration(action.payload));
 }

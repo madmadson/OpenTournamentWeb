@@ -20,13 +20,13 @@ import {storeData} from "./store/reducers/uiStoreDataReducer";
 import {storeFreeze} from "ngrx-store-freeze";
 import {EffectsModule} from "@ngrx/effects";
 import {AuthEffectService} from "./store/effects/auth-effect.service";
-import {TournamentEffectService} from "./store/effects/tournament-effect.service";
+import {TournamentsEffectService} from "./store/effects/tournaments-effect.service";
 import {LoginService} from "./service/auth.service";
-import {TournamentService} from "./service/tournament.service";
+import {TournamentsService} from "./service/tournaments.service";
 import {routerReducer, RouterStoreModule} from "@ngrx/router-store";
 import {TournamentEditComponent} from "./tournament/tournament-edit/tournament-edit.component";
 import {MomentModule} from "angular2-moment";
-import {TournamentOverviewComponent} from "./tournament/tournament-overview/tournament-overview.component";
+import {TournamentOverviewComponent} from "./tournament/tournament-list-overview/tournament-list-overview.component";
 
 import {MyTournamentsComponent} from "./tournament/my-tournaments/my-tournaments.component";
 import {PageNotFoundComponent} from "./not-found.component";
@@ -37,6 +37,10 @@ import {TournamentNewComponent} from "./tournament/tournament-new/tournament-new
 import {DateTimePickerModule} from "ng2-date-time-picker";
 import {CustomFormsModule} from "ng2-validation";
 import {AuthGuard} from "./auth-guard.service";
+import {TournamentPreparationComponent} from "./tournament/tournament-preparation/tournament-preparation.component";
+import {RegistrationFormComponent} from "./tournament/registration-form/registration-form.component";
+import {TournamentEffectService} from "./store/effects/tournament-effect.service";
+import {TournamentService} from "./service/tournament.service";
 
 const reducers = {
   uiState: uiState,
@@ -79,6 +83,7 @@ const fbAuthConfig = {
     ReactiveFormsModule,
     EffectsModule.run(AuthEffectService),
     EffectsModule.run(TournamentEffectService),
+    EffectsModule.run(TournamentsEffectService),
     StoreModule.provideStore(storeReducer, INITIAL_APPLICATION_STATE),
     RouterStoreModule.connectRouter(),
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
@@ -97,9 +102,11 @@ const fbAuthConfig = {
     TournamentOverviewComponent,
     MyTournamentsComponent,
     PageNotFoundComponent,
-    TournamentNewComponent
+    TournamentNewComponent,
+    TournamentPreparationComponent,
+    RegistrationFormComponent
   ],
-  providers: [LoginService, TournamentService, AuthGuard],
+  providers: [LoginService, TournamentsService, AuthGuard, TournamentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -7,6 +7,7 @@ export interface TournamentListVM {
 
 export interface TournamentVM {
 
+  id: string;
   name: string;
   location: string;
   beginDate: String;
@@ -15,6 +16,7 @@ export interface TournamentVM {
   teamSize: number;
   actualRound: number;
   creatorUid: string;
+  blub: string;
 }
 
 

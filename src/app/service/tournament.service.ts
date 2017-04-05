@@ -1,109 +1,33 @@
-import {Inject, Injectable, OnDestroy} from "@angular/core";
+import {Inject, Injectable} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "../store/application-state";
 import {AngularFire, FirebaseRef} from "angularfire2";
-import {
-  TournamentAddedAction,
-  TournamentChangedAction,
-  TournamentDeletedAction,
-  TournamentsClearAction
-} from "../store/actions/tournament-actions";
-import {Tournament} from "../../../shared/model/tournament";
-import {TournamentVM} from "../tournament/tournament.vm";
+import {TournamentsClearAction} from "../store/actions/tournaments-actions";
+import {SetActualTournamentAction} from "../store/actions/tournament-actions";
+import {Registration} from "../../../shared/model/registration";
 
 @Injectable()
-export class TournamentService implements OnDestroy {
+export class TournamentService {
 
-  private query: any;
+  private tournament: any;
 
-  constructor(protected afService: AngularFire, protected store: Store<ApplicationState>,  @Inject(FirebaseRef) private fb) {
-
-  }
-
-  subscribeOnTournaments() {
-
-    if (!this.query) {
-      console.log('subscribe on tournaments');
-      this.store.dispatch(new TournamentsClearAction());
-
-      const that = this;
-
-      this.query = this.fb.database().ref('tournaments').orderByChild('beginDate');
-
-      this.query.on('child_added', function(snapshot) {
-
-        const tournament: Tournament = Tournament.fromJson(snapshot.val());
-        tournament.id = snapshot.key;
-
-        that.store.dispatch(new TournamentAddedAction(tournament));
-
-      });
-
-      this.query.on('child_changed', function(snapshot) {
-
-        const tournament: Tournament = Tournament.fromJson(snapshot.val());
-        tournament.id = snapshot.key;
-
-        that.store.dispatch(new TournamentChangedAction(tournament));
-        });
-
-      this.query.on('child_removed', function(snapshot) {
-        console.log('removeMe');
-        that.store.dispatch(new TournamentDeletedAction(snapshot.key));
-      });
-    }
+  constructor(protected afService: AngularFire, protected store: Store<ApplicationState>, @Inject(FirebaseRef) private fb) {
 
   }
 
-  unsubscribeOnTournaments() {
-
-    this.query.off();
-  }
-
-  pushTournament(tournament: Tournament) {
-    const tournaments = this.afService.database.list('tournaments');
-
-    tournaments.push(tournament);
-  }
-
-  ngOnDestroy(): void {
+  subscribeOnTournament(tournamentId: string) {
+    console.log('subscribe on tournament with id: ' + tournamentId);
     this.store.dispatch(new TournamentsClearAction());
-    this.query.off();
+
+    this.afService.database.object('tournaments/' + tournamentId).subscribe(
+      tournament => this.store.dispatch(new SetActualTournamentAction(tournament))
+    );
   }
 
-  pushTournaments(payload: TournamentVM) {
+  pushRegistration(payload: Registration) {
+    const newRegistration = Registration.fromRegistrationVM(payload);
 
-    const newTournament = Tournament.fromTournamentVM(payload);
-
-    const tournaments = this.afService.database.list('tournaments');
-    tournaments.push(newTournament);
+    const registrations = this.afService.database.list('tournament-registration/' + newRegistration.tournamentId );
+    registrations.push(newRegistration);
   }
 }
-
-// this.pushTournament({
-//   name: 'Tournament1',
-//   location: 'Karlsruhe',
-//   beginDate: moment('2017-03-12').format(),
-//   endDate: moment('2017-03-12').format(),
-//   actualRound: 0,
-//   maxParticipants: 16,
-//   teamSize: 1
-// });
-// this.pushTournament({
-//   name: 'Tournament2',
-//   location: 'Oberhausen',
-//   beginDate: moment('2017-03-17').format(),
-//   endDate: moment('2017-03-18').format(),
-//   actualRound: 1,
-//   maxParticipants: 64,
-//   teamSize: 3
-// });
-// this.pushTournament({
-//   name: 'Tournament3',
-//   location: 'Erfurt',
-//   beginDate: moment('2017-04-01').format(),
-//   endDate: moment('2017-04-01').format(),
-//   actualRound: 0,
-//   maxParticipants: 32,
-//   teamSize: 1
-// });

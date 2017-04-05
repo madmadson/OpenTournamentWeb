@@ -5,8 +5,9 @@ import {
   TOURNAMENT_CHANGED_ACTION,
   TOURNAMENT_DELETED_ACTION,
   TOURNAMENTS_CLEAR_ACTION
-} from "../actions/tournament-actions";
+} from "../actions/tournaments-actions";
 import * as _ from "lodash";
+import {SET_ACTUAL_TOURNAMENT_ACTION} from "../actions/tournament-actions";
 
 export function storeData(state: StoreData, action: Action): StoreData {
   switch (action.type) {
@@ -26,6 +27,10 @@ export function storeData(state: StoreData, action: Action): StoreData {
     case TOURNAMENT_DELETED_ACTION:
 
       return handleTournamentDeletedData(state, action);
+
+    case SET_ACTUAL_TOURNAMENT_ACTION:
+
+      return handleSetTournament(state, action);
 
     default:
       return state;
@@ -68,6 +73,18 @@ function handleTournamentDeletedData(state: StoreData, action: Action): StoreDat
 
     const indexOfSearchedTournament = _.findIndex(newStoreState.tournaments, ['id', action.payload]);
     newStoreState.tournaments.splice(indexOfSearchedTournament, 1);
+  }
+  return newStoreState;
+}
+
+
+function handleSetTournament(state: StoreData, action: Action): StoreData {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    console.log('set tournament: ' + JSON.stringify(action.payload));
+      newStoreState.actualTournament = action.payload;
   }
   return newStoreState;
 }
