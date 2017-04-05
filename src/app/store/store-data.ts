@@ -1,8 +1,8 @@
-import {UserData} from "../../../shared/model/userData";
-import {Tournament} from "../../../shared/model/tournament";
-import {Player} from "../../../shared/model/player";
+import {UserData} from '../../../shared/model/userData';
+import {Tournament} from '../../../shared/model/tournament';
+import {Player} from '../../../shared/model/player';
 
-import * as moment from "moment";
+import * as moment from 'moment';
 
 export interface StoreData {
 
