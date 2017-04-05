@@ -6,7 +6,7 @@
   <h2 md-line style="padding-bottom: 10px; font-weight: bold; ">{{tournament.name}}</h2>
   <p class="tournament-card-lines" md-line
      *ngIf="(tournament.beginDate | date:'MM/d/yy') === (tournament.endDate | date:'MM/d/yy')">
-    {{tournament.beginDate | date:'MM/d/yy HH:mm'}} - {{tournament.beginDate | date:'HH:mm'}}
+    {{tournament.beginDate | date:'MM/d/yy HH:mm'}} - {{tournament.endDate | date:'HH:mm'}}
   </p>
   <p class="tournament-card-lines" md-line
      *ngIf="(tournament.beginDate | date:'MM/d/yy') !== (tournament.endDate | date:'MM/d/yy')">

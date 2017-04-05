@@ -41,6 +41,7 @@ import {TournamentPreparationComponent} from "./tournament/tournament-preparatio
 import {RegistrationFormComponent} from "./tournament/registration-form/registration-form.component";
 import {TournamentEffectService} from "./store/effects/tournament-effect.service";
 import {TournamentService} from "./service/tournament.service";
+import {PlayerListOverviewComponent} from "./player/player-list-overview/player-list-overview.component";
 
 const reducers = {
   uiState: uiState,
@@ -104,7 +105,8 @@ const fbAuthConfig = {
     PageNotFoundComponent,
     TournamentNewComponent,
     TournamentPreparationComponent,
-    RegistrationFormComponent
+    RegistrationFormComponent,
+    PlayerListOverviewComponent
   ],
   providers: [LoginService, TournamentsService, AuthGuard, TournamentService],
   bootstrap: [AppComponent]

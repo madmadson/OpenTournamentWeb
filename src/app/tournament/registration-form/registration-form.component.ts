@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {Store} from "@ngrx/store";
 import {MdSnackBar} from "@angular/material";
 import {ApplicationState} from "../../store/application-state";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {RegistrationPushAction} from "../../store/actions/tournament-actions";
 import {RegistrationVM} from "../registration.vm";
 
@@ -23,7 +23,8 @@ export class RegistrationFormComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private store: Store<ApplicationState>,
-    public snackBar: MdSnackBar) {
+    public snackBar: MdSnackBar,
+    private activeRouter: ActivatedRoute) {
 
   }
 
@@ -43,10 +44,11 @@ export class RegistrationFormComponent implements OnInit {
 
     const registration = this.prepareSaveRegistration();
     this.store.dispatch(new RegistrationPushAction(registration));
-    // this.af.database.list('tournaments').push(this.tournament);
+
     this.snackBar.open('Registration successful', '', {
       duration: 2000,
     });
+    this.router.navigate(['..'], { relativeTo: this.activeRouter });
 
   }
 
