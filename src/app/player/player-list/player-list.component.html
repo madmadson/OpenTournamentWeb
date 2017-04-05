@@ -1,0 +1,14 @@
+<md-list-item  *ngFor="let player of players"  (click)="onSelect(player)">
+
+
+  <h2 md-line style="padding-bottom: 15px">{{player.firstName}} <b>{{player.nickName}}</b> {{player.lastName}}</h2>
+  <p md-line  style="padding-bottom: 10px">
+    <span> {{player.origin}} </span>
+    <span class="small-md-line"> -- {{player.meta}} </span>
+  </p>
+  <p md-line>
+    <span> {{player.country}} </span>
+  </p>
+  <span class="md-secondary"><img src="../../../assets/my_crown_small.png">{{player.elo}}</span>
+</md-list-item>
+

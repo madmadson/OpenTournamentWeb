@@ -11,6 +11,7 @@ import {AuthGuard} from "./auth-guard.service";
 import {TournamentPreparationComponent} from "./tournament/tournament-preparation/tournament-preparation.component";
 import {RegistrationFormComponent} from "./tournament/registration-form/registration-form.component";
 import {PlayerListOverviewComponent} from "./player/player-list-overview/player-list-overview.component";
+import {PlayerFormComponent} from "./player/player-form/player-form.component";
 
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
   {path: 'my-tournaments', component: MyTournamentsComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'tournament/:id', component: TournamentPreparationComponent},
   {path: 'tournament-new', component: TournamentNewComponent},
+  {path: 'profile-new', component: PlayerFormComponent},
   {path: 'tournament/:id/register', component: RegistrationFormComponent},
   {path: 'game', component: GameEditComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},

@@ -1,3 +1,9 @@
-<p>
-  player-list-overview works!
-</p>
+<h1 class="list-heading">Online Players ({{(allPlayers$| async) ?.length}})</h1>
+
+<md-card>
+  <span *ngIf="(allPlayers$ | async).length == 0">No Players found</span>
+  <md-list>
+    <player-list [players]="allPlayers$ | async"></player-list>
+
+  </md-list>
+</md-card>

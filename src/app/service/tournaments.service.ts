@@ -48,7 +48,7 @@ export class TournamentsService implements OnDestroy {
         });
 
       this.query.on('child_removed', function(snapshot) {
-        console.log('removeMe');
+
         that.store.dispatch(new TournamentDeletedAction(snapshot.key));
       });
     }

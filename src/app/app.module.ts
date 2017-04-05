@@ -42,6 +42,10 @@ import {RegistrationFormComponent} from "./tournament/registration-form/registra
 import {TournamentEffectService} from "./store/effects/tournament-effect.service";
 import {TournamentService} from "./service/tournament.service";
 import {PlayerListOverviewComponent} from "./player/player-list-overview/player-list-overview.component";
+import {PlayersEffectService} from "./store/effects/players-effect.service";
+import {PlayersService} from "./service/players.service";
+import {PlayerListComponent} from "./player/player-list/player-list.component";
+import {PlayerFormComponent} from "./player/player-form/player-form.component";
 
 const reducers = {
   uiState: uiState,
@@ -85,6 +89,7 @@ const fbAuthConfig = {
     EffectsModule.run(AuthEffectService),
     EffectsModule.run(TournamentEffectService),
     EffectsModule.run(TournamentsEffectService),
+    EffectsModule.run(PlayersEffectService),
     StoreModule.provideStore(storeReducer, INITIAL_APPLICATION_STATE),
     RouterStoreModule.connectRouter(),
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
@@ -106,9 +111,11 @@ const fbAuthConfig = {
     TournamentNewComponent,
     TournamentPreparationComponent,
     RegistrationFormComponent,
-    PlayerListOverviewComponent
+    PlayerListOverviewComponent,
+    PlayerListComponent,
+    PlayerFormComponent
   ],
-  providers: [LoginService, TournamentsService, AuthGuard, TournamentService],
+  providers: [LoginService, TournamentsService, AuthGuard, TournamentService, PlayersService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,4 +1,7 @@
 import {Component} from "@angular/core";
+import {ApplicationState} from "../store/application-state";
+import {Store} from "@ngrx/store";
+import {Player} from "../../../shared/model/player";
 
 
 @Component({
@@ -8,5 +11,17 @@ import {Component} from "@angular/core";
 })
 export class HomePageComponent {
 
+  private playerData: Player;
+  private loggedIn: boolean;
 
+  constructor(private store: Store<ApplicationState>) {
+
+    store.select(state => state.storeData.playerData).subscribe(
+      playerData => this.playerData = playerData
+    );
+
+    store.select(state => state.uiState.loggedIn).subscribe(
+      loggedIn => this.loggedIn = loggedIn
+    );
+  }
 }

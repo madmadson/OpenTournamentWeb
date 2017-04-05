@@ -2,11 +2,14 @@ import {UserData} from "../../../shared/model/userData";
 import {Tournament} from "../../../shared/model/tournament";
 
 import * as moment from "moment";
+import {Player} from "../../../shared/model/player";
 
 export interface StoreData {
 
   userData:  UserData;
+  playerData: Player;
   tournaments: Tournament[];
+  players: Player[];
   actualTournament: Tournament;
 
 }
@@ -15,7 +18,22 @@ export const INITIAL_STORE_DATA = {
 
   userData: {uid: '1', displayName: 'Hans', photoURL: '/'},
 
+  playerData: {
+    id: '123',
+    userUid: '456',
+    firstName: 'Test',
+    nickName: 'awesome',
+    lastName: 'Lasti',
+    meta: '48 AD',
+    country: 'Germany',
+    origin: 'Karlsruhe',
+    elo: 2000
+  },
+
+
   tournaments: [],
+
+  players: [],
 
     actualTournament: {
     id: '123',

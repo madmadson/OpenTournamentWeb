@@ -1,8 +1,8 @@
-import {Injectable, OnDestroy} from "@angular/core";
+import {Inject, Injectable, OnDestroy} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "../store/application-state";
 import {SaveUserDataAction} from "../store/actions/auth-actions";
-import {AngularFire, AuthMethods, AuthProviders} from "angularfire2";
+import {AngularFire, AuthMethods, AuthProviders, FirebaseRef} from "angularfire2";
 import {Subscription} from "rxjs/Subscription";
 import {Router} from "@angular/router";
 
@@ -11,8 +11,13 @@ import {Router} from "@angular/router";
 export class LoginService implements OnDestroy {
 
   private authSubscription: Subscription;
+  private query: any;
 
-  constructor(protected afService: AngularFire, private store: Store<ApplicationState>, private  router: Router) {
+  constructor(
+    protected afService: AngularFire,
+    private store: Store<ApplicationState>,
+    private  router: Router,
+    @Inject(FirebaseRef) private fb) {
   }
 
   login(loginProvider?: string) {
@@ -29,11 +34,19 @@ export class LoginService implements OnDestroy {
           this.store.dispatch(
             new SaveUserDataAction(
               {uid: auth.auth.uid, displayName: auth.auth.displayName, photoURL: auth.auth.photoURL}
-              ));
+            ));
+
+
+          this.query = this.fb.database().ref('players').orderByChild('userUid')
+            .equalTo(auth.auth.uid).on('child_added', function (snaphot) {
+              console.log('found player for userId: ' + JSON.stringify(snaphot));
+            });
 
         }
       }
     );
+
+
   }
 
   logout() {

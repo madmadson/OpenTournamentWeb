@@ -19,3 +19,20 @@ body {
 .primary-text-color    { color: #212121; }
 .secondary-text-color  { color: #757575; }
 .divider-color         { border-color: #BDBDBD; }
+
+list-heading{
+  text-align: center;
+}
+
+/*md-changes watch for improvement in lib*/
+
+.list-item:hover{
+  background-color: deepskyblue;
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 800px) {
+  .md-secondary {
+    padding-left: 20em;
+  }
+}

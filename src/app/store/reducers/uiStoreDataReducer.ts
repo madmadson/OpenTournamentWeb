@@ -8,6 +8,7 @@ import {
 } from "../actions/tournaments-actions";
 import * as _ from "lodash";
 import {SET_ACTUAL_TOURNAMENT_ACTION} from "../actions/tournament-actions";
+import {PLAYER_ADDED_ACTION, PLAYER_CHANGED_ACTION, PLAYER_DELETED_ACTION} from "../actions/players-actions";
 
 export function storeData(state: StoreData, action: Action): StoreData {
   switch (action.type) {
@@ -31,6 +32,18 @@ export function storeData(state: StoreData, action: Action): StoreData {
     case SET_ACTUAL_TOURNAMENT_ACTION:
 
       return handleSetTournament(state, action);
+
+    case PLAYER_ADDED_ACTION:
+
+      return handlePlayerAddedData(state, action);
+
+    case PLAYER_CHANGED_ACTION:
+
+      return handlePlayerChangedData(state, action);
+
+    case PLAYER_DELETED_ACTION:
+
+      return handlePlayerDeletedData(state, action);
 
     default:
       return state;
@@ -85,6 +98,38 @@ function handleSetTournament(state: StoreData, action: Action): StoreData {
 
     console.log('set tournament: ' + JSON.stringify(action.payload));
       newStoreState.actualTournament = action.payload;
+  }
+  return newStoreState;
+}
+
+function handlePlayerAddedData(state: StoreData, action: Action): StoreData {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    newStoreState.players.push(action.payload);
+  }
+  return newStoreState;
+}
+
+function handlePlayerChangedData(state: StoreData, action: Action): StoreData {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    const indexOfSearchedPlayer = _.findIndex(newStoreState.players, ['id', action.payload.id]);
+    newStoreState.players[indexOfSearchedPlayer] = action.payload;
+  }
+  return newStoreState;
+}
+
+function handlePlayerDeletedData(state: StoreData, action: Action): StoreData {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    const indexOfSearchedPlayer = _.findIndex(newStoreState.players, ['id', action.payload]);
+    newStoreState.players.splice(indexOfSearchedPlayer, 1);
   }
   return newStoreState;
 }
