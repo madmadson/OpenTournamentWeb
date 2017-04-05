@@ -1,0 +1,15 @@
+<md-card>
+  <h2>New Registration</h2>
+  <form [formGroup]="registrationForm"  novalidate>
+
+    <div class="form-group">
+
+      <div class="form-button form-input">
+        <button md-raised-button type="submit" class="save-button"
+                (click)="onSaveRegistration()"
+                [disabled]="registrationForm.invalid">Save
+        </button>
+      </div>
+    </div>
+  </form>
+</md-card>
