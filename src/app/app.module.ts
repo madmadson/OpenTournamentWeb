@@ -46,6 +46,8 @@ import {PlayersEffectService} from "./store/effects/players-effect.service";
 import {PlayersService} from "./service/players.service";
 import {PlayerListComponent} from "./player/player-list/player-list.component";
 import {PlayerFormComponent} from "./player/player-form/player-form.component";
+import {MdlModule} from "angular2-mdl";
+import { RegisterPageComponent } from './register-page/register-page.component';
 
 const reducers = {
   uiState: uiState,
@@ -83,7 +85,6 @@ const fbAuthConfig = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule,
     AngularFireModule.initializeApp(fbConfig, fbAuthConfig),
     ReactiveFormsModule,
     EffectsModule.run(AuthEffectService),
@@ -96,7 +97,10 @@ const fbAuthConfig = {
     MomentModule,
     AppRoutingModule,
     DateTimePickerModule,
-    CustomFormsModule
+    CustomFormsModule,
+    // MdlModule,
+
+    MaterialModule,
   ],
   declarations: [
     AppComponent,
@@ -113,7 +117,8 @@ const fbAuthConfig = {
     RegistrationFormComponent,
     PlayerListOverviewComponent,
     PlayerListComponent,
-    PlayerFormComponent
+    PlayerFormComponent,
+    RegisterPageComponent
   ],
   providers: [LoginService, TournamentsService, AuthGuard, TournamentService, PlayersService],
   bootstrap: [AppComponent]

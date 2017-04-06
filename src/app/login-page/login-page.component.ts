@@ -1,11 +1,11 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Store} from "@ngrx/store";
-import {ApplicationState} from "../store/application-state";
-import {LoginAction} from "../store/actions/auth-actions";
-import {Router} from "@angular/router";
-import {Subscription} from "rxjs/Subscription";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MdSnackBar} from "@angular/material";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {ApplicationState} from '../store/application-state';
+import {LoginAction, LoginWithProviderAction} from '../store/actions/auth-actions';
+import {Router} from '@angular/router';
+import {Subscription} from 'rxjs/Subscription';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MdSnackBar} from '@angular/material';
 
 @Component({
   selector: 'login-page',
@@ -20,14 +20,12 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   constructor(private formBuilder: FormBuilder,
               private store: Store<ApplicationState>,
-              private  router: Router,
+              private router: Router,
               private snackBar: MdSnackBar) {
     this.createForm();
 
     this.subscription = store.select(state => state.uiState).subscribe(uiState => {
       if (uiState.loggedIn !== false) {
-
-        console.log('redirect loginPage: ' + JSON.stringify(uiState.redirectUrl));
         this.router.navigate([uiState.redirectUrl ? uiState.redirectUrl : '/home']);
       }
      }
@@ -35,7 +33,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
   createForm() {
     this.loginForm = this.formBuilder.group({
-      login: ['', Validators.required ],
+      email: ['', Validators.required ],
       password: ['', Validators.required ],
     });
   }
@@ -48,20 +46,17 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  login(loginProvider?: string) {
-
-    this.store.dispatch(new LoginAction(loginProvider));
-
+  login() {
+    this.store.dispatch(new LoginAction({email: this.loginForm.get('email').value, password: this.loginForm.get('password').value}));
   }
-  onSubmit() {
-    this.snackBar.open('Login', '', {
-      duration: 2000,
-    });
+
+  loginWithProvider(loginProvider?: string) {
+
+    this.store.dispatch(new LoginWithProviderAction(loginProvider));
+
   }
 
   register() {
-    this.snackBar.open('Register', '', {
-      duration: 2000,
-    });
+    this.router.navigate(['/register']);
   }
 }

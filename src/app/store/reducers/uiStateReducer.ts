@@ -1,6 +1,6 @@
-import {INITIAL_UI_STATE, UiState} from "../ui-state";
-import {Action} from "@ngrx/store";
-import {ADD_REDIRECT_LOGIN_ACTION, LOGOUT_ACTION, STORE_USERDATA_ACTION} from "../actions/auth-actions";
+import {INITIAL_UI_STATE, UiState} from '../ui-state';
+import {Action} from '@ngrx/store';
+import {ADD_REDIRECT_LOGIN_ACTION, LOGOUT_ACTION, STORE_USERDATA_ACTION} from '../actions/auth-actions';
 
 
 export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiState {
@@ -29,14 +29,7 @@ export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiS
 function handleStoreData(state: UiState, action: Action): UiState {
   const newState = Object.assign({}, state);
 
-
-  console.log('login action: ' + JSON.stringify(action.payload));
-
-  if (action.payload.displayName !== null) {
-    newState.currentUserName = action.payload.displayName;
-  } else {
-    newState.currentUserName = 'Anonymous';
-  }
+  newState.currentUserName = action.payload.displayName;
   newState.currentUserImage = action.payload.photoURL;
   newState.currentUserId = action.payload.uid;
   newState.loggedIn = true;

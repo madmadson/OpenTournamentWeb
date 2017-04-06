@@ -4,23 +4,9 @@
   justify-content: space-between;
 }
 
-.save-button{
-  margin: 5px;
-  padding: 5px;
-}
-
 .reset-button{
   margin: 5px;
   padding: 5px;
 }
 
-.form-input{
-  width: 100%;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
 
-.info{
-  background: yellow;
-  color: black;
-}

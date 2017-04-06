@@ -16,7 +16,7 @@
         <md-icon class="nav-icon">play_arrow</md-icon>
         <a class="nav-link" (click)="sidenav.close()" routerLink="/tournaments">Tournaments</a>
       </div>
-      <div class="nav-container">
+      <div  class="nav-container">
         <md-icon class="nav-icon">face</md-icon>
         <a class="nav-link" (click)="sidenav.close()"  routerLink="/players">Players</a>
       </div>
@@ -34,7 +34,7 @@
     </div>
     <span class="app-name-label">OpenTournament</span>
     <span class="spacer"></span>
-    <span *ngIf="(uiState.loggedIn)" class="user-welcome-panel">{{uiState.currentUserName}}</span>
+    <span *ngIf="(uiState.currentUserName)" class="user-welcome-panel">{{uiState.currentUserName}}</span>
     <img *ngIf="(uiState.currentUserImage)" class="avatar" src="{{uiState.currentUserImage}}">
     <img *ngIf="(!uiState.currentUserImage)" class="avatar" src="../assets/icon_final_small.png">
     <a *ngIf="(uiState.loggedIn)" class="logout-anchor" (click)="logout()">Logout</a>

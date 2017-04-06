@@ -1,3 +1,57 @@
-<p>
-  player-form works!
-</p>
+<md-card>
+  <h2 class="heading">Your Player-Profile</h2>
+
+  <form [formGroup]="playerForm" novalidate>
+
+    <div class="form-group">
+      <md-input-container
+        dividerColor="{{ (playerForm.get('firstName').invalid && playerForm.get('firstName').dirty) ? 'warn' : 'primary' }}"
+        class="full-width">
+        <input mdInput type="text" placeholder="First Name" formControlName="firstName" required>
+        <md-hint *ngIf="playerForm.get('firstName').invalid && playerForm.get('firstName').dirty" style="color: red">
+          <span>You need to enter a FirstName</span>
+        </md-hint>
+      </md-input-container>
+      <md-input-container
+        dividerColor="{{ (playerForm.get('nickName').invalid && playerForm.get('nickName').dirty) ? 'warn' : 'primary' }}"
+        class="full-width">
+        <input mdInput type="text" placeholder="Nick Name" formControlName="nickName" required>
+        <md-hint *ngIf="playerForm.get('nickName').valid" style="color: blue">
+          <span>Notice: The Nickname in OpenTournament is unique and cant be changed afterwards</span>
+        </md-hint>
+        <md-hint *ngIf="playerForm.get('nickName').invalid && playerForm.get('nickName').dirty" style="color: red">
+          <span>You need to enter a NickName</span>
+        </md-hint>
+      </md-input-container>
+      <md-input-container
+        dividerColor="{{ (playerForm.get('lastName').invalid && playerForm.get('lastName').dirty) ? 'warn' : 'primary' }}"
+        class="full-width">
+        <input mdInput type="text" placeholder="Last Name" formControlName="lastName" required>
+
+        <md-hint *ngIf="playerForm.get('lastName').invalid && playerForm.get('lastName').dirty" style="color: red">
+          <span>You need to enter a LastName</span>
+        </md-hint>
+      </md-input-container>
+      <md-input-container
+        class="full-width">
+        <input mdInput type="text" placeholder="Origin" formControlName="origin">
+      </md-input-container>
+      <md-input-container
+        class="full-width">
+        <input mdInput type="text" placeholder="Meta" formControlName="meta">
+      </md-input-container>
+      <md-select class="full-width" placeholder="Country" formControlName="country">
+        <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>
+      </md-select>
+
+      <button *ngIf="!playerData" md-raised-button type="button" color="primary"
+              [disabled]="playerForm.invalid" (click)="save()">Save Player Profile
+      </button>
+
+      <button *ngIf="playerData" md-raised-button type="button" color="primary"
+              [disabled]="playerForm.invalid" (click)="update()">Update Player Profile
+      </button>
+    </div>
+  </form>
+</md-card>
+

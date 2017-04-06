@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Actions, Effect} from "@ngrx/effects";
-import {LOGIN_ACTION, LOGOUT_ACTION} from "../actions/auth-actions";
+import {CREATE_ACCOUNT_ACTION, LOGIN_ACTION, LOGIN_PROVIDER_ACTION, LOGOUT_ACTION} from "../actions/auth-actions";
 import {LoginService} from "../../service/auth.service";
 
 @Injectable()
@@ -14,7 +14,17 @@ export class AuthEffectService {
   @Effect({dispatch: false}) login = this.actions$
     .ofType(LOGIN_ACTION)
     .debug('LOGIN_ACTION')
-    .map(action => this.loginService.login(action.payload));
+    .map(action => this.loginService.loginWithEmailAndPassword(action.payload));
+
+  @Effect({dispatch: false}) loginProvider = this.actions$
+    .ofType(LOGIN_PROVIDER_ACTION)
+    .debug('LOGIN_PROVIDER_ACTION')
+    .map(action => this.loginService.loginWithProvider(action.payload));
+
+  @Effect({dispatch: false}) createAccount = this.actions$
+    .ofType(CREATE_ACCOUNT_ACTION)
+    .debug('CREATE_ACCOUNT_ACTION')
+    .map(action => this.loginService.createAccount(action.payload));
 
 
   @Effect({dispatch: false}) logout = this.actions$

@@ -1,15 +1,15 @@
-import {Component, OnInit} from "@angular/core";
-import {TournamentVM} from "../tournament.vm";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MdSnackBar} from "@angular/material";
-import {Store} from "@ngrx/store";
-import {ApplicationState} from "../../store/application-state";
-import {composeValidators} from "@angular/forms/src/directives/shared";
-import {CustomValidators} from "ng2-validation";
-import {TournamentPushAction} from "../../store/actions/tournaments-actions";
-import {Router} from "@angular/router";
+import {Component, OnInit} from '@angular/core';
+import {TournamentVM} from '../tournament.vm';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MdSnackBar} from '@angular/material';
+import {Store} from '@ngrx/store';
+import {ApplicationState} from '../../store/application-state';
+import {composeValidators} from '@angular/forms/src/directives/shared';
+import {CustomValidators} from 'ng2-validation';
+import {TournamentPushAction} from '../../store/actions/tournaments-actions';
+import {Router} from '@angular/router';
 
-import * as moment from "moment";
+import * as moment from 'moment';
 
 
 @Component({
@@ -219,12 +219,7 @@ export class TournamentNewComponent implements OnInit {
     const tournament = this.prepareSaveTournament();
 
     this.store.dispatch(new TournamentPushAction(tournament));
-    // this.af.database.list('tournaments').push(this.tournament);
-    this.snackBar.open('Tournament was created', '', {
-      duration: 2000,
-    });
 
-    this.router.navigate(['/my-tournaments']);
   }
 
 

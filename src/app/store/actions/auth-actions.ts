@@ -1,19 +1,39 @@
-import {Action} from "@ngrx/store";
-import {UserData} from "../../../../shared/model/userData";
+import {Action} from '@ngrx/store';
+import {UserData} from '../../../../shared/model/userData';
 
 export const LOGIN_ACTION = 'LOGIN_ACTION';
 
-export class LoginAction implements Action{
+export class LoginAction implements Action {
 
   readonly type = 'LOGIN_ACTION';
+
+  constructor(public payload: any ) {
+  }
+}
+
+export const LOGIN_PROVIDER_ACTION = 'LOGIN_PROVIDER_ACTION';
+
+export class LoginWithProviderAction implements Action {
+
+  readonly type = 'LOGIN_PROVIDER_ACTION';
 
   constructor(public payload?: string ) {
   }
 }
 
+export const CREATE_ACCOUNT_ACTION = 'CREATE_ACCOUNT_ACTION';
+
+export class CreateAccountAction implements Action {
+
+  readonly type = 'CREATE_ACCOUNT_ACTION';
+
+  constructor(public payload: CreateAccount ) {
+  }
+}
+
 export const STORE_USERDATA_ACTION = 'STORE_USERDATA_ACTION';
 
-export class SaveUserDataAction implements Action{
+export class SaveUserDataAction implements Action {
 
   readonly type = 'STORE_USERDATA_ACTION';
 

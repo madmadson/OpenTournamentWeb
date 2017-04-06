@@ -1,35 +1,31 @@
-<md-card class="login-container">
-  <h1 class="login-container-heading">Login</h1>
+<md-card>
+  <h1 class="heading">Login</h1>
 
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+  <form [formGroup]="loginForm" novalidate>
 
     <div class="form-group">
       <md-input-container class="full-width">
-        <input mdInput placeholder="Login/Email" formControlName="login">
+        <input mdInput type="email" placeholder="Email" formControlName="email" required>
       </md-input-container>
       <md-input-container class="full-width">
-        <input mdInput type="password" placeholder="Password" formControlName="password">
+        <input mdInput type="password" placeholder="Password" formControlName="password" required>
       </md-input-container>
     </div>
 
-    <button md-raised-button type="submit" class="login-button" color="primary"
-            [disabled]="loginForm.pristine">SignIn
+    <button md-raised-button type="button" class="full-width-button" color="primary"
+            [disabled]="loginForm.pristine" (click)="login()">SignIn
     </button>
   </form>
   <hr>
-  <button md-raised-button class="login-button" color="primary" (click)="login()">
-    Login Anonymous
-  </button>
-  <hr>
-  <button md-raised-button class="login-button" color="primary" (click)="login('google')">
+  <button md-raised-button class="full-width-button" color="primary" (click)="loginWithProvider('google')">
     Login With Google
   </button>
   <hr>
-  <button md-raised-button class="login-button" color="primary" (click)="login('facebook')">
+  <button md-raised-button class="full-width-button" color="primary" (click)="loginWithProvider('facebook')">
     Login With Facebook
   </button>
   <hr>
-  <button md-raised-button class="login-button" color="accent" (click)="register()">
+  <button md-raised-button class="full-width-button" color="accent" (click)="register()">
     Register
   </button>
 </md-card>

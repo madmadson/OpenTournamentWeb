@@ -12,17 +12,19 @@ import {TournamentPreparationComponent} from "./tournament/tournament-preparatio
 import {RegistrationFormComponent} from "./tournament/registration-form/registration-form.component";
 import {PlayerListOverviewComponent} from "./player/player-list-overview/player-list-overview.component";
 import {PlayerFormComponent} from "./player/player-form/player-form.component";
+import {RegisterPageComponent} from "./register-page/register-page.component";
 
 
 const routes: Routes = [
   {path: 'home', component: HomePageComponent},
   {path: 'login', component: LoginPageComponent},
+  {path: 'register', component: RegisterPageComponent},
   {path: 'tournaments', component: TournamentOverviewComponent},
   {path: 'players', component: PlayerListOverviewComponent},
   {path: 'my-tournaments', component: MyTournamentsComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'tournament/:id', component: TournamentPreparationComponent},
   {path: 'tournament-new', component: TournamentNewComponent},
-  {path: 'profile-new', component: PlayerFormComponent},
+  {path: 'player-profile', component: PlayerFormComponent},
   {path: 'tournament/:id/register', component: RegistrationFormComponent},
   {path: 'game', component: GameEditComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},

@@ -1,11 +1,11 @@
 <md-card>
-  <h2>New Tournament</h2>
+  <h2 class="heading">New Tournament</h2>
   <form [formGroup]="tournamentForm"  novalidate>
 
     <div class="form-group">
       <md-input-container
         dividerColor="{{ (tournamentForm.get('name').invalid && tournamentForm.get('name').dirty) ? 'warn' : 'primary' }}"
-        class="form-input">
+        class="full-width">
         <input mdInput
                required
                placeholder="TournamentName"
@@ -18,7 +18,7 @@
       </md-input-container>
       <md-input-container
         dividerColor="{{ (tournamentForm.get('location').invalid && tournamentForm.get('location').dirty) ? 'warn' : 'primary' }}"
-        class="form-input">
+        class="full-width">
         <input mdInput
                required
                placeholder="Location"
@@ -31,7 +31,7 @@
       </md-input-container>
     </div>
 
-    <md-input-container class="form-input">
+    <md-input-container class="full-width">
       <input mdInput
              name="beginDate"
              placeholder="Start"
@@ -45,7 +45,7 @@
              required
               />
     </md-input-container>
-    <md-input-container class="form-input">
+    <md-input-container class="full-width">
       <input mdInput
              name="endDate"
              placeholder="End"
@@ -59,12 +59,12 @@
              required/>
     </md-input-container>
 
-    <div class="form-input">
+    <div class="full-width">
       <md-checkbox
         formControlName="teamTournament"
       >TeamTournament</md-checkbox>
     </div>
-    <md-input-container *ngIf="tournamentForm.get('teamTournament').value" class="form-input">
+    <md-input-container *ngIf="tournamentForm.get('teamTournament').value" class="full-width">
       <input mdInput
              type="number"
              min="2"
@@ -81,7 +81,7 @@
     </md-input-container>
     <md-input-container
       dividerColor="{{ (tournamentForm.get('maxParticipants').invalid && tournamentForm.get('maxParticipants').dirty) ? 'warn' : 'primary' }}"
-      class="form-input">
+      class="full-width">
       <input mdInput
              type="number"
              min="2"
@@ -95,8 +95,8 @@
         <span >{{tournamentForm.get('maxParticipants').getError('message')}}</span>
       </md-hint>
     </md-input-container>
-    <div class="form-button form-input">
-      <button  type="button" md-raised-button class="save-button"
+    <div class="form-button full-width">
+      <button  type="button" md-raised-button class="full-width-button"
               (click)="onSaveTournament()"
               [disabled]="tournamentForm.invalid">Save
       </button>
