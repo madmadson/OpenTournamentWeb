@@ -4,7 +4,7 @@
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: darkgray;
+  background-color: grey;
 }
 
 
@@ -14,6 +14,7 @@ body {
 }
 .default-primary-color { background: #673AB7; color: #FFFFFF;}
 .light-primary-color   { background: #D1C4E9; }
+.my-item-color         { background: #2196F3; }
 .text-primary-color    { color: #FFFFFF; }
 .accent-color          { background: #FFC107; }
 .primary-text-color    { color: #212121; }
@@ -50,7 +51,6 @@ md-card {
 
 .full-width{
   width: 100%;
-  padding-top: 10px;
   padding-bottom: 10px;
 }
 

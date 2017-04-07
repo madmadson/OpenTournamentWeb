@@ -106,7 +106,7 @@ export class PlayersService implements OnDestroy {
 }
 
 // this.pushPlayer({
-//   name: 'Player1',
+//   playerName: 'Player1',
 //   location: 'Karlsruhe',
 //   beginDate: moment('2017-03-12').format(),
 //   endDate: moment('2017-03-12').format(),
@@ -115,7 +115,7 @@ export class PlayersService implements OnDestroy {
 //   teamSize: 1
 // });
 // this.pushPlayer({
-//   name: 'Player2',
+//   playerName: 'Player2',
 //   location: 'Oberhausen',
 //   beginDate: moment('2017-03-17').format(),
 //   endDate: moment('2017-03-18').format(),
@@ -124,7 +124,7 @@ export class PlayersService implements OnDestroy {
 //   teamSize: 3
 // });
 // this.pushPlayer({
-//   name: 'Player3',
+//   playerName: 'Player3',
 //   location: 'Erfurt',
 //   beginDate: moment('2017-04-01').format(),
 //   endDate: moment('2017-04-01').format(),

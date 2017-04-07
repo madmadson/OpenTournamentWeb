@@ -1,0 +1,35 @@
+<md-card *ngIf="!playerData">
+  You can register only with a valid Player-Profile
+</md-card>
+
+<md-card *ngIf="playerData">
+  <h2>Register for {{actualTournament.name}}</h2>
+  <form [formGroup]="tournamentRegistrationForm" novalidate>
+
+    <div class="form-group">
+
+      <md-input-container
+        class="full-width">
+        <input mdInput type="text" placeholder="Player Name" formControlName="playerName" required>
+      </md-input-container>
+      <md-input-container
+        class="full-width">
+        <input mdInput type="text" placeholder="Meta" formControlName="meta">
+      </md-input-container>
+      <md-input-container
+        class="full-width">
+        <input mdInput type="text" placeholder="Team" formControlName="team">
+      </md-input-container>
+      <md-select class="full-width" placeholder="Faction" formControlName="faction">
+        <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
+      </md-select>
+
+      <div class="form-button form-input">
+        <button md-raised-button type="button" color="accent" class="full-width-button"
+                (click)="saveTournamentRegistration()"
+                [disabled]="tournamentRegistrationForm.invalid">Upload Registration
+        </button>
+      </div>
+    </div>
+  </form>
+</md-card>

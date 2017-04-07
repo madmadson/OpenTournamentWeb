@@ -14,7 +14,7 @@ import {TournamentVM} from '../tournament/tournament.vm';
 @Injectable()
 export class TournamentsService implements OnDestroy {
 
-  private query: any;
+  private query: firebase.database.Reference;
 
   constructor(protected afService: AngularFire,
               protected store: Store<ApplicationState>,
@@ -84,7 +84,7 @@ export class TournamentsService implements OnDestroy {
 }
 
 // this.pushTournament({
-//   name: 'Tournament1',
+//   playerName: 'Tournament1',
 //   location: 'Karlsruhe',
 //   beginDate: moment('2017-03-12').format(),
 //   endDate: moment('2017-03-12').format(),
@@ -93,7 +93,7 @@ export class TournamentsService implements OnDestroy {
 //   teamSize: 1
 // });
 // this.pushTournament({
-//   name: 'Tournament2',
+//   playerName: 'Tournament2',
 //   location: 'Oberhausen',
 //   beginDate: moment('2017-03-17').format(),
 //   endDate: moment('2017-03-18').format(),
@@ -102,7 +102,7 @@ export class TournamentsService implements OnDestroy {
 //   teamSize: 3
 // });
 // this.pushTournament({
-//   name: 'Tournament3',
+//   playerName: 'Tournament3',
 //   location: 'Erfurt',
 //   beginDate: moment('2017-04-01').format(),
 //   endDate: moment('2017-04-01').format(),

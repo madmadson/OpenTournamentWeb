@@ -1,0 +1,8 @@
+<tournament-registration-form
+  [actualTournament]="actualTournament"
+  [playerData]="playerData"
+  (onSaveRegistration)="onSaveRegistration($event)">
+</tournament-registration-form>
+<div md-dialog-actions>
+  <button  type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

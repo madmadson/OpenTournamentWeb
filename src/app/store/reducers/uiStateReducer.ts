@@ -6,7 +6,8 @@ import {
 } from '../actions/auth-actions';
 
 
-export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiState {
+
+export function uiState(state: UiState = INITIAL_UI_STATE, action: Action): UiState {
 
   switch (action.type)  {
 

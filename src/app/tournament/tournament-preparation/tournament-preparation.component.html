@@ -1,24 +1,26 @@
-<h1 class="tournament-heading">123</h1>
+<h1 class="tournament-heading">{{actualTournament.name}}</h1>
 
-<h3 class="tournament-heading">{{tour$ | async | json}}</h3>
-<md-card>
-  <button  type="button" md-raised-button color="primary" class="register-button" (click)="register()">Register</button>
-<md-tab-group>
-  <md-tab>
-    <template md-tab-label>Preparation</template>
-    <template md-tab-content>
-      <h1>Some tab content</h1>
-      <p>...</p>
-    </template>
-  </md-tab>
-  <md-tab>
-    <template md-tab-label>Two</template>
-    <template md-tab-content>
-      <h1>Some more tab content</h1>
-      <p>...</p>
-    </template>
-  </md-tab>
-</md-tab-group>
+<md-card *ngIf="playerData">
+  <button (click)="openRegistrationDialog()" type="button" color="primary" md-raised-button>Register me</button>
 </md-card>
 
 
+<md-card *ngIf="!playerData">
+  <md-card-title>Want to register for Tournament?</md-card-title>
+  <md-card-subtitle>No Problem just create your Player-Profile</md-card-subtitle>
+  <md-card-actions>
+    <button *ngIf="!loggedIn" type="button" color="primary" md-raised-button routerLink="/login">First Login/Register</button>
+    <button *ngIf="loggedIn" type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player Profile</button>
+  </md-card-actions>
+</md-card>
+
+<md-card>
+  <span *ngIf="actualTournamentRegisteredPlayers.length == 0">No Registrations found</span>
+  <h2 *ngIf="actualTournamentRegisteredPlayers.length > 0"
+      class="list-heading">
+    Registrations ({{actualTournamentRegisteredPlayers.length}})
+  </h2>
+  <md-list>
+    <tournament-registration-list [playerData]="playerData" [registrations]="actualTournamentRegisteredPlayers"></tournament-registration-list>
+  </md-list>
+</md-card>

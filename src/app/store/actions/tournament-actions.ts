@@ -1,6 +1,7 @@
 import {Action} from "@ngrx/store";
 import {Tournament} from "../../../../shared/model/tournament";
 import {RegistrationVM} from "../../tournament/registration.vm";
+import {Registration} from "../../../../shared/model/registration";
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -20,6 +21,36 @@ export class SetActualTournamentAction implements Action {
   readonly type = 'SET_ACTUAL_TOURNAMENT_ACTION';
 
   constructor(public payload: Tournament) {
+  }
+}
+
+export const TOURNAMENT_REGISTRATION_ADDED = 'TOURNAMENT_REGISTRATION_ADDED';
+
+export class TournamentRegistrationAdded implements Action {
+
+  readonly type = 'TOURNAMENT_REGISTRATION_ADDED';
+
+  constructor(public payload: Registration) {
+  }
+}
+
+export const TOURNAMENT_REGISTRATION_CHANGED = 'TOURNAMENT_REGISTRATION_CHANGED';
+
+export class TournamentRegistrationChanged implements Action {
+
+  readonly type = 'TOURNAMENT_REGISTRATION_CHANGED';
+
+  constructor(public payload: Registration) {
+  }
+}
+
+export const TOURNAMENT_REGISTRATION_DELETED = 'TOURNAMENT_REGISTRATION_DELETED';
+
+export class TournamentRegistrationDeleted implements Action {
+
+  readonly type = 'TOURNAMENT_REGISTRATION_DELETED';
+
+  constructor(public payload: string) {
   }
 }
 

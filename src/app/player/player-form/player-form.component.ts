@@ -7,6 +7,7 @@ import {composeValidators} from '@angular/forms/src/directives/shared';
 import {Subscription} from 'rxjs';
 import {PlayerVM} from '../player.vm';
 import {PlayerPushAction} from '../../store/actions/players-actions';
+import {getAllCountries} from '../../../../shared/model/countries';
 
 @Component({
   selector: 'player-form',
@@ -21,17 +22,15 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
 
   playerForm: FormGroup;
 
-  countries = ['Australia', 'Austria', 'Belarius', 'Belgium', 'Canada', 'China', 'Czech', 'Denmark', 'England',
-    'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Ireland', 'Italy', 'Netherlands',
-    'New Zealand', 'Northern Ireland', 'Norway', 'Poland', 'Portugal', 'Rusia', 'Scotland', 'Slovenia',
-    'Spain', 'Sweden', 'Switzerland', 'USA', 'Wales'];
-
+  countries: string[];
 
   private userDataSub: Subscription;
   private currentUserId: string;
 
   constructor(private formBuilder: FormBuilder,
               private store: Store<ApplicationState>) {
+
+    this.countries = getAllCountries();
   }
 
 

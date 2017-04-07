@@ -1,4 +1,4 @@
-import {StoreData} from '../store-data';
+import {INITIAL_STORE_DATA, StoreData} from '../store-data';
 import {Action} from '@ngrx/store';
 import {
   TOURNAMENT_ADDED_ACTION,
@@ -11,7 +11,7 @@ import {SET_ACTUAL_TOURNAMENT_ACTION} from '../actions/tournament-actions';
 import {PLAYER_ADDED_ACTION, PLAYER_CHANGED_ACTION, PLAYER_DELETED_ACTION} from '../actions/players-actions';
 import {STORE_PLAYER_DATA_ACTION} from '../actions/auth-actions';
 
-export function storeData(state: StoreData, action: Action): StoreData {
+export function storeData(state: StoreData = INITIAL_STORE_DATA, action: Action): StoreData {
   switch (action.type) {
 
     case TOURNAMENTS_CLEAR_ACTION:

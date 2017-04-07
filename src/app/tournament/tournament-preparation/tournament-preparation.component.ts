@@ -1,12 +1,15 @@
-import {Component, OnInit} from "@angular/core";
-import {Store} from "@ngrx/store";
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
 
-import {ActivatedRoute, Router} from "@angular/router";
-import {TournamentSubscribeAction} from "../../store/actions/tournament-actions";
-import {TournamentVM} from "../tournament.vm";
-import {mapTournamentToTournamentVM} from "../tournamentToVMSelector";
-import {Observable} from "rxjs/Observable";
-import {ApplicationState} from "../../store/application-state";
+import {ActivatedRoute, Router} from '@angular/router';
+import {RegistrationPushAction, TournamentSubscribeAction} from '../../store/actions/tournament-actions';
+import {TournamentVM} from '../tournament.vm';
+
+import {ApplicationState} from '../../store/application-state';
+import {Player} from '../../../../shared/model/player';
+import {MdDialog, MdDialogRef} from '@angular/material';
+import {RegistrationVM} from '../registration.vm';
+import {Registration} from '../../../../shared/model/registration';
 
 
 @Component({
@@ -15,31 +18,78 @@ import {ApplicationState} from "../../store/application-state";
   styleUrls: ['./tournament-preparation.component.css']
 })
 export class TournamentPreparationComponent implements OnInit {
-  private actualTournament$: Observable<TournamentVM>;
   private tournamentId: string;
 
+  actualTournament: TournamentVM;
+  playerData: Player;
+  actualTournamentRegisteredPlayers: Registration[];
 
-  constructor( private store: Store<ApplicationState>, private activeRouter: ActivatedRoute, private router: Router) {
-    this.actualTournament$ = this.store.select(state => {
-      return  mapTournamentToTournamentVM(state.storeData.actualTournament);
-    });
+
+  constructor(private store: Store<ApplicationState>,
+              private activeRouter: ActivatedRoute,
+              private router: Router,
+              public dialog: MdDialog) {
 
   }
 
   ngOnInit() {
 
     this.activeRouter.params.subscribe(
-
       params => {
         this.tournamentId = params['id'];
         this.store.dispatch(new TournamentSubscribeAction(params['id']));
       }
     );
+    this.store.select(state => state.storeData)
+      .subscribe(storeData => {
+        this.playerData = storeData.playerData;
+        console.log('playerData' + JSON.stringify(this.playerData))
+        this.actualTournament = storeData.actualTournament;
+    });
 
+    this.store.select(state => state.tournamentData)
+      .subscribe(tournamentData => {
+        console.log('actualTournamentRegisteredPlayers' + JSON.stringify(tournamentData));
+        this.actualTournamentRegisteredPlayers = tournamentData.actualTournamentRegisteredPlayers;
+      });
   }
 
+  openRegistrationDialog() {
 
-  register() {
-    this.router.navigate(['register'], { relativeTo: this.activeRouter });
+
+    const dialogRef = this.dialog.open(RegisterDialogComponent, {
+      data: {
+        actualTournament: this.actualTournament,
+        playerData: this.playerData
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      this.store.dispatch(new RegistrationPushAction(result));
+
+    });
+  }
+}
+
+
+@Component({
+  selector: 'registration-dialog',
+  templateUrl: './registration-dialog.html'
+})
+export class RegisterDialogComponent {
+
+  playerData: Player;
+  actualTournament: TournamentVM;
+
+  constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>) {
+
+    this.playerData = dialogRef.config.data.playerData;
+    this.actualTournament = dialogRef.config.data.actualTournament;
+  }
+
+  onSaveRegistration(registration: RegistrationVM) {
+
+    this.dialogRef.close(registration);
   }
 }

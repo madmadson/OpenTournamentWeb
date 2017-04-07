@@ -1,0 +1,16 @@
+
+
+<md-list-item *ngFor="let registration of registrations" [class.my-item-color]="isItMe(registration.playerId)" >
+  <h3 md-line style="padding-bottom: 10px;">{{registration.playerName}}</h3>
+
+  <p  md-line style="padding-top: 5px;">
+    {{registration.teamName}} - {{registration.meta}} - {{registration.origin}}</p>
+  <div class="md-secondary">
+    <img src="../../../assets/my_crown_small.png">
+    {{registration.elo}}
+  </div>
+</md-list-item>
+
+
+
+

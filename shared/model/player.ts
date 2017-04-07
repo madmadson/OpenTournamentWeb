@@ -35,6 +35,10 @@ export class Player {
     this.meta = meta;
     this.country = country;
   }
+
+  getFullPlayerName(): string {
+    return this.firstName + ' \"' + this.nickName + '\" ' + this.lastName;
+  }
 }
 
 
