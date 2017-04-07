@@ -2,6 +2,8 @@
 
 <md-card *ngIf="playerData">
   <button (click)="openRegistrationDialog()" type="button" color="primary" md-raised-button>Register me</button>
+
+  {{myRegistration | json}}
 </md-card>
 
 

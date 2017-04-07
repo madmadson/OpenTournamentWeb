@@ -11,6 +11,8 @@ import {MdDialog, MdDialogRef} from '@angular/material';
 import {RegistrationVM} from '../registration.vm';
 import {Registration} from '../../../../shared/model/registration';
 
+import * as _ from 'lodash';
+
 
 @Component({
   selector: 'tournament-preparation',
@@ -24,6 +26,7 @@ export class TournamentPreparationComponent implements OnInit {
   playerData: Player;
   actualTournamentRegisteredPlayers: Registration[];
 
+  myRegistration: Registration;
 
   constructor(private store: Store<ApplicationState>,
               private activeRouter: ActivatedRoute,
@@ -34,6 +37,8 @@ export class TournamentPreparationComponent implements OnInit {
 
   ngOnInit() {
 
+    const that = this;
+
     this.activeRouter.params.subscribe(
       params => {
         this.tournamentId = params['id'];
@@ -43,13 +48,18 @@ export class TournamentPreparationComponent implements OnInit {
     this.store.select(state => state.storeData)
       .subscribe(storeData => {
         this.playerData = storeData.playerData;
-        console.log('playerData' + JSON.stringify(this.playerData))
+        console.log('playerData' + JSON.stringify(this.playerData));
         this.actualTournament = storeData.actualTournament;
-    });
+      });
 
     this.store.select(state => state.tournamentData)
       .subscribe(tournamentData => {
-        console.log('actualTournamentRegisteredPlayers' + JSON.stringify(tournamentData));
+        if (that.playerData) {
+          that.myRegistration = _.find(tournamentData.actualTournamentRegisteredPlayers,
+            function (reg) {
+              return reg.playerId === that.playerData.id;
+            });
+        }
         this.actualTournamentRegisteredPlayers = tournamentData.actualTournamentRegisteredPlayers;
       });
   }
