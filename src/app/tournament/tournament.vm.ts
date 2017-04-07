@@ -16,7 +16,6 @@ export interface TournamentVM {
   teamSize: number;
   actualRound: number;
   creatorUid: string;
-  blub: string;
 }
 
 

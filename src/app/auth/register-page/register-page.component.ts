@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Form, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {composeValidators} from '@angular/forms/src/directives/shared';
 import {CustomValidators} from 'ng2-validation';
-import {ApplicationState} from '../store/application-state';
+import {ApplicationState} from '../../store/application-state';
 import {Store} from '@ngrx/store';
-import {CreateAccountAction} from '../store/actions/auth-actions';
+import {CreateAccountAction} from '../../store/actions/auth-actions';
 
 @Component({
   selector: 'register-page',

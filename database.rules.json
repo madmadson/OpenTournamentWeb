@@ -1,6 +1,9 @@
 {
   "rules": {
+    "players": {
+      ".indexOn": ["userUid", "nickName"]
+    },
     ".read": true,
-    ".write": true
+    ".write": "auth != null"
   }
 }

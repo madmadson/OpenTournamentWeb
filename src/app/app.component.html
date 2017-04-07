@@ -37,7 +37,7 @@
     <span *ngIf="(uiState.currentUserName)" class="user-welcome-panel">{{uiState.currentUserName}}</span>
     <img *ngIf="(uiState.currentUserImage)" class="avatar" src="{{uiState.currentUserImage}}">
     <img *ngIf="(!uiState.currentUserImage)" class="avatar" src="../assets/icon_final_small.png">
-    <a *ngIf="(uiState.loggedIn)" class="logout-anchor" (click)="logout()">Logout</a>
+    <a *ngIf="(uiState.loggedIn)" class="auth-anchor" (click)="logout()">Logout</a>
     <a *ngIf="(!uiState.loggedIn)" class="auth-anchor" (click)="login()">Login</a>
   </md-toolbar>
 

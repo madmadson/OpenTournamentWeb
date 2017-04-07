@@ -1,9 +1,7 @@
-import {TournamentVM} from "./tournament.vm";
-import {Tournament} from "../../../shared/model/tournament";
+import {TournamentVM} from './tournament.vm';
+import {Tournament} from '../../../shared/model/tournament';
 
 export function mapTournamentToTournamentVM(tournament: Tournament): TournamentVM {
-
-
 
   console.log('mapTournamentToTournamentVM:' + JSON.stringify(tournament));
 
@@ -16,7 +14,6 @@ export function mapTournamentToTournamentVM(tournament: Tournament): TournamentV
     maxParticipants: tournament.maxParticipants,
     teamSize: tournament.teamSize,
     actualRound: tournament.actualRound,
-    creatorUid: tournament.creatorUid,
-      blub: ''
+    creatorUid: tournament.creatorUid
   };
 }

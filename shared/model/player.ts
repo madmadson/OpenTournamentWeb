@@ -1,4 +1,4 @@
-import {PlayerVM} from "../../src/app/player/player.vm";
+import {PlayerVM} from '../../src/app/player/player.vm';
 
 export class Player {
 
@@ -12,19 +12,21 @@ export class Player {
   origin: string;
   country: string;
 
-  static fromJson({firstname, lastname, nickname, elo, meta, origin, country}): Player {
+  static fromJson({userUid, firstName, lastName, nickName, elo, meta, origin, country}): Player {
     return new Player(
-      firstname, lastname, nickname, elo, meta, origin, country);
+      userUid, firstName, lastName, nickName, elo, meta, origin, country);
   }
 
   static fromPlayerVM(playerVM: PlayerVM): Player {
-    return new Player(playerVM.firstName, playerVM.lastName,
+    return new Player(playerVM.userUid, playerVM.firstName, playerVM.lastName,
       playerVM.nickName, playerVM.elo, playerVM.meta, playerVM.origin, playerVM.country
     );
   }
 
-  constructor(firstName: string, lastName: string,
+  constructor(userUid: string, firstName: string, lastName: string,
               nickName: string, elo: number, meta: string, origin: string, country: string) {
+
+    this.userUid = userUid;
     this.firstName = firstName;
     this.lastName = lastName;
     this.nickName = nickName;

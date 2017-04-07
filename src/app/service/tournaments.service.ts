@@ -1,24 +1,31 @@
-import {Inject, Injectable, OnDestroy} from "@angular/core";
-import {Store} from "@ngrx/store";
-import {ApplicationState} from "../store/application-state";
-import {AngularFire, FirebaseRef} from "angularfire2";
+import {Inject, Injectable, OnDestroy} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {ApplicationState} from '../store/application-state';
+import {AngularFire, FirebaseRef} from 'angularfire2';
 import {
   TournamentAddedAction,
   TournamentChangedAction,
   TournamentDeletedAction,
   TournamentsClearAction
-} from "../store/actions/tournaments-actions";
-import {Tournament} from "../../../shared/model/tournament";
-import {TournamentVM} from "../tournament/tournament.vm";
+} from '../store/actions/tournaments-actions';
+import {Tournament} from '../../../shared/model/tournament';
+import {TournamentVM} from '../tournament/tournament.vm';
 
 @Injectable()
 export class TournamentsService implements OnDestroy {
 
   private query: any;
 
-  constructor(protected afService: AngularFire, protected store: Store<ApplicationState>,  @Inject(FirebaseRef) private fb) {
+  constructor(protected afService: AngularFire,
+              protected store: Store<ApplicationState>,
+              @Inject(FirebaseRef) private fb) {
 
   }
+
+  ngOnDestroy(): void {
+    this.query.off();
+  }
+
 
   subscribeOnTournaments() {
 
@@ -66,10 +73,6 @@ export class TournamentsService implements OnDestroy {
     tournaments.push(tournament);
   }
 
-  ngOnDestroy(): void {
-    this.store.dispatch(new TournamentsClearAction());
-    this.query.off();
-  }
 
   pushTournaments(payload: TournamentVM) {
 

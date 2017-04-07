@@ -17,7 +17,11 @@ export class HomePageComponent {
   constructor(private store: Store<ApplicationState>) {
 
     store.select(state => state.storeData.playerData).subscribe(
-      playerData => this.playerData = playerData
+
+      playerData => {
+        console.log('found player data in store: ' + JSON.stringify(playerData));
+        this.playerData = playerData;
+      }
     );
 
     store.select(state => state.uiState.loggedIn).subscribe(

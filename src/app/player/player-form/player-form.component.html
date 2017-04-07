@@ -44,12 +44,8 @@
         <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>
       </md-select>
 
-      <button *ngIf="!playerData" md-raised-button type="button" color="primary"
+      <button md-raised-button type="button" color="primary"
               [disabled]="playerForm.invalid" (click)="save()">Save Player Profile
-      </button>
-
-      <button *ngIf="playerData" md-raised-button type="button" color="primary"
-              [disabled]="playerForm.invalid" (click)="update()">Update Player Profile
       </button>
     </div>
   </form>

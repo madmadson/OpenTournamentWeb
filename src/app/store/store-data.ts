@@ -7,7 +7,7 @@ import * as moment from 'moment';
 export interface StoreData {
 
   userData:  UserData;
-  playerData?: Player;
+  playerData: Player;
   tournaments: Tournament[];
   players: Player[];
   actualTournament: Tournament;
@@ -16,23 +16,7 @@ export interface StoreData {
 
 export const INITIAL_STORE_DATA = {
 
-  userData: {
-    uid: '1',
-    displayName: 'Hans',
-    photoURL: '/'
-  },
-
-  // playerData: {
-  //   id: '123',
-  //   userUid: '456',
-  //   firstName: 'Test',
-  //   nickName: 'awesome',
-  //   lastName: 'Lasti',
-  //   meta: '48 AD',
-  //   country: 'Germany',
-  //   origin: 'Karlsruhe',
-  //   elo: 2000
-  // },
+  userData: undefined,
 
   playerData: undefined,
 

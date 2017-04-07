@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {ApplicationState} from "./store/application-state";
 import {Subscription} from "rxjs/Subscription";
-import {LogoutAction} from "./store/actions/auth-actions";
+import {AuthSubscribeAction, LogoutAction} from "./store/actions/auth-actions";
 import {UiState} from "./store/ui-state";
 import * as _ from "lodash";
 import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from "./store/actions/tournaments-actions";
@@ -31,6 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.store.dispatch(new AuthSubscribeAction());
     this.store.dispatch(new TournamentsSubscribeAction());
   }
 

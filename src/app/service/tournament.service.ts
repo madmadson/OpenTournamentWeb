@@ -1,18 +1,21 @@
-import {Inject, Injectable} from "@angular/core";
-import {Store} from "@ngrx/store";
-import {ApplicationState} from "../store/application-state";
-import {AngularFire, FirebaseRef} from "angularfire2";
-import {TournamentsClearAction} from "../store/actions/tournaments-actions";
-import {SetActualTournamentAction} from "../store/actions/tournament-actions";
-import {Registration} from "../../../shared/model/registration";
-import {Router} from "@angular/router";
+import {Inject, Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {ApplicationState} from '../store/application-state';
+import {AngularFire, FirebaseRef} from 'angularfire2';
+import {TournamentsClearAction} from '../store/actions/tournaments-actions';
+import {SetActualTournamentAction} from '../store/actions/tournament-actions';
+import {Registration} from '../../../shared/model/registration';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class TournamentService {
 
   private tournament: any;
 
-  constructor(protected afService: AngularFire, protected store: Store<ApplicationState>, @Inject(FirebaseRef) private fb, private router: Router) {
+  constructor(protected afService: AngularFire,
+              protected store: Store<ApplicationState>,
+              @Inject(FirebaseRef) private fb,
+              private router: Router) {
 
   }
 

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
-import {LoginAction, LoginWithProviderAction} from '../store/actions/auth-actions';
+import {ApplicationState} from '../../store/application-state';
+import {LoginAction, LoginWithProviderAction} from '../../store/actions/auth-actions';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -58,5 +58,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   register() {
     this.router.navigate(['/register']);
+  }
+
+  passwordForget() {
+    this.router.navigate(['/password-forget']);
   }
 }

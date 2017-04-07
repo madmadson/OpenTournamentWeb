@@ -1,38 +1,54 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../../store/application-state';
 import {Player} from '../../../../shared/model/player';
 import {composeValidators} from '@angular/forms/src/directives/shared';
+import {Subscription} from 'rxjs';
+import {PlayerVM} from '../player.vm';
+import {PlayerPushAction} from '../../store/actions/players-actions';
 
 @Component({
   selector: 'player-form',
   templateUrl: './player-form.component.html',
   styleUrls: ['./player-form.component.css']
 })
-export class PlayerFormComponent implements OnInit {
+export class PlayerFormComponent implements OnInit, OnDestroy {
+
+
+  @Input()
+  playerData: Player;
 
   playerForm: FormGroup;
 
-  playerData: Player;
-
   countries = ['Australia', 'Austria', 'Belarius', 'Belgium', 'Canada', 'China', 'Czech', 'Denmark', 'England',
-               'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Ireland', 'Italy', 'Netherlands',
-               'New Zealand', 'Northern Ireland', 'Norway', 'Poland', 'Portugal', 'Rusia', 'Scotland', 'Slovenia',
-               'Spain', 'Sweden', 'Switzerland', 'USA' , 'Wales'];
+    'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Ireland', 'Italy', 'Netherlands',
+    'New Zealand', 'Northern Ireland', 'Norway', 'Poland', 'Portugal', 'Rusia', 'Scotland', 'Slovenia',
+    'Spain', 'Sweden', 'Switzerland', 'USA', 'Wales'];
+
+
+  private userDataSub: Subscription;
+  private currentUserId: string;
 
   constructor(private formBuilder: FormBuilder,
               private store: Store<ApplicationState>) {
-
-    this.store.select(state => state.storeData.playerData).subscribe(playerDate => {
-       this.playerData = playerDate;
-    });
   }
+
 
   ngOnInit() {
 
     this.initForm();
 
+
+    this.userDataSub = this.store.select(state => state.uiState.currentUserId).subscribe(currentUserId => {
+      this.currentUserId = currentUserId;
+    });
+
+  }
+
+  ngOnDestroy(): void {
+
+    this.userDataSub.unsubscribe();
   }
 
   initForm() {
@@ -47,11 +63,29 @@ export class PlayerFormComponent implements OnInit {
     });
   }
 
-  update() {
+  save() {
+
+    const playerModel: PlayerVM = this.preparePlayer();
+
+    this.store.dispatch(new PlayerPushAction(playerModel));
 
   }
 
-  save() {
+  private preparePlayer(): PlayerVM {
+
+    const formModel = this.playerForm.value;
+
+    return {
+      id: this.playerData ? this.playerData.id : undefined,
+      userUid: this.currentUserId,
+      firstName: formModel.firstName as string,
+      nickName: formModel.nickName as string,
+      lastName: formModel.lastName as string,
+      origin: formModel.origin as string,
+      meta: formModel.meta as string,
+      country: formModel.country as string,
+      elo: 1000
+    };
 
   }
 

@@ -1,5 +1,6 @@
 import {Action} from "@ngrx/store";
 import {Player} from "../../../../shared/model/player";
+import {PlayerVM} from "../../player/player.vm";
 
 
 export const PLAYERS_SUBSCRIBE_ACTION = 'PLAYERS_SUBSCRIBE_ACTION';
@@ -59,6 +60,17 @@ export class PlayerDeletedAction implements Action {
   readonly type = 'PLAYER_DELETED_ACTION';
 
   constructor(public payload: string) {
+  }
+}
+
+
+export const PLAYER_PUSH_ACTION = 'PLAYER_PUSH_ACTION';
+
+export class PlayerPushAction implements Action {
+
+  readonly type = 'PLAYER_PUSH_ACTION';
+
+  constructor(public payload: PlayerVM) {
   }
 }
 

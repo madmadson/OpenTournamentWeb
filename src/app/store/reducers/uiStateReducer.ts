@@ -1,6 +1,9 @@
 import {INITIAL_UI_STATE, UiState} from '../ui-state';
 import {Action} from '@ngrx/store';
-import {ADD_REDIRECT_LOGIN_ACTION, LOGOUT_ACTION, STORE_USERDATA_ACTION} from '../actions/auth-actions';
+import {
+  ADD_REDIRECT_LOGIN_ACTION, LOGOUT_ACTION,
+  STORE_USERDATA_ACTION
+} from '../actions/auth-actions';
 
 
 export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiState {
@@ -9,7 +12,7 @@ export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiS
 
     case STORE_USERDATA_ACTION:
 
-      return handleStoreData(state, action);
+      return handleStoreUserData(state, action);
 
 
     case LOGOUT_ACTION:
@@ -26,7 +29,7 @@ export function uiState(state: UiState = INITIAL_UI_STATE, action: Action) : UiS
   }
 }
 
-function handleStoreData(state: UiState, action: Action): UiState {
+function handleStoreUserData(state: UiState, action: Action): UiState {
   const newState = Object.assign({}, state);
 
   newState.currentUserName = action.payload.displayName;
@@ -36,6 +39,7 @@ function handleStoreData(state: UiState, action: Action): UiState {
 
   return newState;
 }
+
 
 
 function handleLogout(state: UiState, action: Action) {

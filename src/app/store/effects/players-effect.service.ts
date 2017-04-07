@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Actions, Effect} from "@ngrx/effects";
 import {PlayersService} from "../../service/players.service";
-import {PLAYERS_SUBSCRIBE_ACTION, PLAYERS_UNSUBSCRIBE_ACTION} from "../actions/players-actions";
+import {PLAYER_PUSH_ACTION, PLAYERS_SUBSCRIBE_ACTION, PLAYERS_UNSUBSCRIBE_ACTION} from "../actions/players-actions";
 
 @Injectable()
 export class PlayersEffectService {
@@ -20,6 +20,11 @@ export class PlayersEffectService {
     .ofType(PLAYERS_UNSUBSCRIBE_ACTION)
     .debug('PLAYERS_UNSUBSCRIBE_ACTION')
     .map(action => this.playerService.unsubscribeOnPlayers());
+
+  @Effect({dispatch: false}) push = this.actions$
+    .ofType(PLAYER_PUSH_ACTION)
+    .debug('PLAYER_PUSH_ACTION')
+    .map(action => this.playerService.pushPlayer(action.payload));
 
 
 }

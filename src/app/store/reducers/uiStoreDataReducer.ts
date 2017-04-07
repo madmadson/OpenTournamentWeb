@@ -1,14 +1,15 @@
-import {StoreData} from "../store-data";
-import {Action} from "@ngrx/store";
+import {StoreData} from '../store-data';
+import {Action} from '@ngrx/store';
 import {
   TOURNAMENT_ADDED_ACTION,
   TOURNAMENT_CHANGED_ACTION,
   TOURNAMENT_DELETED_ACTION,
   TOURNAMENTS_CLEAR_ACTION
-} from "../actions/tournaments-actions";
-import * as _ from "lodash";
-import {SET_ACTUAL_TOURNAMENT_ACTION} from "../actions/tournament-actions";
-import {PLAYER_ADDED_ACTION, PLAYER_CHANGED_ACTION, PLAYER_DELETED_ACTION} from "../actions/players-actions";
+} from '../actions/tournaments-actions';
+import * as _ from 'lodash';
+import {SET_ACTUAL_TOURNAMENT_ACTION} from '../actions/tournament-actions';
+import {PLAYER_ADDED_ACTION, PLAYER_CHANGED_ACTION, PLAYER_DELETED_ACTION} from '../actions/players-actions';
+import {STORE_PLAYER_DATA_ACTION} from '../actions/auth-actions';
 
 export function storeData(state: StoreData, action: Action): StoreData {
   switch (action.type) {
@@ -44,6 +45,10 @@ export function storeData(state: StoreData, action: Action): StoreData {
     case PLAYER_DELETED_ACTION:
 
       return handlePlayerDeletedData(state, action);
+
+    case STORE_PLAYER_DATA_ACTION:
+
+      return handleStorePlayerData(state, action);
 
     default:
       return state;
@@ -96,7 +101,6 @@ function handleSetTournament(state: StoreData, action: Action): StoreData {
 
   if (action.payload !== undefined) {
 
-    console.log('set tournament: ' + JSON.stringify(action.payload));
       newStoreState.actualTournament = action.payload;
   }
   return newStoreState;
@@ -130,6 +134,18 @@ function handlePlayerDeletedData(state: StoreData, action: Action): StoreData {
 
     const indexOfSearchedPlayer = _.findIndex(newStoreState.players, ['id', action.payload]);
     newStoreState.players.splice(indexOfSearchedPlayer, 1);
+  }
+  return newStoreState;
+}
+
+function handleStorePlayerData(state: StoreData, action: Action): StoreData {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    console.log(' store playerData' + JSON.stringify(action.payload));
+    newStoreState.playerData = action.payload;
+
   }
   return newStoreState;
 }

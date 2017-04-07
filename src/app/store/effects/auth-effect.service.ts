@@ -1,6 +1,9 @@
 import {Injectable} from "@angular/core";
 import {Actions, Effect} from "@ngrx/effects";
-import {CREATE_ACCOUNT_ACTION, LOGIN_ACTION, LOGIN_PROVIDER_ACTION, LOGOUT_ACTION} from "../actions/auth-actions";
+import {
+  AUTH_SUBSCRIBE_ACTION, CREATE_ACCOUNT_ACTION, LOGIN_ACTION, LOGIN_PROVIDER_ACTION,
+  LOGOUT_ACTION, RESET_PASSWORD_ACTION
+} from "../actions/auth-actions";
 import {LoginService} from "../../service/auth.service";
 
 @Injectable()
@@ -15,6 +18,16 @@ export class AuthEffectService {
     .ofType(LOGIN_ACTION)
     .debug('LOGIN_ACTION')
     .map(action => this.loginService.loginWithEmailAndPassword(action.payload));
+
+  @Effect({dispatch: false}) authSub = this.actions$
+    .ofType(AUTH_SUBSCRIBE_ACTION)
+    .debug('AUTH_SUBSCRIBE_ACTION')
+    .map(action => this.loginService.subscribeOnAuthentication());
+
+  @Effect({dispatch: false}) resetPassword = this.actions$
+    .ofType(RESET_PASSWORD_ACTION)
+    .debug('RESET_PASSWORD_ACTION')
+    .map(action => this.loginService.resetPassword(action.payload));
 
   @Effect({dispatch: false}) loginProvider = this.actions$
     .ofType(LOGIN_PROVIDER_ACTION)
