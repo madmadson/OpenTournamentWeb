@@ -1,4 +1,3 @@
-import {Moment} from 'moment';
 export interface TournamentListVM {
 
   monthYear: number;

@@ -3,12 +3,12 @@
     <nav>
       <img src="./assets/logo3.png" alt="logo" class="nav-img-logo">
       <hr>
-      <p class="nav-user-welcome" *ngIf="(uiState.loggedIn)">Welcome {{uiState.currentUserName}}</p>
+      <p class="nav-user-welcome" *ngIf="(authenticationState.loggedIn)">Welcome {{authenticationState.currentUserName}}</p>
       <div class="nav-container">
         <md-icon class="nav-icon">home</md-icon>
         <a class="nav-link" (click)="sidenav.close()" routerLink="/home">Home</a>
       </div>
-      <div *ngIf="(uiState.loggedIn)" class="nav-container">
+      <div *ngIf="(authenticationState.loggedIn)" class="nav-container">
         <img src="../assets/my_crown_small.png" class="nav-icon">
         <a class="nav-link" (click)="sidenav.close()" routerLink="/my-tournaments">My Tournaments</a>
       </div>
@@ -34,11 +34,11 @@
     </div>
     <span class="app-name-label">OpenTournament</span>
     <span class="spacer"></span>
-    <span *ngIf="(uiState.currentUserName)" class="user-welcome-panel">{{uiState.currentUserName}}</span>
-    <img *ngIf="(uiState.currentUserImage)" class="avatar" src="{{uiState.currentUserImage}}">
-    <img *ngIf="(!uiState.currentUserImage)" class="avatar" src="../assets/icon_final_small.png">
-    <a *ngIf="(uiState.loggedIn)" class="auth-anchor" (click)="logout()">Logout</a>
-    <a *ngIf="(!uiState.loggedIn)" class="auth-anchor" (click)="login()">Login</a>
+    <span *ngIf="(authenticationState.currentUserName)" class="user-welcome-panel">{{authenticationState.currentUserName}}</span>
+    <img *ngIf="(authenticationState.currentUserImage)" class="avatar" src="{{authenticationState.currentUserImage}}">
+    <img *ngIf="(!authenticationState.currentUserImage)" class="avatar" src="../assets/icon_final_small.png">
+    <a *ngIf="(authenticationState.loggedIn)" class="auth-anchor" (click)="logout()">Logout</a>
+    <a *ngIf="(!authenticationState.loggedIn)" class="auth-anchor" (click)="login()">Login</a>
   </md-toolbar>
 
   <div class="app-content">

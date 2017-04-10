@@ -15,7 +15,7 @@ import {ApplicationState} from './store/application-state';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {compose} from '@ngrx/core/compose';
 import {environment} from '../environments/environment';
-import {uiState} from './store/reducers/uiStateReducer';
+import {authenticationState} from './store/reducers/authenticationReducer';
 import {storeData} from './store/reducers/uiStoreDataReducer';
 import {tournamentData} from './store/reducers/tournamentReducer';
 
@@ -58,7 +58,7 @@ import { TournamentRegistrationListComponent } from './tournament/tournament-reg
 
 const reducers = {
   tournamentData: tournamentData,
-  uiState: uiState,
+  authenticationState: authenticationState,
   storeData: storeData,
   router: routerReducer
 };

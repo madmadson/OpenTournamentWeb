@@ -11,21 +11,17 @@ import {Player} from "../../../shared/model/player";
 })
 export class HomePageComponent {
 
-  private playerData: Player;
+  private userPlayerData: Player;
   private loggedIn: boolean;
 
   constructor(private store: Store<ApplicationState>) {
 
-    store.select(state => state.storeData.playerData).subscribe(
+    store.select(state => state.authenticationState).subscribe(
 
-      playerData => {
-        console.log('found player data in store: ' + JSON.stringify(playerData));
-        this.playerData = playerData;
+      authenticationState => {
+        this.userPlayerData = authenticationState.userPlayerData;
+        this.loggedIn = authenticationState.loggedIn;
       }
-    );
-
-    store.select(state => state.uiState.loggedIn).subscribe(
-      loggedIn => this.loggedIn = loggedIn
     );
   }
 }

@@ -4,6 +4,7 @@ import {ApplicationState} from '../store/application-state';
 import {AngularFire, FirebaseRef} from 'angularfire2';
 
 import {
+  ClearRegistrationAction,
   SetActualTournamentAction, TournamentRegistrationAdded, TournamentRegistrationChanged,
   TournamentRegistrationDeleted
 } from '../store/actions/tournament-actions';
@@ -28,6 +29,7 @@ export class TournamentService implements OnDestroy{
   ngOnDestroy(): void {
     console.log('ngOnDestroy  TournamentService');
     this.tournamentRegistrationsRef.off();
+    this.store.dispatch(new ClearRegistrationAction());
   }
 
 
@@ -41,6 +43,7 @@ export class TournamentService implements OnDestroy{
       tournament => {
         tournament.id = tournamentId;
         this.store.dispatch(new SetActualTournamentAction(tournament));
+
       }
     );
 
@@ -82,5 +85,10 @@ export class TournamentService implements OnDestroy{
     this.snackBar.open('Registration saved successfuly', '', {
       duration: 5000
     });
+  }
+
+  unsubscribeOnTournament() {
+    this.tournamentRegistrationsRef.off();
+    this.store.dispatch(new ClearRegistrationAction());
   }
 }

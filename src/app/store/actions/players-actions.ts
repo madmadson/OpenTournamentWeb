@@ -1,6 +1,6 @@
-import {Action} from "@ngrx/store";
-import {Player} from "../../../../shared/model/player";
-import {PlayerVM} from "../../player/player.vm";
+import {Action} from '@ngrx/store';
+import {Player} from '../../../../shared/model/player';
+import {PlayerVM} from '../../player/player.vm';
 
 
 export const PLAYERS_SUBSCRIBE_ACTION = 'PLAYERS_SUBSCRIBE_ACTION';

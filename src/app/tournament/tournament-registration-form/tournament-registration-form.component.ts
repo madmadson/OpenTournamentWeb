@@ -16,10 +16,10 @@ import {getAllFactions} from "../../../../shared/model/factions";
 export class TournamentRegistrationFormComponent implements OnInit {
 
   @Input()
-   actualTournament: TournamentVM;
+  actualTournament: TournamentVM;
 
   @Input()
-   playerData: Player;
+  userPlayerData: Player;
 
   @Output() onSaveRegistration = new EventEmitter<RegistrationVM>();
 
@@ -37,10 +37,10 @@ export class TournamentRegistrationFormComponent implements OnInit {
 
     this.tournamentRegistrationForm = this.formBuilder.group({
       playerName: [ {
-        value: this.playerData.getFullPlayerName(), disabled: true
+        value: this.userPlayerData.getFullPlayerName(), disabled: true
       } , [Validators.required]],
       faction: [''],
-      meta: [this.playerData.meta],
+      meta: [this.userPlayerData.meta],
       team: [''],
     });
 
@@ -59,15 +59,15 @@ export class TournamentRegistrationFormComponent implements OnInit {
     return {
       id: undefined,
       tournamentId: this.actualTournament.id,
-      playerName: this.playerData.getFullPlayerName(),
-      origin: this.playerData.origin,
+      playerName: this.userPlayerData.getFullPlayerName(),
+      origin: this.userPlayerData.origin,
       meta: formModel.meta,
       registrationDate: moment().format(),
       teamName: formModel.team,
-      playerId: this.playerData.id,
+      playerId: this.userPlayerData.id,
       teamId: '',
-      country: this.playerData.country,
-      elo: this.playerData.elo
+      country: this.userPlayerData.country,
+      elo: this.userPlayerData.elo
     };
   }
 

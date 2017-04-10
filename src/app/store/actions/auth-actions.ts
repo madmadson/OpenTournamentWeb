@@ -1,6 +1,6 @@
 import {Action} from '@ngrx/store';
 import {UserData} from '../../../../shared/model/userData';
-import {Player} from "../../../../shared/model/player";
+import {Player} from '../../../../shared/model/player';
 
 
 export const AUTH_SUBSCRIBE_ACTION = 'AUTH_SUBSCRIBE_ACTION';
@@ -53,25 +53,47 @@ export class CreateAccountAction implements Action {
   }
 }
 
-export const STORE_USERDATA_ACTION = 'STORE_USERDATA_ACTION';
+export const SAVE_USERDATA_ACTION = 'SAVE_USERDATA_ACTION';
 
 export class SaveUserDataAction implements Action {
 
-  readonly type = 'STORE_USERDATA_ACTION';
+  readonly type = 'SAVE_USERDATA_ACTION';
 
 
   constructor(public payload: UserData ) {
   }
 }
 
-export const STORE_PLAYER_DATA_ACTION = 'STORE_PLAYER_DATA_ACTION';
+export const DELETE_USERDATA_ACTION = 'DELETE_USERDATA_ACTION';
 
-export class StorePlayerDataAction implements Action {
+export class DeleteUserDataAction implements Action {
 
-  readonly type = 'STORE_PLAYER_DATA_ACTION';
+  readonly type = 'DELETE_USERDATA_ACTION';
+
+
+  constructor() {
+  }
+}
+
+export const SAVE_USER_PLAYER_DATA_ACTION = 'SAVE_USER_PLAYER_DATA_ACTION';
+
+export class SaveUserPlayerDataAction implements Action {
+
+  readonly type = 'SAVE_USER_PLAYER_DATA_ACTION';
 
 
   constructor(public payload: Player ) {
+  }
+}
+
+export const DELETE_USER_PLAYER_DATA_ACTION = 'DELETE_USER_PLAYER_DATA_ACTION';
+
+export class DeleteUserPlayerDataAction implements Action {
+
+  readonly type = 'DELETE_USER_PLAYER_DATA_ACTION';
+
+
+  constructor() {
   }
 }
 

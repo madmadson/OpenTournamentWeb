@@ -1,9 +1,7 @@
-
-
-
 import {Action} from '@ngrx/store';
 import {INITIAL_TOURNAMENT_DATA, TournamentData} from '../tournament-data';
 import {
+  CLEAR_TOURNAMENT_REGISTRATION_ACTION,
   TOURNAMENT_REGISTRATION_ADDED, TOURNAMENT_REGISTRATION_CHANGED,
   TOURNAMENT_REGISTRATION_DELETED
 } from '../actions/tournament-actions';
@@ -14,7 +12,7 @@ import * as _ from 'lodash';
 export function tournamentData(state: TournamentData = INITIAL_TOURNAMENT_DATA, action: Action): TournamentData {
 
 
-  switch (action.type)  {
+  switch (action.type) {
 
     case TOURNAMENT_REGISTRATION_ADDED:
 
@@ -27,6 +25,10 @@ export function tournamentData(state: TournamentData = INITIAL_TOURNAMENT_DATA, 
     case TOURNAMENT_REGISTRATION_CHANGED:
 
       return handleRegistrationChangedData(state, action);
+
+    case CLEAR_TOURNAMENT_REGISTRATION_ACTION:
+
+      return handleClearRegistrationAction(state, action);
 
     default:
       return state;
@@ -41,6 +43,9 @@ function handleTournamentRegistrationAddedAction(state: TournamentData, action: 
   const newTournamentData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
+    if (newTournamentData.actualTournamentRegisteredPlayers === undefined) {
+      newTournamentData.actualTournamentRegisteredPlayers = [];
+    }
     newTournamentData.actualTournamentRegisteredPlayers.push(action.payload);
   }
   return newTournamentData;
@@ -68,4 +73,13 @@ function handleRegistrationChangedData(state: TournamentData, action: Action): T
     newStoreState.actualTournamentRegisteredPlayers[indexOfSearchedRegistration] = action.payload;
   }
   return newStoreState;
+}
+
+function handleClearRegistrationAction(state: TournamentData, action: Action): TournamentData {
+
+  const newTournamentData = _.cloneDeep(state);
+
+  newTournamentData.actualTournamentRegisteredPlayers = [];
+
+  return newTournamentData;
 }

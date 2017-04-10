@@ -1,5 +1,7 @@
 
-export interface UiState {
+import {UserData} from '../../../shared/model/userData';
+import {Player} from '../../../shared/model/player';
+export interface AuthenticationState {
 
   currentUserId: string;
   currentUserName: string;
@@ -7,10 +9,12 @@ export interface UiState {
   loggedIn: boolean;
   redirectUrl: string;
 
+  userData:  UserData;
+  userPlayerData: Player;
   currentTournamentId: string;
 }
 
-export const INITIAL_UI_STATE: UiState = {
+export const INITIAL_UI_STATE: AuthenticationState = {
 
     currentUserId: undefined,
     currentUserName: undefined,
@@ -18,5 +22,7 @@ export const INITIAL_UI_STATE: UiState = {
     loggedIn: false,
     redirectUrl: undefined,
 
+    userPlayerData: undefined,
+    userData: undefined,
     currentTournamentId: undefined
 };

@@ -9,12 +9,11 @@ import {Player} from '../../../../shared/model/player';
 })
 export class TournamentRegistrationListComponent implements OnInit {
 
-
   @Input()
   registrations: Registration[];
 
   @Input()
-  playerData: Player;
+  userPlayerData: Player;
 
   constructor() {
   }
@@ -25,8 +24,8 @@ export class TournamentRegistrationListComponent implements OnInit {
   isItMe(regId: string) {
 
 
-    if (this.playerData) {
-      if (regId === this.playerData.id) {
+    if (this.userPlayerData) {
+      if (regId === this.userPlayerData.id) {
         return 'blue';
       }
     }

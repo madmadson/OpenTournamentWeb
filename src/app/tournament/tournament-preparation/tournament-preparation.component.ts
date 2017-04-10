@@ -1,8 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {ActivatedRoute, Router} from '@angular/router';
-import {RegistrationPushAction, TournamentSubscribeAction} from '../../store/actions/tournament-actions';
+import {
+  RegistrationPushAction, TournamentSubscribeAction,
+  TournamentUnsubscribeAction
+} from '../../store/actions/tournament-actions';
 import {TournamentVM} from '../tournament.vm';
 
 import {ApplicationState} from '../../store/application-state';
@@ -19,14 +22,16 @@ import * as _ from 'lodash';
   templateUrl: './tournament-preparation.component.html',
   styleUrls: ['./tournament-preparation.component.css']
 })
-export class TournamentPreparationComponent implements OnInit {
+export class TournamentPreparationComponent implements OnInit, OnDestroy {
   private tournamentId: string;
 
   actualTournament: TournamentVM;
-  playerData: Player;
+  userPlayerData: Player;
   actualTournamentRegisteredPlayers: Registration[];
 
   myRegistration: Registration;
+  myTournament: boolean;
+  loggedIn: boolean;
 
   constructor(private store: Store<ApplicationState>,
               private activeRouter: ActivatedRoute,
@@ -45,23 +50,28 @@ export class TournamentPreparationComponent implements OnInit {
         this.store.dispatch(new TournamentSubscribeAction(params['id']));
       }
     );
-    this.store.select(state => state.storeData)
-      .subscribe(storeData => {
-        this.playerData = storeData.playerData;
-        console.log('playerData' + JSON.stringify(this.playerData));
-        this.actualTournament = storeData.actualTournament;
+    this.store.select(state => state)
+      .subscribe(state => {
+
+        this.userPlayerData = state.authenticationState.userPlayerData;
+        this.actualTournament = state.storeData.actualTournament;
+
+        this.actualTournamentRegisteredPlayers = state.tournamentData.actualTournamentRegisteredPlayers;
+        this.loggedIn = state.authenticationState.loggedIn;
+
+        that.myRegistration = _.find(state.tournamentData.actualTournamentRegisteredPlayers,
+          function (reg) {
+            return reg.playerId === state.authenticationState.userPlayerData.id;
+          });
+
+        that.myTournament = (state.storeData.actualTournament.creatorUid === state.authenticationState.currentUserId);
+
       });
 
-    this.store.select(state => state.tournamentData)
-      .subscribe(tournamentData => {
-        if (that.playerData) {
-          that.myRegistration = _.find(tournamentData.actualTournamentRegisteredPlayers,
-            function (reg) {
-              return reg.playerId === that.playerData.id;
-            });
-        }
-        this.actualTournamentRegisteredPlayers = tournamentData.actualTournamentRegisteredPlayers;
-      });
+  }
+
+  ngOnDestroy() {
+    this.store.dispatch(new TournamentUnsubscribeAction());
   }
 
   openRegistrationDialog() {
@@ -70,13 +80,15 @@ export class TournamentPreparationComponent implements OnInit {
     const dialogRef = this.dialog.open(RegisterDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
-        playerData: this.playerData
+        userPlayerData: this.userPlayerData
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
 
-      this.store.dispatch(new RegistrationPushAction(result));
+      if (result !== undefined) {
+        this.store.dispatch(new RegistrationPushAction(result));
+      }
 
     });
   }
@@ -89,13 +101,15 @@ export class TournamentPreparationComponent implements OnInit {
 })
 export class RegisterDialogComponent {
 
-  playerData: Player;
+  userPlayerData: Player;
   actualTournament: TournamentVM;
 
   constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>) {
 
-    this.playerData = dialogRef.config.data.playerData;
+
+    this.userPlayerData = dialogRef.config.data.userPlayerData;
     this.actualTournament = dialogRef.config.data.actualTournament;
+    console.log('act tournament: ' + JSON.stringify(this.actualTournament));
   }
 
   onSaveRegistration(registration: RegistrationVM) {

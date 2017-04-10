@@ -1,8 +1,8 @@
-<md-card *ngIf="!playerData">
+<md-card *ngIf="!userPlayerData">
   You can register only with a valid Player-Profile
 </md-card>
 
-<md-card *ngIf="playerData">
+<md-card *ngIf="userPlayerData">
   <h2>Register for {{actualTournament.name}}</h2>
   <form [formGroup]="tournamentRegistrationForm" novalidate>
 

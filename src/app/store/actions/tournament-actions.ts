@@ -14,6 +14,16 @@ export class TournamentSubscribeAction implements Action {
   }
 }
 
+export const TOURNAMENT_UNSUBSCRIBE_ACTION = 'TOURNAMENT_UNSUBSCRIBE_ACTION';
+
+export class TournamentUnsubscribeAction implements Action {
+
+  readonly type = 'TOURNAMENT_UNSUBSCRIBE_ACTION';
+
+  constructor() {
+  }
+}
+
 export const SET_ACTUAL_TOURNAMENT_ACTION = 'SET_ACTUAL_TOURNAMENT_ACTION';
 
 export class SetActualTournamentAction implements Action {
@@ -61,6 +71,16 @@ export class RegistrationPushAction implements Action {
   readonly type = 'REGISTRATION_PUSH_ACTION';
 
   constructor(public payload: RegistrationVM) {
+  }
+}
+
+export const CLEAR_TOURNAMENT_REGISTRATION_ACTION = 'CLEAR_TOURNAMENT_REGISTRATION_ACTION';
+
+export class ClearRegistrationAction implements Action {
+
+  readonly type = 'CLEAR_TOURNAMENT_REGISTRATION_ACTION';
+
+  constructor() {
   }
 }
 

@@ -9,8 +9,7 @@ import {TournamentPlayer} from '../../../shared/model/tournament-player';
 
 export interface StoreData {
 
-  userData:  UserData;
-  playerData: Player;
+
   tournaments: Tournament[];
   players: Player[];
 
@@ -23,9 +22,7 @@ export interface StoreData {
 
 export const INITIAL_STORE_DATA = {
 
-  userData: undefined,
 
-  playerData: undefined,
 
   actualTournament: {
     id: '123',

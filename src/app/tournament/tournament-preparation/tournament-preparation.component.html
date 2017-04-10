@@ -1,13 +1,15 @@
 <h1 class="tournament-heading">{{actualTournament.name}}</h1>
 
-<md-card *ngIf="playerData">
+<md-card *ngIf="userPlayerData && !myRegistration">
   <button (click)="openRegistrationDialog()" type="button" color="primary" md-raised-button>Register me</button>
+</md-card>
 
-  {{myRegistration | json}}
+<md-card *ngIf="myTournament">
+  Its my Tournament :)
 </md-card>
 
 
-<md-card *ngIf="!playerData">
+<md-card *ngIf="!userPlayerData">
   <md-card-title>Want to register for Tournament?</md-card-title>
   <md-card-subtitle>No Problem just create your Player-Profile</md-card-subtitle>
   <md-card-actions>
@@ -23,6 +25,6 @@
     Registrations ({{actualTournamentRegisteredPlayers.length}})
   </h2>
   <md-list>
-    <tournament-registration-list [playerData]="playerData" [registrations]="actualTournamentRegisteredPlayers"></tournament-registration-list>
+    <tournament-registration-list [userPlayerData]="userPlayerData" [registrations]="actualTournamentRegisteredPlayers"></tournament-registration-list>
   </md-list>
 </md-card>

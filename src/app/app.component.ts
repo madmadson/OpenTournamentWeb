@@ -1,12 +1,12 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Store} from "@ngrx/store";
-import {ApplicationState} from "./store/application-state";
-import {Subscription} from "rxjs/Subscription";
-import {AuthSubscribeAction, LogoutAction} from "./store/actions/auth-actions";
-import {UiState} from "./store/ui-state";
-import * as _ from "lodash";
-import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from "./store/actions/tournaments-actions";
-import {Router} from "@angular/router";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {ApplicationState} from './store/application-state';
+import {Subscription} from 'rxjs/Subscription';
+import {AuthSubscribeAction, LogoutAction} from './store/actions/auth-actions';
+import {AuthenticationState} from './store/authentication-state';
+import * as _ from 'lodash';
+import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from './store/actions/tournaments-actions';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -17,14 +17,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription;
 
-  public  uiState: UiState;
+  public  authenticationState: AuthenticationState;
 
 
   constructor(private router: Router, private store: Store<ApplicationState>) {
 
-    this.subscription = store.select(state => state.uiState).subscribe(uiState => {
-        console.log('new state' + JSON.stringify(uiState));
-        this.uiState = _.cloneDeep(uiState);
+    this.subscription = store.select(state => state.authenticationState).subscribe(authenticationState => {
+        console.log('new state' + JSON.stringify(authenticationState));
+        this.authenticationState = _.cloneDeep(authenticationState);
       }
     );
 

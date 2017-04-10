@@ -1,7 +1,10 @@
 import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
-import {LogoutAction, SaveUserDataAction, StorePlayerDataAction} from '../store/actions/auth-actions';
+import {
+  DeleteUserDataAction, DeleteUserPlayerDataAction, SaveUserDataAction,
+  SaveUserPlayerDataAction
+} from '../store/actions/auth-actions';
 import {AngularFire, AuthMethods, AuthProviders, FirebaseRef} from 'angularfire2';
 import {Subscription} from 'rxjs/Subscription';
 import {Router} from '@angular/router';
@@ -30,8 +33,6 @@ export class LoginService implements OnDestroy {
 
   subscribeOnAuthentication() {
 
-    const that = this;
-
     this.authSubscription = this.afService.auth.subscribe(
       (auth) => {
 
@@ -44,34 +45,50 @@ export class LoginService implements OnDestroy {
               {uid: auth.auth.uid, displayName: auth.auth.displayName, photoURL: auth.auth.photoURL}
             ));
 
-            this.query = this.fb.database().ref('players').orderByChild('userUid')
-              .equalTo(auth.auth.uid).limitToFirst(1);
-            this.query.on('child_added', function (snapshot) {
-              const player = Player.fromJson(snapshot.val());
-              player.id = snapshot.key;
-              that.store.dispatch(new StorePlayerDataAction(player));
-            });
+            this.subscribeAsPlayer(auth.auth.uid);
 
-            this.query.on('child_changed', function (snapshot) {
-              const player = Player.fromJson(snapshot.val());
-              player.id = snapshot.key;
-              that.store.dispatch(new StorePlayerDataAction(player));
+            this.snackBar.open('Login Successfully', '', {
+              duration: 5000
             });
+            this.router.navigate(['/home']);
+
           } else {
             const snackBarRef = this.snackBar.open('Please verify your email first', 'SEND EMAIL AGAIN', {
               duration: 5000
             });
             snackBarRef.onAction().subscribe(() => {
-             auth.auth.sendEmailVerification();
-             snackBarRef.dismiss();
+              auth.auth.sendEmailVerification();
+              snackBarRef.dismiss();
             });
           }
-
-        } else {
-          console.log('failed?!');
         }
       }
     );
+  }
+
+  subscribeAsPlayer(userUid: string) {
+
+    const that = this;
+
+    this.query = this.fb.database().ref('players').orderByChild('userUid')
+      .equalTo(userUid).limitToFirst(1);
+
+    this.query.once('child_added').then(function (snapshot) {
+      if (snapshot.val() != null) {
+
+        const player = Player.fromJson(snapshot.val());
+        player.id = snapshot.key;
+        that.store.dispatch(new SaveUserPlayerDataAction(player));
+      } else {
+        that.store.dispatch(new DeleteUserPlayerDataAction());
+      }
+    });
+
+    // this.query.on('child_changed', function (snapshot) {
+    //   const player = Player.fromJson(snapshot.val());
+    //   player.id = snapshot.key;
+    //   this.store.dispatch(new SaveUserPlayerDataAction(player));
+    // });
   }
 
   createAccount(payload) {
@@ -101,15 +118,7 @@ export class LoginService implements OnDestroy {
     this.afService.auth.login(
       {email: login.email, password: login.password},
       {provider: AuthProviders.Password, method: AuthMethods.Password}
-    ).then(() => {
-
-      if (this.afService.auth.getAuth().auth.emailVerified) {
-        this.snackBar.open('Login Successfully', '', {
-          duration: 5000
-        });
-        this.router.navigate(['/home']);
-      }
-    }).catch((error: any) => {
+    ).catch((error: any) => {
       console.log(error);
 
       this.snackBar.open('Failed to login. Please check Email/Password', '', {
