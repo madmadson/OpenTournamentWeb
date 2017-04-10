@@ -1,6 +1,6 @@
 
 
-<md-list-item *ngFor="let tournament of tournaments" (click)="onSelect(tournament)">
+<md-list-item class="list-item" *ngFor="let tournament of tournaments" (click)="onSelect(tournament)">
   <md-icon md-list-avatar *ngIf="tournament.teamSize == ''">person</md-icon>
   <md-icon md-list-avatar *ngIf="tournament.teamSize > 1">group</md-icon>
   <h2 md-line style="padding-bottom: 10px; font-weight: bold; ">{{tournament.name}}</h2>

@@ -1,3 +1,4 @@
+import {Moment} from 'moment';
 export interface TournamentListVM {
 
   monthYear: number;
@@ -10,8 +11,8 @@ export interface TournamentVM {
   id: string;
   name: string;
   location: string;
-  beginDate: String;
-  endDate: String;
+  beginDate: string;
+  endDate: string;
   maxParticipants: number;
   teamSize: number;
   actualRound: number;

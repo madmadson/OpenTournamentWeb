@@ -10,6 +10,8 @@ import {
 } from '../store/actions/tournaments-actions';
 import {Tournament} from '../../../shared/model/tournament';
 import {TournamentVM} from '../tournament/tournament.vm';
+import {MdSnackBar} from '@angular/material';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class TournamentsService implements OnDestroy {
@@ -18,7 +20,9 @@ export class TournamentsService implements OnDestroy {
 
   constructor(protected afService: AngularFire,
               protected store: Store<ApplicationState>,
-              @Inject(FirebaseRef) private fb) {
+              @Inject(FirebaseRef) private fb,
+              private router: Router,
+              private snackBar: MdSnackBar) {
 
   }
 
@@ -80,6 +84,12 @@ export class TournamentsService implements OnDestroy {
 
     const tournaments = this.afService.database.list('tournaments');
     tournaments.push(newTournament);
+
+    this.snackBar.open('Tournament saved successfuly', '', {
+      duration: 5000
+    });
+
+    this.router.navigate(['/my-tournaments']);
   }
 }
 

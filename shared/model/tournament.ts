@@ -26,7 +26,7 @@ export class Tournament {
   static fromTournamentVM(tournamentVM: TournamentVM): Tournament {
     return new Tournament(
       tournamentVM.name, tournamentVM.location,
-      moment(tournamentVM.beginDate).format(), moment(tournamentVM.endDate).format(),
+      moment(new Date(tournamentVM.beginDate)).toISOString(), moment(new Date(tournamentVM.endDate)).toISOString(),
       tournamentVM.maxParticipants, tournamentVM.teamSize, 0, tournamentVM.creatorUid);
   }
 

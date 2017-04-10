@@ -1,12 +1,12 @@
-import {Injectable} from "@angular/core";
-import {Actions, Effect} from "@ngrx/effects";
-import {TournamentsService} from "../../service/tournaments.service";
+import {Injectable} from '@angular/core';
+import {Actions, Effect} from '@ngrx/effects';
+import {TournamentsService} from '../../service/tournaments.service';
 import {
   TOURNAMENT_LOAD_ACTION,
   TOURNAMENT_PUSH_ACTION,
   TOURNAMENTS_SUBSCRIBE_ACTION,
   TOURNAMENTS_UNSUBSCRIBE_ACTION
-} from "../actions/tournaments-actions";
+} from '../actions/tournaments-actions';
 
 @Injectable()
 export class TournamentsEffectService {

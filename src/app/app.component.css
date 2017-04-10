@@ -127,5 +127,10 @@
   color: deepskyblue;
 }
 
+.list-item:hover {
+  cursor: pointer;
+  color: deepskyblue;
+}
+
 
 

@@ -94,14 +94,12 @@ export class TournamentNewComponent implements OnInit {
 
     changes$.subscribe(teamTournament => {
       if (teamTournament) {
-        console.log('is TeamTournament:');
         this.tournamentForm.get('teamSize').setValidators(
           composeValidators([Validators.required, CustomValidators.min(2), CustomValidators.max(20)])
         );
         this.tournamentForm.get('teamSize').updateValueAndValidity();
 
       } else {
-        console.log('is not TeamTournament:');
         this.tournamentForm.get('teamSize').clearValidators();
         this.tournamentForm.get('teamSize').updateValueAndValidity();
       }
@@ -121,7 +119,6 @@ export class TournamentNewComponent implements OnInit {
         const messages = this.validationMessages[field];
         for (const key of Object.keys(formField.errors)) {
 
-          console.log('errors: ' + key + ' message: ' + messages[key]);
           formField.setErrors({'message': messages[key]});
         }
       }
