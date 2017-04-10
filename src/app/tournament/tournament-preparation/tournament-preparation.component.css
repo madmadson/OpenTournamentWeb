@@ -1,0 +1,12 @@
+.flex-container{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+
+@media only screen and (max-width: 1100px) {
+  .flex-item {
+    width: 80%;
+  }
+}

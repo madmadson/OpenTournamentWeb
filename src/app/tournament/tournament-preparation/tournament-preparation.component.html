@@ -1,13 +1,8 @@
-<h1 class="tournament-heading">{{actualTournament.name}}</h1>
+<h1 class="heading">{{actualTournament.name}}</h1>
 
 <md-card *ngIf="userPlayerData && !myRegistration">
   <button (click)="openRegistrationDialog()" type="button" color="primary" md-raised-button>Register me</button>
 </md-card>
-
-<md-card *ngIf="myTournament">
-  Its my Tournament :)
-</md-card>
-
 
 <md-card *ngIf="!userPlayerData">
   <md-card-title>Want to register for Tournament?</md-card-title>
@@ -18,13 +13,26 @@
   </md-card-actions>
 </md-card>
 
-<md-card>
-  <span *ngIf="actualTournamentRegisteredPlayers.length == 0">No Registrations found</span>
-  <h2 *ngIf="actualTournamentRegisteredPlayers.length > 0"
-      class="list-heading">
-    Registrations ({{actualTournamentRegisteredPlayers.length}})
-  </h2>
-  <md-list>
-    <tournament-registration-list [userPlayerData]="userPlayerData" [registrations]="actualTournamentRegisteredPlayers"></tournament-registration-list>
-  </md-list>
-</md-card>
+<div class="flex-container">
+  <md-card class="flex-item">
+    <span *ngIf="actualTournamentRegisteredPlayers.length == 0">No Registrations found</span>
+    <h2 *ngIf="actualTournamentRegisteredPlayers.length > 0"
+        class="list-heading">
+      Registrations ({{actualTournamentRegisteredPlayers.length}})
+    </h2>
+    <md-list>
+      <tournament-registration-list [userPlayerData]="userPlayerData" [registrations]="actualTournamentRegisteredPlayers"></tournament-registration-list>
+    </md-list>
+  </md-card>
+  <md-card *ngIf="myTournament" class="flex-item">
+    <span *ngIf="actualTournamentRegisteredPlayers.length == 0">No Registrations found</span>
+    <h2 *ngIf="actualTournamentRegisteredPlayers.length > 0"
+        class="list-heading">
+      Registrations ({{actualTournamentRegisteredPlayers.length}})
+    </h2>
+    <md-list>
+      <tournament-registration-list [isAdmin]="myTournament" [userPlayerData]="userPlayerData" [registrations]="actualTournamentRegisteredPlayers"></tournament-registration-list>
+    </md-list>
+  </md-card>
+
+</div>

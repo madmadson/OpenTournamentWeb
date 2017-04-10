@@ -15,6 +15,9 @@ export class TournamentRegistrationListComponent implements OnInit {
   @Input()
   userPlayerData: Player;
 
+  @Input()
+  isAdmin: boolean;
+
   constructor() {
   }
 

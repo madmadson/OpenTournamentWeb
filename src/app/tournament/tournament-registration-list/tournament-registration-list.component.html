@@ -5,12 +5,10 @@
 
   <p  md-line style="padding-top: 5px;">
     {{registration.teamName}} - {{registration.meta}} - {{registration.origin}}</p>
-  <div class="md-secondary">
-    <img src="../../../assets/my_crown_small.png">
-    {{registration.elo}}
-  </div>
+
+  <span class="md-secondary-spacer"></span>
+  <span class="md-secondary">
+    <img src="../../../assets/my_crown_small.png">{{registration.elo}}</span>
+  <md-icon  class="md-secondary list-action negative">delete</md-icon>
+  <md-icon  class="md-secondary list-action positive">check_circle</md-icon>
 </md-list-item>
-
-
-
-

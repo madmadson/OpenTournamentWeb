@@ -61,7 +61,9 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 
         that.myRegistration = _.find(state.tournamentData.actualTournamentRegisteredPlayers,
           function (reg) {
-            return reg.playerId === state.authenticationState.userPlayerData.id;
+            if (state.authenticationState.userPlayerData !== undefined) {
+              return reg.playerId === state.authenticationState.userPlayerData.id;
+            }
           });
 
         that.myTournament = (state.storeData.actualTournament.creatorUid === state.authenticationState.currentUserId);
