@@ -6,6 +6,7 @@ export class Registration {
   id: string;
   tournamentId: string;
   playerName: string;
+  email: string;
   origin: string;
   meta: string;
   registrationDate: string;
@@ -14,31 +15,33 @@ export class Registration {
   teamId: string;
   country: string;
   elo: number;
+  faction: string;
 
-  static fromJson({tournamentId, playerName,
+  static fromJson({tournamentId, playerName, email,
                     origin, meta,
-                    registrationDate, teamName, playerId, teamId, country, elo}): Registration {
+                    registrationDate, teamName, playerId, teamId, country, elo, faction}): Registration {
     return new Registration(
-      tournamentId, playerName, origin,
+      tournamentId, playerName, email, origin,
       meta, registrationDate,
-      teamName, playerId, teamId, country, elo);
+      teamName, playerId, teamId, country, elo, faction);
   }
 
   static fromRegistrationVM(registrationVM: RegistrationVM): Registration {
     return new Registration( registrationVM.tournamentId,
-      registrationVM.playerName, registrationVM.origin, registrationVM.meta,
+      registrationVM.playerName, registrationVM.email, registrationVM.origin, registrationVM.meta,
       moment(registrationVM.registrationDate).format(),
      registrationVM.teamName, registrationVM.playerId, registrationVM.teamId,
-    registrationVM.country, registrationVM.elo);
-  }
+      registrationVM.country, registrationVM.elo, registrationVM.faction);
+    }
 
-  constructor(tournamentId: string, playerName: string, origin: string,
+  constructor(tournamentId: string, playerName: string, email: string, origin: string,
               meta: string, registrationDate: string,
               teamName: string, playerId: string, teamId: string,
-              country: string, elo: number) {
+              country: string, elo: number, faction: string) {
 
     this.tournamentId = tournamentId;
     this.playerName = playerName;
+    this.email = email;
     this.origin = origin;
     this.meta = meta;
     this.registrationDate = registrationDate;
@@ -47,6 +50,7 @@ export class Registration {
     this.teamId = teamId;
     this.country = country;
     this.elo = elo;
+    this.faction = faction;
   }
 }
 

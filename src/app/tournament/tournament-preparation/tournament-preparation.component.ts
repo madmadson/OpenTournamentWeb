@@ -3,7 +3,8 @@ import {Store} from '@ngrx/store';
 
 import {ActivatedRoute, Router} from '@angular/router';
 import {
-  RegistrationPushAction, TournamentSubscribeAction,
+  RegistrationEraseAction,
+  RegistrationPushAction, TournamentPlayerPushAction, TournamentSubscribeAction,
   TournamentUnsubscribeAction
 } from '../../store/actions/tournament-actions';
 import {TournamentVM} from '../tournament.vm';
@@ -15,6 +16,7 @@ import {RegistrationVM} from '../registration.vm';
 import {Registration} from '../../../../shared/model/registration';
 
 import * as _ from 'lodash';
+import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 
 
 @Component({
@@ -28,6 +30,7 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
   actualTournament: TournamentVM;
   userPlayerData: Player;
   actualTournamentRegisteredPlayers: Registration[];
+  actualTournamentPlayers: TournamentPlayer[];
 
   myRegistration: Registration;
   myTournament: boolean;
@@ -50,6 +53,8 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
         this.store.dispatch(new TournamentSubscribeAction(params['id']));
       }
     );
+
+
     this.store.select(state => state)
       .subscribe(state => {
 
@@ -57,6 +62,7 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
         this.actualTournament = state.storeData.actualTournament;
 
         this.actualTournamentRegisteredPlayers = state.tournamentData.actualTournamentRegisteredPlayers;
+        this.actualTournamentPlayers = state.tournamentData.actualTournamentPlayers;
         this.loggedIn = state.authenticationState.loggedIn;
 
         that.myRegistration = _.find(state.tournamentData.actualTournamentRegisteredPlayers,
@@ -94,6 +100,35 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 
     });
   }
+
+  onSaveTournamentPlayer(registration: Registration) {
+    if (registration !== undefined) {
+      this.store.dispatch(new TournamentPlayerPushAction(registration));
+    }
+  }
+  onDeleteRegistration(registration: Registration) {
+    if (registration !== undefined) {
+      this.store.dispatch(new RegistrationEraseAction(registration));
+    }
+  }
+
+  onAddArmyLists(registration: Registration) {
+    if (registration !== undefined) {
+      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
+        data: {
+          registration: registration
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+
+        if (result !== undefined) {
+          this.store.dispatch(new RegistrationPushAction(result));
+        }
+
+      });
+    }
+  }
 }
 
 
@@ -108,13 +143,30 @@ export class RegisterDialogComponent {
 
   constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>) {
 
-
     this.userPlayerData = dialogRef.config.data.userPlayerData;
     this.actualTournament = dialogRef.config.data.actualTournament;
-    console.log('act tournament: ' + JSON.stringify(this.actualTournament));
   }
 
   onSaveRegistration(registration: RegistrationVM) {
+
+    this.dialogRef.close(registration);
+  }
+}
+
+@Component({
+  selector: 'add-army-lists-dialog',
+  templateUrl: './add-army-lists-dialog.html'
+})
+export class AddArmyListsDialogComponent {
+
+  registration: Registration;
+
+  constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>) {
+
+    this.registration = dialogRef.config.data.registration;
+  }
+
+  onSaveArmyList(registration: Registration) {
 
     this.dialogRef.close(registration);
   }

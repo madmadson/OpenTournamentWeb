@@ -4,7 +4,7 @@ import {Store} from '@ngrx/store';
 import {ApplicationState} from '../../store/application-state';
 import {Player} from '../../../../shared/model/player';
 import {composeValidators} from '@angular/forms/src/directives/shared';
-import {Subscription} from 'rxjs';
+import {Subscription} from 'rxjs/Subscription';
 import {PlayerVM} from '../player.vm';
 import {PlayerPushAction} from '../../store/actions/players-actions';
 import {getAllCountries} from '../../../../shared/model/countries';
@@ -26,6 +26,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
 
   private userDataSub: Subscription;
   private currentUserId: string;
+  private currentUserEmail: string;
 
   constructor(private formBuilder: FormBuilder,
               private store: Store<ApplicationState>) {
@@ -39,8 +40,9 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     this.initForm();
 
 
-    this.userDataSub = this.store.select(state => state.authenticationState.currentUserId).subscribe(currentUserId => {
-      this.currentUserId = currentUserId;
+    this.userDataSub = this.store.select(state => state.authenticationState).subscribe(authenticationState => {
+      this.currentUserId = authenticationState.currentUserId;
+      this.currentUserEmail = authenticationState.currentUserEmail;
     });
 
   }
@@ -77,6 +79,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     return {
       id: this.playerData ? this.playerData.id : undefined,
       userUid: this.currentUserId,
+      userEmail: this.currentUserEmail,
       firstName: formModel.firstName as string,
       nickName: formModel.nickName as string,
       lastName: formModel.lastName as string,

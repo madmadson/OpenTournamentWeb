@@ -6,9 +6,16 @@
   <p  md-line style="padding-top: 5px;">
     {{registration.teamName}} - {{registration.meta}} - {{registration.origin}}</p>
 
+  <p  md-line style="padding-top: 5px;">
+    {{registration.faction}}</p>
+
   <span class="md-secondary-spacer"></span>
   <span class="md-secondary">
     <img src="../../../assets/my_crown_small.png">{{registration.elo}}</span>
-  <md-icon  class="md-secondary list-action negative">delete</md-icon>
-  <md-icon  class="md-secondary list-action positive">check_circle</md-icon>
+  <md-icon *ngIf="isAdmin || isItMe(registration.playerId)" class="md-secondary list-action" (click)="addArmyLists(registration)">playlist_add_check</md-icon>
+  <md-icon *ngIf="isAdmin" class="md-secondary list-action negative" (click)="deleteRegistration(registration)">delete</md-icon>
+  <md-icon *ngIf="isAdmin" class="md-secondary list-action positive" (click)="addTournamentPlayer(registration)">check_circle</md-icon>
+  <a *ngIf="isAdmin" href='mailto:{{registration.email}}' style="padding-top: 12px">
+    <md-icon class="md-secondary list-action">email</md-icon>
+  </a>
 </md-list-item>

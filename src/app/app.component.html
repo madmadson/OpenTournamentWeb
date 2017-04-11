@@ -3,7 +3,9 @@
     <nav>
       <img src="./assets/logo3.png" alt="logo" class="nav-img-logo">
       <hr>
-      <p class="nav-user-welcome" *ngIf="(authenticationState.loggedIn)">Welcome {{authenticationState.currentUserName}}</p>
+      <p class="nav-user-welcome" *ngIf="(authenticationState.loggedIn)">
+        Welcome {{authenticationState.currentUserName ? authenticationState.currentUserName : authenticationState.currentUserEmail}}
+      </p>
       <div class="nav-container">
         <md-icon class="nav-icon">home</md-icon>
         <a class="nav-link" (click)="sidenav.close()" routerLink="/home">Home</a>

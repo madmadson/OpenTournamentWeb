@@ -6,6 +6,7 @@ export interface AuthenticationState {
   currentUserId: string;
   currentUserName: string;
   currentUserImage: string;
+  currentUserEmail: string;
   loggedIn: boolean;
   redirectUrl: string;
 
@@ -19,6 +20,7 @@ export const INITIAL_UI_STATE: AuthenticationState = {
     currentUserId: undefined,
     currentUserName: undefined,
     currentUserImage: undefined,
+    currentUserEmail: undefined,
     loggedIn: false,
     redirectUrl: undefined,
 

@@ -4,6 +4,7 @@ export class Player {
 
   id: string;
   userUid: string;
+  userEmail: string;
   firstName: string;
   lastName: string;
   nickName: string;
@@ -12,21 +13,22 @@ export class Player {
   origin: string;
   country: string;
 
-  static fromJson({userUid, firstName, lastName, nickName, elo, meta, origin, country}): Player {
+  static fromJson({userUid, userEmail, firstName, lastName, nickName, elo, meta, origin, country}): Player {
     return new Player(
-      userUid, firstName, lastName, nickName, elo, meta, origin, country);
+      userUid, userEmail, firstName, lastName, nickName, elo, meta, origin, country);
   }
 
   static fromPlayerVM(playerVM: PlayerVM): Player {
-    return new Player(playerVM.userUid, playerVM.firstName, playerVM.lastName,
+    return new Player(playerVM.userUid, playerVM.userEmail, playerVM.firstName, playerVM.lastName,
       playerVM.nickName, playerVM.elo, playerVM.meta, playerVM.origin, playerVM.country
     );
   }
 
-  constructor(userUid: string, firstName: string, lastName: string,
+  constructor(userUid: string, userEmail: string, firstName: string, lastName: string,
               nickName: string, elo: number, meta: string, origin: string, country: string) {
 
     this.userUid = userUid;
+    this.userEmail = userEmail;
     this.firstName = firstName;
     this.lastName = lastName;
     this.nickName = nickName;

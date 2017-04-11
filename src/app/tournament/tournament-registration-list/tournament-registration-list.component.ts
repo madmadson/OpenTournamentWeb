@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Registration} from '../../../../shared/model/registration';
 import {Player} from '../../../../shared/model/player';
 
@@ -18,6 +18,12 @@ export class TournamentRegistrationListComponent implements OnInit {
   @Input()
   isAdmin: boolean;
 
+  @Output() onSaveTournamentPlayer = new EventEmitter<Registration>();
+
+  @Output() onDeleteRegistration = new EventEmitter<Registration>();
+
+  @Output() onAddArmyLists = new EventEmitter<Registration>();
+
   constructor() {
   }
 
@@ -32,5 +38,17 @@ export class TournamentRegistrationListComponent implements OnInit {
         return 'blue';
       }
     }
+  }
+
+  addTournamentPlayer(registration: Registration) {
+    this.onSaveTournamentPlayer.emit(registration);
+  }
+
+  deleteRegistration(registration: Registration) {
+    this.onDeleteRegistration.emit(registration);
+  }
+
+  addArmyLists(registration: Registration) {
+    this.onAddArmyLists.emit(registration);
   }
 }

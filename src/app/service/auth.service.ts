@@ -1,8 +1,8 @@
-import {Inject, Injectable, OnDestroy} from '@angular/core';
+import {Inject, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 import {
-  DeleteUserDataAction, DeleteUserPlayerDataAction, SaveUserDataAction,
+  DeleteUserPlayerDataAction, SaveUserDataAction,
   SaveUserPlayerDataAction
 } from '../store/actions/auth-actions';
 import {AngularFire, AuthMethods, AuthProviders, FirebaseRef} from 'angularfire2';
@@ -13,10 +13,11 @@ import {Player} from '../../../shared/model/player';
 
 
 @Injectable()
-export class LoginService implements OnDestroy {
+export class LoginService implements OnInit, OnDestroy {
 
   private authSubscription: Subscription;
   private query: any;
+  private redirectUrl: string;
 
   constructor(protected afService: AngularFire,
               private store: Store<ApplicationState>,
@@ -24,6 +25,12 @@ export class LoginService implements OnDestroy {
               @Inject(FirebaseRef) private fb,
               private snackBar: MdSnackBar) {
 
+  }
+
+  ngOnInit(): void{
+    this.store.select(state => state.authenticationState.redirectUrl).subscribe(redirectUrl => {
+      this.redirectUrl = redirectUrl;
+    });
   }
 
   ngOnDestroy(): void {
@@ -42,7 +49,7 @@ export class LoginService implements OnDestroy {
           if (auth.auth.emailVerified) {
 
             this.store.dispatch(new SaveUserDataAction(
-              {uid: auth.auth.uid, displayName: auth.auth.displayName, photoURL: auth.auth.photoURL}
+              {uid: auth.auth.uid, displayName: auth.auth.displayName, photoURL: auth.auth.photoURL, email: auth.auth.email}
             ));
 
             this.subscribeAsPlayer(auth.auth.uid);
@@ -50,10 +57,8 @@ export class LoginService implements OnDestroy {
             this.snackBar.open('Login Successfully', '', {
               duration: 5000
             });
-            this.router.navigate(['/home']);
-
           } else {
-            const snackBarRef = this.snackBar.open('Please verify your email first', 'SEND EMAIL AGAIN', {
+            const snackBarRef = this.snackBar.open('Please verify your userEmail first', 'SEND EMAIL AGAIN', {
               duration: 5000
             });
             snackBarRef.onAction().subscribe(() => {
@@ -99,7 +104,7 @@ export class LoginService implements OnDestroy {
 
       user.auth.sendEmailVerification();
 
-      this.snackBar.open('Registration Successful. Please verify your email.', '', {
+      this.snackBar.open('Registration Successful. Please verify your userEmail.', '', {
         duration: 5000
       });
       this.router.navigate(['/login']);
@@ -118,7 +123,14 @@ export class LoginService implements OnDestroy {
     this.afService.auth.login(
       {email: login.email, password: login.password},
       {provider: AuthProviders.Password, method: AuthMethods.Password}
-    ).catch((error: any) => {
+    ).then(() => {
+      if (this.redirectUrl !== undefined){
+        console.log('found redirect!' + this.redirectUrl);
+        this.router.navigate([this.redirectUrl]);
+      }else {
+        this.router.navigate(['/home']);
+      }
+    }).catch((error: any) => {
       console.log(error);
 
       this.snackBar.open('Failed to login. Please check Email/Password', '', {
@@ -159,14 +171,16 @@ export class LoginService implements OnDestroy {
       provider: provider,
       method: method,
     }).then(() => {
-      this.snackBar.open('Login Successfully', '', {
-        duration: 5000
-      });
-      this.router.navigate(['/home']);
+      if (this.redirectUrl !== undefined){
+        console.log('found redirect!' + this.redirectUrl);
+        this.router.navigate([this.redirectUrl]);
+      }else {
+        this.router.navigate(['/home']);
+      }
     }).catch((error: any) => {
       console.log(error);
 
-      this.snackBar.open('Failed to login with ' + loginProvider + '. Already registered with email?', '', {
+      this.snackBar.open('Failed to login with ' + loginProvider + '. Already registered with userEmail?', '', {
         duration: 5000
       });
     });
@@ -175,7 +189,7 @@ export class LoginService implements OnDestroy {
   resetPassword(email: string) {
     this.fb.auth().sendPasswordResetEmail(email);
 
-    this.snackBar.open('Send email to ' + email, '', {
+    this.snackBar.open('Send userEmail to ' + email, '', {
       duration: 5000
     });
     this.router.navigate(['/login']);

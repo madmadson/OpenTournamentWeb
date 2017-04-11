@@ -1,8 +1,8 @@
-import {enableProdMode} from "@angular/core";
-import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
-import {AppModule} from "./app/app.module";
-import {environment} from "./environments/environment";
-import {Observable} from "rxjs";
+import {enableProdMode} from '@angular/core';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {AppModule} from './app/app.module';
+import {environment} from './environments/environment';
+import {Observable} from 'rxjs';
 
 const debuggerOn = true;
 
@@ -10,18 +10,18 @@ Observable.prototype.debug = function (message: string){
 
   return this.do(
     nextValue => {
-      if(debuggerOn) {
+      if (debuggerOn) {
         console.log(message, nextValue);
       }
     },
     error => {
-      if(debuggerOn) {
+      if (debuggerOn) {
         console.error(message, error);
       }
     },
     () => {
-      if(debuggerOn) {
-        console.log("Observerable completed - ", message);
+      if (debuggerOn) {
+        console.log('Observerable completed - ', message);
       }
     }
   );
@@ -29,7 +29,7 @@ Observable.prototype.debug = function (message: string){
 
 declare module 'rxjs/Observable' {
   interface Observable<T>{
-    debug: (...any) => Observable<T>
+    debug: (...any) => Observable<T>;
   }
 }
 

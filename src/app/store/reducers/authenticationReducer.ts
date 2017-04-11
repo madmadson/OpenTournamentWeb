@@ -16,7 +16,6 @@ export function authenticationState(state: AuthenticationState = INITIAL_UI_STAT
 
       return handleSaveUserData(state, action);
 
-
     case LOGOUT_ACTION:
 
       return handleLogout(state, action);
@@ -45,6 +44,7 @@ function handleSaveUserData(state: AuthenticationState, action: Action): Authent
   newState.currentUserName = action.payload.displayName;
   newState.currentUserImage = action.payload.photoURL;
   newState.currentUserId = action.payload.uid;
+  newState.currentUserEmail = action.payload.email;
   newState.loggedIn = true;
 
   return newState;
@@ -58,8 +58,10 @@ function handleLogout(state: AuthenticationState, action: Action) {
   newState.currentUserName = undefined;
   newState.currentUserId = undefined;
   newState.currentUserImage = undefined;
-  newState.loggedIn = false;
+  newState.currentUserEmail = undefined;
+
   newState.redirectUrl = undefined;
+  newState.loggedIn = false;
 
   newState.userPlayerData = undefined;
 

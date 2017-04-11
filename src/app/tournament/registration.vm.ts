@@ -4,6 +4,7 @@ export interface RegistrationVM {
   id: string;
   tournamentId: string;
   playerName: string;
+  email: string;
   origin: string;
   meta: string;
   country: string;
@@ -12,6 +13,7 @@ export interface RegistrationVM {
   playerId: string;
   teamId: string;
   elo: number;
+  faction: string;
 }
 
 

@@ -60,6 +60,7 @@ export class TournamentRegistrationFormComponent implements OnInit {
       id: undefined,
       tournamentId: this.actualTournament.id,
       playerName: this.userPlayerData.getFullPlayerName(),
+      email: this.userPlayerData.userEmail,
       origin: this.userPlayerData.origin,
       meta: formModel.meta,
       registrationDate: moment().format(),
@@ -67,7 +68,8 @@ export class TournamentRegistrationFormComponent implements OnInit {
       playerId: this.userPlayerData.id,
       teamId: '',
       country: this.userPlayerData.country,
-      elo: this.userPlayerData.elo
+      elo: this.userPlayerData.elo,
+      faction: formModel.faction,
     };
   }
 

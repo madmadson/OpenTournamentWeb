@@ -1,38 +1,64 @@
 <h1 class="heading">{{actualTournament.name}}</h1>
+<div class="action-card-container">
+  <md-card class="action-card" >
+    <button *ngIf="myTournament" type="button" color="accent" md-raised-button>
+      <md-icon>build</md-icon>
+      Edit
+    </button>
+    <button *ngIf="myTournament" type="button" color="accent" md-raised-button>
+      <md-icon>play_arrow</md-icon>
+      Start
+    </button>
+    <button *ngIf="userPlayerData && !myRegistration"
+            (click)="openRegistrationDialog()"
+            type="button"
+            color="accent"
+            md-raised-button>
+      <md-icon>add</md-icon>
+      Register me
+    </button>
+  </md-card>
 
-<md-card *ngIf="userPlayerData && !myRegistration">
-  <button (click)="openRegistrationDialog()" type="button" color="primary" md-raised-button>Register me</button>
-</md-card>
-
-<md-card *ngIf="!userPlayerData">
-  <md-card-title>Want to register for Tournament?</md-card-title>
-  <md-card-subtitle>No Problem just create your Player-Profile</md-card-subtitle>
-  <md-card-actions>
-    <button *ngIf="!loggedIn" type="button" color="primary" md-raised-button routerLink="/login">First Login/Register</button>
-    <button *ngIf="loggedIn" type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player Profile</button>
-  </md-card-actions>
-</md-card>
-
-<div class="flex-container">
-  <md-card class="flex-item">
+  <md-card class="action-card" *ngIf="!userPlayerData">
+    <md-card-title>Want to register for Tournament?</md-card-title>
+    <md-card-subtitle>No Problem just create your Player-Profile</md-card-subtitle>
+    <md-card-actions>
+      <button *ngIf="!loggedIn" type="button" color="primary" md-raised-button routerLink="/login">First
+        Login/Register
+      </button>
+      <button *ngIf="loggedIn" type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player
+        Profile
+      </button>
+    </md-card-actions>
+  </md-card>
+</div>
+<div class="content-cards-container">
+  <md-card class="registration-card">
     <span *ngIf="actualTournamentRegisteredPlayers.length == 0">No Registrations found</span>
     <h2 *ngIf="actualTournamentRegisteredPlayers.length > 0"
         class="list-heading">
       Registrations ({{actualTournamentRegisteredPlayers.length}})
     </h2>
     <md-list>
-      <tournament-registration-list [userPlayerData]="userPlayerData" [registrations]="actualTournamentRegisteredPlayers"></tournament-registration-list>
+      <tournament-registration-list
+        [isAdmin]="myTournament"
+        [userPlayerData]="userPlayerData"
+        [registrations]="actualTournamentRegisteredPlayers"
+        (onSaveTournamentPlayer)="onSaveTournamentPlayer($event)"
+        (onDeleteRegistration)="onDeleteRegistration($event)"
+        (onAddArmyLists)="onAddArmyLists($event)">
+      </tournament-registration-list>
     </md-list>
   </md-card>
-  <md-card *ngIf="myTournament" class="flex-item">
-    <span *ngIf="actualTournamentRegisteredPlayers.length == 0">No Registrations found</span>
-    <h2 *ngIf="actualTournamentRegisteredPlayers.length > 0"
+  <md-card *ngIf="myTournament" class="tournament-player-card">
+    <span *ngIf="actualTournamentPlayers.length == 0">No Tournament Players found</span>
+    <h2 *ngIf="actualTournamentPlayers.length > 0"
         class="list-heading">
-      Registrations ({{actualTournamentRegisteredPlayers.length}})
+      Tournament Players ({{actualTournamentPlayers.length}})
     </h2>
     <md-list>
-      <tournament-registration-list [isAdmin]="myTournament" [userPlayerData]="userPlayerData" [registrations]="actualTournamentRegisteredPlayers"></tournament-registration-list>
+      <tournament-player-list [isAdmin]="myTournament" [userPlayerData]="userPlayerData"
+                                    [tournamentPlayers]="actualTournamentPlayers"></tournament-player-list>
     </md-list>
   </md-card>
-
 </div>

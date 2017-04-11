@@ -1,0 +1,11 @@
+<md-list-item *ngFor="let tournamentPlayer of tournamentPlayers" [class.my-item-color]="isItMe(tournamentPlayer.playerId)" >
+  <h3 md-line style="padding-bottom: 10px;">{{tournamentPlayer.playerName}}</h3>
+
+  <p  md-line style="padding-top: 5px;">
+    {{tournamentPlayer.teamName}} - {{tournamentPlayer.meta}} - {{tournamentPlayer.origin}}</p>
+
+  <span class="md-secondary-spacer"></span>
+  <span class="md-secondary">
+    <img src="../../../assets/my_crown_small.png">{{tournamentPlayer.elo}}</span>
+  <md-icon *ngIf="isAdmin" class="md-secondary list-action negative">delete</md-icon>
+</md-list-item>

@@ -18,7 +18,7 @@ export class PasswordForgetComponent implements OnInit {
   validationMessages = {
     'email': {
       'required': 'Email is required.',
-      'email': 'Must be a valid email'
+      'email': 'Must be a valid userEmail'
     }
   };
 

@@ -3,6 +3,7 @@ export interface PlayerVM {
 
   id: string;
   userUid?: string;
+  userEmail?: string;
   firstName?: string;
   lastName?: string;
   nickName?: string;
