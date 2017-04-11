@@ -1,8 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {ActivatedRoute, Router} from '@angular/router';
 import {
+  ArmyListEraseAction,
+  PushArmyListAction,
   RegistrationEraseAction,
   RegistrationPushAction, TournamentPlayerPushAction, TournamentSubscribeAction,
   TournamentUnsubscribeAction
@@ -12,11 +14,13 @@ import {TournamentVM} from '../tournament.vm';
 import {ApplicationState} from '../../store/application-state';
 import {Player} from '../../../../shared/model/player';
 import {MdDialog, MdDialogRef} from '@angular/material';
-import {RegistrationVM} from '../registration.vm';
 import {Registration} from '../../../../shared/model/registration';
 
 import * as _ from 'lodash';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
+import {ArmyList} from '../../../../shared/model/armyList';
+import {Observable} from 'rxjs';
+import {register} from 'ts-node/dist';
 
 
 @Component({
@@ -31,6 +35,7 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
   userPlayerData: Player;
   actualTournamentRegisteredPlayers: Registration[];
   actualTournamentPlayers: TournamentPlayer[];
+  actualTournamentArmyList$: Observable<ArmyList[]>;
 
   myRegistration: Registration;
   myTournament: boolean;
@@ -54,6 +59,7 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
       }
     );
 
+    this.actualTournamentArmyList$ = this.store.select(state => state.tournamentData.actualTournamentArmyLists);
 
     this.store.select(state => state)
       .subscribe(state => {
@@ -63,6 +69,7 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 
         this.actualTournamentRegisteredPlayers = state.tournamentData.actualTournamentRegisteredPlayers;
         this.actualTournamentPlayers = state.tournamentData.actualTournamentPlayers;
+
         this.loggedIn = state.authenticationState.loggedIn;
 
         that.myRegistration = _.find(state.tournamentData.actualTournamentRegisteredPlayers,
@@ -106,6 +113,7 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
       this.store.dispatch(new TournamentPlayerPushAction(registration));
     }
   }
+
   onDeleteRegistration(registration: Registration) {
     if (registration !== undefined) {
       this.store.dispatch(new RegistrationEraseAction(registration));
@@ -114,18 +122,30 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 
   onAddArmyLists(registration: Registration) {
     if (registration !== undefined) {
+
       const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
         data: {
-          registration: registration
+          registration: registration,
+          armyListForRegistration: this.actualTournamentArmyList$
+        }
+      });
+      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyList.subscribe(armyList => {
+
+        if (armyList !== undefined) {
+          this.store.dispatch(new PushArmyListAction(armyList));
+        }
+      });
+      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
+
+        if (armyList !== undefined) {
+          this.store.dispatch(new ArmyListEraseAction(armyList));
         }
       });
 
-      dialogRef.afterClosed().subscribe(result => {
+      dialogRef.afterClosed().subscribe(() => {
 
-        if (result !== undefined) {
-          this.store.dispatch(new RegistrationPushAction(result));
-        }
-
+        saveEventSubscribe.unsubscribe();
+        deleteEventSubscribe.unsubscribe();
       });
     }
   }
@@ -147,7 +167,7 @@ export class RegisterDialogComponent {
     this.actualTournament = dialogRef.config.data.actualTournament;
   }
 
-  onSaveRegistration(registration: RegistrationVM) {
+  onSaveRegistration(registration: Registration) {
 
     this.dialogRef.close(registration);
   }
@@ -160,14 +180,34 @@ export class RegisterDialogComponent {
 export class AddArmyListsDialogComponent {
 
   registration: Registration;
+  armyListForRegistration: ArmyList[];
+
+  armyListModel: ArmyList;
+
+  @Output() onSaveArmyList = new EventEmitter<ArmyList>();
+  @Output() onDeleteArmyList = new EventEmitter<ArmyList>();
 
   constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>) {
 
+    const that = this;
     this.registration = dialogRef.config.data.registration;
+
+    this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.playerId, '', '');
+
+    dialogRef.config.data.armyListForRegistration.subscribe(armyLists => {
+      this.armyListForRegistration = _.filter(armyLists, function (armyList: ArmyList) {
+        if (that.registration !== undefined) {
+          return armyList.playerId === that.registration.playerId;
+        }
+      });
+    });
   }
 
-  onSaveArmyList(registration: Registration) {
+  addArmyList() {
+    this.onSaveArmyList.emit(this.armyListModel);
+  };
 
-    this.dialogRef.close(registration);
-  }
+  deleteArmyList(armyList: ArmyList) {
+    this.onDeleteArmyList.emit(armyList);
+  };
 }

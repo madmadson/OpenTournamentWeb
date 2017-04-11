@@ -1,8 +1,8 @@
 import {Action} from '@ngrx/store';
 import {Tournament} from '../../../../shared/model/tournament';
-import {RegistrationVM} from '../../tournament/registration.vm';
 import {Registration} from '../../../../shared/model/registration';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
+import {ArmyList} from '../../../../shared/model/armyList';
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -71,7 +71,7 @@ export class RegistrationPushAction implements Action {
 
   readonly type = 'REGISTRATION_PUSH_ACTION';
 
-  constructor(public payload: RegistrationVM) {
+  constructor(public payload: Registration) {
   }
 }
 
@@ -152,6 +152,56 @@ export class TournamentPlayerEraseAction implements Action {
   readonly type = 'TOURNAMENT_PLAYER_ERASE_ACTION';
 
   constructor(public payload: TournamentPlayer) {
+  }
+}
+
+export const ARMY_LIST_PUSH_ACTION = 'ARMY_LIST_PUSH_ACTION';
+
+export class PushArmyListAction implements Action {
+
+  readonly type = 'ARMY_LIST_PUSH_ACTION';
+
+  constructor(public payload: ArmyList) {
+  }
+}
+
+export const ARMY_LIST_ERASE_ACTION = 'ARMY_LIST_ERASE_ACTION';
+
+export class ArmyListEraseAction implements Action {
+
+  readonly type = 'ARMY_LIST_ERASE_ACTION';
+
+  constructor(public payload: ArmyList) {
+  }
+}
+
+export const ARMY_LIST_ADDED_ACTION = 'ARMY_LIST_ADDED_ACTION';
+
+export class AddArmyListAction implements Action {
+
+  readonly type = 'ARMY_LIST_ADDED_ACTION';
+
+  constructor(public payload: ArmyList) {
+  }
+}
+
+export const ARMY_LIST_DELETED_ACTION = 'ARMY_LIST_DELETED_ACTION';
+
+export class ArmyListDeletedAction implements Action {
+
+  readonly type = 'ARMY_LIST_DELETED_ACTION';
+
+  constructor(public payload: string) {
+  }
+}
+
+export const CLEAR_ARMY_LISTS_ACTION = 'CLEAR_ARMY_LISTS_ACTION';
+
+export class ClearArmyListsAction implements Action {
+
+  readonly type = 'CLEAR_ARMY_LISTS_ACTION';
+
+  constructor() {
   }
 }
 

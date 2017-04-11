@@ -4,6 +4,8 @@ import {ApplicationState} from '../store/application-state';
 import {AngularFire, FirebaseRef} from 'angularfire2';
 
 import {
+  AddArmyListAction, ArmyListDeletedAction,
+  ClearArmyListsAction,
   ClearRegistrationAction, ClearTournamentPlayerAction,
   SetActualTournamentAction, TournamentPlayerAdded, TournamentPlayerChanged, TournamentPlayerDeleted,
   TournamentRegistrationAdded,
@@ -11,21 +13,21 @@ import {
   TournamentRegistrationDeleted
 } from '../store/actions/tournament-actions';
 import {Registration} from '../../../shared/model/registration';
-import {Router} from '@angular/router';
 import {MdSnackBar} from '@angular/material';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {ArmyList} from '../../../shared/model/armyList';
 
 
 @Injectable()
-export class TournamentService implements OnDestroy{
+export class TournamentService implements OnDestroy {
 
   private tournamentRegistrationsRef: firebase.database.Reference;
   private tournamentPlayerRef: firebase.database.Reference;
+  private armyListsRef: firebase.database.Reference;
 
   constructor(protected afService: AngularFire,
               protected store: Store<ApplicationState>,
               @Inject(FirebaseRef) private fb,
-              private router: Router,
               private snackBar: MdSnackBar) {
 
   }
@@ -38,11 +40,6 @@ export class TournamentService implements OnDestroy{
 
 
   subscribeOnTournament(tournamentId: string) {
-
-    const that = this;
-
-    console.log('subscribe on tournament with id: ' + tournamentId);
-
     this.afService.database.object('tournaments/' + tournamentId).subscribe(
       tournament => {
         tournament.id = tournamentId;
@@ -53,6 +50,7 @@ export class TournamentService implements OnDestroy{
 
     this.subscribeOnRegistrations(tournamentId);
     this.subscribeOnTournamentPlayers(tournamentId);
+    this.subscribeOnArmyLists(tournamentId);
   }
 
   private subscribeOnRegistrations(tournamentId: string) {
@@ -116,9 +114,28 @@ export class TournamentService implements OnDestroy{
     });
   }
 
-  pushRegistration(payload: Registration) {
+  private subscribeOnArmyLists(tournamentId: string) {
+    const that = this;
 
-    const newRegistration = Registration.fromRegistrationVM(payload);
+    this.armyListsRef = this.fb.database().ref('tournament-armyLists/' + tournamentId);
+
+    this.armyListsRef.on('child_added', function (snapshot) {
+
+      const armyList: ArmyList = ArmyList.fromJson(snapshot.val());
+      armyList.id = snapshot.key;
+
+      that.store.dispatch(new AddArmyListAction(armyList));
+
+    });
+
+    this.armyListsRef.on('child_removed', function (snapshot) {
+
+      that.store.dispatch(new ArmyListDeletedAction(snapshot.key));
+
+    });
+  }
+
+  pushRegistration(newRegistration: Registration) {
 
     const registrations = this.afService.database.list('tournament-registration/' + newRegistration.tournamentId );
     registrations.push(newRegistration);
@@ -126,12 +143,6 @@ export class TournamentService implements OnDestroy{
     this.snackBar.open('Registration saved successfully', '', {
       duration: 5000
     });
-  }
-
-  unsubscribeOnTournament() {
-    this.tournamentRegistrationsRef.off();
-    this.store.dispatch(new ClearRegistrationAction());
-    this.store.dispatch(new ClearTournamentPlayerAction());
   }
 
   pushTournamentPlayer(payload: Registration) {
@@ -164,5 +175,34 @@ export class TournamentService implements OnDestroy{
       duration: 5000
     });
   }
+
+  pushArmyList(armyList: ArmyList) {
+
+    const tournamentPlayers = this.afService.database.list('tournament-armyLists/' + armyList.tournamentId );
+    tournamentPlayers.push(armyList);
+
+    this.snackBar.open('Army List saved successfully', '', {
+      duration: 5000
+    });
+  }
+
+  eraseArmyList(armyList: ArmyList) {
+    const armyListRef = this.afService.database
+      .list('tournament-armyLists/' + armyList.tournamentId + '/' + armyList.playerId);
+    armyListRef.remove();
+
+    this.snackBar.open('ArmyList deleted successfully', '', {
+      duration: 5000
+    });
+  }
+
+  unsubscribeOnTournament() {
+    this.tournamentRegistrationsRef.off();
+    this.store.dispatch(new ClearRegistrationAction());
+    this.store.dispatch(new ClearTournamentPlayerAction());
+    this.store.dispatch(new ClearArmyListsAction());
+  }
+
+
 
 }

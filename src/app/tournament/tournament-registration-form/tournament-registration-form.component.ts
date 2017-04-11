@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {RegistrationVM} from '../registration.vm';
 
 import * as moment from 'moment';
 import {TournamentVM} from '../tournament.vm';
 import {Player} from '../../../../shared/model/player';
-import {getAllFactions} from "../../../../shared/model/factions";
+import {getAllFactions} from '../../../../shared/model/factions';
+import {Registration} from '../../../../shared/model/registration';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class TournamentRegistrationFormComponent implements OnInit {
   @Input()
   userPlayerData: Player;
 
-  @Output() onSaveRegistration = new EventEmitter<RegistrationVM>();
+  @Output() onSaveRegistration = new EventEmitter<Registration>();
 
 
   tournamentRegistrationForm: FormGroup;
@@ -53,7 +53,7 @@ export class TournamentRegistrationFormComponent implements OnInit {
     this.onSaveRegistration.emit(registration);
   }
 
-  prepareSaveRegistration(): RegistrationVM {
+  prepareSaveRegistration(): Registration {
     const formModel = this.tournamentRegistrationForm.value;
 
     return {
@@ -70,6 +70,7 @@ export class TournamentRegistrationFormComponent implements OnInit {
       country: this.userPlayerData.country,
       elo: this.userPlayerData.elo,
       faction: formModel.faction,
+      armyLists: []
     };
   }
 

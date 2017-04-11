@@ -1,5 +1,4 @@
-import * as moment from 'moment';
-import {RegistrationVM} from '../../src/app/tournament/registration.vm';
+import {ArmyList} from './armyList';
 
 export class Registration {
 
@@ -16,6 +15,7 @@ export class Registration {
   country: string;
   elo: number;
   faction: string;
+  armyLists: ArmyList[];
 
   static fromJson({tournamentId, playerName, email,
                     origin, meta,
@@ -26,13 +26,6 @@ export class Registration {
       teamName, playerId, teamId, country, elo, faction);
   }
 
-  static fromRegistrationVM(registrationVM: RegistrationVM): Registration {
-    return new Registration( registrationVM.tournamentId,
-      registrationVM.playerName, registrationVM.email, registrationVM.origin, registrationVM.meta,
-      moment(registrationVM.registrationDate).format(),
-     registrationVM.teamName, registrationVM.playerId, registrationVM.teamId,
-      registrationVM.country, registrationVM.elo, registrationVM.faction);
-    }
 
   constructor(tournamentId: string, playerName: string, email: string, origin: string,
               meta: string, registrationDate: string,
@@ -51,6 +44,7 @@ export class Registration {
     this.country = country;
     this.elo = elo;
     this.faction = faction;
+    this.armyLists = [];
   }
 }
 

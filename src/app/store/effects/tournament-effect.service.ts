@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 
 import {
+  ARMY_LIST_ERASE_ACTION,
+  ARMY_LIST_PUSH_ACTION,
   REGISTRATION_ERASE_ACTION,
   REGISTRATION_PUSH_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION, TOURNAMENT_SUBSCRIBE_ACTION,
   TOURNAMENT_UNSUBSCRIBE_ACTION
@@ -46,4 +48,14 @@ export class TournamentEffectService {
     .ofType(TOURNAMENT_PLAYER_ERASE_ACTION)
     .debug('TOURNAMENT_PLAYER_ERASE_ACTION')
     .map(action => this.tournamentService.eraseTournamentPlayer(action.payload));
+
+  @Effect({dispatch: false}) pushArmyList = this.actions$
+    .ofType(ARMY_LIST_PUSH_ACTION)
+    .debug('ARMY_LIST_PUSH_ACTION')
+    .map(action => this.tournamentService.pushArmyList(action.payload));
+
+  @Effect({dispatch: false}) eraseArmyList = this.actions$
+    .ofType(ARMY_LIST_ERASE_ACTION)
+    .debug('ARMY_LIST_ERASE_ACTION')
+    .map(action => this.tournamentService.eraseArmyList(action.payload));
 }
