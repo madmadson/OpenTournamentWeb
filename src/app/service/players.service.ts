@@ -9,7 +9,6 @@ import {
   PlayersClearAction
 } from '../store/actions/players-actions';
 import {Player} from '../../../shared/model/player';
-import {PlayerVM} from '../player/player.vm';
 import {MdSnackBar} from '@angular/material';
 import {Router} from '@angular/router';
 
@@ -71,14 +70,14 @@ export class PlayersService implements OnDestroy {
     this.query.off();
   }
 
-  pushPlayer(playerVM: PlayerVM) {
+  pushPlayer(player: Player) {
 
     const that = this;
 
-    const player = Player.fromPlayerVM(playerVM);
+    player
 
-    if (playerVM.id) {
-      this.afService.database.object('players/' + playerVM.id).$ref.set(player);
+    if (player.id) {
+      this.afService.database.object('players/' + player.id).$ref.set(player);
     } else {
       const players = this.afService.database.list('players');
 

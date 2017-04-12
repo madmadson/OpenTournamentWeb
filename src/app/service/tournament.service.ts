@@ -188,10 +188,20 @@ export class TournamentService implements OnDestroy {
 
   eraseArmyList(armyList: ArmyList) {
     const armyListRef = this.afService.database
-      .list('tournament-armyLists/' + armyList.tournamentId + '/' + armyList.playerId);
+      .list('tournament-armyLists/' + armyList.tournamentId + '/' + armyList.id);
     armyListRef.remove();
 
     this.snackBar.open('ArmyList deleted successfully', '', {
+      duration: 5000
+    });
+  }
+
+  pushNewTournamentPlayer(player: TournamentPlayer) {
+
+    const tournamentPlayers = this.afService.database.list('tournament-player/' + player.tournamentId );
+    tournamentPlayers.push(player);
+
+    this.snackBar.open('Tournament Player saved successfully', '', {
       duration: 5000
     });
   }
@@ -202,7 +212,6 @@ export class TournamentService implements OnDestroy {
     this.store.dispatch(new ClearTournamentPlayerAction());
     this.store.dispatch(new ClearArmyListsAction());
   }
-
 
 
 }

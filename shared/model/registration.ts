@@ -2,7 +2,7 @@ import {ArmyList} from './armyList';
 
 export class Registration {
 
-  id: string;
+  id?: string;
   tournamentId: string;
   playerName: string;
   email: string;

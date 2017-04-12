@@ -3,7 +3,7 @@ import {Actions, Effect} from '@ngrx/effects';
 
 import {
   ARMY_LIST_ERASE_ACTION,
-  ARMY_LIST_PUSH_ACTION,
+  ARMY_LIST_PUSH_ACTION, NEW_TOURNAMENT_PLAYER_PUSH_ACTION,
   REGISTRATION_ERASE_ACTION,
   REGISTRATION_PUSH_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION, TOURNAMENT_SUBSCRIBE_ACTION,
   TOURNAMENT_UNSUBSCRIBE_ACTION
@@ -58,4 +58,9 @@ export class TournamentEffectService {
     .ofType(ARMY_LIST_ERASE_ACTION)
     .debug('ARMY_LIST_ERASE_ACTION')
     .map(action => this.tournamentService.eraseArmyList(action.payload));
+
+  @Effect({dispatch: false}) pushNewTournamentPlayer = this.actions$
+    .ofType(NEW_TOURNAMENT_PLAYER_PUSH_ACTION)
+    .debug('NEW_TOURNAMENT_PLAYER_PUSH_ACTION')
+    .map(action => this.tournamentService.pushNewTournamentPlayer(action.payload));
 }

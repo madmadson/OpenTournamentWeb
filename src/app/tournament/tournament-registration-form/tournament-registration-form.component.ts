@@ -57,7 +57,6 @@ export class TournamentRegistrationFormComponent implements OnInit {
     const formModel = this.tournamentRegistrationForm.value;
 
     return {
-      id: undefined,
       tournamentId: this.actualTournament.id,
       playerName: this.userPlayerData.getFullPlayerName(),
       email: this.userPlayerData.userEmail,

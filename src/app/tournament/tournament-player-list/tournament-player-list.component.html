@@ -1,11 +1,14 @@
-<md-list-item *ngFor="let tournamentPlayer of tournamentPlayers" [class.my-item-color]="isItMe(tournamentPlayer.playerId)" >
+<md-list-item
+  *ngFor="let tournamentPlayer of tournamentPlayers; let i = index; let even = even;"
+  [ngClass]="isItMe(tournamentPlayer.playerId)"
+  [ngClass]="{ even: even}">
+  <h2 md-list-avatar>{{i+1}}</h2>
   <h3 md-line style="padding-bottom: 10px;">{{tournamentPlayer.playerName}}</h3>
-
   <p  md-line style="padding-top: 5px;">
     {{tournamentPlayer.teamName}} - {{tournamentPlayer.meta}} - {{tournamentPlayer.origin}}</p>
 
   <span class="md-secondary-spacer"></span>
-  <span class="md-secondary">
-    <img src="../../../assets/my_crown_small.png">{{tournamentPlayer.elo}}</span>
-  <md-icon *ngIf="isAdmin" class="md-secondary list-action negative">delete</md-icon>
+  <img class="md-secondary" src="../../../assets/my_crown_small.png">
+  <span class="md-secondary">{{tournamentPlayer.elo}}</span>
+  <md-icon *ngIf="isAdmin" (click)="deleteTournamentPlayer(tournamentPlayer)" class="md-secondary list-action negative">delete</md-icon>
 </md-list-item>

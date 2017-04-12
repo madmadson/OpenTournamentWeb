@@ -145,6 +145,17 @@ export class TournamentPlayerPushAction implements Action {
   }
 }
 
+
+export const NEW_TOURNAMENT_PLAYER_PUSH_ACTION = 'NEW_TOURNAMENT_PLAYER_PUSH_ACTION';
+
+export class PushNewTournamentPlayerAction implements Action {
+
+  readonly type = 'NEW_TOURNAMENT_PLAYER_PUSH_ACTION';
+
+  constructor(public payload: TournamentPlayer) {
+  }
+}
+
 export const TOURNAMENT_PLAYER_ERASE_ACTION = 'TOURNAMENT_PLAYER_ERASE_ACTION';
 
 export class TournamentPlayerEraseAction implements Action {

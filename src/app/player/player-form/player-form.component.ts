@@ -5,7 +5,7 @@ import {ApplicationState} from '../../store/application-state';
 import {Player} from '../../../../shared/model/player';
 import {composeValidators} from '@angular/forms/src/directives/shared';
 import {Subscription} from 'rxjs/Subscription';
-import {PlayerVM} from '../player.vm';
+
 import {PlayerPushAction} from '../../store/actions/players-actions';
 import {getAllCountries} from '../../../../shared/model/countries';
 
@@ -66,29 +66,27 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
 
   save() {
 
-    const playerModel: PlayerVM = this.preparePlayer();
+    const playerModel: Player = this.preparePlayer();
 
     this.store.dispatch(new PlayerPushAction(playerModel));
 
   }
 
-  private preparePlayer(): PlayerVM {
+  private preparePlayer(): Player {
 
     const formModel = this.playerForm.value;
 
-    return {
-      id: this.playerData ? this.playerData.id : undefined,
-      userUid: this.currentUserId,
-      userEmail: this.currentUserEmail,
-      firstName: formModel.firstName as string,
-      nickName: formModel.nickName as string,
-      lastName: formModel.lastName as string,
-      origin: formModel.origin as string,
-      meta: formModel.meta as string,
-      country: formModel.country as string,
-      elo: 1000
-    };
-
+    return new Player(
+      this.currentUserId,
+      this.currentUserEmail,
+      formModel.firstName as string,
+      formModel.nickName as string,
+      formModel.lastName as string,
+      1000,
+      formModel.origin as string,
+      formModel.meta as string,
+      formModel.country as string
+    );
   }
 
 }

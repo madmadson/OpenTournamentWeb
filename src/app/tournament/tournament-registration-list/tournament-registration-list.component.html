@@ -1,20 +1,27 @@
-
-
-<md-list-item *ngFor="let registration of registrations" [class.my-item-color]="isItMe(registration.playerId)" >
+<md-list-item
+  *ngFor="let registration of registrations; let i = index; let even = even;"
+  [ngClass]="isItMe(registration.playerId)"
+  [ngClass]="{ even: even}">
+  <h2 md-list-avatar>{{i+1}}</h2>
   <h3 md-line style="padding-bottom: 10px;">{{registration.playerName}}</h3>
 
-  <p  md-line style="padding-top: 5px;">
+  <p md-line style="padding-top: 5px;">
     {{registration.teamName}} - {{registration.meta}} - {{registration.origin}}</p>
 
-  <p  md-line style="padding-top: 5px;">
+  <p md-line style="padding-top: 5px;">
     {{registration.faction}}</p>
 
   <span class="md-secondary-spacer"></span>
-  <span class="md-secondary">
-    <img src="../../../assets/my_crown_small.png">{{registration.elo}}</span>
-  <md-icon *ngIf="isAdmin || isItMe(registration.playerId)" class="md-secondary list-action" (click)="addArmyLists(registration)">playlist_add_check</md-icon>
-  <md-icon *ngIf="isAdmin" class="md-secondary list-action negative" (click)="deleteRegistration(registration)">delete</md-icon>
-  <md-icon *ngIf="isAdmin" class="md-secondary list-action positive" (click)="addTournamentPlayer(registration)">check_circle</md-icon>
+  <img class="md-secondary" src="../../../assets/my_crown_small.png">
+  <span class="md-secondary">{{registration.elo}}</span>
+  <md-icon *ngIf="isAdmin || isItMe(registration.playerId)" class="md-secondary list-action"
+           (click)="addArmyLists(registration)">playlist_add_check
+  </md-icon>
+  <md-icon *ngIf="isAdmin" class="md-secondary list-action negative" (click)="deleteRegistration(registration)">delete
+  </md-icon>
+  <md-icon *ngIf="isAdmin" class="md-secondary list-action positive" (click)="addTournamentPlayer(registration)">
+    check_circle
+  </md-icon>
   <a *ngIf="isAdmin" href='mailto:{{registration.email}}' style="padding-top: 12px">
     <md-icon class="md-secondary list-action">email</md-icon>
   </a>

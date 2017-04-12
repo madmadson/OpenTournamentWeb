@@ -40,7 +40,7 @@ import {DateTimePickerModule} from 'ng2-date-time-picker';
 import {CustomFormsModule} from 'ng2-validation';
 import {AuthGuard} from './auth-guard.service';
 import {
-  AddArmyListsDialogComponent,
+  AddArmyListsDialogComponent, NewTournamentPlayerDialogComponent,
   RegisterDialogComponent,
   TournamentPreparationComponent
 } from './tournament/tournament-preparation/tournament-preparation.component';
@@ -56,6 +56,7 @@ import { RegisterPageComponent } from './auth/register-page/register-page.compon
 import { PasswordForgetComponent } from './auth/password-forget/password-forget.component';
 import { TournamentRegistrationListComponent } from './tournament/tournament-registration-list/tournament-registration-list.component';
 import { TournamentPlayerListComponent } from './tournament/tournament-player-list/tournament-player-list.component';
+import { PlayerSearchComponent } from './player/player-search/player-search.component';
 
 
 const reducers = {
@@ -140,9 +141,11 @@ const firebaseConfDev = {
     RegisterDialogComponent,
     TournamentPlayerListComponent,
     AddArmyListsDialogComponent,
+    PlayerSearchComponent,
+    NewTournamentPlayerDialogComponent,
   ],
   providers: [LoginService, TournamentsService, AuthGuard, TournamentService, PlayersService],
-  entryComponents: [RegisterDialogComponent, AddArmyListsDialogComponent],
+  entryComponents: [RegisterDialogComponent, AddArmyListsDialogComponent, NewTournamentPlayerDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {Player} from '../../../../shared/model/player';
 
@@ -18,6 +18,9 @@ export class TournamentPlayerListComponent implements OnInit {
   @Input()
   isAdmin: boolean;
 
+  @Output() onDeleteTournamentPlayer = new EventEmitter<TournamentPlayer>();
+
+
   constructor() { }
 
   ngOnInit() {
@@ -27,9 +30,13 @@ export class TournamentPlayerListComponent implements OnInit {
 
     if (this.userPlayerData) {
       if (playerId === this.userPlayerData.id) {
-        return 'blue';
+        return 'my-item-color';
       }
     }
+  }
+
+  deleteTournamentPlayer(tournamentPlayer: TournamentPlayer) {
+    this.onDeleteTournamentPlayer.emit(tournamentPlayer);
   }
 
 }

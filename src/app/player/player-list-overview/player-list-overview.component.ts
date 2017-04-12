@@ -1,9 +1,10 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Store} from "@ngrx/store";
-import {ApplicationState} from "../../store/application-state";
-import {Observable} from "rxjs/Observable";
-import {PlayerVM} from "../player.vm";
-import {PlayersSubscribeAction, PlayersUnsubscribeAction} from "../../store/actions/players-actions";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {ApplicationState} from '../../store/application-state';
+import {PlayersSubscribeAction, PlayersUnsubscribeAction} from '../../store/actions/players-actions';
+
+import * as _ from 'lodash';
+import {Player} from '../../../../shared/model/player';
 
 @Component({
   selector: 'player-list-overview',
@@ -11,13 +12,20 @@ import {PlayersSubscribeAction, PlayersUnsubscribeAction} from "../../store/acti
   styleUrls: ['./player-list-overview.component.css']
 })
 export class PlayerListOverviewComponent implements OnInit, OnDestroy {
-  private allPlayers$: Observable<PlayerVM[]>;
 
-  constructor(private store: Store<ApplicationState>) { }
+  allPlayers: Player[];
+  filteredPlayers: Player[];
+
+  constructor(private store: Store<ApplicationState>) {
+
+  }
 
   ngOnInit() {
 
-    this.allPlayers$ = this.store.select(state => state.storeData.players);
+    this.store.select(state => state.storeData.players).subscribe(players => {
+      this.allPlayers = players;
+      this.filteredPlayers = players;
+    });
     this.store.dispatch(new PlayersSubscribeAction());
   }
 
@@ -27,5 +35,20 @@ export class PlayerListOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new PlayersUnsubscribeAction());
   }
 
+  search(searchString: string) {
+
+    console.log('searchString: ' + searchString);
+
+    if (searchString === '') {
+      this.filteredPlayers = this.allPlayers;
+    }
+
+    this.filteredPlayers = _.filter(this.allPlayers, function (player) {
+      return player.firstName.startsWith(searchString) ||
+        player.nickName.startsWith(searchString) ||
+        player.lastName.startsWith(searchString);
+    });
+
+  }
 
 }

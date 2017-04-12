@@ -1,26 +1,28 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-
 import {ActivatedRoute, Router} from '@angular/router';
 import {
   ArmyListEraseAction,
-  PushArmyListAction,
+  PushArmyListAction, PushNewTournamentPlayerAction,
   RegistrationEraseAction,
-  RegistrationPushAction, TournamentPlayerPushAction, TournamentSubscribeAction,
+  RegistrationPushAction, TournamentPlayerEraseAction, TournamentPlayerPushAction, TournamentSubscribeAction,
   TournamentUnsubscribeAction
 } from '../../store/actions/tournament-actions';
 import {TournamentVM} from '../tournament.vm';
-
 import {ApplicationState} from '../../store/application-state';
 import {Player} from '../../../../shared/model/player';
-import {MdDialog, MdDialogRef} from '@angular/material';
+import {MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
 import {Registration} from '../../../../shared/model/registration';
 
 import * as _ from 'lodash';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {ArmyList} from '../../../../shared/model/armyList';
-import {Observable} from 'rxjs';
-import {register} from 'ts-node/dist';
+import {Observable} from 'rxjs/Observable';
+
+
+import {getAllCountries} from '../../../../shared/model/countries';
+
+import {Tournament} from '../../../../shared/model/tournament';
 
 
 @Component({
@@ -43,8 +45,8 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<ApplicationState>,
               private activeRouter: ActivatedRoute,
-              private router: Router,
-              public dialog: MdDialog) {
+              public dialog: MdDialog,
+              private snackBar: MdSnackBar) {
 
   }
 
@@ -110,7 +112,23 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 
   onSaveTournamentPlayer(registration: Registration) {
     if (registration !== undefined) {
-      this.store.dispatch(new TournamentPlayerPushAction(registration));
+      const alreadyRegistered = _.find(this.actualTournamentPlayers, function (tournamentPlayer: TournamentPlayer) {
+        return tournamentPlayer.playerId === registration.playerId;
+      });
+      if (alreadyRegistered) {
+        this.snackBar.open('Player already in Tournament', '', {
+          duration: 5000
+        });
+      } else {
+        this.store.dispatch(new TournamentPlayerPushAction(registration));
+      }
+    }
+
+  }
+
+  onDeleteTournamentPlayer(tournamentPlayer: TournamentPlayer) {
+    if (tournamentPlayer !== undefined) {
+      this.store.dispatch(new TournamentPlayerEraseAction(tournamentPlayer));
     }
   }
 
@@ -149,6 +167,28 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  addTournamentPlayer() {
+
+
+    const dialogRef = this.dialog.open(NewTournamentPlayerDialogComponent, {
+      data: {
+        actualTournament: this.actualTournament
+      },
+      height: '500px',
+      width: '800px',
+    });
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveNewTournamentPlayer.subscribe(tournamentPlayer => {
+
+      if (tournamentPlayer !== undefined) {
+        this.store.dispatch(new PushNewTournamentPlayerAction(tournamentPlayer));
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+    });
+  }
 }
 
 
@@ -171,6 +211,37 @@ export class RegisterDialogComponent {
 
     this.dialogRef.close(registration);
   }
+}
+
+@Component({
+  selector: 'add-offline-player-dialog',
+  templateUrl: './add-tournament-player-dialog.html'
+})
+export class NewTournamentPlayerDialogComponent {
+
+  tournamentPlayerModel: TournamentPlayer;
+  tournament: Tournament;
+
+  countries: string[];
+
+  @Output() onSaveNewTournamentPlayer = new EventEmitter<TournamentPlayer>();
+
+  constructor(public dialogRef: MdDialogRef<NewTournamentPlayerDialogComponent>) {
+
+    this.countries = getAllCountries();
+    this.tournament = dialogRef.config.data.actualTournament;
+
+    this.tournamentPlayerModel = {tournamentId: this.tournament.id, playerName: '', origin: '', meta: '', country: ''};
+  }
+
+  saveTournamentPlayer() {
+    if (this.tournamentPlayerModel.playerName !== '') {
+      this.onSaveNewTournamentPlayer.emit(this.tournamentPlayerModel);
+      this.dialogRef.close();
+    }
+  }
+
+
 }
 
 @Component({
@@ -205,6 +276,7 @@ export class AddArmyListsDialogComponent {
 
   addArmyList() {
     this.onSaveArmyList.emit(this.armyListModel);
+    this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.playerId, '', '');
   };
 
   deleteArmyList(armyList: ArmyList) {

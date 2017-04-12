@@ -36,7 +36,7 @@ export class TournamentRegistrationListComponent implements OnInit {
 
     if (this.userPlayerData) {
       if (regId === this.userPlayerData.id) {
-        return 'blue';
+        return 'my-item-color';
       }
     }
   }

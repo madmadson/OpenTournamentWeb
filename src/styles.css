@@ -14,7 +14,7 @@ body {
 }
 .default-primary-color { background: #673AB7; color: #FFFFFF;}
 .light-primary-color   { background: #D1C4E9; }
-.my-item-color         { background: #2196F3; }
+.my-item-color         { background: #FFC107; }
 .text-primary-color    { color: #FFFFFF; }
 .accent-color          { background: #FFC107; }
 .primary-text-color    { color: #212121; }
@@ -91,5 +91,13 @@ md-card {
 }
 
 .max-height {
-  max-height: 500px;
+  max-height: 350px;
+}
+
+.fix-height{
+  height: 350px;
+}
+
+.even{
+  background-color: #f7eff7;
 }

@@ -3,10 +3,10 @@
 import {Registration} from './registration';
 export class TournamentPlayer {
 
-  id: string;
+  id?: string;
   tournamentId: string;
-  email: string;
-  playerId: string;
+  email?: string;
+  playerId?: string;
   playerName: string;
   elo?: number;
   meta?: string;

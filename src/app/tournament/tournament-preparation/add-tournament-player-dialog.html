@@ -1,0 +1,65 @@
+<h2 class="heading">New Tournament Player</h2>
+
+<form (ngSubmit)="onSubmit()" #tournamentPlayerForm="ngForm">
+  <md-input-container
+    class="full-width">
+    <input
+      mdInput
+      type="text"
+      placeholder="Full PlayerName"
+      maxlength="150"
+      required
+      #fullPlayerName
+      (keyup.enter)="saveTournamentPlayer()"
+      [(ngModel)]="tournamentPlayerModel.playerName" name="playerName">
+    <md-hint align="end">{{fullPlayerName.value.length}} / 150</md-hint>
+  </md-input-container>
+  <md-input-container
+    class="full-width">
+    <input
+      mdInput
+      type="text"
+      placeholder="Origin"
+      maxlength="50"
+      (keyup.enter)="saveTournamentPlayer()"
+      [(ngModel)]="tournamentPlayerModel.origin"
+      name="origin"
+      #origin>
+    <md-hint align="end">{{origin.value.length}} / 50</md-hint>
+  </md-input-container>
+  <md-input-container
+    class="full-width">
+    <input
+      mdInput
+      type="text"
+      placeholder="Meta"
+      maxlength="50"
+      [(ngModel)]="tournamentPlayerModel.meta"
+      name="meta"
+      #meta>
+    <md-hint align="end">{{meta.value.length}} / 50</md-hint>
+  </md-input-container>
+  <md-select
+    class="full-width"
+    placeholder="Country"
+    #country
+    name="country"
+    (keyup.enter)="saveTournamentPlayer()"
+    [(ngModel)]="tournamentPlayerModel.country">
+    <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>
+  </md-select>
+
+  <button type="button"
+          color="accent"
+          md-raised-button
+          (click)="saveTournamentPlayer()"
+          (keyup.enter)="saveTournamentPlayer()"
+          [disabled]="tournamentPlayerForm.invalid">
+    <md-icon>add</md-icon>
+    Save Tournament Player
+  </button>
+
+</form>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

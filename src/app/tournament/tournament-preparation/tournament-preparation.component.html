@@ -17,6 +17,14 @@
       <md-icon>add</md-icon>
       Register me
     </button>
+    <button *ngIf="myRegistration"
+            (click)="onDeleteRegistration(myRegistration)"
+            type="button"
+            color="accent"
+            md-raised-button>
+      <md-icon>delete</md-icon>
+    Delete my Registration
+    </button>
   </md-card>
 
   <md-card class="action-card" *ngIf="!userPlayerData">
@@ -34,9 +42,10 @@
 </div>
 <div class="content-cards-container">
   <md-card class="registration-card">
-    <span *ngIf="actualTournamentRegisteredPlayers.length == 0">No Registrations found</span>
-    <h2 *ngIf="actualTournamentRegisteredPlayers.length > 0"
-        class="list-heading">
+    <h3 *ngIf="actualTournamentRegisteredPlayers.length == 0" class="list-heading">
+      No Registrations found
+    </h3>
+    <h2 *ngIf="actualTournamentRegisteredPlayers.length > 0" class="list-heading">
       Registrations ({{actualTournamentRegisteredPlayers.length}})
     </h2>
     <md-list>
@@ -51,14 +60,22 @@
     </md-list>
   </md-card>
   <md-card *ngIf="myTournament" class="tournament-player-card">
-    <span *ngIf="actualTournamentPlayers.length == 0">No Tournament Players found</span>
-    <h2 *ngIf="actualTournamentPlayers.length > 0"
-        class="list-heading">
+    <h2 *ngIf="actualTournamentPlayers.length > 0" class="list-heading">
       Tournament Players ({{actualTournamentPlayers.length}})
     </h2>
+    <h3 *ngIf="actualTournamentPlayers.length == 0" class="list-heading">
+      No Tournament Players found</h3>
+    <button *ngIf="myTournament" type="button" color="accent" md-raised-button (click)="addTournamentPlayer()">
+      <md-icon>add</md-icon>
+      Add Player
+    </button>
     <md-list>
-      <tournament-player-list [isAdmin]="myTournament" [userPlayerData]="userPlayerData"
-                                    [tournamentPlayers]="actualTournamentPlayers"></tournament-player-list>
+      <tournament-player-list
+          [isAdmin]="myTournament"
+          [userPlayerData]="userPlayerData"
+          [tournamentPlayers]="actualTournamentPlayers"
+          (onDeleteTournamentPlayer)="onDeleteTournamentPlayer($event)">
+      </tournament-player-list>
     </md-list>
   </md-card>
 </div>

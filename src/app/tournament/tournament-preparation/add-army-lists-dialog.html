@@ -1,8 +1,9 @@
 <h1>ArmyLists</h1>
 <h3>{{registration.playerName}}</h3>
 <md-card>
+  <p *ngIf="armyListForRegistration.length > 6" style="color: red">Maximum reached for ArmyLists</p>
   <md-tab-group>
-    <md-tab label="AddArmyList">
+    <md-tab *ngIf="armyListForRegistration.length <= 6" label="AddArmyList">
       <form (ngSubmit)="onSubmit()" #armyListForm="ngForm">
         <md-input-container
           class="full-width">
@@ -41,7 +42,14 @@
       </form>
     </md-tab>
     <md-tab *ngFor="let armyList of armyListForRegistration" label="{{armyList.name}}">
-      <p>{{armyList.list}}</p>
+      <md-input-container
+        class="full-width">
+      <textarea
+        mdInput
+        class="fix-height"
+        disabled
+        >{{armyList.list}}</textarea>
+      </md-input-container>
       <button type="button"
               color="accent"
               md-raised-button
