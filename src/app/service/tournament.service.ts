@@ -145,12 +145,16 @@ export class TournamentService implements OnDestroy {
     });
   }
 
-  pushTournamentPlayer(payload: Registration) {
+  pushTournamentPlayer(registration: Registration) {
 
-    TournamentPlayer.fromRegistration(payload);
+    const tournamentPlayer = TournamentPlayer.fromRegistration(registration);
 
-    const tournamentPlayers = this.afService.database.list('tournament-player/' + payload.tournamentId );
-    tournamentPlayers.push(payload);
+    const tournamentPlayers = this.afService.database.list('tournament-player/' + registration.tournamentId );
+    tournamentPlayers.push(tournamentPlayer);
+
+
+    const registrationRef = this.afService.database.object('tournament-registration/' + registration.tournamentId + '/' + registration.id);
+    registrationRef.update({isTournamentPlayer: true});
 
     this.snackBar.open('Tournament Player saved successfully', '', {
       duration: 5000
@@ -170,6 +174,9 @@ export class TournamentService implements OnDestroy {
   eraseTournamentPlayer(player: TournamentPlayer) {
     const playerRef = this.afService.database.list('tournament-player/' + player.tournamentId + '/' + player.id);
     playerRef.remove();
+
+    const registrationRef = this.afService.database.object('tournament-registration/' + player.tournamentId + '/' + player.registrationId);
+    registrationRef.update({isTournamentPlayer: false});
 
     this.snackBar.open('Tournament Player deleted successfully', '', {
       duration: 5000

@@ -60,20 +60,27 @@
     </md-list>
   </md-card>
   <md-card *ngIf="myTournament" class="tournament-player-card">
-    <h2 *ngIf="actualTournamentPlayers.length > 0" class="list-heading">
-      Tournament Players ({{actualTournamentPlayers.length}})
+    <h2 *ngIf="allActualTournamentPlayers.length > 0" class="list-heading">
+      Tournament Players ({{filteredActualTournamentPlayers.length}}/{{allActualTournamentPlayers.length}})
     </h2>
-    <h3 *ngIf="actualTournamentPlayers.length == 0" class="list-heading">
+    <h3 *ngIf="allActualTournamentPlayers.length == 0" class="list-heading">
       No Tournament Players found</h3>
     <button *ngIf="myTournament" type="button" color="accent" md-raised-button (click)="addTournamentPlayer()">
       <md-icon>add</md-icon>
       Add Player
     </button>
+    <md-input-container class="search-field">
+      <input type="text"
+             mdInput
+             placeholder="Filter Tournament Player"
+             #searchInput
+             (keyup)="filter(searchInput.value)">
+    </md-input-container>
     <md-list>
       <tournament-player-list
           [isAdmin]="myTournament"
           [userPlayerData]="userPlayerData"
-          [tournamentPlayers]="actualTournamentPlayers"
+          [tournamentPlayers]="filteredActualTournamentPlayers"
           (onDeleteTournamentPlayer)="onDeleteTournamentPlayer($event)">
       </tournament-player-list>
     </md-list>

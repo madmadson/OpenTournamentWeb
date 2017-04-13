@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Registration} from '../../../../shared/model/registration';
 import {Player} from '../../../../shared/model/player';
 import {ArmyList} from "../../../../shared/model/armyList";
+import {TournamentPlayer} from "../../../../shared/model/tournament-player";
 
 @Component({
   selector: 'tournament-registration-list',

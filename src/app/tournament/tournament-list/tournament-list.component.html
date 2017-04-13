@@ -7,7 +7,7 @@
   (click)="onSelect(tournament)">
   <md-icon md-list-avatar *ngIf="tournament.teamSize == ''">person</md-icon>
   <md-icon md-list-avatar *ngIf="tournament.teamSize > 1">group</md-icon>
-  <h2 md-line style="padding-bottom: 10px; font-weight: bold; ">{{tournament.name}}</h2>
+  <h2 md-line style="padding-bottom: 12px; font-weight: bold; ">{{tournament.name}}</h2>
   <p md-line
      *ngIf="(tournament.beginDate | date:'MM/d/yy') === (tournament.endDate | date:'MM/d/yy')">
     {{tournament.beginDate | date:'MM/d/yy HH:mm'}} - {{tournament.endDate | date:'HH:mm'}}
@@ -17,7 +17,7 @@
     {{tournament.beginDate | date:'MM/d/yy HH:mm'}}  -
     {{tournament.endDate | date:'MM/d/yy HH:mm'}}
   </p>
-  <p  md-line style="padding-top: 5px;">{{tournament.location}}</p>
+  <p  md-line style="padding-top: 6px;">{{tournament.location}}</p>
   <span class="md-secondary-spacer"></span>
   <div class="md-secondary">?/{{tournament.maxParticipants}}</div>
 </md-list-item>

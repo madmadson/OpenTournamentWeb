@@ -3,12 +3,12 @@
   [ngClass]="isItMe(registration.playerId)"
   [ngClass]="{ even: even}">
   <h2 md-list-avatar>{{i+1}}</h2>
-  <h3 md-line style="padding-bottom: 10px;">{{registration.playerName}}</h3>
+  <h3 md-line style="padding-bottom: 12px;">{{registration.playerName}}</h3>
 
-  <p md-line style="padding-top: 5px;">
+  <p md-line style="padding-top: 6px;">
     {{registration.teamName}} - {{registration.meta}} - {{registration.origin}}</p>
 
-  <p md-line style="padding-top: 5px;">
+  <p md-line style="padding-top: 6px;">
     {{registration.faction}}</p>
 
   <span class="md-secondary-spacer"></span>
@@ -17,12 +17,14 @@
   <md-icon *ngIf="isAdmin || isItMe(registration.playerId)" class="md-secondary list-action"
            (click)="addArmyLists(registration)">playlist_add_check
   </md-icon>
-  <md-icon *ngIf="isAdmin" class="md-secondary list-action negative" (click)="deleteRegistration(registration)">delete
-  </md-icon>
-  <md-icon *ngIf="isAdmin" class="md-secondary list-action positive" (click)="addTournamentPlayer(registration)">
-    check_circle
-  </md-icon>
-  <a *ngIf="isAdmin" href='mailto:{{registration.email}}' style="padding-top: 12px">
-    <md-icon class="md-secondary list-action">email</md-icon>
-  </a>
+  <ng-container *ngIf="isAdmin && !registration.isTournamentPlayer">
+    <md-icon  class="md-secondary list-action negative" (click)="deleteRegistration(registration)">delete
+    </md-icon>
+    <md-icon class="md-secondary list-action positive" (click)="addTournamentPlayer(registration)">
+      check_circle
+    </md-icon>
+    <a  href='mailto:{{registration.email}}' style="padding-top: 12px">
+      <md-icon class="md-secondary list-action">email</md-icon>
+    </a>
+  </ng-container>
 </md-list-item>

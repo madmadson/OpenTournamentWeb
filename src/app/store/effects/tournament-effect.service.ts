@@ -14,11 +14,6 @@ import {TournamentService} from '../../service/tournament.service';
 @Injectable()
 export class TournamentEffectService {
 
-  constructor(
-    private actions$: Actions,
-    private tournamentService: TournamentService
-  ) { }
-
   @Effect({dispatch: false}) subscribe = this.actions$
     .ofType(TOURNAMENT_SUBSCRIBE_ACTION)
     .debug('TOURNAMENT_SUBSCRIBE_ACTION')
@@ -63,4 +58,9 @@ export class TournamentEffectService {
     .ofType(NEW_TOURNAMENT_PLAYER_PUSH_ACTION)
     .debug('NEW_TOURNAMENT_PLAYER_PUSH_ACTION')
     .map(action => this.tournamentService.pushNewTournamentPlayer(action.payload));
+
+  constructor(
+    private actions$: Actions,
+    private tournamentService: TournamentService
+  ) { }
 }

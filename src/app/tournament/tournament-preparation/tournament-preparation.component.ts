@@ -36,10 +36,12 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
   actualTournament: TournamentVM;
   userPlayerData: Player;
   actualTournamentRegisteredPlayers: Registration[];
-  actualTournamentPlayers: TournamentPlayer[];
   actualTournamentArmyList$: Observable<ArmyList[]>;
-
   myRegistration: Registration;
+
+  allActualTournamentPlayers: TournamentPlayer[];
+  filteredActualTournamentPlayers: TournamentPlayer[];
+
   myTournament: boolean;
   loggedIn: boolean;
 
@@ -70,7 +72,8 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
         this.actualTournament = state.storeData.actualTournament;
 
         this.actualTournamentRegisteredPlayers = state.tournamentData.actualTournamentRegisteredPlayers;
-        this.actualTournamentPlayers = state.tournamentData.actualTournamentPlayers;
+        this.allActualTournamentPlayers = state.tournamentData.actualTournamentPlayers;
+        this.filteredActualTournamentPlayers =  this.allActualTournamentPlayers;
 
         this.loggedIn = state.authenticationState.loggedIn;
 
@@ -89,6 +92,20 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.store.dispatch(new TournamentUnsubscribeAction());
+  }
+
+  filter(searchString: string) {
+
+    console.log('search' + searchString);
+
+    if (searchString === '') {
+      this.filteredActualTournamentPlayers = this.allActualTournamentPlayers;
+    }
+
+    this.filteredActualTournamentPlayers = _.filter(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      return player.playerName.includes(searchString);
+    });
+
   }
 
   openRegistrationDialog() {
@@ -112,7 +129,7 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 
   onSaveTournamentPlayer(registration: Registration) {
     if (registration !== undefined) {
-      const alreadyRegistered = _.find(this.actualTournamentPlayers, function (tournamentPlayer: TournamentPlayer) {
+      const alreadyRegistered = _.find(this.allActualTournamentPlayers, function (tournamentPlayer: TournamentPlayer) {
         return tournamentPlayer.playerId === registration.playerId;
       });
       if (alreadyRegistered) {

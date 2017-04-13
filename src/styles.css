@@ -101,3 +101,7 @@ md-card {
 .even{
   background-color: #f7eff7;
 }
+
+.search-field{
+  margin-left: 12px
+}

@@ -16,21 +16,22 @@ export class Registration {
   elo: number;
   faction: string;
   armyLists: ArmyList[];
+  isTournamentPlayer: boolean;
 
   static fromJson({tournamentId, playerName, email,
                     origin, meta,
-                    registrationDate, teamName, playerId, teamId, country, elo, faction}): Registration {
+                    registrationDate, teamName, playerId, teamId, country, elo, faction, isTournamentPlayer}): Registration {
     return new Registration(
       tournamentId, playerName, email, origin,
       meta, registrationDate,
-      teamName, playerId, teamId, country, elo, faction);
+      teamName, playerId, teamId, country, elo, faction, isTournamentPlayer);
   }
 
 
   constructor(tournamentId: string, playerName: string, email: string, origin: string,
               meta: string, registrationDate: string,
               teamName: string, playerId: string, teamId: string,
-              country: string, elo: number, faction: string) {
+              country: string, elo: number, faction: string, isTournamentPlayer: boolean) {
 
     this.tournamentId = tournamentId;
     this.playerName = playerName;
@@ -45,6 +46,7 @@ export class Registration {
     this.elo = elo;
     this.faction = faction;
     this.armyLists = [];
+    this.isTournamentPlayer = isTournamentPlayer;
   }
 }
 

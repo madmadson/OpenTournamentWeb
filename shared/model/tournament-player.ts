@@ -5,6 +5,7 @@ export class TournamentPlayer {
 
   id?: string;
   tournamentId: string;
+  registrationId?: string;
   email?: string;
   playerId?: string;
   playerName: string;
@@ -15,23 +16,24 @@ export class TournamentPlayer {
   faction?: string;
   teamName?: string;
 
-  static fromJson({tournamentId, email, playerId, playerName,
+  static fromJson({tournamentId, registrationId, email, playerId, playerName,
                     origin, meta, teamName,  country, elo}): TournamentPlayer {
-    return new TournamentPlayer(tournamentId, email,
+    return new TournamentPlayer(tournamentId, registrationId, email,
       playerId, playerName, origin,
       meta, teamName, country, elo);
   }
 
   static fromRegistration(reg: Registration): TournamentPlayer {
-    return new TournamentPlayer( reg.tournamentId, reg.email, reg.playerId,
+    return new TournamentPlayer( reg.tournamentId, reg.id, reg.email, reg.playerId,
       reg.playerName, reg.origin, reg.meta,
       reg.teamName, reg.country, reg.elo);
   }
 
-  constructor(tournamentId: string, email: string, playerId: string, playerName: string, origin: string,
+  constructor(tournamentId: string, registrationId: string, email: string, playerId: string, playerName: string, origin: string,
               meta: string, teamName: string, country: string, elo: number) {
 
     this.tournamentId = tournamentId;
+    this.registrationId = registrationId;
     this.email = email;
     this.playerId = playerId;
     this.playerName = playerName;
