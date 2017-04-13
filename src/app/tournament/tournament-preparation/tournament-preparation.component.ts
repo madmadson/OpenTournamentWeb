@@ -5,10 +5,11 @@ import {
   ArmyListEraseAction,
   PushArmyListAction, PushNewTournamentPlayerAction,
   RegistrationEraseAction,
-  RegistrationPushAction, TournamentPlayerEraseAction, TournamentPlayerPushAction, TournamentSubscribeAction,
+  RegistrationPushAction, StartTournamentAction, TournamentPlayerEraseAction, TournamentPlayerPushAction,
+  TournamentSubscribeAction,
   TournamentUnsubscribeAction
 } from '../../store/actions/tournament-actions';
-import {TournamentVM} from '../tournament.vm';
+
 import {ApplicationState} from '../../store/application-state';
 import {Player} from '../../../../shared/model/player';
 import {MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
@@ -33,7 +34,7 @@ import {Tournament} from '../../../../shared/model/tournament';
 export class TournamentPreparationComponent implements OnInit, OnDestroy {
   private tournamentId: string;
 
-  actualTournament: TournamentVM;
+  actualTournament: Tournament;
   userPlayerData: Player;
   actualTournamentRegisteredPlayers: Registration[];
   actualTournamentArmyList$: Observable<ArmyList[]>;
@@ -68,23 +69,23 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
     this.store.select(state => state)
       .subscribe(state => {
 
-        this.userPlayerData = state.authenticationState.userPlayerData;
-        this.actualTournament = state.storeData.actualTournament;
+        this.userPlayerData = state.globalState.userPlayerData;
+        this.actualTournament = state.tournamentData.actualTournament;
 
         this.actualTournamentRegisteredPlayers = state.tournamentData.actualTournamentRegisteredPlayers;
         this.allActualTournamentPlayers = state.tournamentData.actualTournamentPlayers;
         this.filteredActualTournamentPlayers =  this.allActualTournamentPlayers;
 
-        this.loggedIn = state.authenticationState.loggedIn;
+        this.loggedIn = state.globalState.loggedIn;
 
         that.myRegistration = _.find(state.tournamentData.actualTournamentRegisteredPlayers,
           function (reg) {
-            if (state.authenticationState.userPlayerData !== undefined) {
-              return reg.playerId === state.authenticationState.userPlayerData.id;
+            if (state.globalState.userPlayerData !== undefined) {
+              return reg.playerId === state.globalState.userPlayerData.id;
             }
           });
 
-        that.myTournament = (state.storeData.actualTournament.creatorUid === state.authenticationState.currentUserId);
+        that.myTournament = (state.tournamentData.actualTournament.creatorUid === state.globalState.currentUserId);
 
       });
 
@@ -124,6 +125,25 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
         this.store.dispatch(new RegistrationPushAction(result));
       }
 
+    });
+  }
+
+  openStartTournamentDialog() {
+
+
+    const dialogRef = this.dialog.open(StartTournamentDialogComponent, {
+      data: {
+        allActualTournamentPlayers: this.allActualTournamentPlayers
+      }
+    });
+    const startTournamentSub = dialogRef.componentInstance.onStartTournament.subscribe(config => {
+      if (config !== undefined) {
+        this.store.dispatch(new StartTournamentAction(config));
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+      startTournamentSub.unsubscribe();
     });
   }
 
@@ -216,7 +236,7 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 export class RegisterDialogComponent {
 
   userPlayerData: Player;
-  actualTournament: TournamentVM;
+  actualTournament: Tournament;
 
   constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>) {
 
@@ -299,4 +319,25 @@ export class AddArmyListsDialogComponent {
   deleteArmyList(armyList: ArmyList) {
     this.onDeleteArmyList.emit(armyList);
   };
+}
+
+@Component({
+  selector: 'start-tournament-dialog',
+  templateUrl: './start-tournament-dialog.html'
+})
+export class StartTournamentDialogComponent {
+
+  allActualTournamentPlayers: TournamentPlayer[];
+
+  @Output() onStartTournament = new EventEmitter();
+
+  constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>) {
+    this.allActualTournamentPlayers = dialogRef.config.data.allActualTournamentPlayers;
+  }
+
+  startTournament() {
+
+    this.onStartTournament.emit({test: 'test'});
+  }
+
 }

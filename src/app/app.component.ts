@@ -3,10 +3,9 @@ import {Store} from '@ngrx/store';
 import {ApplicationState} from './store/application-state';
 import {Subscription} from 'rxjs/Subscription';
 import {AuthSubscribeAction, LogoutAction} from './store/actions/auth-actions';
-import {AuthenticationState} from './store/authentication-state';
-import * as _ from 'lodash';
 import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from './store/actions/tournaments-actions';
 import {Router} from '@angular/router';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-root',
@@ -15,16 +14,20 @@ import {Router} from '@angular/router';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription;
+  currentUserName: string;
+  loggedIn: boolean;
+  currentUserEmail: string;
+  currentUserImage: string;
 
-  public  authenticationState: AuthenticationState;
 
 
   constructor(private router: Router, private store: Store<ApplicationState>) {
 
-    this.subscription = store.select(state => state.authenticationState).subscribe(authenticationState => {
-        console.log('new state' + JSON.stringify(authenticationState));
-        this.authenticationState = _.cloneDeep(authenticationState);
+    store.select(state => state.globalState).subscribe(globalState => {
+        this.currentUserName = globalState.currentUserName;
+        this.loggedIn = globalState.loggedIn;
+        this.currentUserEmail = globalState.currentUserEmail;
+        this.currentUserImage = globalState.currentUserImage;
       }
     );
 
@@ -36,8 +39,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
-    this.subscription.unsubscribe();
     this.store.dispatch(new TournamentsUnsubscribeAction());
   }
 

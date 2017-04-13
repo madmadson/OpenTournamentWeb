@@ -9,7 +9,6 @@ import {
   TournamentsClearAction
 } from '../store/actions/tournaments-actions';
 import {Tournament} from '../../../shared/model/tournament';
-import {TournamentVM} from '../tournament/tournament.vm';
 import {MdSnackBar} from '@angular/material';
 import {Router} from '@angular/router';
 
@@ -78,9 +77,8 @@ export class TournamentsService implements OnDestroy {
   }
 
 
-  pushTournaments(payload: TournamentVM) {
+  pushTournaments(newTournament: Tournament) {
 
-    const newTournament = Tournament.fromTournamentVM(payload);
 
     const tournaments = this.afService.database.list('tournaments');
     tournaments.push(newTournament);

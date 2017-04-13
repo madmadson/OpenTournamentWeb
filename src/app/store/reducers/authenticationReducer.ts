@@ -1,4 +1,3 @@
-import {INITIAL_UI_STATE, AuthenticationState} from '../authentication-state';
 import {Action} from '@ngrx/store';
 import {
   ADD_REDIRECT_LOGIN_ACTION, DELETE_USER_PLAYER_DATA_ACTION, LOGOUT_ACTION,
@@ -7,8 +6,9 @@ import {
 } from '../actions/auth-actions';
 
 import * as _ from 'lodash';
+import {GlobalData, INITIAL_GLOBAL_DATA} from '../global-store-data';
 
-export function authenticationState(state: AuthenticationState = INITIAL_UI_STATE, action: Action): AuthenticationState {
+export function AuthenticationReducer(state: GlobalData = INITIAL_GLOBAL_DATA, action: Action): GlobalData {
 
   switch (action.type) {
 
@@ -38,7 +38,7 @@ export function authenticationState(state: AuthenticationState = INITIAL_UI_STAT
   }
 }
 
-function handleSaveUserData(state: AuthenticationState, action: Action): AuthenticationState {
+function handleSaveUserData(state: GlobalData, action: Action): GlobalData {
   const newState = Object.assign({}, state);
 
   newState.currentUserName = action.payload.displayName;
@@ -51,7 +51,7 @@ function handleSaveUserData(state: AuthenticationState, action: Action): Authent
 }
 
 
-function handleLogout(state: AuthenticationState, action: Action) {
+function handleLogout(state: GlobalData, action: Action): GlobalData{
 
   const newState = Object.assign({}, state);
 
@@ -68,7 +68,7 @@ function handleLogout(state: AuthenticationState, action: Action) {
   return newState;
 }
 
-function handleAddRedirectLoginAction(state: AuthenticationState, action: Action) {
+function handleAddRedirectLoginAction(state: GlobalData, action: Action): GlobalData{
 
   const newState = Object.assign({}, state);
 
@@ -77,7 +77,7 @@ function handleAddRedirectLoginAction(state: AuthenticationState, action: Action
   return newState;
 }
 
-function handleSaveUserPlayerData(state: AuthenticationState, action: Action): AuthenticationState {
+function handleSaveUserPlayerData(state: GlobalData, action: Action): GlobalData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -88,7 +88,7 @@ function handleSaveUserPlayerData(state: AuthenticationState, action: Action): A
   return newStoreState;
 }
 
-function handleDeleteUserPlayerData(state: AuthenticationState, action: Action): AuthenticationState {
+function handleDeleteUserPlayerData(state: GlobalData, action: Action): GlobalData {
   const newStoreState = _.cloneDeep(state);
 
   newStoreState.userPlayerData = undefined;

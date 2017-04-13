@@ -1,6 +1,6 @@
 .god-container{
 
-  width: 99.5vw;
+  width: 99vw;
   min-height: calc(100vh - 2px);
   border: 2px solid rgba(0, 0, 0, 1);
 }

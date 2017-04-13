@@ -1,65 +1,39 @@
 import {Action} from '@ngrx/store';
 import {INITIAL_TOURNAMENT_DATA, TournamentData} from '../tournament-data';
-import {
-  ARMY_LIST_ADDED_ACTION, ARMY_LIST_DELETED_ACTION,
-  CLEAR_ARMY_LISTS_ACTION,
-  CLEAR_TOURNAMENT_PLAYER_ACTION,
-  CLEAR_TOURNAMENT_REGISTRATION_ACTION, TOURNAMENT_PLAYER_ADDED, TOURNAMENT_PLAYER_CHANGED, TOURNAMENT_PLAYER_DELETED,
-  TOURNAMENT_REGISTRATION_ADDED, TOURNAMENT_REGISTRATION_CHANGED,
-  TOURNAMENT_REGISTRATION_DELETED
-} from '../actions/tournament-actions';
 
 import * as _ from 'lodash';
+import {
+  TOURNAMENT_ADDED_ACTION, TOURNAMENT_CHANGED_ACTION, TOURNAMENT_DELETED_ACTION,
+  TOURNAMENTS_CLEAR_ACTION
+} from "../actions/tournaments-actions";
+import {SET_ACTUAL_TOURNAMENT_ACTION} from "../actions/tournament-actions";
 
 
-export function tournamentData(state: TournamentData = INITIAL_TOURNAMENT_DATA, action: Action): TournamentData {
+export function TournamentReducer(state: TournamentData = INITIAL_TOURNAMENT_DATA, action: Action): TournamentData {
 
 
   switch (action.type) {
 
-    case TOURNAMENT_REGISTRATION_ADDED:
+    case TOURNAMENTS_CLEAR_ACTION:
 
-      return handleTournamentRegistrationAddedAction(state, action);
+      return handleTournamentClearData(state, action);
 
-    case TOURNAMENT_REGISTRATION_DELETED:
+    case TOURNAMENT_ADDED_ACTION:
 
-      return handleTournamentRegistrationDeletedAction(state, action);
+      return handleTournamentAddedData(state, action);
 
-    case TOURNAMENT_REGISTRATION_CHANGED:
+    case TOURNAMENT_CHANGED_ACTION:
 
-      return handleRegistrationChangedData(state, action);
+      return handleTournamentChangedData(state, action);
 
-    case CLEAR_TOURNAMENT_REGISTRATION_ACTION:
+    case TOURNAMENT_DELETED_ACTION:
 
-      return handleClearRegistrationAction(state, action);
+      return handleTournamentDeletedData(state, action);
 
-    case TOURNAMENT_PLAYER_ADDED:
+    case SET_ACTUAL_TOURNAMENT_ACTION:
 
-      return handleTournamentPlayerAddedAction(state, action);
+      return handleSetTournament(state, action);
 
-    case TOURNAMENT_PLAYER_DELETED:
-
-      return handleTournamentPlayerDeletedAction(state, action);
-
-    case TOURNAMENT_PLAYER_CHANGED:
-
-      return handleTournamentPlayerChangedData(state, action);
-
-    case CLEAR_TOURNAMENT_PLAYER_ACTION:
-
-      return handleClearTournamentPlayerAction(state, action);
-
-    case ARMY_LIST_ADDED_ACTION:
-
-      return handleArmyListAddedAction(state, action);
-
-    case ARMY_LIST_DELETED_ACTION:
-
-      return handleArmyListDeletedAction(state, action);
-
-    case CLEAR_ARMY_LISTS_ACTION:
-
-      return handleClearArmyListsAction(state, action);
 
     default:
       return state;
@@ -68,131 +42,54 @@ export function tournamentData(state: TournamentData = INITIAL_TOURNAMENT_DATA, 
 }
 
 
-function handleTournamentRegistrationAddedAction(state: TournamentData, action: Action): TournamentData {
+function handleTournamentClearData(state: TournamentData, action: Action): TournamentData {
+  const newStoreState = _.cloneDeep(state);
 
+  newStoreState.tournaments = [];
 
-  const newTournamentData = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-    if (newTournamentData.actualTournamentRegisteredPlayers === undefined) {
-      newTournamentData.actualTournamentRegisteredPlayers = [];
-    }
-    newTournamentData.actualTournamentRegisteredPlayers.push(action.payload);
-  }
-  return newTournamentData;
+  return newStoreState;
 }
 
-function handleTournamentRegistrationDeletedAction(state: TournamentData, action: Action): TournamentData {
-  const newStoreState: TournamentData = _.cloneDeep(state);
+function handleTournamentAddedData(state: TournamentData, action: Action): TournamentData {
+  const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
 
-    const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload]);
-    newStoreState.actualTournamentRegisteredPlayers.splice(indexOfSearchedRegistration, 1);
+    newStoreState.tournaments.push(action.payload);
+  }
+  return newStoreState;
+}
+
+function handleTournamentChangedData(state: TournamentData, action: Action): TournamentData {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    const indexOfSearchedTournament = _.findIndex(newStoreState.tournaments, ['id', action.payload.id]);
+    newStoreState.tournaments[indexOfSearchedTournament] = action.payload;
+  }
+  return newStoreState;
+}
+
+function handleTournamentDeletedData(state: TournamentData, action: Action): TournamentData {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    const indexOfSearchedTournament = _.findIndex(newStoreState.tournaments, ['id', action.payload]);
+    newStoreState.tournaments.splice(indexOfSearchedTournament, 1);
   }
   return newStoreState;
 }
 
 
-function handleRegistrationChangedData(state: TournamentData, action: Action): TournamentData {
-  const newStoreState: TournamentData = _.cloneDeep(state);
+function handleSetTournament(state: TournamentData, action: Action): TournamentData {
+  const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
-    console.log('new reducer!' + JSON.stringify(action.payload));
-    const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload.id]);
-    console.log('index!' + indexOfSearchedRegistration);
-    newStoreState.actualTournamentRegisteredPlayers[indexOfSearchedRegistration] = action.payload;
+
+    newStoreState.actualTournament = action.payload;
   }
   return newStoreState;
 }
 
-function handleClearRegistrationAction(state: TournamentData, action: Action): TournamentData {
-
-  const newTournamentData = _.cloneDeep(state);
-
-  newTournamentData.actualTournamentRegisteredPlayers = [];
-
-  return newTournamentData;
-}
-
-function handleTournamentPlayerAddedAction(state: TournamentData, action: Action): TournamentData {
-
-
-  const newTournamentData = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-    if (newTournamentData.actualTournamentPlayers === undefined) {
-      newTournamentData.actualTournamentPlayers = [];
-    }
-    newTournamentData.actualTournamentPlayers.push(action.payload);
-  }
-  return newTournamentData;
-}
-
-function handleTournamentPlayerDeletedAction(state: TournamentData, action: Action): TournamentData {
-  const newStoreState: TournamentData = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-
-    const indexOfSearchedPlayer = _.findIndex(newStoreState.actualTournamentPlayers, ['id', action.payload]);
-    newStoreState.actualTournamentPlayers.splice(indexOfSearchedPlayer, 1);
-  }
-  return newStoreState;
-}
-
-
-function handleTournamentPlayerChangedData(state: TournamentData, action: Action): TournamentData {
-  const newStoreState: TournamentData = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-
-    const indexOfSearchedPlayer = _.findIndex(newStoreState.actualTournamentPlayers, ['id', action.payload.id]);
-
-    newStoreState.actualTournamentPlayers[indexOfSearchedPlayer] = action.payload;
-  }
-  return newStoreState;
-}
-
-function handleClearTournamentPlayerAction(state: TournamentData, action: Action): TournamentData {
-
-  const newTournamentData = _.cloneDeep(state);
-
-  newTournamentData.actualTournamentPlayers = [];
-
-  return newTournamentData;
-}
-
-function handleArmyListAddedAction(state: TournamentData, action: Action): TournamentData {
-
-  const newTournamentData = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-    if (newTournamentData.actualTournamentArmyLists === undefined) {
-      newTournamentData.actualTournamentArmyLists = [];
-    }
-    newTournamentData.actualTournamentArmyLists.push(action.payload);
-  }
-  return newTournamentData;
-}
-
-
-function handleArmyListDeletedAction(state: TournamentData, action: Action): TournamentData {
-
-  const newStoreState: TournamentData = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-
-    const indexOfSearchedArmyList = _.findIndex(newStoreState.actualTournamentArmyLists, ['id', action.payload]);
-    newStoreState.actualTournamentArmyLists.splice(indexOfSearchedArmyList, 1);
-  }
-  return newStoreState;
-}
-
-function handleClearArmyListsAction(state: TournamentData, action: Action): TournamentData {
-
-  const newTournamentData = _.cloneDeep(state);
-
-  newTournamentData.actualTournamentArmyLists = [];
-
-  return newTournamentData;
-}

@@ -1,9 +1,9 @@
-import {Injectable, OnDestroy} from "@angular/core";
-import {ActivatedRouteSnapshot, CanActivate, CanLoad, Route, Router, RouterStateSnapshot} from "@angular/router";
-import {ApplicationState} from "./store/application-state";
-import {Store} from "@ngrx/store";
-import {Subscription} from "rxjs/Subscription";
-import {AddRedirectUrlAction} from "./store/actions/auth-actions";
+import {Injectable, OnDestroy} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, CanLoad, Route, Router, RouterStateSnapshot} from '@angular/router';
+import {ApplicationState} from '../store/application-state';
+import {Store} from '@ngrx/store';
+import {Subscription} from 'rxjs/Subscription';
+import {AddRedirectUrlAction} from '../store/actions/auth-actions';
 
 
 @Injectable()
@@ -14,7 +14,7 @@ export class AuthGuard implements OnDestroy, CanActivate, CanLoad {
   loggedIn: boolean;
 
   constructor(private store: Store<ApplicationState>, private router: Router) {
-    this.subscription = store.select(state => state.authenticationState.loggedIn).subscribe(loggedIn => {
+    this.subscription = store.select(state => state.globalState.loggedIn).subscribe(loggedIn => {
 
         this.loggedIn = loggedIn;
       }

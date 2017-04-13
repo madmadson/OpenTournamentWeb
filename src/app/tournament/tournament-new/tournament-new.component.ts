@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {TournamentVM} from '../tournament.vm';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MdSnackBar} from '@angular/material';
 import {Store} from '@ngrx/store';
@@ -10,6 +9,7 @@ import {TournamentPushAction} from '../../store/actions/tournaments-actions';
 import {Router} from '@angular/router';
 
 import * as moment from 'moment';
+import {Tournament} from "../../../../shared/model/tournament";
 
 
 @Component({
@@ -57,7 +57,8 @@ export class TournamentNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.select(state => state.authenticationState.currentUserId).subscribe(currentUserId => this.creatorId = currentUserId);
+    this.store.select(state => state.globalState.currentUserId)
+      .subscribe(currentUserId => this.creatorId = currentUserId);
 
     this.initForm();
 
@@ -194,7 +195,7 @@ export class TournamentNewComponent implements OnInit {
   }
 
 
-  prepareSaveTournament(): TournamentVM {
+  prepareSaveTournament(): Tournament {
     const formModel = this.tournamentForm.value;
 
     return  {

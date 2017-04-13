@@ -1,8 +1,8 @@
-import {Component, OnInit, OnChanges, Input} from "@angular/core";
-import {FormGroup, FormBuilder, Validators} from "@angular/forms";
-import {MdSnackBar} from "@angular/material";
-import {Game} from "./game";
-import {AngularFire} from "angularfire2";
+import {Component, OnInit, OnChanges, Input} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {MdSnackBar} from '@angular/material';
+import {Game} from './game';
+import {AngularFire} from 'angularfire2';
 
 @Component({
   selector: 'game-edit',
@@ -15,10 +15,10 @@ export class GameEditComponent implements OnInit, OnChanges {
 
   gameForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private af: AngularFire,public snackBar: MdSnackBar) {
+  constructor(private formBuilder: FormBuilder, private af: AngularFire, public snackBar: MdSnackBar) {
     this.createForm();
 
-    if(this.game == null){
+    if (this.game == null){
       this.game = new Game(null, '');
     }
   }
@@ -54,8 +54,8 @@ export class GameEditComponent implements OnInit, OnChanges {
   onSubmit() {
     this.game = this.prepareSaveGame();
 
-    this.af.database.list("games").push(this.game);
-    this.snackBar.open("Game was created", "", {
+    this.af.database.list('games').push(this.game);
+    this.snackBar.open('Game was created', '', {
       duration: 2000,
     });
 

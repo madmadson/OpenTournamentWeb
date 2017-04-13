@@ -16,6 +16,7 @@ import {Registration} from '../../../shared/model/registration';
 import {MdSnackBar} from '@angular/material';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyList} from '../../../shared/model/armyList';
+import {RankingService} from './ranking.service';
 
 
 @Injectable()
@@ -25,7 +26,8 @@ export class TournamentService implements OnDestroy {
   private tournamentPlayerRef: firebase.database.Reference;
   private armyListsRef: firebase.database.Reference;
 
-  constructor(protected afService: AngularFire,
+  constructor(public rankingService: RankingService,
+              protected afService: AngularFire,
               protected store: Store<ApplicationState>,
               @Inject(FirebaseRef) private fb,
               private snackBar: MdSnackBar) {
@@ -211,6 +213,13 @@ export class TournamentService implements OnDestroy {
     this.snackBar.open('Tournament Player saved successfully', '', {
       duration: 5000
     });
+  }
+
+  startTournament(config: any) {
+
+    this.rankingService.createRankingForFirstRound();
+
+    console.log('start Tournament with config : ' + JSON.stringify(config));
   }
 
   unsubscribeOnTournament() {

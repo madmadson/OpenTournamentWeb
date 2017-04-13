@@ -5,7 +5,8 @@ import {
   ARMY_LIST_ERASE_ACTION,
   ARMY_LIST_PUSH_ACTION, NEW_TOURNAMENT_PLAYER_PUSH_ACTION,
   REGISTRATION_ERASE_ACTION,
-  REGISTRATION_PUSH_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION, TOURNAMENT_SUBSCRIBE_ACTION,
+  REGISTRATION_PUSH_ACTION, START_TOURNAMENT_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION,
+  TOURNAMENT_SUBSCRIBE_ACTION,
   TOURNAMENT_UNSUBSCRIBE_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
@@ -13,6 +14,11 @@ import {TournamentService} from '../../service/tournament.service';
 
 @Injectable()
 export class TournamentEffectService {
+
+  @Effect({dispatch: false}) startTournament = this.actions$
+    .ofType(START_TOURNAMENT_ACTION)
+    .debug('START_TOURNAMENT_ACTION')
+    .map(action => this.tournamentService.startTournament(action.payload));
 
   @Effect({dispatch: false}) subscribe = this.actions$
     .ofType(TOURNAMENT_SUBSCRIBE_ACTION)

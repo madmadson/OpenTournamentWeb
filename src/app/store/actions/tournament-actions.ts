@@ -3,6 +3,7 @@ import {Tournament} from '../../../../shared/model/tournament';
 import {Registration} from '../../../../shared/model/registration';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {ArmyList} from '../../../../shared/model/armyList';
+import {TournamentRanking} from "../../../../shared/model/tournament-ranking";
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -216,3 +217,12 @@ export class ClearArmyListsAction implements Action {
   }
 }
 
+export const START_TOURNAMENT_ACTION = 'START_TOURNAMENT_ACTION';
+
+export class StartTournamentAction implements Action {
+
+  readonly type = 'START_TOURNAMENT_ACTION';
+
+  constructor(public payload: any) {
+  }
+}

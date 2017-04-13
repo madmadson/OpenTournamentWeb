@@ -5,7 +5,6 @@ import {LoginAction, LoginWithProviderAction} from '../../store/actions/auth-act
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MdSnackBar} from '@angular/material';
 
 @Component({
   selector: 'login-page',
@@ -20,11 +19,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   constructor(private formBuilder: FormBuilder,
               private store: Store<ApplicationState>,
-              private router: Router,
-              private snackBar: MdSnackBar) {
+              private router: Router) {
     this.createForm();
 
-    this.subscription = store.select(state => state.authenticationState).subscribe(authenticationState => {
+    this.subscription = store.select(state => state.globalState).subscribe(authenticationState => {
       if (authenticationState.loggedIn !== false) {
         this.router.navigate([authenticationState.redirectUrl ? authenticationState.redirectUrl : '/home']);
       }

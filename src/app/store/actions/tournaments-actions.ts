@@ -1,6 +1,5 @@
-import {Action} from "@ngrx/store";
-import {Tournament} from "../../../../shared/model/tournament";
-import {TournamentVM} from "../../tournament/tournament.vm";
+import {Action} from '@ngrx/store';
+import {Tournament} from '../../../../shared/model/tournament';
 
 
 export const TOURNAMENTS_SUBSCRIBE_ACTION = 'TOURNAMENTS_SUBSCRIBE_ACTION';
@@ -78,7 +77,7 @@ export class TournamentPushAction implements Action {
 
   readonly type = 'TOURNAMENT_PUSH_ACTION';
 
-  constructor(public payload: TournamentVM) {
+  constructor(public payload: Tournament) {
   }
 }
 

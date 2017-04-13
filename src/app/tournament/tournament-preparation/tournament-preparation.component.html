@@ -5,7 +5,11 @@
       <md-icon>build</md-icon>
       Edit
     </button>
-    <button *ngIf="myTournament" type="button" color="accent" md-raised-button>
+    <button *ngIf="myTournament"
+            (click)="openStartTournamentDialog()"
+            type="button"
+            color="accent"
+            md-raised-button>
       <md-icon>play_arrow</md-icon>
       Start
     </button>

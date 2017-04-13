@@ -1,6 +1,4 @@
-import {TournamentVM} from "../../src/app/tournament/tournament.vm";
 
-import * as moment from "moment";
 
 export class Tournament {
 
@@ -23,12 +21,6 @@ export class Tournament {
       maxParticipants, teamSize, actualRound, creatorUid);
   }
 
-  static fromTournamentVM(tournamentVM: TournamentVM): Tournament {
-    return new Tournament(
-      tournamentVM.name, tournamentVM.location,
-      moment(new Date(tournamentVM.beginDate)).toISOString(), moment(new Date(tournamentVM.endDate)).toISOString(),
-      tournamentVM.maxParticipants, tournamentVM.teamSize, 0, tournamentVM.creatorUid);
-  }
 
   constructor(name: string, location: string,
               beginDate: string, endDate: string,

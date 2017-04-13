@@ -1,11 +1,11 @@
 export interface TournamentListVM {
 
   monthYear: number;
-  tournaments: TournamentVM[];
+  tournaments: Tournament[];
 
 }
 
-export interface TournamentVM {
+export interface Tournament {
 
   id: string;
   name: string;

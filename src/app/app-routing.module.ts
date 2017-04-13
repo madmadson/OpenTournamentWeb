@@ -7,7 +7,7 @@ import {HomePageComponent} from './home-page/home-page.component';
 import {PageNotFoundComponent} from './not-found.component';
 import {MyTournamentsComponent} from './tournament/my-tournaments/my-tournaments.component';
 import {TournamentNewComponent} from './tournament/tournament-new/tournament-new.component';
-import {AuthGuard} from './auth-guard.service';
+import {AuthGuard} from './service/auth-guard.service';
 import {TournamentPreparationComponent} from './tournament/tournament-preparation/tournament-preparation.component';
 import {TournamentRegistrationFormComponent} from './tournament/tournament-registration-form/tournament-registration-form.component';
 import {PlayerListOverviewComponent} from './player/player-list-overview/player-list-overview.component';

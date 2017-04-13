@@ -1,7 +1,7 @@
-import {Component} from "@angular/core";
-import {ApplicationState} from "../store/application-state";
-import {Store} from "@ngrx/store";
-import {Player} from "../../../shared/model/player";
+import {Component} from '@angular/core';
+import {ApplicationState} from '../store/application-state';
+import {Store} from '@ngrx/store';
+import {Player} from '../../../shared/model/player';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class HomePageComponent {
 
   constructor(private store: Store<ApplicationState>) {
 
-    store.select(state => state.authenticationState).subscribe(
+    store.select(state => state.globalState).subscribe(
 
       authenticationState => {
         this.userPlayerData = authenticationState.userPlayerData;

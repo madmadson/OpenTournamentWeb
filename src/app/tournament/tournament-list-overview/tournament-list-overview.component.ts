@@ -1,11 +1,11 @@
-import {Component} from "@angular/core";
-import {ApplicationState} from "../../store/application-state";
-import {Store} from "@ngrx/store";
-import {Observable} from "rxjs/Observable";
-import {TournamentListVM} from "../tournament.vm";
+import {Component} from '@angular/core';
+import {ApplicationState} from '../../store/application-state';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {TournamentListVM} from '../tournament.vm';
 
-import * as _ from "lodash";
-import * as moment from "moment";
+import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Component({
   selector: 'tournament-list-overview',
@@ -19,11 +19,11 @@ export class TournamentOverviewComponent  {
 
   constructor(private store: Store<ApplicationState>) {
 
-    this.allTournaments$ = store.select(state => state.storeData.tournaments);
+    this.allTournaments$ = store.select(state => state.globalState.tournaments);
 
     this.groupedTournaments$ = store.select(
       state => {
-        return _.chain(state.storeData.tournaments)
+        return _.chain(state.globalState.tournaments)
           .groupBy(function (tournament) {
             return moment(tournament.beginDate).format('MMMM YYYY');
           }).toPairs()

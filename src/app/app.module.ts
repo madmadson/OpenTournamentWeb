@@ -1,3 +1,5 @@
+///<reference path="store/global-store-data.ts"/>
+///<reference path="store/tournament-data.ts"/>
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -15,9 +17,6 @@ import {ApplicationState} from './store/application-state';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {compose} from '@ngrx/core/compose';
 import {environment} from '../environments/environment';
-import {authenticationState} from './store/reducers/authenticationReducer';
-import {storeData} from './store/reducers/uiStoreDataReducer';
-import {tournamentData} from './store/reducers/tournamentReducer';
 
 import {storeFreeze} from 'ngrx-store-freeze';
 import {EffectsModule} from '@ngrx/effects';
@@ -26,7 +25,6 @@ import {TournamentsEffectService} from './store/effects/tournaments-effect.servi
 import {LoginService} from './service/auth.service';
 import {TournamentsService} from './service/tournaments.service';
 import {routerReducer, RouterStoreModule} from '@ngrx/router-store';
-import {TournamentEditComponent} from './tournament/tournament-edit/tournament-edit.component';
 import {MomentModule} from 'angular2-moment';
 import {TournamentOverviewComponent} from './tournament/tournament-list-overview/tournament-list-overview.component';
 
@@ -38,10 +36,10 @@ import 'hammerjs';
 import {TournamentNewComponent} from './tournament/tournament-new/tournament-new.component';
 import {DateTimePickerModule} from 'ng2-date-time-picker';
 import {CustomFormsModule} from 'ng2-validation';
-import {AuthGuard} from './auth-guard.service';
+import {AuthGuard} from './service/auth-guard.service';
 import {
   AddArmyListsDialogComponent, NewTournamentPlayerDialogComponent,
-  RegisterDialogComponent,
+  RegisterDialogComponent, StartTournamentDialogComponent,
   TournamentPreparationComponent
 } from './tournament/tournament-preparation/tournament-preparation.component';
 import {TournamentRegistrationFormComponent} from './tournament/tournament-registration-form/tournament-registration-form.component';
@@ -57,13 +55,16 @@ import { PasswordForgetComponent } from './auth/password-forget/password-forget.
 import { TournamentRegistrationListComponent } from './tournament/tournament-registration-list/tournament-registration-list.component';
 import { TournamentPlayerListComponent } from './tournament/tournament-player-list/tournament-player-list.component';
 import { PlayerSearchComponent } from './player/player-search/player-search.component';
+import {RankingService} from './service/ranking.service';
 
+
+import {GlobalData} from './store/global-store-data';
+import {TournamentData} from './store/tournament-data';
 
 const reducers = {
-  tournamentData: tournamentData,
-  authenticationState: authenticationState,
-  storeData: storeData,
-  router: routerReducer
+  router: routerReducer,
+  globalData: GlobalData,
+  tournamentData: TournamentData
 };
 
 const developmentReducer: ActionReducer<ApplicationState> = compose(storeFreeze, combineReducers)(reducers);
@@ -115,8 +116,6 @@ const firebaseConfDev = {
     AppRoutingModule,
     DateTimePickerModule,
     CustomFormsModule,
-    // MdlModule,
-
     MaterialModule,
   ],
   declarations: [
@@ -125,7 +124,6 @@ const firebaseConfDev = {
     GameEditComponent,
     LoginPageComponent,
     HomePageComponent,
-    TournamentEditComponent,
     TournamentOverviewComponent,
     MyTournamentsComponent,
     PageNotFoundComponent,
@@ -143,9 +141,21 @@ const firebaseConfDev = {
     AddArmyListsDialogComponent,
     PlayerSearchComponent,
     NewTournamentPlayerDialogComponent,
+    StartTournamentDialogComponent,
   ],
-  providers: [LoginService, TournamentsService, AuthGuard, TournamentService, PlayersService],
-  entryComponents: [RegisterDialogComponent, AddArmyListsDialogComponent, NewTournamentPlayerDialogComponent],
+  providers: [
+    LoginService,
+    TournamentsService,
+    AuthGuard,
+    TournamentService,
+    PlayersService,
+    RankingService
+  ],
+  entryComponents: [
+    RegisterDialogComponent,
+    AddArmyListsDialogComponent,
+    NewTournamentPlayerDialogComponent,
+    StartTournamentDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

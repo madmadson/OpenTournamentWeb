@@ -2,10 +2,10 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import * as moment from 'moment';
-import {TournamentVM} from '../tournament.vm';
 import {Player} from '../../../../shared/model/player';
 import {getAllFactions} from '../../../../shared/model/factions';
 import {Registration} from '../../../../shared/model/registration';
+import {Tournament} from '../../../../shared/model/tournament';
 
 
 @Component({
@@ -16,7 +16,7 @@ import {Registration} from '../../../../shared/model/registration';
 export class TournamentRegistrationFormComponent implements OnInit {
 
   @Input()
-  actualTournament: TournamentVM;
+  actualTournament: Tournament;
 
   @Input()
   userPlayerData: Player;
@@ -69,7 +69,8 @@ export class TournamentRegistrationFormComponent implements OnInit {
       country: this.userPlayerData.country,
       elo: this.userPlayerData.elo,
       faction: formModel.faction,
-      armyLists: []
+      armyLists: [],
+      isTournamentPlayer: false
     };
   }
 
