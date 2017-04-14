@@ -40,7 +40,7 @@ export class PlayerFormComponent implements OnInit, OnDestroy {
     this.initForm();
 
 
-    this.userDataSub = this.store.select(state => state.globalState).subscribe(authenticationState => {
+    this.userDataSub = this.store.select(state => state.authenticationStoreData).subscribe(authenticationState => {
       this.currentUserId = authenticationState.currentUserId;
       this.currentUserEmail = authenticationState.currentUserEmail;
     });

@@ -57,7 +57,7 @@ export class TournamentNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.select(state => state.globalState.currentUserId)
+    this.store.select(state => state.authenticationStoreData.currentUserId)
       .subscribe(currentUserId => this.creatorId = currentUserId);
 
     this.initForm();

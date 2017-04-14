@@ -19,23 +19,21 @@ export class AppComponent implements OnInit, OnDestroy {
   currentUserEmail: string;
   currentUserImage: string;
 
-
-
   constructor(private router: Router, private store: Store<ApplicationState>) {
-
-    store.select(state => state.globalState).subscribe(globalState => {
-        this.currentUserName = globalState.currentUserName;
-        this.loggedIn = globalState.loggedIn;
-        this.currentUserEmail = globalState.currentUserEmail;
-        this.currentUserImage = globalState.currentUserImage;
+    this.store.select(state => state.authenticationStoreData).subscribe(authenticationStoreData => {
+        this.currentUserName = authenticationStoreData.currentUserName;
+        this.loggedIn = authenticationStoreData.loggedIn;
+        this.currentUserEmail = authenticationStoreData.currentUserEmail;
+        this.currentUserImage = authenticationStoreData.currentUserImage;
       }
     );
 
+    this.store.dispatch(new AuthSubscribeAction());
+    this.store.dispatch(new TournamentsSubscribeAction());
   }
 
   ngOnInit() {
-    this.store.dispatch(new AuthSubscribeAction());
-    this.store.dispatch(new TournamentsSubscribeAction());
+
   }
 
   ngOnDestroy(): void {

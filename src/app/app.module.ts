@@ -58,13 +58,20 @@ import { PlayerSearchComponent } from './player/player-search/player-search.comp
 import {RankingService} from './service/ranking.service';
 
 
-import {GlobalData} from './store/global-store-data';
-import {TournamentData} from './store/tournament-data';
+import {AuthenticationReducer} from './store/reducers/authenticationReducer';
+import {TournamentsReducer} from './store/reducers/tournamentsReducer';
+import {PlayersReducer} from './store/reducers/playersReducer';
+import {TournamentReducer} from "./store/reducers/tournamentReducer";
+
 
 const reducers = {
-  router: routerReducer,
-  globalData: GlobalData,
-  tournamentData: TournamentData
+  routerState: routerReducer,
+  tournamentStoreData: TournamentsReducer,
+  playerStoreData: PlayersReducer,
+  authenticationStoreData: AuthenticationReducer,
+
+  actualTournamentStoreData: TournamentReducer,
+
 };
 
 const developmentReducer: ActionReducer<ApplicationState> = compose(storeFreeze, combineReducers)(reducers);

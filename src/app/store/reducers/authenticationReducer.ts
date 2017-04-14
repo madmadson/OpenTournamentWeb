@@ -6,9 +6,36 @@ import {
 } from '../actions/auth-actions';
 
 import * as _ from 'lodash';
-import {GlobalData, INITIAL_GLOBAL_DATA} from '../global-store-data';
 
-export function AuthenticationReducer(state: GlobalData = INITIAL_GLOBAL_DATA, action: Action): GlobalData {
+import {Player} from '../../../../shared/model/player';
+import {UserData} from '../../../../shared/model/userData';
+
+export interface AuthenticationStoreData {
+  currentUserId: string;
+  currentUserName: string;
+  currentUserImage: string;
+  currentUserEmail: string;
+  loggedIn: boolean;
+  redirectUrl: string;
+
+  userData:  UserData;
+  userPlayerData: Player;
+}
+
+ const INITIAL_STATE: AuthenticationStoreData = {
+
+  currentUserId: undefined,
+  currentUserName: undefined,
+  currentUserImage: undefined,
+  currentUserEmail: undefined,
+  loggedIn: false,
+  redirectUrl: undefined,
+
+  userData:  undefined,
+  userPlayerData: undefined
+};
+
+export function AuthenticationReducer(state: AuthenticationStoreData = INITIAL_STATE, action: Action): AuthenticationStoreData {
 
   switch (action.type) {
 
@@ -38,7 +65,7 @@ export function AuthenticationReducer(state: GlobalData = INITIAL_GLOBAL_DATA, a
   }
 }
 
-function handleSaveUserData(state: GlobalData, action: Action): GlobalData {
+function handleSaveUserData(state: AuthenticationStoreData, action: Action): AuthenticationStoreData {
   const newState = Object.assign({}, state);
 
   newState.currentUserName = action.payload.displayName;
@@ -51,7 +78,7 @@ function handleSaveUserData(state: GlobalData, action: Action): GlobalData {
 }
 
 
-function handleLogout(state: GlobalData, action: Action): GlobalData{
+function handleLogout(state: AuthenticationStoreData, action: Action): AuthenticationStoreData{
 
   const newState = Object.assign({}, state);
 
@@ -68,7 +95,7 @@ function handleLogout(state: GlobalData, action: Action): GlobalData{
   return newState;
 }
 
-function handleAddRedirectLoginAction(state: GlobalData, action: Action): GlobalData{
+function handleAddRedirectLoginAction(state: AuthenticationStoreData, action: Action): AuthenticationStoreData{
 
   const newState = Object.assign({}, state);
 
@@ -77,7 +104,7 @@ function handleAddRedirectLoginAction(state: GlobalData, action: Action): Global
   return newState;
 }
 
-function handleSaveUserPlayerData(state: GlobalData, action: Action): GlobalData {
+function handleSaveUserPlayerData(state: AuthenticationStoreData, action: Action): AuthenticationStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -88,7 +115,7 @@ function handleSaveUserPlayerData(state: GlobalData, action: Action): GlobalData
   return newStoreState;
 }
 
-function handleDeleteUserPlayerData(state: GlobalData, action: Action): GlobalData {
+function handleDeleteUserPlayerData(state: AuthenticationStoreData, action: Action): AuthenticationStoreData {
   const newStoreState = _.cloneDeep(state);
 
   newStoreState.userPlayerData = undefined;

@@ -22,9 +22,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
               private router: Router) {
     this.createForm();
 
-    this.subscription = store.select(state => state.globalState).subscribe(authenticationState => {
-      if (authenticationState.loggedIn !== false) {
-        this.router.navigate([authenticationState.redirectUrl ? authenticationState.redirectUrl : '/home']);
+    this.subscription = store.select(state => state.authenticationStoreData).subscribe(authenticationStoreData => {
+      if (authenticationStoreData.loggedIn !== false) {
+        this.router.navigate([authenticationStoreData.redirectUrl ? authenticationStoreData.redirectUrl : '/home']);
       }
      }
    );

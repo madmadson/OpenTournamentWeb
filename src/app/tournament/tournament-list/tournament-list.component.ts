@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
-import {Tournament} from '../tournament.vm';
+
 import {Router} from '@angular/router';
+import {Tournament} from '../../../../shared/model/tournament';
 
 @Component({
   selector: 'tournament-list',

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {TournamentListVM} from '../tournament.vm';
+import {TournamentListVM} from '../tournamentList.vm';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../../store/application-state';
 import {Router} from '@angular/router';
@@ -21,17 +21,17 @@ export class MyTournamentsComponent {
   constructor(private store: Store<ApplicationState>, private router: Router) {
 
     this.allTournaments$ = store.select(state => {
-      return _.filter(state.globalState.tournaments, function (tournament) {
-        return tournament.creatorUid === state.globalState.currentUserId;
+      return _.filter(state.tournamentStoreData.tournaments, function (tournament) {
+        return tournament.creatorUid === state.authenticationStoreData.currentUserId;
       });
     });
 
     this.groupedTournaments$ = store.select(
       state => {
 
-        return _.chain(state.globalState.tournaments)
+        return _.chain(state.tournamentStoreData.tournaments)
           .filter(function (tournament) {
-            return tournament.creatorUid === state.globalState.currentUserId;
+            return tournament.creatorUid === state.authenticationStoreData.currentUserId;
           })
           .groupBy(function (tournament) {
             return moment(tournament.beginDate).format('MMMM YYYY');

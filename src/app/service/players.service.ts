@@ -74,8 +74,6 @@ export class PlayersService implements OnDestroy {
 
     const that = this;
 
-    player
-
     if (player.id) {
       this.afService.database.object('players/' + player.id).$ref.set(player);
     } else {

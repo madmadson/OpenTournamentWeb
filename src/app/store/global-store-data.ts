@@ -8,7 +8,7 @@ import {UserData} from "../../../shared/model/userData";
 export interface GlobalData {
 
 
-  tournaments: Tournament[];
+
   players: Player[];
 
   currentUserId: string;

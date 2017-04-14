@@ -1,12 +1,23 @@
 
-import {GlobalData} from './global-store-data';
+
 import {RouterState} from '@ngrx/router-store';
-import {TournamentData} from './tournament-data';
+
+import {TournamentStoreData} from './reducers/tournamentsReducer';
+import {AuthenticationStoreData} from './reducers/authenticationReducer';
+import {PlayerStoreData} from './reducers/playersReducer';
+import {ActualTournamentStoreData} from './reducers/tournamentReducer';
+
 
 export interface ApplicationState {
 
   routerState: RouterState;
-  globalState: GlobalData;
-  tournamentData: TournamentData;
+  tournamentStoreData: TournamentStoreData;
+  playerStoreData: PlayerStoreData;
+  authenticationStoreData: AuthenticationStoreData;
+
+
+  actualTournamentData: ActualTournamentStoreData;
+
+
 }
 

@@ -64,30 +64,30 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.actualTournamentArmyList$ = this.store.select(state => state.tournamentData.actualTournamentArmyLists);
+    // this.actualTournamentArmyList$ = this.store.select(state => state.actualTournamentData.actualTournamentArmyLists);
 
-    this.store.select(state => state)
-      .subscribe(state => {
-
-        this.userPlayerData = state.globalState.userPlayerData;
-        this.actualTournament = state.tournamentData.actualTournament;
-
-        this.actualTournamentRegisteredPlayers = state.tournamentData.actualTournamentRegisteredPlayers;
-        this.allActualTournamentPlayers = state.tournamentData.actualTournamentPlayers;
-        this.filteredActualTournamentPlayers =  this.allActualTournamentPlayers;
-
-        this.loggedIn = state.globalState.loggedIn;
-
-        that.myRegistration = _.find(state.tournamentData.actualTournamentRegisteredPlayers,
-          function (reg) {
-            if (state.globalState.userPlayerData !== undefined) {
-              return reg.playerId === state.globalState.userPlayerData.id;
-            }
-          });
-
-        that.myTournament = (state.tournamentData.actualTournament.creatorUid === state.globalState.currentUserId);
-
-      });
+    // this.store.select(state => state)
+    //   .subscribe(state => {
+    //
+    //     this.userPlayerData = state.authenticationStoreData.userPlayerData;
+    //     this.actualTournament = state.tournamentData.actualTournament;
+    //
+    //     this.actualTournamentRegisteredPlayers = state.tournamentData.actualTournamentRegisteredPlayers;
+    //     this.allActualTournamentPlayers = state.tournamentData.actualTournamentPlayers;
+    //     this.filteredActualTournamentPlayers =  this.allActualTournamentPlayers;
+    //
+    //     this.loggedIn = state.globalData.loggedIn;
+    //
+    //     that.myRegistration = _.find(state.tournamentData.actualTournamentRegisteredPlayers,
+    //       function (reg) {
+    //         if (state.globalData.userPlayerData !== undefined) {
+    //           return reg.playerId === state.globalData.userPlayerData.id;
+    //         }
+    //       });
+    //
+    //     that.myTournament = (state.tournamentData.actualTournament.creatorUid === state.globalData.currentUserId);
+    //
+    //   });
 
   }
 

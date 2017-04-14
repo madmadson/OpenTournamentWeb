@@ -69,22 +69,22 @@ export class RankingService implements OnDestroy {
 
     console.log('create ranking for first round');
 
-    this.store.select(state => state.tournamentData).subscribe(tournamentData => {
-      const allPlayers: TournamentPlayer[] = tournamentData.actualTournamentPlayers;
-      const allGames: TournamentGame[] = tournamentData.actualTournamentGames;
-      const allRankings: TournamentRanking[] = tournamentData.actualTournamentRankings;
-      const tournament: Tournament = tournamentData.actualTournament;
-
-      _.forEach(allPlayers, function (player: TournamentPlayer) {
-          const tournamentRanking = new TournamentRanking(player.id, player.tournamentId, 0, 0, 0, 0, 1, []);
-          const tournamentRankingsRef = that.afService.database
-            .list('tournament-rankings/' + tournamentRanking.tournamentId );
-          tournamentRankingsRef.push(tournamentRanking);
-
-
-      });
-
-    });
+    // this.store.select(state => state.tournamentData).subscribe(tournamentData => {
+    //   const allPlayers: TournamentPlayer[] = tournamentData.actualTournamentPlayers;
+    //   const allGames: TournamentGame[] = tournamentData.actualTournamentGames;
+    //   const allRankings: TournamentRanking[] = tournamentData.actualTournamentRankings;
+    //   const tournament: Tournament = tournamentData.actualTournament;
+    //
+    //   _.forEach(allPlayers, function (player: TournamentPlayer) {
+    //       const tournamentRanking = new TournamentRanking(player.id, player.tournamentId, 0, 0, 0, 0, 1, []);
+    //       const tournamentRankingsRef = that.afService.database
+    //         .list('tournament-rankings/' + tournamentRanking.tournamentId );
+    //       tournamentRankingsRef.push(tournamentRanking);
+    //
+    //
+    //   });
+    //
+    // });
   }
 
 }

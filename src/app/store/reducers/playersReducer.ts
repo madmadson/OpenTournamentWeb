@@ -12,9 +12,20 @@ import {
 import * as _ from 'lodash';
 import {GlobalData, INITIAL_GLOBAL_DATA} from "../global-store-data";
 import {PLAYER_ADDED_ACTION, PLAYER_CHANGED_ACTION, PLAYER_DELETED_ACTION} from "../actions/players-actions";
+import {Player} from "../../../../shared/model/player";
 
 
-export function PlayerReducer(state: GlobalData = INITIAL_GLOBAL_DATA, action: Action): GlobalData {
+export interface PlayerStoreData {
+  players: Player[];
+}
+
+const INITIAL_STATE: PlayerStoreData = {
+
+  players: []
+};
+
+
+export function PlayersReducer(state: PlayerStoreData = INITIAL_STATE, action: Action): PlayerStoreData {
 
 
   switch (action.type) {
@@ -37,7 +48,7 @@ export function PlayerReducer(state: GlobalData = INITIAL_GLOBAL_DATA, action: A
   }
 }
 
-function handlePlayerAddedData(state: GlobalData, action: Action): GlobalData {
+function handlePlayerAddedData(state: PlayerStoreData, action: Action): PlayerStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -47,7 +58,7 @@ function handlePlayerAddedData(state: GlobalData, action: Action): GlobalData {
   return newStoreState;
 }
 
-function handlePlayerChangedData(state: GlobalData, action: Action): GlobalData {
+function handlePlayerChangedData(state: PlayerStoreData, action: Action): PlayerStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -58,7 +69,7 @@ function handlePlayerChangedData(state: GlobalData, action: Action): GlobalData 
   return newStoreState;
 }
 
-function handlePlayerDeletedData(state: GlobalData, action: Action): GlobalData {
+function handlePlayerDeletedData(state: PlayerStoreData, action: Action): PlayerStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
