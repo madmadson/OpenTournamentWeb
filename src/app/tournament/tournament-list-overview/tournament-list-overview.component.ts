@@ -20,11 +20,11 @@ export class TournamentOverviewComponent  {
 
   constructor(private store: Store<ApplicationState>) {
 
-    this.allTournaments$ = store.select(state => state.tournamentStoreData.tournaments);
+    this.allTournaments$ = store.select(state => state.tournaments.tournaments);
 
     this.groupedTournaments$ = store.select(
       state => {
-        return _.chain(state.tournamentStoreData.tournaments)
+        return _.chain(state.tournaments.tournaments)
           .groupBy(function (tournament) {
             return moment(tournament.beginDate).format('MMMM YYYY');
           }).toPairs()

@@ -16,7 +16,10 @@ import {Registration} from '../../../shared/model/registration';
 import {MdSnackBar} from '@angular/material';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyList} from '../../../shared/model/armyList';
-import {RankingService} from './ranking.service';
+import {TournamentRankingService} from './tournament-ranking.service';
+import {TournamentGameService} from "./tournament-game.service";
+import {PairingConfiguration} from "../../../shared/model/pairing-configuration";
+import {TournamentRanking} from "../../../shared/model/tournament-ranking";
 
 
 @Injectable()
@@ -26,10 +29,11 @@ export class TournamentService implements OnDestroy {
   private tournamentPlayerRef: firebase.database.Reference;
   private armyListsRef: firebase.database.Reference;
 
-  constructor(public rankingService: RankingService,
+  constructor(protected rankingService: TournamentRankingService,
+              protected tournamentGameService: TournamentGameService,
               protected afService: AngularFire,
               protected store: Store<ApplicationState>,
-              @Inject(FirebaseRef) private fb,
+              @Inject(FirebaseRef) protected fb,
               private snackBar: MdSnackBar) {
 
   }
@@ -215,11 +219,24 @@ export class TournamentService implements OnDestroy {
     });
   }
 
-  startTournament(config: any) {
-
-    this.rankingService.createRankingForFirstRound();
-
+  startTournament(config: PairingConfiguration) {
     console.log('start Tournament with config : ' + JSON.stringify(config));
+
+    const newRankings: TournamentRanking[] = this.rankingService.createRankingForRound(1);
+    const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(newRankings);
+
+    if (successFullyPaired) {
+      const registrationRef = this.afService.database.object('tournament/' + config.tournamentId);
+      registrationRef.update({actualRound: 1});
+      this.snackBar.open('new Round Paired', '', {
+        duration: 5000
+      });
+
+    } else {
+      this.snackBar.open('Failed to create Parings', '', {
+        duration: 5000
+      });
+    }
   }
 
   unsubscribeOnTournament() {

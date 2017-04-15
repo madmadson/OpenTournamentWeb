@@ -22,7 +22,7 @@ export class PlayerListOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.store.select(state => state.playerStoreData.players).subscribe(players => {
+    this.store.select(state => state.players.players).subscribe(players => {
       this.allPlayers = players;
       this.filteredPlayers = players;
     });

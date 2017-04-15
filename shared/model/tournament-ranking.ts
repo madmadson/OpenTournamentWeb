@@ -4,6 +4,9 @@ export class TournamentRanking {
 
   tournamentId: string;
   playerId: string;
+
+  playerName: string;
+
   score: number;
   sos: number;
   controlPoints: number;
@@ -12,19 +15,21 @@ export class TournamentRanking {
   tournamentRound: number;
   opponentPlayerIds: string[];
 
-  static fromJson({tournamentId, playerId, score, sos,
+  static fromJson({tournamentId, playerId, playerName, score, sos,
                     controlPoints, victoryPoints, tournamentRound,  opponentPlayerIds}): TournamentRanking {
-    return new TournamentRanking(tournamentId, playerId, score,
+    return new TournamentRanking(tournamentId, playerId, playerName, score,
       sos, controlPoints, victoryPoints,
       tournamentRound, opponentPlayerIds);
   }
 
-  constructor(playerId: string, tournamentId: string, score: number, sos: number,
+  constructor(playerId: string, tournamentId: string, playerName: string, score: number, sos: number,
               controlPoints: number, victoryPoints: number,
               tournamentRound: number, opponentPlayerIds: string[]) {
 
     this.playerId = playerId;
     this.tournamentId = tournamentId;
+
+    this.playerName = playerName;
     this.score = score;
     this.sos = sos;
     this.controlPoints = controlPoints;

@@ -1,9 +1,0 @@
-<md-input-container>
-  <input type="text" mdInput placeholder="Search Player" [mdAutocomplete]="auto" [formControl]="formControl">
-</md-input-container>
-
-<md-autocomplete #auto="mdAutocomplete">
-  <md-option *ngFor="let player of filteredPlayers | async" [value]="player.nickName" (click)="onSelect(player)">
-    {{ player.firstName }} {{ player.nickName }} {{ player.lastName }} ({{ player.meta }})
-  </md-option>
-</md-autocomplete>

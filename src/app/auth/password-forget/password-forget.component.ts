@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../../store/application-state';
 import {CustomValidators} from 'ng2-validation';
-import {composeValidators} from '@angular/forms/src/directives/shared';
 import {ResetPasswordAction} from '../../store/actions/auth-actions';
 
 @Component({
@@ -22,7 +21,7 @@ export class PasswordForgetComponent implements OnInit {
     }
   };
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(  @Inject(FormBuilder) protected formBuilder: FormBuilder,
               private store: Store<ApplicationState>) { }
 
   ngOnInit() {
@@ -36,7 +35,7 @@ export class PasswordForgetComponent implements OnInit {
 
 
     this.passwordForm = this.formBuilder.group({
-      email: ['', composeValidators([Validators.required, CustomValidators.email])],
+      email: ['', Validators.compose([Validators.required, CustomValidators.email])],
     });
   }
 

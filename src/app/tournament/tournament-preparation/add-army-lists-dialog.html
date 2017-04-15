@@ -4,7 +4,7 @@
   <p *ngIf="armyListForRegistration.length > 6" style="color: red">Maximum reached for ArmyLists</p>
   <md-tab-group>
     <md-tab *ngIf="armyListForRegistration.length <= 6" label="AddArmyList">
-      <form (ngSubmit)="onSubmit()" #armyListForm="ngForm">
+      <form #armyListForm="ngForm">
         <md-input-container
           class="full-width">
           <input

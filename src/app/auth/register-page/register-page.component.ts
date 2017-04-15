@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {composeValidators} from '@angular/forms/src/directives/shared';
 import {CustomValidators} from 'ng2-validation';
 import {ApplicationState} from '../../store/application-state';
 import {Store} from '@ngrx/store';
@@ -35,12 +34,12 @@ export class RegisterPageComponent implements OnInit {
   }
 
   initForm() {
-    const password = new FormControl('', composeValidators([Validators.required, Validators.minLength(6)]));
+    const password = new FormControl('', Validators.compose([Validators.required, Validators.minLength(6)]));
 
     this.registerForm = this.formBuilder.group({
-      email: ['', composeValidators([Validators.required, CustomValidators.email])],
+      email: ['', Validators.compose([Validators.required, CustomValidators.email])],
       password: password,
-      certainPassword: ['', composeValidators([Validators.required, CustomValidators.equalTo(password)])],
+      certainPassword: ['', Validators.compose([Validators.required, CustomValidators.equalTo(password)])],
     });
   }
 

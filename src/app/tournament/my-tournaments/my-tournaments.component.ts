@@ -21,7 +21,7 @@ export class MyTournamentsComponent {
   constructor(private store: Store<ApplicationState>, private router: Router) {
 
     this.allTournaments$ = store.select(state => {
-      return _.filter(state.tournamentStoreData.tournaments, function (tournament) {
+      return _.filter(state.tournaments.tournaments, function (tournament) {
         return tournament.creatorUid === state.authenticationStoreData.currentUserId;
       });
     });
@@ -29,7 +29,7 @@ export class MyTournamentsComponent {
     this.groupedTournaments$ = store.select(
       state => {
 
-        return _.chain(state.tournamentStoreData.tournaments)
+        return _.chain(state.tournaments.tournaments)
           .filter(function (tournament) {
             return tournament.creatorUid === state.authenticationStoreData.currentUserId;
           })

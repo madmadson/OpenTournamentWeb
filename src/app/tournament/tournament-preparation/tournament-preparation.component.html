@@ -1,11 +1,11 @@
-<h1 class="heading">{{actualTournament.name}}</h1>
+<h1 class="heading">{{actualTournament?.name}}</h1>
 <div class="action-card-container">
   <md-card class="action-card" >
-    <button *ngIf="myTournament" type="button" color="accent" md-raised-button>
+    <button *ngIf="currentUserId === actualTournament?.creatorUid" type="button" color="accent" md-raised-button>
       <md-icon>build</md-icon>
       Edit
     </button>
-    <button *ngIf="myTournament"
+    <button *ngIf="currentUserId === actualTournament?.creatorUid"
             (click)="openStartTournamentDialog()"
             type="button"
             color="accent"
@@ -54,7 +54,7 @@
     </h2>
     <md-list>
       <tournament-registration-list
-        [isAdmin]="myTournament"
+        [isAdmin]="currentUserId === actualTournament?.creatorUid"
         [userPlayerData]="userPlayerData"
         [registrations]="actualTournamentRegisteredPlayers"
         (onSaveTournamentPlayer)="onSaveTournamentPlayer($event)"
@@ -63,13 +63,13 @@
       </tournament-registration-list>
     </md-list>
   </md-card>
-  <md-card *ngIf="myTournament" class="tournament-player-card">
+  <md-card *ngIf="currentUserId === actualTournament?.creatorUid" class="tournament-player-card">
     <h2 *ngIf="allActualTournamentPlayers.length > 0" class="list-heading">
       Tournament Players ({{filteredActualTournamentPlayers.length}}/{{allActualTournamentPlayers.length}})
     </h2>
     <h3 *ngIf="allActualTournamentPlayers.length == 0" class="list-heading">
       No Tournament Players found</h3>
-    <button *ngIf="myTournament" type="button" color="accent" md-raised-button (click)="addTournamentPlayer()">
+    <button *ngIf="currentUserId === actualTournament.creatorUid" type="button" color="accent" md-raised-button (click)="addTournamentPlayer()">
       <md-icon>add</md-icon>
       Add Player
     </button>
@@ -82,7 +82,7 @@
     </md-input-container>
     <md-list>
       <tournament-player-list
-          [isAdmin]="myTournament"
+          [isAdmin]="currentUserId === actualTournament?.creatorUid"
           [userPlayerData]="userPlayerData"
           [tournamentPlayers]="filteredActualTournamentPlayers"
           (onDeleteTournamentPlayer)="onDeleteTournamentPlayer($event)">

@@ -1,11 +1,13 @@
 import {Action} from '@ngrx/store';
 
-import * as _ from 'lodash';
 
 import {SET_ACTUAL_TOURNAMENT_ACTION} from '../actions/tournament-actions';
+import {Tournament} from '../../../../shared/model/tournament';
+
+import * as _ from 'lodash';
 
 export interface ActualTournamentStoreData {
-  actualTournament: string;
+  actualTournament: Tournament;
 }
 
 const INITIAL_STATE: ActualTournamentStoreData = {

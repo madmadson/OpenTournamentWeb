@@ -1,36 +1,39 @@
 import {Action} from '@ngrx/store';
-import {INITIAL_TOURNAMENT_DATA, TournamentData} from '../tournament-data';
-import {
-  ARMY_LIST_ADDED_ACTION, ARMY_LIST_DELETED_ACTION,
-  CLEAR_ARMY_LISTS_ACTION,
-  CLEAR_TOURNAMENT_PLAYER_ACTION,
-  CLEAR_TOURNAMENT_REGISTRATION_ACTION, TOURNAMENT_PLAYER_ADDED, TOURNAMENT_PLAYER_CHANGED, TOURNAMENT_PLAYER_DELETED,
-  TOURNAMENT_REGISTRATION_ADDED, TOURNAMENT_REGISTRATION_CHANGED,
-  TOURNAMENT_REGISTRATION_DELETED
-} from '../actions/tournament-actions';
 
 import * as _ from 'lodash';
 import {
-  TOURNAMENT_RANKING_ADDED, TOURNAMENT_RANKING_CHANGED,
-  TOURNAMENT_RANKING_DELETED
-} from '../actions/ranking-actions';
+  TOURNAMENT_RANKING_ADDED_ACTION, TOURNAMENT_RANKING_CHANGED_ACTION,
+  TOURNAMENT_RANKING_DELETED_ACTION
+} from '../actions/tournament-rankings-actions';
+
+import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
+
+export interface ActualTournamentRankingsStoreData {
+  actualTournamentRankings: TournamentRanking[];
+}
+
+const INITIAL_STATE: ActualTournamentRankingsStoreData = {
+
+  actualTournamentRankings: []
+};
 
 
-export function TournamentRankingReducer(state: TournamentData = INITIAL_TOURNAMENT_DATA, action: Action): TournamentData {
+export function TournamentRankingReducer(
+  state: ActualTournamentRankingsStoreData = INITIAL_STATE, action: Action): ActualTournamentRankingsStoreData {
 
 
   switch (action.type) {
 
 
-    case TOURNAMENT_RANKING_ADDED:
+    case TOURNAMENT_RANKING_ADDED_ACTION:
 
       return handleTournamentRankingAddedAction(state, action);
 
-    case TOURNAMENT_RANKING_DELETED:
+    case TOURNAMENT_RANKING_DELETED_ACTION:
 
       return handleTournamentRankingDeletedAction(state, action);
 
-    case TOURNAMENT_RANKING_CHANGED:
+    case TOURNAMENT_RANKING_CHANGED_ACTION:
 
       return handleTournamentRankingChangedData(state, action);
 
@@ -43,10 +46,11 @@ export function TournamentRankingReducer(state: TournamentData = INITIAL_TOURNAM
 }
 
 
-function handleTournamentRankingAddedAction(state: TournamentData, action: Action): TournamentData {
+function handleTournamentRankingAddedAction(
+  state: ActualTournamentRankingsStoreData, action: Action): ActualTournamentRankingsStoreData {
 
 
-  const newTournamentData = _.cloneDeep(state);
+  const newTournamentData: ActualTournamentRankingsStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
     if (newTournamentData.actualTournamentRankings === undefined) {
@@ -58,8 +62,9 @@ function handleTournamentRankingAddedAction(state: TournamentData, action: Actio
 }
 
 
-function handleTournamentRankingDeletedAction(state: TournamentData, action: Action): TournamentData {
-  const newStoreState: TournamentData = _.cloneDeep(state);
+function handleTournamentRankingDeletedAction(
+  state: ActualTournamentRankingsStoreData, action: Action): ActualTournamentRankingsStoreData {
+  const newStoreState: ActualTournamentRankingsStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
 
@@ -70,8 +75,9 @@ function handleTournamentRankingDeletedAction(state: TournamentData, action: Act
 }
 
 
-function handleTournamentRankingChangedData(state: TournamentData, action: Action): TournamentData {
-  const newStoreState: TournamentData = _.cloneDeep(state);
+function handleTournamentRankingChangedData(
+  state: ActualTournamentRankingsStoreData, action: Action): ActualTournamentRankingsStoreData {
+  const newStoreState: ActualTournamentRankingsStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
 

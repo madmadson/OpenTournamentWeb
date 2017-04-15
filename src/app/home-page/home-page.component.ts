@@ -11,8 +11,8 @@ import {Player} from '../../../shared/model/player';
 })
 export class HomePageComponent {
 
-  private userPlayerData: Player;
-  private loggedIn: boolean;
+  userPlayerData: Player;
+  loggedIn: boolean;
 
   constructor(private store: Store<ApplicationState>) {
 

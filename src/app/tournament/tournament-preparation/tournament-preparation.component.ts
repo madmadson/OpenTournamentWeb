@@ -1,10 +1,8 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ActivatedRoute, Router} from '@angular/router';
 import {
   ArmyListEraseAction,
-  PushArmyListAction, PushNewTournamentPlayerAction,
-  RegistrationEraseAction,
+  PushArmyListAction, PushNewTournamentPlayerAction, RegistrationEraseAction,
   RegistrationPushAction, StartTournamentAction, TournamentPlayerEraseAction, TournamentPlayerPushAction,
   TournamentSubscribeAction,
   TournamentUnsubscribeAction
@@ -24,6 +22,10 @@ import {Observable} from 'rxjs/Observable';
 import {getAllCountries} from '../../../../shared/model/countries';
 
 import {Tournament} from '../../../../shared/model/tournament';
+import {ActivatedRoute} from '@angular/router';
+import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
+import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
+import {TournamentGame} from '../../../../shared/model/tournament-game';
 
 
 @Component({
@@ -43,7 +45,10 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
   allActualTournamentPlayers: TournamentPlayer[];
   filteredActualTournamentPlayers: TournamentPlayer[];
 
-  myTournament: boolean;
+  actualTournamentRankings: TournamentRanking[];
+  actualTournamentGames: TournamentGame[];
+
+  currentUserId: string;
   loggedIn: boolean;
 
   constructor(private store: Store<ApplicationState>,
@@ -51,11 +56,36 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
               public dialog: MdDialog,
               private snackBar: MdSnackBar) {
 
+    this.actualTournamentArmyList$ = this.store.select(state => state.actualTournamentArmyLists.actualTournamentArmyLists);
+
+    this.store.select(state => state)
+      .subscribe(state => {
+
+        this.userPlayerData = state.authenticationStoreData.userPlayerData;
+        this.actualTournament = state.actualTournament.actualTournament;
+        this.currentUserId = state.authenticationStoreData.currentUserId;
+
+        this.actualTournamentRegisteredPlayers = state.actualTournamentRegistrations.actualTournamentRegisteredPlayers;
+        this.allActualTournamentPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
+        this.actualTournamentRankings = state.actualTournamentRankings.actualTournamentRankings;
+        this.actualTournamentGames = state.actualTournamentGames.actualTournamentGames;
+        this.allActualTournamentPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
+        this.filteredActualTournamentPlayers =  this.allActualTournamentPlayers;
+
+        this.loggedIn = state.authenticationStoreData.loggedIn;
+
+        this.myRegistration = _.find(state.actualTournamentRegistrations.actualTournamentRegisteredPlayers,
+          function (reg) {
+            if (state.authenticationStoreData.userPlayerData !== undefined) {
+              return reg.playerId === state.authenticationStoreData.userPlayerData.id;
+            }
+          });
+      });
+
   }
 
   ngOnInit() {
 
-    const that = this;
 
     this.activeRouter.params.subscribe(
       params => {
@@ -63,31 +93,6 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
         this.store.dispatch(new TournamentSubscribeAction(params['id']));
       }
     );
-
-    // this.actualTournamentArmyList$ = this.store.select(state => state.actualTournamentData.actualTournamentArmyLists);
-
-    // this.store.select(state => state)
-    //   .subscribe(state => {
-    //
-    //     this.userPlayerData = state.authenticationStoreData.userPlayerData;
-    //     this.actualTournament = state.tournamentData.actualTournament;
-    //
-    //     this.actualTournamentRegisteredPlayers = state.tournamentData.actualTournamentRegisteredPlayers;
-    //     this.allActualTournamentPlayers = state.tournamentData.actualTournamentPlayers;
-    //     this.filteredActualTournamentPlayers =  this.allActualTournamentPlayers;
-    //
-    //     this.loggedIn = state.globalData.loggedIn;
-    //
-    //     that.myRegistration = _.find(state.tournamentData.actualTournamentRegisteredPlayers,
-    //       function (reg) {
-    //         if (state.globalData.userPlayerData !== undefined) {
-    //           return reg.playerId === state.globalData.userPlayerData.id;
-    //         }
-    //       });
-    //
-    //     that.myTournament = (state.tournamentData.actualTournament.creatorUid === state.globalData.currentUserId);
-    //
-    //   });
 
   }
 
@@ -97,14 +102,13 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
 
   filter(searchString: string) {
 
-    console.log('search' + searchString);
 
     if (searchString === '') {
       this.filteredActualTournamentPlayers = this.allActualTournamentPlayers;
     }
 
     this.filteredActualTournamentPlayers = _.filter(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
-      return player.playerName.includes(searchString);
+      return player.playerName.toLocaleLowerCase().includes(searchString.toLowerCase());
     });
 
   }
@@ -138,6 +142,7 @@ export class TournamentPreparationComponent implements OnInit, OnDestroy {
     });
     const startTournamentSub = dialogRef.componentInstance.onStartTournament.subscribe(config => {
       if (config !== undefined) {
+        config.tournamentId = this.tournamentId;
         this.store.dispatch(new StartTournamentAction(config));
       }
     });
@@ -240,8 +245,8 @@ export class RegisterDialogComponent {
 
   constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>) {
 
-    this.userPlayerData = dialogRef.config.data.userPlayerData;
-    this.actualTournament = dialogRef.config.data.actualTournament;
+    this.userPlayerData = dialogRef._containerInstance.dialogConfig.data.userPlayerData;
+    this.actualTournament = dialogRef._containerInstance.dialogConfig.data.actualTournament;
   }
 
   onSaveRegistration(registration: Registration) {
@@ -266,7 +271,7 @@ export class NewTournamentPlayerDialogComponent {
   constructor(public dialogRef: MdDialogRef<NewTournamentPlayerDialogComponent>) {
 
     this.countries = getAllCountries();
-    this.tournament = dialogRef.config.data.actualTournament;
+    this.tournament = dialogRef._containerInstance.dialogConfig.data.actualTournament;
 
     this.tournamentPlayerModel = {tournamentId: this.tournament.id, playerName: '', origin: '', meta: '', country: ''};
   }
@@ -298,11 +303,11 @@ export class AddArmyListsDialogComponent {
   constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>) {
 
     const that = this;
-    this.registration = dialogRef.config.data.registration;
+    this.registration = dialogRef._containerInstance.dialogConfig.data.registration;
 
     this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.playerId, '', '');
 
-    dialogRef.config.data.armyListForRegistration.subscribe(armyLists => {
+    dialogRef._containerInstance.dialogConfig.data.armyListForRegistration.subscribe(armyLists => {
       this.armyListForRegistration = _.filter(armyLists, function (armyList: ArmyList) {
         if (that.registration !== undefined) {
           return armyList.playerId === that.registration.playerId;
@@ -329,15 +334,15 @@ export class StartTournamentDialogComponent {
 
   allActualTournamentPlayers: TournamentPlayer[];
 
-  @Output() onStartTournament = new EventEmitter();
+  @Output() onStartTournament = new EventEmitter<PairingConfiguration>();
 
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>) {
-    this.allActualTournamentPlayers = dialogRef.config.data.allActualTournamentPlayers;
+    this.allActualTournamentPlayers = dialogRef._containerInstance.dialogConfig.data.allActualTournamentPlayers;
   }
 
   startTournament() {
 
-    this.onStartTournament.emit({test: 'test'});
+    this.onStartTournament.emit({tournamentId: ''});
   }
 
 }

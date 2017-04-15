@@ -1,15 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, Inject, OnInit} from '@angular/core';
+
 import {MdSnackBar} from '@angular/material';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../../store/application-state';
-import {composeValidators} from '@angular/forms/src/directives/shared';
 import {CustomValidators} from 'ng2-validation';
 import {TournamentPushAction} from '../../store/actions/tournaments-actions';
-import {Router} from '@angular/router';
+
 
 import * as moment from 'moment';
-import {Tournament} from "../../../../shared/model/tournament";
+import {Tournament} from '../../../../shared/model/tournament';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 
 @Component({
@@ -49,16 +49,31 @@ export class TournamentNewComponent implements OnInit {
   };
 
   constructor(
-    private router: Router,
-    private formBuilder: FormBuilder,
-    private store: Store<ApplicationState>,
-    public snackBar: MdSnackBar) {
 
+    protected fb: FormBuilder,
+    protected store: Store<ApplicationState>,
+    protected snackBar: MdSnackBar) {
+
+    this.store.select(state => state.authenticationStoreData.currentUserId)
+      .subscribe(currentUserId => this.creatorId = currentUserId);
+
+    const initialBeginDate = moment().weekday(6).hours(10).minutes(0).add(1, 'week').format(this.dateFormat);
+    const initialEndDate = moment().weekday(6).hours(20).minutes(0).add(1, 'week').format(this.dateFormat);
+
+
+    this.tournamentForm = this.fb.group({
+      name: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
+      location: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
+      beginDate: [initialBeginDate, Validators.required],
+      endDate: [initialEndDate, Validators.required],
+      teamTournament: [''],
+      teamSize: [''],
+      maxParticipants: ['', Validators.compose([Validators.required, CustomValidators.min(2), CustomValidators.max(9999)])]
+    });
   }
 
   ngOnInit() {
-    this.store.select(state => state.authenticationStoreData.currentUserId)
-      .subscribe(currentUserId => this.creatorId = currentUserId);
+
 
     this.initForm();
 
@@ -70,18 +85,8 @@ export class TournamentNewComponent implements OnInit {
 
   initForm() {
 
-    const initialBeginDate = moment().weekday(6).hours(10).minutes(0).add(1, 'week').format(this.dateFormat);
-    const initialEndDate = moment().weekday(6).hours(20).minutes(0).add(1, 'week').format(this.dateFormat);
 
-    this.tournamentForm = this.formBuilder.group({
-      name: ['', composeValidators([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
-      location: ['', composeValidators([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
-      beginDate: [initialBeginDate, Validators.required],
-      endDate: [initialEndDate, Validators.required],
-      teamTournament: [''],
-      teamSize: [''],
-      maxParticipants: ['', composeValidators([Validators.required, CustomValidators.min(2), CustomValidators.max(9999)])]
-    });
+
   }
 
   handleError() {
@@ -96,7 +101,7 @@ export class TournamentNewComponent implements OnInit {
     changes$.subscribe(teamTournament => {
       if (teamTournament) {
         this.tournamentForm.get('teamSize').setValidators(
-          composeValidators([Validators.required, CustomValidators.min(2), CustomValidators.max(20)])
+          Validators.compose([Validators.required, CustomValidators.min(2), CustomValidators.max(20)])
         );
         this.tournamentForm.get('teamSize').updateValueAndValidity();
 

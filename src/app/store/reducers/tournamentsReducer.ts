@@ -1,14 +1,12 @@
 import {Action} from '@ngrx/store';
-import {INITIAL_TOURNAMENT_DATA, TournamentData} from '../tournament-data';
 
 import * as _ from 'lodash';
 import {
   TOURNAMENT_ADDED_ACTION, TOURNAMENT_CHANGED_ACTION, TOURNAMENT_DELETED_ACTION,
   TOURNAMENTS_CLEAR_ACTION
 } from '../actions/tournaments-actions';
-import {SET_ACTUAL_TOURNAMENT_ACTION} from '../actions/tournament-actions';
-import {GlobalData, INITIAL_GLOBAL_DATA} from "../global-store-data";
-import {Tournament} from "../../../../shared/model/tournament";
+import {Tournament} from '../../../../shared/model/tournament';
+
 
 
 export interface TournamentStoreData {
@@ -84,17 +82,6 @@ function handleTournamentDeletedData(state: TournamentStoreData, action: Action)
 
     const indexOfSearchedTournament = _.findIndex(newStoreState.tournaments, ['id', action.payload]);
     newStoreState.tournaments.splice(indexOfSearchedTournament, 1);
-  }
-  return newStoreState;
-}
-
-
-function handleSetTournament(state: TournamentStoreData, action: Action): TournamentStoreData {
-  const newStoreState = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-
-    newStoreState.actualTournament = action.payload;
   }
   return newStoreState;
 }

@@ -1,10 +1,8 @@
-///<reference path="store/global-store-data.ts"/>
-///<reference path="store/tournament-data.ts"/>
+
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
-import {MaterialModule} from '@angular/material';
 import {AppComponent} from './app.component';
 import {TournamentListComponent} from './tournament/tournament-list/tournament-list.component';
 import {AngularFireModule} from 'angularfire2';
@@ -54,23 +52,38 @@ import { RegisterPageComponent } from './auth/register-page/register-page.compon
 import { PasswordForgetComponent } from './auth/password-forget/password-forget.component';
 import { TournamentRegistrationListComponent } from './tournament/tournament-registration-list/tournament-registration-list.component';
 import { TournamentPlayerListComponent } from './tournament/tournament-player-list/tournament-player-list.component';
-import { PlayerSearchComponent } from './player/player-search/player-search.component';
-import {RankingService} from './service/ranking.service';
+import {TournamentRankingService} from './service/tournament-ranking.service';
 
 
 import {AuthenticationReducer} from './store/reducers/authenticationReducer';
 import {TournamentsReducer} from './store/reducers/tournamentsReducer';
 import {PlayersReducer} from './store/reducers/playersReducer';
-import {TournamentReducer} from "./store/reducers/tournamentReducer";
+import {TournamentReducer} from './store/reducers/tournamentReducer';
+import {TournamentRegistrationReducer} from './store/reducers/tournamentRegistrationReducer';
+import {TournamentRankingReducer} from './store/reducers/tournamentRankingReducer';
+import {TournamentPlayerReducer} from './store/reducers/tournamentPlayerReducer';
+import {TournamentArmyListReducer} from './store/reducers/tournamentArmyListReducer';
+import {TournamentGameService} from './service/tournament-game.service';
+import {TournamentGameReducer} from './store/reducers/tournamentGameReducer';
+import {
+  MdButtonModule, MdCard, MdCardModule, MdCheckboxModule, MdDialogModule, MdIcon, MdIconModule, MdInputModule, MdSelect,
+  MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbar, MdToolbarModule, MdListModule
+} from '@angular/material';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 const reducers = {
   routerState: routerReducer,
-  tournamentStoreData: TournamentsReducer,
-  playerStoreData: PlayersReducer,
+  tournaments: TournamentsReducer,
+  players: PlayersReducer,
   authenticationStoreData: AuthenticationReducer,
 
-  actualTournamentStoreData: TournamentReducer,
+  actualTournament: TournamentReducer,
+  actualTournamentRegistrations: TournamentRegistrationReducer,
+  actualTournamentRankings: TournamentRankingReducer,
+  actualTournamentGames: TournamentGameReducer,
+  actualTournamentPlayers: TournamentPlayerReducer,
+  actualTournamentArmyLists: TournamentArmyListReducer,
 
 };
 
@@ -86,7 +99,7 @@ export function storeReducer(state: any, action: any) {
 }
 
 
-const firebaseConfProd = {
+export const firebaseConfProd = {
   apiKey: 'AIzaSyBHTHAaFv7_d11CYY6V9We_gD1tK1WiBQs',
   authDomain: 'madson-org-opentournament.firebaseapp.com',
   databaseURL: 'https://madson-org-opentournament.firebaseio.com',
@@ -95,7 +108,7 @@ const firebaseConfProd = {
   messagingSenderId: '736115725028'
 };
 
-const firebaseConfDev = {
+export const firebaseConfDev = {
   apiKey: 'AIzaSyAMFwFtLKudN3GfqikkimvZOvWzXbTaJ-o',
   authDomain: 'devopentournament.firebaseapp.com',
   databaseURL: 'https://devopentournament.firebaseio.com',
@@ -109,9 +122,9 @@ const firebaseConfDev = {
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     AngularFireModule.initializeApp(firebaseConfDev),
-    ReactiveFormsModule,
     EffectsModule.run(AuthEffectService),
     EffectsModule.run(TournamentEffectService),
     EffectsModule.run(TournamentsEffectService),
@@ -123,7 +136,10 @@ const firebaseConfDev = {
     AppRoutingModule,
     DateTimePickerModule,
     CustomFormsModule,
-    MaterialModule,
+    BrowserAnimationsModule,
+    MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
+    MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
+    MdListModule, MdDialogModule
   ],
   declarations: [
     AppComponent,
@@ -146,7 +162,6 @@ const firebaseConfDev = {
     RegisterDialogComponent,
     TournamentPlayerListComponent,
     AddArmyListsDialogComponent,
-    PlayerSearchComponent,
     NewTournamentPlayerDialogComponent,
     StartTournamentDialogComponent,
   ],
@@ -156,7 +171,8 @@ const firebaseConfDev = {
     AuthGuard,
     TournamentService,
     PlayersService,
-    RankingService
+    TournamentRankingService,
+    TournamentGameService
   ],
   entryComponents: [
     RegisterDialogComponent,

@@ -89,11 +89,11 @@ export class LoginService implements OnInit, OnDestroy {
       }
     });
 
-    // this.query.on('child_changed', function (snapshot) {
-    //   const player = Player.fromJson(snapshot.val());
-    //   player.id = snapshot.key;
-    //   this.store.dispatch(new SaveUserPlayerDataAction(player));
-    // });
+    this.query.on('child_changed', function (snapshot) {
+      const player = Player.fromJson(snapshot.val());
+      player.id = snapshot.key;
+      this.store.dispatch(new SaveUserPlayerDataAction(player));
+    });
   }
 
   createAccount(payload) {

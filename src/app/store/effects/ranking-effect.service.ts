@@ -10,21 +10,21 @@ import {
   TOURNAMENT_UNSUBSCRIBE_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
-import {RankingService} from "../../service/ranking.service";
-import {RANKING_SUBSCRIBE_ACTION} from "../actions/ranking-actions";
+import {TournamentRankingService} from "../../service/tournament-ranking.service";
+import {TOURNAMENT_RANKINGS_SUBSCRIBE_ACTION} from "../actions/tournament-rankings-actions";
 
 
 @Injectable()
 export class RankingEffectService {
 
   @Effect({dispatch: false}) subscribe = this.actions$
-    .ofType(RANKING_SUBSCRIBE_ACTION)
-    .debug('RANKING_SUBSCRIBE_ACTION')
+    .ofType(TOURNAMENT_RANKINGS_SUBSCRIBE_ACTION)
+    .debug('TOURNAMENT_RANKINGS_SUBSCRIBE_ACTION')
     .map(action => this.rankingService.subscribeOnTournamentRankings(action.payload));
 
 
   constructor(
     private actions$: Actions,
-    private rankingService: RankingService
+    private rankingService: TournamentRankingService
   ) { }
 }

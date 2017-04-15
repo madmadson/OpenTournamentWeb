@@ -1,18 +1,26 @@
 import {Action} from '@ngrx/store';
-import {INITIAL_TOURNAMENT_DATA, TournamentData} from '../tournament-data';
 import {
-  ARMY_LIST_ADDED_ACTION, ARMY_LIST_DELETED_ACTION,
-  CLEAR_ARMY_LISTS_ACTION,
-  CLEAR_TOURNAMENT_PLAYER_ACTION,
-  CLEAR_TOURNAMENT_REGISTRATION_ACTION, TOURNAMENT_PLAYER_ADDED, TOURNAMENT_PLAYER_CHANGED, TOURNAMENT_PLAYER_DELETED,
-  TOURNAMENT_REGISTRATION_ADDED, TOURNAMENT_REGISTRATION_CHANGED,
+  CLEAR_TOURNAMENT_REGISTRATION_ACTION, TOURNAMENT_REGISTRATION_ADDED, TOURNAMENT_REGISTRATION_CHANGED,
   TOURNAMENT_REGISTRATION_DELETED
 } from '../actions/tournament-actions';
 
 import * as _ from 'lodash';
+import {Registration} from '../../../../shared/model/registration';
 
 
-export function TournamentRegistrationReducer(state: TournamentData = INITIAL_TOURNAMENT_DATA, action: Action): TournamentData {
+export interface ActualTournamentRegistrationsStoreData {
+  actualTournamentRegisteredPlayers: Registration[];
+}
+
+const INITIAL_STATE: ActualTournamentRegistrationsStoreData = {
+
+  actualTournamentRegisteredPlayers: []
+};
+
+
+export function TournamentRegistrationReducer(
+  state: ActualTournamentRegistrationsStoreData = INITIAL_STATE,
+  action: Action): ActualTournamentRegistrationsStoreData {
 
 
   switch (action.type) {
@@ -41,7 +49,8 @@ export function TournamentRegistrationReducer(state: TournamentData = INITIAL_TO
   }
 }
 
-function handleTournamentRegistrationAddedAction(state: TournamentData, action: Action): TournamentData {
+function handleTournamentRegistrationAddedAction(
+  state: ActualTournamentRegistrationsStoreData, action: Action): ActualTournamentRegistrationsStoreData {
 
 
   const newTournamentData = _.cloneDeep(state);
@@ -55,8 +64,9 @@ function handleTournamentRegistrationAddedAction(state: TournamentData, action: 
   return newTournamentData;
 }
 
-function handleTournamentRegistrationDeletedAction(state: TournamentData, action: Action): TournamentData {
-  const newStoreState: TournamentData = _.cloneDeep(state);
+function handleTournamentRegistrationDeletedAction(
+  state: ActualTournamentRegistrationsStoreData, action: Action): ActualTournamentRegistrationsStoreData {
+  const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
 
@@ -67,8 +77,9 @@ function handleTournamentRegistrationDeletedAction(state: TournamentData, action
 }
 
 
-function handleRegistrationChangedData(state: TournamentData, action: Action): TournamentData {
-  const newStoreState: TournamentData = _.cloneDeep(state);
+function handleRegistrationChangedData(
+  state: ActualTournamentRegistrationsStoreData, action: Action): ActualTournamentRegistrationsStoreData {
+  const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
     console.log('new reducer!' + JSON.stringify(action.payload));
@@ -79,7 +90,8 @@ function handleRegistrationChangedData(state: TournamentData, action: Action): T
   return newStoreState;
 }
 
-function handleClearRegistrationAction(state: TournamentData, action: Action): TournamentData {
+function handleClearRegistrationAction(
+  state: ActualTournamentRegistrationsStoreData, action: Action): ActualTournamentRegistrationsStoreData {
 
   const newTournamentData = _.cloneDeep(state);
 

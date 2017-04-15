@@ -6,17 +6,27 @@ import {TournamentStoreData} from './reducers/tournamentsReducer';
 import {AuthenticationStoreData} from './reducers/authenticationReducer';
 import {PlayerStoreData} from './reducers/playersReducer';
 import {ActualTournamentStoreData} from './reducers/tournamentReducer';
+import {ActualTournamentRegistrationsStoreData} from './reducers/tournamentRegistrationReducer';
+import {ActualTournamentRankingsStoreData} from './reducers/tournamentRankingReducer';
+import {ActualTournamentPlayersStoreData} from './reducers/tournamentPlayerReducer';
+import {ActualTournamentArmyListsStoreData} from './reducers/tournamentArmyListReducer';
+import {ActualTournamentGamesStoreData} from './reducers/tournamentGameReducer';
 
 
 export interface ApplicationState {
 
   routerState: RouterState;
-  tournamentStoreData: TournamentStoreData;
-  playerStoreData: PlayerStoreData;
+  tournaments: TournamentStoreData;
+  players: PlayerStoreData;
   authenticationStoreData: AuthenticationStoreData;
 
 
-  actualTournamentData: ActualTournamentStoreData;
+  actualTournament: ActualTournamentStoreData;
+  actualTournamentRegistrations: ActualTournamentRegistrationsStoreData;
+  actualTournamentRankings: ActualTournamentRankingsStoreData;
+  actualTournamentGames: ActualTournamentGamesStoreData;
+  actualTournamentPlayers: ActualTournamentPlayersStoreData;
+  actualTournamentArmyLists: ActualTournamentArmyListsStoreData;
 
 
 }
