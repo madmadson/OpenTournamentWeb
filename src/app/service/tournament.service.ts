@@ -17,9 +17,9 @@ import {MdSnackBar} from '@angular/material';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyList} from '../../../shared/model/armyList';
 import {TournamentRankingService} from './tournament-ranking.service';
-import {TournamentGameService} from "./tournament-game.service";
-import {PairingConfiguration} from "../../../shared/model/pairing-configuration";
-import {TournamentRanking} from "../../../shared/model/tournament-ranking";
+import {TournamentGameService} from './tournament-game.service';
+import {PairingConfiguration} from '../../../shared/model/pairing-configuration';
+import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 
 
 @Injectable()
@@ -63,6 +63,8 @@ export class TournamentService implements OnDestroy {
 
     const that = this;
 
+    this.store.dispatch(new ClearRegistrationAction());
+
     this.tournamentRegistrationsRef = this.fb.database().ref('tournament-registration/' + tournamentId);
 
     this.tournamentRegistrationsRef.on('child_added', function (snapshot) {
@@ -92,6 +94,9 @@ export class TournamentService implements OnDestroy {
 
   private subscribeOnTournamentPlayers(tournamentId: string) {
     const that = this;
+
+    this.store.dispatch(new ClearTournamentPlayerAction());
+
 
     this.tournamentPlayerRef = this.fb.database().ref('tournament-player/' + tournamentId);
 
@@ -226,7 +231,7 @@ export class TournamentService implements OnDestroy {
     const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(newRankings);
 
     if (successFullyPaired) {
-      const registrationRef = this.afService.database.object('tournament/' + config.tournamentId);
+      const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
       registrationRef.update({actualRound: 1});
       this.snackBar.open('new Round Paired', '', {
         duration: 5000

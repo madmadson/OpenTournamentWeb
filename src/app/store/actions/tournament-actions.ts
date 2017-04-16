@@ -3,7 +3,6 @@ import {Tournament} from '../../../../shared/model/tournament';
 import {Registration} from '../../../../shared/model/registration';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {ArmyList} from '../../../../shared/model/armyList';
-import {TournamentRanking} from "../../../../shared/model/tournament-ranking";
 import {PairingConfiguration} from "../../../../shared/model/pairing-configuration";
 
 

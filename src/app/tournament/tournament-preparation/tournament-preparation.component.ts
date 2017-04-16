@@ -34,7 +34,7 @@ import {TournamentGame} from '../../../../shared/model/tournament-game';
   styleUrls: ['./tournament-preparation.component.css']
 })
 export class TournamentPreparationComponent implements OnInit, OnDestroy {
-  private tournamentId: string;
+  tournamentId: string;
 
   actualTournament: Tournament;
   userPlayerData: Player;

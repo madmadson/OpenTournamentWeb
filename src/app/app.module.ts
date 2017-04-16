@@ -24,7 +24,7 @@ import {LoginService} from './service/auth.service';
 import {TournamentsService} from './service/tournaments.service';
 import {routerReducer, RouterStoreModule} from '@ngrx/router-store';
 import {MomentModule} from 'angular2-moment';
-import {TournamentOverviewComponent} from './tournament/tournament-list-overview/tournament-list-overview.component';
+import {TournamentListOverviewComponent} from './tournament/tournament-list-overview/tournament-list-overview.component';
 
 import {MyTournamentsComponent} from './tournament/my-tournaments/my-tournaments.component';
 import {PageNotFoundComponent} from './not-found.component';
@@ -69,7 +69,8 @@ import {
   MdButtonModule, MdCard, MdCardModule, MdCheckboxModule, MdDialogModule, MdIcon, MdIconModule, MdInputModule, MdSelect,
   MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbar, MdToolbarModule, MdListModule
 } from '@angular/material';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
 
 
 const reducers = {
@@ -147,7 +148,7 @@ export const firebaseConfDev = {
     GameEditComponent,
     LoginPageComponent,
     HomePageComponent,
-    TournamentOverviewComponent,
+    TournamentListOverviewComponent,
     MyTournamentsComponent,
     PageNotFoundComponent,
     TournamentNewComponent,
@@ -164,6 +165,7 @@ export const firebaseConfDev = {
     AddArmyListsDialogComponent,
     NewTournamentPlayerDialogComponent,
     StartTournamentDialogComponent,
+    TournamentOverviewComponent
   ],
   providers: [
     LoginService,

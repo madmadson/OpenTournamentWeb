@@ -13,7 +13,7 @@ import {Tournament} from '../../../../shared/model/tournament';
   templateUrl: 'tournament-list-overview.component.html',
   styleUrls: ['tournament-list-overview.component.css']
 })
-export class TournamentOverviewComponent  {
+export class TournamentListOverviewComponent  {
 
     groupedTournaments$: Observable<TournamentListVM[]>;
     allTournaments$: Observable<Tournament[]>;
