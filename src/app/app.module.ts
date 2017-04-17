@@ -72,12 +72,16 @@ import {
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
 
+import { TournamentRoundOverviewComponent } from './tournament/tournament-round-overview/tournament-round-overview.component';
+import { TournamentGameListComponent } from './tournament/tournament-game-list/tournament-game-list.component';
+import { TournamentRankingListComponent } from './tournament/tournament-ranking-list/tournament-ranking-list.component';
+
 
 const reducers = {
   routerState: routerReducer,
   tournaments: TournamentsReducer,
   players: PlayersReducer,
-  authenticationStoreData: AuthenticationReducer,
+  authenticationStoreState: AuthenticationReducer,
 
   actualTournament: TournamentReducer,
   actualTournamentRegistrations: TournamentRegistrationReducer,
@@ -165,7 +169,10 @@ export const firebaseConfDev = {
     AddArmyListsDialogComponent,
     NewTournamentPlayerDialogComponent,
     StartTournamentDialogComponent,
-    TournamentOverviewComponent
+    TournamentOverviewComponent,
+    TournamentRoundOverviewComponent,
+    TournamentGameListComponent,
+    TournamentRankingListComponent
   ],
   providers: [
     LoginService,

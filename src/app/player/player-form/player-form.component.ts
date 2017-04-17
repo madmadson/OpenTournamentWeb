@@ -30,7 +30,7 @@ export class PlayerFormComponent  {
 
     this.countries = getAllCountries();
 
-    this.store.select(state => state.authenticationStoreData).subscribe(authenticationState => {
+    this.store.select(state => state.authenticationStoreState).subscribe(authenticationState => {
       this.currentUserId = authenticationState.currentUserId;
       this.currentUserEmail = authenticationState.currentUserEmail;
     });

@@ -1,0 +1,24 @@
+<h1 class="heading">{{actualTournament?.name}}</h1>
+
+<md-tab-group >
+  <md-tab  label="TournamentPreparation">
+    <tournament-preparation
+      [authenticationStoreState$]="authenticationStoreState$"
+      [actualTournament]="actualTournament"
+      [actualTournamentArmyList$]="actualTournamentArmyList$"
+      [allActualTournamentPlayers$]="allActualTournamentPlayers$"
+      [actualTournamentRegisteredPlayers$]="actualTournamentRegisteredPlayers$"
+      (onStartTournament)="handleStartTournament($event)"
+      (onAddTournamentPlayer)="handleAddTournamentPlayer($event)"
+      (onAcceptRegistration)="handleAcceptRegistration($event)"
+      (onAddTournamentRegistration)="handleAddTournamentRegistration($event)"
+      (onAddArmyList)="handleAddArmyList($event)"
+      (onDeleteArmyList)="handleDeleteArmyList($event)"
+      (onDeleteTournamentPlayer)="handleDeleteTournamentPlayer($event)"
+      (onDeleteRegistration)="handleDeleteRegistration($event)"></tournament-preparation>
+  </md-tab>
+  <md-tab *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;" label="Round {{index +1}}">
+      <tournament-round-overview></tournament-round-overview>
+  </md-tab>
+</md-tab-group>
+

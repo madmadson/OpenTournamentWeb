@@ -20,7 +20,7 @@ export class TournamentRegistrationListComponent implements OnInit {
   @Input()
   isAdmin: boolean;
 
-  @Output() onSaveTournamentPlayer = new EventEmitter<Registration>();
+  @Output() onAcceptRegistration = new EventEmitter<Registration>();
 
   @Output() onDeleteRegistration = new EventEmitter<Registration>();
 
@@ -42,8 +42,8 @@ export class TournamentRegistrationListComponent implements OnInit {
     }
   }
 
-  addTournamentPlayer(registration: Registration) {
-    this.onSaveTournamentPlayer.emit(registration);
+  acceptRegistration(registration: Registration) {
+    this.onAcceptRegistration.emit(registration);
   }
 
   deleteRegistration(registration: Registration) {

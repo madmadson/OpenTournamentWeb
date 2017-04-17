@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {MdSnackBar} from '@angular/material';
 import {Store} from '@ngrx/store';
@@ -54,7 +54,7 @@ export class TournamentNewComponent implements OnInit {
     protected store: Store<ApplicationState>,
     protected snackBar: MdSnackBar) {
 
-    this.store.select(state => state.authenticationStoreData.currentUserId)
+    this.store.select(state => state.authenticationStoreState.currentUserId)
       .subscribe(currentUserId => this.creatorId = currentUserId);
 
     const initialBeginDate = moment().weekday(6).hours(10).minutes(0).add(1, 'week').format(this.dateFormat);

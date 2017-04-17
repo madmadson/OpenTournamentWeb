@@ -28,7 +28,7 @@ export class LoginService implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void{
-    this.store.select(state => state.authenticationStoreData.redirectUrl).subscribe(redirectUrl => {
+    this.store.select(state => state.authenticationStoreState.redirectUrl).subscribe(redirectUrl => {
       this.redirectUrl = redirectUrl;
     });
   }

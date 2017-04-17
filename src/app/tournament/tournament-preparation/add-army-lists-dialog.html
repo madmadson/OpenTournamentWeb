@@ -2,7 +2,7 @@
 <h3>{{registration.playerName}}</h3>
 <md-card>
   <p *ngIf="armyListForRegistration.length > 6" style="color: red">Maximum reached for ArmyLists</p>
-  <md-tab-group>
+  <md-tab-group [selectedIndex]="selectedTab">
     <md-tab *ngIf="armyListForRegistration.length <= 6" label="AddArmyList">
       <form #armyListForm="ngForm">
         <md-input-container

@@ -22,7 +22,7 @@ export class MyTournamentsComponent {
 
     this.allTournaments$ = store.select(state => {
       return _.filter(state.tournaments.tournaments, function (tournament) {
-        return tournament.creatorUid === state.authenticationStoreData.currentUserId;
+        return tournament.creatorUid === state.authenticationStoreState.currentUserId;
       });
     });
 
@@ -31,7 +31,7 @@ export class MyTournamentsComponent {
 
         return _.chain(state.tournaments.tournaments)
           .filter(function (tournament) {
-            return tournament.creatorUid === state.authenticationStoreData.currentUserId;
+            return tournament.creatorUid === state.authenticationStoreState.currentUserId;
           })
           .groupBy(function (tournament) {
             return moment(tournament.beginDate).format('MMMM YYYY');

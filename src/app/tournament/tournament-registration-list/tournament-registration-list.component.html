@@ -20,7 +20,7 @@
   <ng-container *ngIf="isAdmin && !registration.isTournamentPlayer">
     <md-icon  class="md-secondary list-action negative" (click)="deleteRegistration(registration)">delete
     </md-icon>
-    <md-icon class="md-secondary list-action positive" (click)="addTournamentPlayer(registration)">
+    <md-icon class="md-secondary list-action positive" (click)="acceptRegistration(registration)">
       check_circle
     </md-icon>
     <a  href='mailto:{{registration.email}}' style="padding-top: 12px">

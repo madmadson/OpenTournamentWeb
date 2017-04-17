@@ -3,9 +3,9 @@ import {Actions, Effect} from '@ngrx/effects';
 
 import {
   ARMY_LIST_ERASE_ACTION,
-  ARMY_LIST_PUSH_ACTION, NEW_TOURNAMENT_PLAYER_PUSH_ACTION,
+  ARMY_LIST_PUSH_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION,
   REGISTRATION_ERASE_ACTION,
-  REGISTRATION_PUSH_ACTION, START_TOURNAMENT_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION,
+  REGISTRATION_PUSH_ACTION, START_TOURNAMENT_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, REGISTRATION_ACCEPT_ACTION,
   TOURNAMENT_SUBSCRIBE_ACTION,
   TOURNAMENT_UNSUBSCRIBE_ACTION
 } from '../actions/tournament-actions';
@@ -41,8 +41,8 @@ export class TournamentEffectService {
     .map(action => this.tournamentService.eraseRegistration(action.payload));
 
   @Effect({dispatch: false}) pushTournamentPlayer = this.actions$
-    .ofType(TOURNAMENT_PLAYER_PUSH_ACTION)
-    .debug('TOURNAMENT_PLAYER_PUSH_ACTION')
+    .ofType(REGISTRATION_ACCEPT_ACTION)
+    .debug('REGISTRATION_ACCEPT_ACTION')
     .map(action => this.tournamentService.pushTournamentPlayer(action.payload));
 
   @Effect({dispatch: false}) eraseTournamentPlayer = this.actions$
@@ -61,8 +61,8 @@ export class TournamentEffectService {
     .map(action => this.tournamentService.eraseArmyList(action.payload));
 
   @Effect({dispatch: false}) pushNewTournamentPlayer = this.actions$
-    .ofType(NEW_TOURNAMENT_PLAYER_PUSH_ACTION)
-    .debug('NEW_TOURNAMENT_PLAYER_PUSH_ACTION')
+    .ofType(TOURNAMENT_PLAYER_PUSH_ACTION)
+    .debug('TOURNAMENT_PLAYER_PUSH_ACTION')
     .map(action => this.tournamentService.pushNewTournamentPlayer(action.payload));
 
   constructor(

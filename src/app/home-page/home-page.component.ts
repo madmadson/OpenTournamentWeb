@@ -16,11 +16,11 @@ export class HomePageComponent {
 
   constructor(private store: Store<ApplicationState>) {
 
-    store.select(state => state.authenticationStoreData).subscribe(
+    store.select(state => state.authenticationStoreState).subscribe(
 
-      authenticationStoreData => {
-        this.userPlayerData = authenticationStoreData.userPlayerData;
-        this.loggedIn = authenticationStoreData.loggedIn;
+      authenticationStoreState => {
+        this.userPlayerData = authenticationStoreState.userPlayerData;
+        this.loggedIn = authenticationStoreState.loggedIn;
       }
     );
   }

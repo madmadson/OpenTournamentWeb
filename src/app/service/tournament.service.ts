@@ -186,9 +186,11 @@ export class TournamentService implements OnDestroy {
     const playerRef = this.afService.database.list('tournament-player/' + player.tournamentId + '/' + player.id);
     playerRef.remove();
 
-    const registrationRef = this.afService.database.object('tournament-registration/' + player.tournamentId + '/' + player.registrationId);
-    registrationRef.update({isTournamentPlayer: false});
-
+    if (player.registrationId) {
+      const registrationRef = this.afService.database
+        .object('tournament-registration/' + player.tournamentId + '/' + player.registrationId);
+      registrationRef.update({isTournamentPlayer: false});
+    }
     this.snackBar.open('Tournament Player deleted successfully', '', {
       duration: 5000
     });

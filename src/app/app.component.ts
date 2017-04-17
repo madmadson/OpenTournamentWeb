@@ -20,11 +20,11 @@ export class AppComponent implements OnInit, OnDestroy {
   currentUserImage: string;
 
   constructor(private router: Router, private store: Store<ApplicationState>) {
-    this.store.select(state => state.authenticationStoreData).subscribe(authenticationStoreData => {
-        this.currentUserName = authenticationStoreData.currentUserName;
-        this.loggedIn = authenticationStoreData.loggedIn;
-        this.currentUserEmail = authenticationStoreData.currentUserEmail;
-        this.currentUserImage = authenticationStoreData.currentUserImage;
+    this.store.select(state => state.authenticationStoreState).subscribe(authenticationStoreState => {
+        this.currentUserName = authenticationStoreState.currentUserName;
+        this.loggedIn = authenticationStoreState.loggedIn;
+        this.currentUserEmail = authenticationStoreState.currentUserEmail;
+        this.currentUserImage = authenticationStoreState.currentUserImage;
       }
     );
 

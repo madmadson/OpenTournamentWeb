@@ -3,7 +3,7 @@ import {Tournament} from '../../../../shared/model/tournament';
 import {Registration} from '../../../../shared/model/registration';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {ArmyList} from '../../../../shared/model/armyList';
-import {PairingConfiguration} from "../../../../shared/model/pairing-configuration";
+import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -136,22 +136,22 @@ export class ClearTournamentPlayerAction implements Action {
   }
 }
 
-export const TOURNAMENT_PLAYER_PUSH_ACTION = 'TOURNAMENT_PLAYER_PUSH_ACTION';
+export const REGISTRATION_ACCEPT_ACTION = 'REGISTRATION_ACCEPT_ACTION';
 
-export class TournamentPlayerPushAction implements Action {
+export class RegistrationAcceptAction implements Action {
 
-  readonly type = 'TOURNAMENT_PLAYER_PUSH_ACTION';
+  readonly type = 'REGISTRATION_ACCEPT_ACTION';
 
   constructor(public payload: Registration) {
   }
 }
 
 
-export const NEW_TOURNAMENT_PLAYER_PUSH_ACTION = 'NEW_TOURNAMENT_PLAYER_PUSH_ACTION';
+export const TOURNAMENT_PLAYER_PUSH_ACTION = 'TOURNAMENT_PLAYER_PUSH_ACTION';
 
-export class PushNewTournamentPlayerAction implements Action {
+export class TournamentPlayerPushAction implements Action {
 
-  readonly type = 'NEW_TOURNAMENT_PLAYER_PUSH_ACTION';
+  readonly type = 'TOURNAMENT_PLAYER_PUSH_ACTION';
 
   constructor(public payload: TournamentPlayer) {
   }
@@ -169,7 +169,7 @@ export class TournamentPlayerEraseAction implements Action {
 
 export const ARMY_LIST_PUSH_ACTION = 'ARMY_LIST_PUSH_ACTION';
 
-export class PushArmyListAction implements Action {
+export class ArmyListPushAction implements Action {
 
   readonly type = 'ARMY_LIST_PUSH_ACTION';
 
@@ -219,7 +219,7 @@ export class ClearArmyListsAction implements Action {
 
 export const START_TOURNAMENT_ACTION = 'START_TOURNAMENT_ACTION';
 
-export class StartTournamentAction implements Action {
+export class TournamentStartAction implements Action {
 
   readonly type = 'START_TOURNAMENT_ACTION';
 

@@ -1,7 +1,8 @@
 
 <div class="action-card-container">
   <md-card class="action-card" >
-    <button *ngIf="currentUserId === actualTournament?.creatorUid" type="button" color="accent" md-raised-button>
+    <button *ngIf="currentUserId === actualTournament?.creatorUid"
+            type="button" color="accent" md-raised-button>
       <md-icon>build</md-icon>
       Edit
     </button>
@@ -22,7 +23,7 @@
       Register me
     </button>
     <button *ngIf="myRegistration"
-            (click)="onDeleteRegistration(myRegistration)"
+            (click)="deleteMyRegistration(myRegistration)"
             type="button"
             color="accent"
             md-raised-button>
@@ -46,20 +47,20 @@
 </div>
 <div class="content-cards-container">
   <md-card class="registration-card">
-    <h3 *ngIf="actualTournamentRegisteredPlayers.length == 0" class="list-heading">
+    <h3 *ngIf="allRegistrations.length == 0" class="list-heading">
       No Registrations found
     </h3>
-    <h2 *ngIf="actualTournamentRegisteredPlayers.length > 0" class="list-heading">
-      Registrations ({{actualTournamentRegisteredPlayers.length}})
+    <h2 *ngIf="allRegistrations.length > 0" class="list-heading">
+      Registrations ({{allRegistrations.length}})
     </h2>
     <md-list>
       <tournament-registration-list
         [isAdmin]="currentUserId === actualTournament?.creatorUid"
         [userPlayerData]="userPlayerData"
-        [registrations]="actualTournamentRegisteredPlayers"
-        (onSaveTournamentPlayer)="onSaveTournamentPlayer($event)"
-        (onDeleteRegistration)="onDeleteRegistration($event)"
-        (onAddArmyLists)="onAddArmyLists($event)">
+        [registrations]="allRegistrations"
+        (onAcceptRegistration)="acceptRegistration($event)"
+        (onDeleteRegistration)="deleteMyRegistration($event)"
+        (onAddArmyLists)="addArmyList($event)">
       </tournament-registration-list>
     </md-list>
   </md-card>
@@ -69,7 +70,8 @@
     </h2>
     <h3 *ngIf="allActualTournamentPlayers.length == 0" class="list-heading">
       No Tournament Players found</h3>
-    <button *ngIf="currentUserId === actualTournament.creatorUid" type="button" color="accent" md-raised-button (click)="addTournamentPlayer()">
+    <button *ngIf="currentUserId === actualTournament?.creatorUid"
+            type="button" color="accent" md-raised-button (click)="addTournamentPlayer()">
       <md-icon>add</md-icon>
       Add Player
     </button>
@@ -85,7 +87,7 @@
           [isAdmin]="currentUserId === actualTournament?.creatorUid"
           [userPlayerData]="userPlayerData"
           [tournamentPlayers]="filteredActualTournamentPlayers"
-          (onDeleteTournamentPlayer)="onDeleteTournamentPlayer($event)">
+          (onDeleteTournamentPlayer)="deleteTournamentPlayer($event)">
       </tournament-player-list>
     </md-list>
   </md-card>

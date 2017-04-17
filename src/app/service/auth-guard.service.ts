@@ -12,7 +12,7 @@ export class AuthGuard implements OnInit, OnDestroy, CanActivate, CanLoad {
   loggedIn: boolean;
 
   constructor(private store: Store<ApplicationState>, private router: Router) {
-    this.store.select(state => state.authenticationStoreData.loggedIn).subscribe(loggedIn => {
+    this.store.select(state => state.authenticationStoreState.loggedIn).subscribe(loggedIn => {
 
         this.loggedIn = loggedIn;
       }
