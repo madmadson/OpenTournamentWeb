@@ -2,7 +2,7 @@
 
 export class Tournament {
 
-  id: string;
+  id?: string;
   name: string;
   location: string;
   beginDate: string;

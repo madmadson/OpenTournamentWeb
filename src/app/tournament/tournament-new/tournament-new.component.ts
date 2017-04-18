@@ -204,7 +204,6 @@ export class TournamentNewComponent implements OnInit {
     const formModel = this.tournamentForm.value;
 
     return  {
-      id: undefined,
       name: formModel.name as string,
       location: formModel.location as string,
       beginDate: formModel.beginDate as string,

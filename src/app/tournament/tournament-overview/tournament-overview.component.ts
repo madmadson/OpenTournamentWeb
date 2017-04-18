@@ -83,7 +83,6 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleAddTournamentRegistration(registration: Registration) {
-    console.log('blub:' + JSON.stringify(registration));
     this.store.dispatch(new RegistrationPushAction(registration));
   }
 

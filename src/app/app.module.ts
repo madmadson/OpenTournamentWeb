@@ -75,6 +75,7 @@ import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/to
 import { TournamentRoundOverviewComponent } from './tournament/tournament-round-overview/tournament-round-overview.component';
 import { TournamentGameListComponent } from './tournament/tournament-game-list/tournament-game-list.component';
 import { TournamentRankingListComponent } from './tournament/tournament-ranking-list/tournament-ranking-list.component';
+import {MdlModule} from "angular2-mdl";
 
 
 const reducers = {
@@ -142,6 +143,7 @@ export const firebaseConfDev = {
     DateTimePickerModule,
     CustomFormsModule,
     BrowserAnimationsModule,
+    MdlModule,
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule

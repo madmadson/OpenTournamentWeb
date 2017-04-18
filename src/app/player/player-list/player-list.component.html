@@ -3,9 +3,9 @@
   (click)="onSelect(player)"
   class="list-item"
   [ngClass]="{ even: even}">
-  <h2 md-list-avatar>{{i+1}}</h2>
-  <h2 md-line style="padding-bottom: 15px">{{player.firstName}} <b>{{player.nickName}}</b> {{player.lastName}}</h2>
-  <p md-line  style="padding-bottom: 10px">
+  <h4 md-list-icon>{{i+1}}</h4>
+  <h3 md-line >{{player.firstName}} <b>{{player.nickName}}</b> {{player.lastName}}</h3>
+  <p md-line>
     <span> {{player.origin}} </span>
     <span class="small-md-line"> - {{player.meta}} </span>
   </p>

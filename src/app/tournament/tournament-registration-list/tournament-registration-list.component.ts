@@ -33,12 +33,8 @@ export class TournamentRegistrationListComponent implements OnInit {
   }
 
   isItMe(regId: string) {
-
-
     if (this.userPlayerData) {
-      if (regId === this.userPlayerData.id) {
-        return 'my-item-color';
-      }
+      return regId === this.userPlayerData.id;
     }
   }
 

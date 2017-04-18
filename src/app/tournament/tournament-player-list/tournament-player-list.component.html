@@ -2,10 +2,10 @@
   *ngFor="let tournamentPlayer of tournamentPlayers; let i = index; let even = even;"
   [ngClass]="isItMe(tournamentPlayer.playerId)"
   [ngClass]="{ even: even}">
-  <h2 md-list-avatar>{{i+1}}</h2>
+  <h4 md-list-avatar>{{i+1}}</h4>
   <md-icon md-list-avatar *ngIf="!tournamentPlayer.playerId">cloud_off</md-icon>
-  <h3 md-line style="padding-bottom: 12px;">{{tournamentPlayer.playerName}}</h3>
-  <p  md-line style="padding-top: 6px;">
+  <h4 md-line >{{tournamentPlayer.playerName}}</h4>
+  <p  md-line >
     {{tournamentPlayer.teamName}} - {{tournamentPlayer.meta}} - {{tournamentPlayer.origin}}</p>
 
   <span class="md-secondary-spacer"></span>

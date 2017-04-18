@@ -1,30 +1,34 @@
-<md-list-item
-  *ngFor="let registration of registrations; let i = index; let even = even;"
-  [ngClass]="isItMe(registration.playerId)"
-  [ngClass]="{ even: even}">
-  <h2 md-list-avatar>{{i+1}}</h2>
-  <h3 md-line style="padding-bottom: 12px;">{{registration.playerName}}</h3>
+<mdl-list-item lines="3"
+               class="list-item"
+               *ngFor="let registration of registrations; let i = index; let even = even;"
+               [ngClass]="{'even': even, 'my-item-color':isItMe(registration.playerId)} ">
+  <mdl-list-item-primary-content>
+    <mdl-icon mdl-list-item-avatar mdl-badge="{{i +1}}" mdl-badge-overlap>person</mdl-icon>
+    <span>{{registration.playerName}}</span>
 
-  <p md-line style="padding-top: 6px;">
-    {{registration.teamName}} - {{registration.meta}} - {{registration.origin}}</p>
-
-  <p md-line style="padding-top: 6px;">
-    {{registration.faction}}</p>
-
+    <mdl-list-item-text-body>
+      <div>{{registration.faction}}</div>
+      <div>{{registration.teamName}} - {{registration.meta}} - {{registration.origin}}</div>
+    </mdl-list-item-text-body>
+  </mdl-list-item-primary-content>
   <span class="md-secondary-spacer"></span>
-  <img class="md-secondary" src="../../../assets/my_crown_small.png">
-  <span class="md-secondary">{{registration.elo}}</span>
-  <md-icon *ngIf="isAdmin || isItMe(registration.playerId)" class="md-secondary list-action"
-           (click)="addArmyLists(registration)">playlist_add_check
-  </md-icon>
+  <mdl-list-item-secondary-content>
+    <mdl-list-item-secondary-info>ELO</mdl-list-item-secondary-info>
+    <span>{{registration.elo}}<img class="md-secondary" src="../../../assets/my_crown_small.png"></span>
+  </mdl-list-item-secondary-content>
+
+
   <ng-container *ngIf="isAdmin && !registration.isTournamentPlayer">
-    <md-icon  class="md-secondary list-action negative" (click)="deleteRegistration(registration)">delete
-    </md-icon>
-    <md-icon class="md-secondary list-action positive" (click)="acceptRegistration(registration)">
-      check_circle
-    </md-icon>
-    <a  href='mailto:{{registration.email}}' style="padding-top: 12px">
-      <md-icon class="md-secondary list-action">email</md-icon>
-    </a>
+    <mdl-list-item-secondary-content>
+      <md-icon class="negative  list-action" (click)="deleteRegistration(registration)">delete</md-icon>
+    </mdl-list-item-secondary-content>
+    <mdl-list-item-secondary-content>
+      <md-icon class="positive  list-action" (click)="acceptRegistration(registration)">check_circle</md-icon>
+    </mdl-list-item-secondary-content>
+    <mdl-list-item-secondary-content>
+      <a href='mailto:{{registration.email}}'><md-icon class="info list-action">email</md-icon></a>
+    </mdl-list-item-secondary-content>
   </ng-container>
-</md-list-item>
+</mdl-list-item>
+
+
