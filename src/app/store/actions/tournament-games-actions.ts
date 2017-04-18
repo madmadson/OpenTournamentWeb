@@ -13,6 +13,16 @@ export class SubscribeTournamentGamesAction implements Action {
   }
 }
 
+export const TOURNAMENT_GAMES_CLEAR_ACTION = 'TOURNAMENT_GAMES_CLEAR_ACTION';
+
+export class ClearTournamentGamesAction implements Action {
+
+  readonly type = 'TOURNAMENT_GAMES_CLEAR_ACTION';
+
+  constructor() {
+  }
+}
+
 export const TOURNAMENT_GAME_ADDED_ACTION = 'TOURNAMENT_GAME_ADDED_ACTION';
 
 export class AddTournamentGameAction implements Action {

@@ -16,6 +16,7 @@ import {Tournament} from '../../../../shared/model/tournament';
 
 import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
 import {AuthenticationStoreState} from '../../store/authentication-state';
+import {getAllFactions} from "../../../../shared/model/factions";
 
 
 @Component({
@@ -104,6 +105,7 @@ export class TournamentPreparationComponent implements OnInit {
     const startTournamentSub = dialogRef.componentInstance.onStartTournament.subscribe(config => {
       if (config !== undefined) {
         config.tournamentId = this.actualTournament.id;
+        config.round = 1;
         this.onStartTournament.emit(config);
       }
     });
@@ -250,15 +252,19 @@ export class NewTournamentPlayerDialogComponent {
   tournament: Tournament;
 
   countries: string[];
+  factions: string[];
 
   @Output() onSaveNewTournamentPlayer = new EventEmitter<TournamentPlayer>();
 
   constructor(public dialogRef: MdDialogRef<NewTournamentPlayerDialogComponent>) {
 
     this.countries = getAllCountries();
+    this.factions = getAllFactions();
     this.tournament = dialogRef._containerInstance.dialogConfig.data.actualTournament;
 
-    this.tournamentPlayerModel = {tournamentId: this.tournament.id, playerName: '', origin: '', meta: '', country: ''};
+    this.tournamentPlayerModel = {
+      tournamentId: this.tournament.id, playerName: '', origin: '', meta: '', country: '', faction: ''
+    };
   }
 
   saveTournamentPlayer() {
@@ -327,7 +333,8 @@ export class StartTournamentDialogComponent {
 
   startTournament() {
 
-    this.onStartTournament.emit({tournamentId: ''});
+    this.onStartTournament.emit({tournamentId: '', round: 1});
+    this.dialogRef.close();
   }
 
 }

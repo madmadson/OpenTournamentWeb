@@ -7,31 +7,46 @@
 <div class="content-cards-container">
   <md-card >
       Games
+    <div class="game-cards-container"
+         *ngFor="let game of gamesForRound$ | async; let i = index; let even = even"
+         [ngClass]="{'even': even, 'my-item-color':isItMyGame(game.playerOnePlayerId, game.playerTwoPlayerId)}">
+      <md-card class="game-card" >
+       {{game.playerOnePlayerName}}
+      </md-card>
+      <div>VS</div>
+      <md-card class="game-card" >
+        {{game.playerTwoPlayerName}}
+      </md-card>
+    </div>
+
   </md-card>
   <md-card >
-    <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+    <h3 class="heading">Ranking for round 1</h3>
+    <table align="right" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
       <thead>
       <tr>
-        <th class="mdl-data-table__cell--non-numeric">Material</th>
-        <th>Quantity</th>
-        <th>Unit price</th>
+        <th>#</th>
+        <th class="mdl-data-table__cell--non-numeric">Player</th>
+        <th>Score</th>
+        <th>SOS</th>
+        <th>CP</th>
+        <th>VP</th>
       </tr>
       </thead>
-      <tbody>
+      <tbody *ngFor="let rank of rankingsForRound$ | async; let i = index; let even = even"
+             [ngClass]="{'even': even, 'my-item-color':isItMe(rank.playerId)} ">
       <tr>
-        <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-        <td>25</td>
-        <td>$2.90</td>
-      </tr>
-      <tr>
-        <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-        <td>50</td>
-        <td>$1.25</td>
-      </tr>
-      <tr>
-        <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-        <td>10</td>
-        <td>$2.35</td>
+        <td>{{i +1}}</td>
+        <td class="mdl-data-table__cell--non-numeric">
+          <div class="player-name-table-cell">{{rank.playerName}}</div>
+          <div>{{rank.faction}}</div>
+          <div>{{rank.teamName}} - {{rank.meta}} - {{rank.origin}}</div>
+          <div *ngIf="rank.elo != 0">{{rank.elo}}<img class="md-secondary" src="../../../assets/my_crown_small.png"></div>
+        </td>
+        <td>{{rank.score}}</td>
+        <td>{{rank.sos}}</td>
+        <td>{{rank.controlPoints}}</td>
+        <td>{{rank.victoryPoints}}</td>
       </tr>
       </tbody>
     </table>

@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {
   TOURNAMENT_GAME_ADDED_ACTION, TOURNAMENT_GAME_CHANGED_ACTION,
-  TOURNAMENT_GAME_DELETED_ACTION
+  TOURNAMENT_GAME_DELETED_ACTION, TOURNAMENT_GAMES_CLEAR_ACTION
 } from '../actions/tournament-games-actions';
 
 
@@ -25,6 +25,9 @@ export function TournamentGameReducer(
 
   switch (action.type) {
 
+    case TOURNAMENT_GAMES_CLEAR_ACTION:
+
+      return handleTournamentGameClearAction(state, action);
 
     case TOURNAMENT_GAME_ADDED_ACTION:
 
@@ -45,6 +48,17 @@ export function TournamentGameReducer(
 
   }
 }
+
+function handleTournamentGameClearAction(
+  state: ActualTournamentGamesStoreData, action: Action): ActualTournamentGamesStoreData {
+
+  const gamesStoreData: ActualTournamentGamesStoreData = _.cloneDeep(state);
+
+  gamesStoreData.actualTournamentGames = [];
+
+  return gamesStoreData;
+}
+
 
 
 function handleTournamentGameAddedAction(

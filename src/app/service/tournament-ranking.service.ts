@@ -9,11 +9,12 @@ import {Tournament} from '../../../shared/model/tournament';
 
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {
-  AddTournamentRankingAction, ChangeTournamentRankingAction,
+  AddTournamentRankingAction, ChangeTournamentRankingAction, ClearRankingAction,
   DeleteTournamentRankingAction
 } from '../store/actions/tournament-rankings-actions';
 
 import * as _ from 'lodash';
+import {PairingConfiguration} from '../../../shared/model/pairing-configuration';
 
 
 @Injectable()
@@ -45,7 +46,11 @@ export class TournamentRankingService implements OnDestroy {
 
     const that = this;
 
-    this.tournamentRankingsRef = this.fb.ref('tournament-rankings/' + tournamentId);
+    this.store.dispatch(new ClearRankingAction());
+
+    console.log('subscribeOnTournamentRankings');
+
+    this.tournamentRankingsRef = this.fb.database().ref('tournament-rankings/' + tournamentId);
 
     this.tournamentRankingsRef.on('child_added', function (snapshot) {
 
@@ -73,22 +78,30 @@ export class TournamentRankingService implements OnDestroy {
   }
 
 
-  createRankingForRound(tournamentRound: number): TournamentRanking[] {
+  pushRankingForRound(config: PairingConfiguration): TournamentRanking[] {
 
     const that = this;
     const newRankings: TournamentRanking[] = [];
 
-    console.log('create ranking for first round');
+    this.eraseRankingsForRound(config);
+
+    console.log('push ranking for round: '  + config.round);
 
     const lastRoundRankings: TournamentRanking[] = _.filter(this.allRankings, function (ranking: TournamentRanking) {
-      return ranking.tournamentRound = (tournamentRound - 1);
+      return (ranking.tournamentRound === (config.round - 1));
     });
 
-    _.forEach(this.allPlayers, function (player: TournamentPlayer) {
+    _.forEach(this.allPlayers, function (tournamentPlayer: TournamentPlayer) {
+
       const newTournamentRanking = new TournamentRanking(
-        player.id,
-        player.tournamentId,
-        player.playerName,
+        tournamentPlayer.tournamentId,
+        tournamentPlayer.playerId ?  tournamentPlayer.playerId : tournamentPlayer.id,
+        tournamentPlayer.playerName,
+        tournamentPlayer.faction ?  tournamentPlayer.faction : '',
+        tournamentPlayer.teamName ?  tournamentPlayer.teamName : '',
+        tournamentPlayer.origin ?  tournamentPlayer.origin : '',
+        tournamentPlayer.meta ?  tournamentPlayer.meta : '',
+        tournamentPlayer.elo ? tournamentPlayer.elo : 0,
         0,
         0,
         0,
@@ -96,11 +109,9 @@ export class TournamentRankingService implements OnDestroy {
         1,
         []);
 
-
       _.find(lastRoundRankings, function (lastRoundRanking: TournamentRanking) {
-        if (lastRoundRanking.playerId === player.playerId) {
+        if (lastRoundRanking.playerId === tournamentPlayer.playerId) {
 
-          newTournamentRanking.playerName = lastRoundRanking.playerName;
           newTournamentRanking.score = lastRoundRanking.score;
           newTournamentRanking.sos = lastRoundRanking.sos;
           newTournamentRanking.controlPoints = lastRoundRanking.controlPoints;
@@ -114,10 +125,25 @@ export class TournamentRankingService implements OnDestroy {
         .list('tournament-rankings/' + newTournamentRanking.tournamentId);
       tournamentRankingsRef.push(newTournamentRanking);
 
-      newRankings.push(newTournamentRanking)
+      newRankings.push(newTournamentRanking);
     });
 
     return newRankings;
+  }
+
+  eraseRankingsForRound(config: PairingConfiguration) {
+
+    console.log('erase ranking for round: '  + config.round);
+
+    const query = this.fb.database().ref('tournament-rankings/' + config.tournamentId).orderByChild('tournamentRound')
+      .equalTo(config.round);
+
+    query.once('value', function (snapshot) {
+
+      snapshot.forEach(function (child) {
+        child.ref.remove();
+      });
+    });
   }
 
 }

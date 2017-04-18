@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Tournament} from '../../../../shared/model/tournament';
 import {Registration} from '../../../../shared/model/registration';
 import {ArmyList} from '../../../../shared/model/armyList';
@@ -28,16 +28,17 @@ import {AuthenticationStoreState} from 'app/store/authentication-state';
 })
 export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
-  getArrayForNumber = Array;
-
   actualTournament: Tournament;
   actualTournamentRegisteredPlayers$: Observable<Registration[]>;
   actualTournamentArmyList$: Observable<ArmyList[]>;
   allActualTournamentPlayers$: Observable<TournamentPlayer[]>;
-  actualTournamentRankings: TournamentRanking[];
-  actualTournamentGames: TournamentGame[];
+
+  actualTournamentRankings$:  Observable<TournamentRanking[]>;
+  actualTournamentGames$:  Observable<TournamentGame[]>;
 
   authenticationStoreState$: Observable<AuthenticationStoreState>;
+
+  selectedIndex: number;
 
   constructor(private store: Store<ApplicationState>,
               private activeRouter: ActivatedRoute) {
@@ -58,24 +59,45 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.allActualTournamentPlayers$ =  this.store.select(
       state => state.actualTournamentPlayers.actualTournamentPlayers);
 
+    this.actualTournamentRankings$ =  this.store.select(
+      state => state.actualTournamentRankings.actualTournamentRankings);
+
+    this.actualTournamentGames$ =  this.store.select(
+      state => state.actualTournamentGames.actualTournamentGames);
 
     this.store.select(state => state)
       .subscribe(state => {
         this.actualTournament = state.actualTournament.actualTournament;
-
-        this.actualTournamentRankings = state.actualTournamentRankings.actualTournamentRankings;
-        this.actualTournamentGames = state.actualTournamentGames.actualTournamentGames;
+        if (state.actualTournament.actualTournament) {
+          this.selectedIndex = state.actualTournament.actualTournament.actualRound;
+        }
       });
 
   }
-
 
   ngOnDestroy() {
     this.store.dispatch(new TournamentUnsubscribeAction());
   }
 
+  getArrayForNumber(round: number) {
+    return [Array(round)].map((e, i) => i + 1);
+  };
+
+  getRankingsForRound(round: number): Observable<TournamentRanking[]> {
+     return this.actualTournamentRankings$.map(rankings => rankings.filter(rank => {
+       return (rank.tournamentRound === round);
+     }));
+  }
+
+  getGamesForRound(round: number): Observable<TournamentGame[]> {
+    return this.actualTournamentGames$.map(games => games.filter(game => {
+      return (game.tournamentRound === round);
+    }));
+  }
+
   handleStartTournament(config: PairingConfiguration ) {
     this.store.dispatch(new TournamentStartAction(config));
+    this.selectedIndex = (this.selectedIndex + 1);
   }
 
   handleAddTournamentPlayer(tournamentPlayer: TournamentPlayer) {

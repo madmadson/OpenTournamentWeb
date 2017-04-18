@@ -3,7 +3,7 @@ import {Action} from '@ngrx/store';
 import * as _ from 'lodash';
 import {
   TOURNAMENT_RANKING_ADDED_ACTION, TOURNAMENT_RANKING_CHANGED_ACTION,
-  TOURNAMENT_RANKING_DELETED_ACTION
+  TOURNAMENT_RANKING_DELETED_ACTION, TOURNAMENT_RANKINGS_CLEAR_ACTION
 } from '../actions/tournament-rankings-actions';
 
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
@@ -24,6 +24,9 @@ export function TournamentRankingReducer(
 
   switch (action.type) {
 
+    case TOURNAMENT_RANKINGS_CLEAR_ACTION:
+
+      return handleTournamentRankingClearAction(state, action);
 
     case TOURNAMENT_RANKING_ADDED_ACTION:
 
@@ -44,21 +47,31 @@ export function TournamentRankingReducer(
 
   }
 }
+function handleTournamentRankingClearAction(
+  state: ActualTournamentRankingsStoreData, action: Action): ActualTournamentRankingsStoreData {
+
+  const rankingData: ActualTournamentRankingsStoreData = _.cloneDeep(state);
+
+  rankingData.actualTournamentRankings = [];
+
+  return rankingData;
+}
+
 
 
 function handleTournamentRankingAddedAction(
   state: ActualTournamentRankingsStoreData, action: Action): ActualTournamentRankingsStoreData {
 
 
-  const newTournamentData: ActualTournamentRankingsStoreData = _.cloneDeep(state);
+  const rankingsStoreData: ActualTournamentRankingsStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
-    if (newTournamentData.actualTournamentRankings === undefined) {
-      newTournamentData.actualTournamentRankings = [];
+    if (rankingsStoreData.actualTournamentRankings === undefined) {
+      rankingsStoreData.actualTournamentRankings = [];
     }
-    newTournamentData.actualTournamentRankings.push(action.payload);
+    rankingsStoreData.actualTournamentRankings.push(action.payload);
   }
-  return newTournamentData;
+  return rankingsStoreData;
 }
 
 

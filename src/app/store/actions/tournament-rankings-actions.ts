@@ -5,11 +5,21 @@ import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 
 export const TOURNAMENT_RANKINGS_SUBSCRIBE_ACTION = 'TOURNAMENT_RANKINGS_SUBSCRIBE_ACTION';
 
-export class SubscribeRankingAction implements Action {
+export class SubscribeTournamentRankingsAction implements Action {
 
   readonly type = 'TOURNAMENT_RANKINGS_SUBSCRIBE_ACTION';
 
   constructor(public payload: string) {
+  }
+}
+
+export const TOURNAMENT_RANKINGS_CLEAR_ACTION = 'TOURNAMENT_RANKINGS_CLEAR_ACTION';
+
+export class ClearRankingAction implements Action {
+
+  readonly type = 'TOURNAMENT_RANKINGS_CLEAR_ACTION';
+
+  constructor() {
   }
 }
 

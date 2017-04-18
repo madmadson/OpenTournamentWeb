@@ -76,6 +76,8 @@ import { TournamentRoundOverviewComponent } from './tournament/tournament-round-
 import { TournamentGameListComponent } from './tournament/tournament-game-list/tournament-game-list.component';
 import { TournamentRankingListComponent } from './tournament/tournament-ranking-list/tournament-ranking-list.component';
 import {MdlModule} from "angular2-mdl";
+import {RankingEffectService} from "./store/effects/ranking-effect.service";
+import {TournamentGameEffectService} from "./store/effects/tournament-game-effect.service";
 
 
 const reducers = {
@@ -135,6 +137,8 @@ export const firebaseConfDev = {
     EffectsModule.run(TournamentEffectService),
     EffectsModule.run(TournamentsEffectService),
     EffectsModule.run(PlayersEffectService),
+    EffectsModule.run(RankingEffectService),
+    EffectsModule.run(TournamentGameEffectService),
     StoreModule.provideStore(storeReducer),
     RouterStoreModule.connectRouter(),
     StoreDevtoolsModule.instrumentOnlyWithExtension(),

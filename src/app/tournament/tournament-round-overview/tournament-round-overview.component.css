@@ -1,0 +1,12 @@
+
+.player-name-table-cell{
+  font-size: 1.4em;
+  margin-bottom: 6px;
+}
+
+.game-cards-container{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+}

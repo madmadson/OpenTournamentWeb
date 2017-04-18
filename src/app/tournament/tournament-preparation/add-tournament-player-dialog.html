@@ -44,11 +44,17 @@
     placeholder="Country"
     #country
     name="country"
-    (keyup.enter)="saveTournamentPlayer()"
     [(ngModel)]="tournamentPlayerModel.country">
     <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>
   </md-select>
-
+  <md-select
+    class="full-width"
+    placeholder="Faction"
+    #faction
+    name="faction"
+    [(ngModel)]="tournamentPlayerModel.faction">
+    <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
+  </md-select>
   <button type="button"
           color="accent"
           md-raised-button

@@ -20,6 +20,8 @@ import {TournamentRankingService} from './tournament-ranking.service';
 import {TournamentGameService} from './tournament-game.service';
 import {PairingConfiguration} from '../../../shared/model/pairing-configuration';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
+import {SubscribeTournamentRankingsAction} from '../store/actions/tournament-rankings-actions';
+import {SubscribeTournamentGamesAction} from "../store/actions/tournament-games-actions";
 
 
 @Injectable()
@@ -46,6 +48,9 @@ export class TournamentService implements OnDestroy {
 
 
   subscribeOnTournament(tournamentId: string) {
+
+    console.log('subscribeOnTournament');
+
     this.afService.database.object('tournaments/' + tournamentId).subscribe(
       tournament => {
         tournament.id = tournamentId;
@@ -57,6 +62,8 @@ export class TournamentService implements OnDestroy {
     this.subscribeOnRegistrations(tournamentId);
     this.subscribeOnTournamentPlayers(tournamentId);
     this.subscribeOnArmyLists(tournamentId);
+    this.store.dispatch(new SubscribeTournamentRankingsAction(tournamentId));
+    this.store.dispatch(new SubscribeTournamentGamesAction(tournamentId));
   }
 
   private subscribeOnRegistrations(tournamentId: string) {
@@ -97,6 +104,7 @@ export class TournamentService implements OnDestroy {
 
     this.store.dispatch(new ClearTournamentPlayerAction());
 
+    console.log('subscribeOnTournamentPlayers');
 
     this.tournamentPlayerRef = this.fb.database().ref('tournament-player/' + tournamentId);
 
@@ -229,8 +237,8 @@ export class TournamentService implements OnDestroy {
   startTournament(config: PairingConfiguration) {
     console.log('start Tournament with config : ' + JSON.stringify(config));
 
-    const newRankings: TournamentRanking[] = this.rankingService.createRankingForRound(1);
-    const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(newRankings);
+    const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
+    const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
 
     if (successFullyPaired) {
       const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);

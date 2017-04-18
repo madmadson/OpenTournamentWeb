@@ -11,14 +11,9 @@ import {TournamentPlayer} from "../../../../shared/model/tournament-player";
 })
 export class TournamentRegistrationListComponent implements OnInit {
 
-  @Input()
-  registrations: Registration[];
-
-  @Input()
-  userPlayerData: Player;
-
-  @Input()
-  isAdmin: boolean;
+  @Input() registrations: Registration[];
+  @Input() userPlayerData: Player;
+  @Input() isAdmin: boolean;
 
   @Output() onAcceptRegistration = new EventEmitter<Registration>();
 
