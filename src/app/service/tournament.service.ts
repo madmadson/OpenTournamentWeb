@@ -21,7 +21,7 @@ import {TournamentGameService} from './tournament-game.service';
 import {PairingConfiguration} from '../../../shared/model/pairing-configuration';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {SubscribeTournamentRankingsAction} from '../store/actions/tournament-rankings-actions';
-import {SubscribeTournamentGamesAction} from "../store/actions/tournament-games-actions";
+import {SubscribeTournamentGamesAction} from '../store/actions/tournament-games-actions';
 
 
 @Injectable()
@@ -254,12 +254,28 @@ export class TournamentService implements OnDestroy {
     }
   }
 
+  pairAgainTournament(config: PairingConfiguration) {
+    const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
+    const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
+    if (successFullyPaired) {
+       this.snackBar.open('Round ' + config.round + ' paired again successfully ', '', {
+        duration: 5000
+      });
+
+    } else {
+      this.snackBar.open('Failed to pair Round ' + config.round + ' again', '', {
+        duration: 5000
+      });
+    }
+  }
+
   unsubscribeOnTournament() {
     this.tournamentRegistrationsRef.off();
     this.store.dispatch(new ClearRegistrationAction());
     this.store.dispatch(new ClearTournamentPlayerAction());
     this.store.dispatch(new ClearArmyListsAction());
   }
+
 
 
 }

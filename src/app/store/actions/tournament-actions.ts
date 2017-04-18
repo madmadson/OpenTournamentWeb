@@ -226,3 +226,13 @@ export class TournamentStartAction implements Action {
   constructor(public payload: PairingConfiguration) {
   }
 }
+
+export const TOURNAMENT_PAIR_AGAIN_ACTION = 'TOURNAMENT_PAIR_AGAIN_ACTION';
+
+export class TournamentPairAgainAction implements Action {
+
+  readonly type = 'TOURNAMENT_PAIR_AGAIN_ACTION';
+
+  constructor(public payload: PairingConfiguration) {
+  }
+}

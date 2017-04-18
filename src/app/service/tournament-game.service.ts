@@ -17,7 +17,7 @@ import {
   DeleteTournamentGameAction,
   ClearTournamentGamesAction,
 } from '../store/actions/tournament-games-actions';
-import {PairingConfiguration} from "../../../shared/model/pairing-configuration";
+import {PairingConfiguration} from '../../../shared/model/pairing-configuration';
 
 
 @Injectable()
@@ -89,8 +89,8 @@ export class TournamentGameService implements OnDestroy {
 
     this.eraseGamesForRound(config);
 
-    const sortedRankings = _.sortBy(newRankings, ['score']);
-
+    const shuffledRankings = _.shuffle(newRankings);
+    const sortedRankings = _.sortBy(shuffledRankings, ['score']);
 
     this.newGames = [];
 
@@ -155,8 +155,10 @@ export class TournamentGameService implements OnDestroy {
         if (success) {
           const newGame = new TournamentGame(
             config.tournamentId,
-            ranking1.playerId, ranking1.playerName, 0, 0, 0, '',
-            ranking2.playerId, ranking2.playerName, 0, 0, 0, '',
+            ranking1.playerId, ranking1.playerName, ranking1.elo, ranking1.faction,
+            0, 0, 0, '',
+            ranking2.playerId, ranking2.playerName, ranking2.elo, ranking2.faction,
+            0, 0, 0, '',
             ranking1.tournamentRound, config.round, false, '');
 
           this.newGames.push(newGame);

@@ -54,7 +54,6 @@ import { TournamentRegistrationListComponent } from './tournament/tournament-reg
 import { TournamentPlayerListComponent } from './tournament/tournament-player-list/tournament-player-list.component';
 import {TournamentRankingService} from './service/tournament-ranking.service';
 
-
 import {AuthenticationReducer} from './store/reducers/authenticationReducer';
 import {TournamentsReducer} from './store/reducers/tournamentsReducer';
 import {PlayersReducer} from './store/reducers/playersReducer';
@@ -72,12 +71,16 @@ import {
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
 
-import { TournamentRoundOverviewComponent } from './tournament/tournament-round-overview/tournament-round-overview.component';
-import { TournamentGameListComponent } from './tournament/tournament-game-list/tournament-game-list.component';
+import {
+  PairAgainDialogComponent,
+  TournamentRoundOverviewComponent
+} from './tournament/tournament-round-overview/tournament-round-overview.component';
+import { TournamentGameListComponent, GameResultDialogComponent } from './tournament/tournament-game-list/tournament-game-list.component';
 import { TournamentRankingListComponent } from './tournament/tournament-ranking-list/tournament-ranking-list.component';
-import {MdlModule} from "angular2-mdl";
-import {RankingEffectService} from "./store/effects/ranking-effect.service";
-import {TournamentGameEffectService} from "./store/effects/tournament-game-effect.service";
+import {MdlModule} from 'angular2-mdl';
+import {RankingEffectService} from './store/effects/ranking-effect.service';
+import {TournamentGameEffectService} from './store/effects/tournament-game-effect.service';
+import {TruncatePipe} from '../pipes/truncate-pise';
 
 
 const reducers = {
@@ -178,7 +181,10 @@ export const firebaseConfDev = {
     TournamentOverviewComponent,
     TournamentRoundOverviewComponent,
     TournamentGameListComponent,
-    TournamentRankingListComponent
+    TournamentRankingListComponent,
+    TruncatePipe,
+    PairAgainDialogComponent,
+    GameResultDialogComponent
   ],
   providers: [
     LoginService,
@@ -193,7 +199,10 @@ export const firebaseConfDev = {
     RegisterDialogComponent,
     AddArmyListsDialogComponent,
     NewTournamentPlayerDialogComponent,
-    StartTournamentDialogComponent],
+    StartTournamentDialogComponent,
+    PairAgainDialogComponent,
+    GameResultDialogComponent,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

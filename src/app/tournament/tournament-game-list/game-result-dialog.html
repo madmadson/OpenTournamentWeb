@@ -1,0 +1,89 @@
+<md-dialog-content>
+  <form #gameForm="ngForm">
+    <div class="game-result-container">
+      <md-card class="game-result-card">
+        <h4 class="heading game-result-playerName">{{gameModel.playerOnePlayerName | truncate:35}}</h4>
+
+        <button class="big-button won-button"
+                type="button"
+                md-raised-button>WON</button>
+        <div class="full-width game-result-card-line">
+          <md-icon class="remove-button">remove_circle_outline</md-icon>
+          <md-input-container class="game-result-input">
+            <input
+              mdInput
+              type="number"
+              min="0" max="5"
+              placeholder="CP"
+              #playerOneControlPoints
+              [(ngModel)]="gameModel.playerOneControlPoints"
+              name="playerOneControlPoints">
+          </md-input-container>
+          <md-icon class="add-button">add_circle_outline</md-icon>
+        </div>
+        <div class="full-width game-result-card-line">
+          <md-icon class="remove-button">remove_circle_outline</md-icon>
+          <md-input-container class="game-result-input">
+            <input
+              mdInput
+              type="number"
+              min="0" max="10000"
+              placeholder="VP"
+              #playerOneVictoryPoints
+              [(ngModel)]="gameModel.playerOneVictoryPoints"
+              name="playerOneVictoryPoints">
+          </md-input-container>
+          <md-icon class="add-button">add_circle_outline</md-icon>
+        </div>
+      </md-card>
+      <div class="game-result-card-divider">
+        VS
+      </div>
+      <md-card class="game-result-card">
+        <h4 class="heading game-result-playerName">{{gameModel.playerTwoPlayerName | truncate:35}}</h4>
+        <button class="big-button won-button"
+                type="button"
+                md-raised-button>WON</button>
+        <div class="full-width game-result-card-line">
+          <md-icon class="remove-button">remove_circle_outline</md-icon>
+          <md-input-container class="game-result-input">
+            <input
+              mdInput
+              type="number"
+              min="0" max="5"
+              placeholder="CP"
+              #playerTwoControlPoints
+              [(ngModel)]="gameModel.playerTwoControlPoints"
+              name="playerTwoControlPoints">
+          </md-input-container>
+          <md-icon class="add-button">add_circle_outline</md-icon>
+        </div>
+        <div class="full-width game-result-card-line">
+          <md-icon class="remove-button">remove_circle_outline</md-icon>
+          <md-input-container class="game-result-input">
+            <input
+              mdInput
+              type="number"
+              min="0" max="10000"
+              placeholder="VP"
+              #playerTwoVictoryPoints
+              [(ngModel)]="gameModel.playerTwoVictoryPoints"
+              name="playerTwoVictoryPoints">
+          </md-input-container>
+          <md-icon class="add-button">add_circle_outline</md-icon>
+        </div>
+      </md-card>
+    </div>
+    <button (click)="enterGameResult()"
+            class="full-width big-button"
+            type="button"
+            color="accent"
+            md-raised-button>
+      <md-icon>check</md-icon>
+      Enter Game Result
+    </button>
+  </form>
+</md-dialog-content>
+<md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</md-dialog-actions>

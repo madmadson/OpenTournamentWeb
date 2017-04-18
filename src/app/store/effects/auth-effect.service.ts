@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import {Actions, Effect} from "@ngrx/effects";
+import {Injectable} from '@angular/core';
+import {Actions, Effect} from '@ngrx/effects';
 import {
   AUTH_SUBSCRIBE_ACTION, CREATE_ACCOUNT_ACTION, LOGIN_ACTION, LOGIN_PROVIDER_ACTION,
   LOGOUT_ACTION, RESET_PASSWORD_ACTION
-} from "../actions/auth-actions";
-import {LoginService} from "../../service/auth.service";
+} from '../actions/auth-actions';
+import {LoginService} from '../../service/auth.service';
 
 @Injectable()
 export class AuthEffectService {

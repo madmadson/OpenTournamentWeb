@@ -99,6 +99,9 @@ md-card {
   padding-top: 6px;
   padding-bottom: 6px;
 }
+.big-button{
+  height: 54px;
+}
 
 .max-height {
   max-height: 350px;

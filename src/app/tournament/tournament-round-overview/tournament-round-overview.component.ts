@@ -1,10 +1,15 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {Player} from '../../../../shared/model/player';
 import {AuthenticationStoreState} from '../../store/authentication-state';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
+import {Tournament} from '../../../../shared/model/tournament';
+
+import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
+import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
+
 
 @Component({
   selector: 'tournament-round-overview',
@@ -13,32 +18,71 @@ import {TournamentGame} from '../../../../shared/model/tournament-game';
 })
 export class TournamentRoundOverviewComponent implements OnInit {
 
+  @Input() round: number;
+  @Input() actualTournament: Tournament;
+
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() rankingsForRound$: Observable<TournamentRanking[]>;
   @Input() gamesForRound$: Observable<TournamentGame[]>;
 
+  @Output() onPairAgain = new EventEmitter<PairingConfiguration>();
+  @Output() onGameResult = new EventEmitter<TournamentGame>();
 
   userPlayerData: Player;
+  currentUserId: string;
 
-  constructor() { }
+  constructor(public dialog: MdDialog) { }
 
   ngOnInit() {
 
     this.authenticationStoreState$.subscribe(auth => {
       this.userPlayerData = auth.userPlayerData;
+      this.currentUserId = auth.currentUserId;
     });
   }
 
-  isItMe(id: string): boolean {
-    if (this.userPlayerData) {
-      return (id === this.userPlayerData.id);
-    }
+  handleGameResult(game: TournamentGame) {
+
+    this.onGameResult.emit(game);
   }
 
-  isItMyGame(playerOne_id: string, playerTwo_id: string) {
-    if (this.userPlayerData) {
-      return (playerOne_id === this.userPlayerData.id) || (playerTwo_id === this.userPlayerData.id);
-    }
+  openPairAgainDialog() {
+    const dialogRef = this.dialog.open(PairAgainDialogComponent, {
+      data: {
+        round: this.round
+      },
+    });
+    const eventSubscribe = dialogRef.componentInstance.onPairAgain
+      .subscribe((config: PairingConfiguration) => {
+
+      if (config !== undefined) {
+        config.tournamentId = this.actualTournament.id;
+        this.onPairAgain.emit(config);
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+      eventSubscribe.unsubscribe();
+    });
+  }
+}
+
+@Component({
+  selector: 'pair-again-dialog',
+  templateUrl: './pair-again-dialog.html'
+})
+export class PairAgainDialogComponent {
+
+  @Output() onPairAgain = new EventEmitter<PairingConfiguration>();
+
+  constructor(public dialogRef: MdDialogRef<PairAgainDialogComponent>,
+              @Inject(MD_DIALOG_DATA) public data: any) {
+  }
+
+  pairRoundAgain() {
+
+    this.onPairAgain.emit({tournamentId: '', round: 1});
+    this.dialogRef.close();
   }
 }

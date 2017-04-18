@@ -1,3 +1,28 @@
-<p>
-  tournament-ranking-list works!
-</p>
+<table  class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th class="mdl-data-table__cell--non-numeric">Player</th>
+    <th>Score</th>
+    <th>SOS</th>
+    <th>CP</th>
+    <th>VP</th>
+  </tr>
+  </thead>
+  <tbody *ngFor="let rank of rankingsForRound$ | async; let i = index; let even = even"
+         [ngClass]="{'even': even, 'my-item-color':isItMe(rank.playerId)} ">
+  <tr>
+    <td>{{i +1}}</td>
+    <td class="mdl-data-table__cell--non-numeric">
+      <div class="player-name-table-cell">{{rank.playerName | truncate:40}}</div>
+      <div>{{rank.faction}}</div>
+      <div>{{rank.teamName}} - {{rank.meta}} - {{rank.origin}}</div>
+      <div *ngIf="rank.elo != 0">{{rank.elo}}<img class="md-secondary" src="../../../assets/my_crown_small.png"></div>
+    </td>
+    <td>{{rank.score}}</td>
+    <td>{{rank.sos}}</td>
+    <td>{{rank.controlPoints}}</td>
+    <td>{{rank.victoryPoints}}</td>
+  </tr>
+  </tbody>
+</table>

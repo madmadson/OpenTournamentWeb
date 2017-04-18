@@ -1,0 +1,94 @@
+.game-cards-container{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-card{
+  text-align: center;
+  width: 250px;
+}
+.game-card-line{
+  margin: 6px;
+}
+
+.game-card-line-playerName{
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+.table-info{
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.tournament-game:hover{
+  background-color: #f7eff7;
+  cursor: pointer;
+}
+
+.game-result-container{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-result-card{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+}
+
+.game-result-card-line{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-result-playerName{
+  height: 80px;
+}
+
+.add-button{
+  color: #388E3C;
+  font-size:48px;
+  margin-bottom: 24px;
+  margin-right: 24px;
+}
+
+.remove-button{
+  color: #D32F2F;
+  font-size:48px;
+  margin-bottom: 24px;
+  margin-right: 24px;
+}
+
+.game-result-input{
+  margin-right: 24px;
+  margin-left: 24px;
+  width: 30px;
+  font-size:24px;
+}
+
+.won-button{
+  width: 80%;
+   background: #388E3C;
+  color: white;
+}
+
+.game-result-card-divider{
+  font-weight: bold;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1270px) {
+  .game-result-card-divider {
+    width: 100%;
+  }
+}

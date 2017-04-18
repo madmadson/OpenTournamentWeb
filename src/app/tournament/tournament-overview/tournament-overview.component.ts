@@ -14,7 +14,7 @@ import {
   TournamentPlayerPushAction,
   TournamentStartAction, RegistrationAcceptAction, TournamentSubscribeAction,
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
-  ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction
+  ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction
 } from '../../store/actions/tournament-actions';
 
 
@@ -97,7 +97,8 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleStartTournament(config: PairingConfiguration ) {
     this.store.dispatch(new TournamentStartAction(config));
-    this.selectedIndex = (this.selectedIndex + 1);
+    setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
+
   }
 
   handleAddTournamentPlayer(tournamentPlayer: TournamentPlayer) {
@@ -128,4 +129,13 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new RegistrationEraseAction(registration));
   }
 
+  handlePairAgain(config: PairingConfiguration ) {
+    this.store.dispatch(new TournamentPairAgainAction(config));
+
+  }
+
+  handleGameResult(game: TournamentGame) {
+    // this.store.dispatch(new TournamentPairAgainAction(config));
+
+  }
 }

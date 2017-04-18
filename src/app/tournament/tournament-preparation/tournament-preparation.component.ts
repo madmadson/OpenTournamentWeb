@@ -16,7 +16,7 @@ import {Tournament} from '../../../../shared/model/tournament';
 
 import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
 import {AuthenticationStoreState} from '../../store/authentication-state';
-import {getAllFactions} from "../../../../shared/model/factions";
+import {getAllFactions} from '../../../../shared/model/factions';
 
 
 @Component({

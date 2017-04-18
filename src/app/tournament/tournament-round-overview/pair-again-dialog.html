@@ -1,0 +1,13 @@
+<h3>Pair Round {{data.round}} again</h3>
+
+<button (click)="pairRoundAgain()"
+        class="full-width big-button"
+        type="button"
+        color="accent"
+        md-raised-button>
+  <md-icon>redo</md-icon>
+  Pair again
+</button>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

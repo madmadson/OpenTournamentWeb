@@ -1,3 +1,27 @@
-<p>
-  tournament-game-list works!
-</p>
+<div *ngFor="let game of gamesForRound$ | async; let i = index; let even = even"
+     [ngClass]="{'my-item-color':isItMyGame(game.playerOnePlayerId, game.playerTwoPlayerId)}"
+      class="tournament-game"
+      (click)="openGameResultDialog(game)">
+  <div class="table-info">Table {{i +1}}</div>
+  <div class="game-cards-container">
+    <md-card class="game-card" >
+      <div class="game-card-line game-card-line-playerName">{{game.playerOnePlayerName | truncate:40}}</div>
+      <div class="game-card-line">{{game.playerOneFaction}}</div>
+      <div class="game-card-line">
+        Score: {{game.playerOneScore}}
+        CP: {{game.playerOneControlPoints}}
+        VP: {{game.playerOneVictoryPoints}}
+      </div>
+    </md-card>
+    <div>VS</div>
+    <md-card class="game-card" >
+      <div class="game-card-line game-card-line-playerName">{{game.playerTwoPlayerName | truncate:40}}</div>
+      <div class="game-card-line">{{game.playerTwoFaction}}</div>
+      <div class="game-card-line">
+        Score: {{game.playerTwoScore}}
+        CP: {{game.playerTwoControlPoints}}
+        VP: {{game.playerTwoVictoryPoints}}
+      </div>
+    </md-card>
+  </div>
+</div>

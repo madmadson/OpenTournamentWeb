@@ -19,10 +19,14 @@
   </md-tab>
   <md-tab *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;" label="Round {{index +1}}">
       <tournament-round-overview
+        [round]="round"
+        [actualTournament]="actualTournament"
         [authenticationStoreState$]="authenticationStoreState$"
         [actualTournamentArmyList$]="actualTournamentArmyList$"
         [gamesForRound$]="getGamesForRound(round)"
         [rankingsForRound$]="getRankingsForRound(round)"
+        (onPairAgain)="handlePairAgain($event)"
+        (onGameResult)="handleGameResult($event)"
       ></tournament-round-overview>
   </md-tab>
 </md-tab-group>

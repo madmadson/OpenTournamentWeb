@@ -1,4 +1,4 @@
-<h2 class="heading">New Tournament Player</h2>
+<h3 class="heading">New Tournament Player</h3>
 
 <form #tournamentPlayerForm="ngForm">
   <md-input-container
@@ -7,12 +7,11 @@
       mdInput
       type="text"
       placeholder="Full PlayerName"
-      maxlength="150"
+      maxlength="50"
       required
       #fullPlayerName
-      (keyup.enter)="saveTournamentPlayer()"
       [(ngModel)]="tournamentPlayerModel.playerName" name="playerName">
-    <md-hint align="end">{{fullPlayerName.value.length}} / 150</md-hint>
+    <md-hint align="end">{{fullPlayerName.value.length}} / 50</md-hint>
   </md-input-container>
   <md-input-container
     class="full-width">
@@ -21,7 +20,6 @@
       type="text"
       placeholder="Origin"
       maxlength="50"
-      (keyup.enter)="saveTournamentPlayer()"
       [(ngModel)]="tournamentPlayerModel.origin"
       name="origin"
       #origin>
