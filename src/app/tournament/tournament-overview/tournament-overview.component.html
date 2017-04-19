@@ -1,4 +1,4 @@
-<h1 class="heading">{{actualTournament?.name}}</h1>
+<h1 class="heading">{{actualTournament?.name}} Round:{{actualTournament?.actualRound}}</h1>
 
 <md-tab-group  [selectedIndex]="selectedIndex">
   <md-tab  label="TournamentPreparation">
@@ -22,10 +22,11 @@
         [round]="round"
         [actualTournament]="actualTournament"
         [authenticationStoreState$]="authenticationStoreState$"
-        [actualTournamentArmyList$]="actualTournamentArmyList$"
+        [actualTournamentArmyLists$]="actualTournamentArmyList$"
         [gamesForRound$]="getGamesForRound(round)"
         [rankingsForRound$]="getRankingsForRound(round)"
         (onPairAgain)="handlePairAgain($event)"
+        (onNewRound)="handleNewRound($event)"
         (onGameResult)="handleGameResult($event)"
       ></tournament-round-overview>
   </md-tab>

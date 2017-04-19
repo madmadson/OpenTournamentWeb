@@ -1,14 +1,26 @@
 <md-dialog-content>
   <form #gameForm="ngForm">
     <div class="game-result-container">
-      <md-card class="game-result-card">
+      <md-card class="game-result-card"
+               [ngClass]="{'card-won': gameModel.playerOneScore == 1,
+                           'card-not-won': gameModel.playerOneScore == 0} ">
         <h4 class="heading game-result-playerName">{{gameModel.playerOnePlayerName | truncate:35}}</h4>
 
-        <button class="big-button won-button"
+        <button *ngIf="gameModel.playerOneScore == 0"
+                class="big-button won-button"
+                (click)="playerOneWin()"
                 type="button"
                 md-raised-button>WON</button>
+        <button *ngIf="gameModel.playerOneScore == 1"
+                class="big-button not-won-button"
+                (click)="playerOneNotWin()"
+                type="button"
+                md-raised-button>NOT WON</button>
         <div class="full-width game-result-card-line">
-          <md-icon class="remove-button">remove_circle_outline</md-icon>
+          <md-icon
+            class="remove-button"
+            (click)="decreasePlayerOneCP()">
+            remove_circle_outline</md-icon>
           <md-input-container class="game-result-input">
             <input
               mdInput
@@ -16,13 +28,20 @@
               min="0" max="5"
               placeholder="CP"
               #playerOneControlPoints
+              (blur)="correctPlayerOneCPInput()"
               [(ngModel)]="gameModel.playerOneControlPoints"
               name="playerOneControlPoints">
           </md-input-container>
-          <md-icon class="add-button">add_circle_outline</md-icon>
+          <md-icon
+            class="add-button"
+            (click)="increasePlayerOneCP()">
+            add_circle_outline</md-icon>
         </div>
         <div class="full-width game-result-card-line">
-          <md-icon class="remove-button">remove_circle_outline</md-icon>
+          <md-icon
+            class="remove-button"
+            (click)="decreasePlayerOneVP()">
+            remove_circle_outline</md-icon>
           <md-input-container class="game-result-input">
             <input
               mdInput
@@ -30,22 +49,46 @@
               min="0" max="10000"
               placeholder="VP"
               #playerOneVictoryPoints
+              (blur)="correctPlayerOneVPInput()"
               [(ngModel)]="gameModel.playerOneVictoryPoints"
               name="playerOneVictoryPoints">
           </md-input-container>
-          <md-icon class="add-button">add_circle_outline</md-icon>
+          <md-icon
+            class="add-button"
+            (click)="increasePlayerOneVP()">
+            add_circle_outline</md-icon>
         </div>
+        <md-select
+          class="full-width"
+          placeholder="PlayerOne ArmyList"
+          #playerOneArmyList
+          name="playerOneArmyList"
+          [(ngModel)]="gameModel.playerOneArmyList">
+          <md-option *ngFor="let armyList of (playerOneArmyLists$ | async)" [value]="armyList.name">{{ armyList.name }}</md-option>
+        </md-select>
       </md-card>
       <div class="game-result-card-divider">
         VS
       </div>
-      <md-card class="game-result-card">
+      <md-card class="game-result-card"
+               [ngClass]="{'card-won': gameModel.playerTwoScore == 1,
+                           'card-not-won': gameModel.playerTwoScore == 0} ">
         <h4 class="heading game-result-playerName">{{gameModel.playerTwoPlayerName | truncate:35}}</h4>
-        <button class="big-button won-button"
+        <button *ngIf="gameModel.playerTwoScore == 0"
+                class="big-button won-button"
+                (click)="playerTwoWin()"
                 type="button"
                 md-raised-button>WON</button>
+        <button *ngIf="gameModel.playerTwoScore == 1"
+                class="big-button not-won-button"
+                (click)="playerTwoNotWin()"
+                type="button"
+                md-raised-button>NOT WON</button>
         <div class="full-width game-result-card-line">
-          <md-icon class="remove-button">remove_circle_outline</md-icon>
+          <md-icon
+            class="remove-button"
+            (click)="decreasePlayerTwoCP()">
+            remove_circle_outline</md-icon>
           <md-input-container class="game-result-input">
             <input
               mdInput
@@ -53,13 +96,20 @@
               min="0" max="5"
               placeholder="CP"
               #playerTwoControlPoints
+              (blur)="correctPlayerTwoCPInput()"
               [(ngModel)]="gameModel.playerTwoControlPoints"
               name="playerTwoControlPoints">
           </md-input-container>
-          <md-icon class="add-button">add_circle_outline</md-icon>
+          <md-icon
+            class="add-button"
+            (click)="increasePlayerTwoCP()">
+            add_circle_outline</md-icon>
         </div>
         <div class="full-width game-result-card-line">
-          <md-icon class="remove-button">remove_circle_outline</md-icon>
+          <md-icon
+            class="remove-button"
+            (click)="decreasePlayerTwoVP()">
+            remove_circle_outline</md-icon>
           <md-input-container class="game-result-input">
             <input
               mdInput
@@ -67,14 +117,27 @@
               min="0" max="10000"
               placeholder="VP"
               #playerTwoVictoryPoints
+              (blur)="correctPlayerTwoVPInput()"
               [(ngModel)]="gameModel.playerTwoVictoryPoints"
               name="playerTwoVictoryPoints">
           </md-input-container>
-          <md-icon class="add-button">add_circle_outline</md-icon>
+          <md-icon
+            class="add-button"
+            (click)="increasePlayerTwoVP()">
+            add_circle_outline</md-icon>
         </div>
+        <md-select *ngIf="(playerTwoArmyLists$ | async).length > 0; else noArmyList"
+          class="full-width"
+          placeholder="PlayerTwo ArmyList"
+          #playerTwoArmyList
+          name="playerTwoArmyList"
+          [(ngModel)]="gameModel.playerTwoArmyList">
+          <md-option *ngFor="let armyList of (playerTwoArmyLists$ | async)" [value]="armyList.name">{{ armyList.name }}</md-option>
+        </md-select>
+        <ng-template #noArmyList>No ArmyList for Player found</ng-template>
       </md-card>
     </div>
-    <button (click)="enterGameResult()"
+    <button (click)="enterGameResultSubmitted()"
             class="full-width big-button"
             type="button"
             color="accent"

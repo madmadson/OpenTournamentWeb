@@ -22,6 +22,7 @@ import {PairingConfiguration} from '../../../shared/model/pairing-configuration'
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {SubscribeTournamentRankingsAction} from '../store/actions/tournament-rankings-actions';
 import {SubscribeTournamentGamesAction} from '../store/actions/tournament-games-actions';
+import {TournamentGame} from '../../../shared/model/tournament-game';
 
 
 @Injectable()
@@ -227,7 +228,11 @@ export class TournamentService implements OnDestroy {
   pushNewTournamentPlayer(player: TournamentPlayer) {
 
     const tournamentPlayers = this.afService.database.list('tournament-player/' + player.tournamentId );
-    tournamentPlayers.push(player);
+    const newRef = tournamentPlayers.push(player);
+
+    if (!player.playerId) {
+      newRef.update({playerId: newRef.key});
+    }
 
     this.snackBar.open('Tournament Player saved successfully', '', {
       duration: 5000
@@ -267,6 +272,35 @@ export class TournamentService implements OnDestroy {
         duration: 5000
       });
     }
+  }
+
+  pairNewRound(config: PairingConfiguration) {
+    console.log('pair new round with config : ' + JSON.stringify(config));
+
+    const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
+    const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
+
+    if (successFullyPaired) {
+      const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+      registrationRef.update({actualRound: config.round});
+      this.snackBar.open('new Round Paired', '', {
+        duration: 5000
+      });
+
+    } else {
+      this.snackBar.open('Failed to create Parings', '', {
+        duration: 5000
+      });
+    }
+  }
+
+
+  gameResultEntered(game: TournamentGame) {
+
+    const gameRef = this.afService.database.object('tournament-games/' + game.tournamentId + '/' + game.id);
+    gameRef.update(game);
+
+    this.rankingService.updateRanking(game);
   }
 
   unsubscribeOnTournament() {

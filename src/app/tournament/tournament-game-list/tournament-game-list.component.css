@@ -25,7 +25,7 @@
 }
 
 .tournament-game:hover{
-  background-color: #f7eff7;
+  background-color: deepskyblue;
   cursor: pointer;
 }
 
@@ -71,14 +71,20 @@
 
 .game-result-input{
   margin-right: 24px;
-  margin-left: 24px;
-  width: 30px;
+  margin-left: 30px;
+  width: 50px;
   font-size:24px;
 }
 
 .won-button{
   width: 80%;
-   background: #388E3C;
+  background: #388E3C;
+  color: white;
+}
+
+.not-won-button{
+  width: 80%;
+  background: #D32F2F;
   color: white;
 }
 
@@ -91,4 +97,12 @@
   .game-result-card-divider {
     width: 100%;
   }
+}
+
+.card-won {
+  background: #AEFFAE;
+}
+
+.card-not-won {
+  background: #FDCDC6;
 }

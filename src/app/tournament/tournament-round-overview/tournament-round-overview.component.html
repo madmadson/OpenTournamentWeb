@@ -9,8 +9,8 @@
       <md-icon>redo</md-icon>
       Pair Again
     </button>
-    <button *ngIf="currentUserId === actualTournament?.creatorUid"
-
+    <button *ngIf="currentUserId === actualTournament?.creatorUid && allGamesFinished"
+            (click)="openNewRoundDialog()"
             type="button"
             color="accent"
             md-raised-button>
@@ -24,6 +24,7 @@
     <h3 class="heading">Games for round {{round}}</h3>
 
     <tournament-game-list
+      [armyLists$]="actualTournamentArmyLists$"
       [gamesForRound$]="gamesForRound$"
       [userPlayerData]="userPlayerData"
       (onGameResult)="handleGameResult($event)"

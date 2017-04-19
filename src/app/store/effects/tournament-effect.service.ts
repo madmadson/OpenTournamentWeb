@@ -7,13 +7,24 @@ import {
   REGISTRATION_ERASE_ACTION,
   REGISTRATION_PUSH_ACTION, START_TOURNAMENT_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, REGISTRATION_ACCEPT_ACTION,
   TOURNAMENT_SUBSCRIBE_ACTION,
-  TOURNAMENT_UNSUBSCRIBE_ACTION, TOURNAMENT_PAIR_AGAIN_ACTION
+  TOURNAMENT_UNSUBSCRIBE_ACTION, TOURNAMENT_PAIR_AGAIN_ACTION, GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
 
 
 @Injectable()
 export class TournamentEffectService {
+
+  @Effect({dispatch: false}) pairNewRound = this.actions$
+    .ofType(TOURNAMENT_NEW_ROUND_ACTION)
+    .debug('TOURNAMENT_NEW_ROUND_ACTION')
+    .map(action => this.tournamentService.pairNewRound(action.payload));
+
+
+  @Effect({dispatch: false}) gameResultEntered = this.actions$
+    .ofType(GAME_RESULT_ENTERED_ACTION)
+    .debug('GAME_RESULT_ENTERED_ACTION')
+    .map(action => this.tournamentService.gameResultEntered(action.payload));
 
   @Effect({dispatch: false}) pairAgainTournament = this.actions$
     .ofType(TOURNAMENT_PAIR_AGAIN_ACTION)

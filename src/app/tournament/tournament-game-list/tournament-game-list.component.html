@@ -1,10 +1,12 @@
 <div *ngFor="let game of gamesForRound$ | async; let i = index; let even = even"
-     [ngClass]="{'my-item-color':isItMyGame(game.playerOnePlayerId, game.playerTwoPlayerId)}"
+     [ngClass]="{'even': even, 'my-item':isItMyGame(game.playerOnePlayerId, game.playerTwoPlayerId)}"
       class="tournament-game"
       (click)="openGameResultDialog(game)">
   <div class="table-info">Table {{i +1}}</div>
   <div class="game-cards-container">
-    <md-card class="game-card" >
+    <md-card class="game-card"
+             [ngClass]="{'card-won': (game.playerOneScore == 1 && game.finished),
+                           'card-not-won': (game.playerOneScore == 0 && game.finished)} ">
       <div class="game-card-line game-card-line-playerName">{{game.playerOnePlayerName | truncate:40}}</div>
       <div class="game-card-line">{{game.playerOneFaction}}</div>
       <div class="game-card-line">
@@ -12,9 +14,12 @@
         CP: {{game.playerOneControlPoints}}
         VP: {{game.playerOneVictoryPoints}}
       </div>
+      <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
     </md-card>
     <div>VS</div>
-    <md-card class="game-card" >
+    <md-card class="game-card"
+             [ngClass]="{'card-won': (game.playerTwoScore == 1 && game.finished),
+                           'card-not-won': (game.playerTwoScore == 0 && game.finished)} ">
       <div class="game-card-line game-card-line-playerName">{{game.playerTwoPlayerName | truncate:40}}</div>
       <div class="game-card-line">{{game.playerTwoFaction}}</div>
       <div class="game-card-line">
@@ -22,6 +27,7 @@
         CP: {{game.playerTwoControlPoints}}
         VP: {{game.playerTwoVictoryPoints}}
       </div>
+      <div *ngIf="game.playerTwoArmyList" class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
     </md-card>
   </div>
 </div>

@@ -9,8 +9,8 @@
     <th>VP</th>
   </tr>
   </thead>
-  <tbody *ngFor="let rank of rankingsForRound$ | async; let i = index; let even = even"
-         [ngClass]="{'even': even, 'my-item-color':isItMe(rank.playerId)} ">
+  <tbody *ngFor="let rank of orderedRankings$ | async; let i = index; let even = even"
+         [ngClass]="{'even': even, 'my-item':isItMe(rank.playerId)} ">
   <tr>
     <td>{{i +1}}</td>
     <td class="mdl-data-table__cell--non-numeric">

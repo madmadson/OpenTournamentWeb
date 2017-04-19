@@ -29,6 +29,14 @@ body {
 
 /*md-changes watch for improvement in lib*/
 
+button:focus{
+  border: 3px solid deepskyblue;
+}
+
+.my-item {
+  border: 3px solid #FFC107;
+}
+
 .list-item:hover{
   background-color: deepskyblue;
   cursor: pointer;

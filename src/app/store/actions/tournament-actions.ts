@@ -4,6 +4,7 @@ import {Registration} from '../../../../shared/model/registration';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
+import {TournamentGame} from "../../../../shared/model/tournament-game";
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -234,5 +235,25 @@ export class TournamentPairAgainAction implements Action {
   readonly type = 'TOURNAMENT_PAIR_AGAIN_ACTION';
 
   constructor(public payload: PairingConfiguration) {
+  }
+}
+
+export const TOURNAMENT_NEW_ROUND_ACTION = 'TOURNAMENT_NEW_ROUND_ACTION';
+
+export class TournamentNewRoundAction implements Action {
+
+  readonly type = 'TOURNAMENT_NEW_ROUND_ACTION';
+
+  constructor(public payload: PairingConfiguration) {
+  }
+}
+
+export const GAME_RESULT_ENTERED_ACTION = 'GAME_RESULT_ENTERED_ACTION';
+
+export class GameResultEnteredAction implements Action {
+
+  readonly type = 'GAME_RESULT_ENTERED_ACTION';
+
+  constructor(public payload: TournamentGame) {
   }
 }

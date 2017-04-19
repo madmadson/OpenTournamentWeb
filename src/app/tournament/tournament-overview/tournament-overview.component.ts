@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Tournament} from '../../../../shared/model/tournament';
 import {Registration} from '../../../../shared/model/registration';
 import {ArmyList} from '../../../../shared/model/armyList';
@@ -10,11 +10,14 @@ import {Store} from '@ngrx/store';
 import {ApplicationState} from '../../store/application-state';
 import {ActivatedRoute} from '@angular/router';
 
+import * as _ from 'lodash';
+
 import {
   TournamentPlayerPushAction,
   TournamentStartAction, RegistrationAcceptAction, TournamentSubscribeAction,
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
-  ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction
+  ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
+  TournamentNewRoundAction
 } from '../../store/actions/tournament-actions';
 
 
@@ -79,8 +82,9 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TournamentUnsubscribeAction());
   }
 
-  getArrayForNumber(round: number) {
-    return [Array(round)].map((e, i) => i + 1);
+  getArrayForNumber(round: number): number[]  {
+
+    return  round ? _.range(1, (round + 1)) : [];
   };
 
   getRankingsForRound(round: number): Observable<TournamentRanking[]> {
@@ -134,8 +138,13 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   }
 
-  handleGameResult(game: TournamentGame) {
-    // this.store.dispatch(new TournamentPairAgainAction(config));
+  handleNewRound(config: PairingConfiguration ) {
+    console.log('new round');
+    this.store.dispatch(new TournamentNewRoundAction(config));
+  }
 
+  handleGameResult(game: TournamentGame) {
+
+     this.store.dispatch(new GameResultEnteredAction(game));
   }
 }
