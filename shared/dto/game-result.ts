@@ -1,7 +1,7 @@
 
 
 
-import {TournamentGame} from './tournament-game';
+import {TournamentGame} from '../model/tournament-game';
 export class GameResult {
 
   gameBefore: TournamentGame;

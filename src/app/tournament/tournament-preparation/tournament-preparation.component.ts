@@ -14,7 +14,7 @@ import {getAllCountries} from '../../../../shared/model/countries';
 
 import {Tournament} from '../../../../shared/model/tournament';
 
-import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
+import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration';
 import {AuthenticationStoreState} from '../../store/authentication-state';
 import {getAllFactions} from '../../../../shared/model/factions';
 

@@ -14,9 +14,9 @@ import {
 } from '../store/actions/tournament-rankings-actions';
 
 import * as _ from 'lodash';
-import {PairingConfiguration} from '../../../shared/model/pairing-configuration';
+import {PairingConfiguration} from '../../../shared/dto/pairing-configuration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
-import {GameResult} from '../../../shared/model/game-result';
+import {GameResult} from '../../../shared/dto/game-result';
 
 
 @Injectable()
@@ -44,6 +44,10 @@ export class TournamentRankingService implements OnDestroy {
 
   ngOnDestroy(): void {
 
+    if (this.tournamentRankingsRef) {
+      this.tournamentRankingsRef.off();
+    }
+
   }
 
   public subscribeOnTournamentRankings(tournamentId: string) {
@@ -51,6 +55,9 @@ export class TournamentRankingService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearRankingAction());
+     if (this.tournamentRankingsRef) {
+      this.tournamentRankingsRef.off();
+    }
 
     console.log('subscribeOnTournamentRankings');
 

@@ -211,6 +211,7 @@ export class TournamentNewComponent implements OnInit {
       actualRound: 0,
       visibleRound: 0,
       maxParticipants: formModel.maxParticipants as number,
+      actualParticipants: 0,
       teamSize: formModel.teamSize as number,
       creatorUid: this.creatorId
     };

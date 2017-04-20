@@ -17,7 +17,7 @@ import {
   DeleteTournamentGameAction,
   ClearTournamentGamesAction,
 } from '../store/actions/tournament-games-actions';
-import {PairingConfiguration} from '../../../shared/model/pairing-configuration';
+import {PairingConfiguration} from '../../../shared/dto/pairing-configuration';
 
 
 @Injectable()
@@ -42,7 +42,9 @@ export class TournamentGameService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.tournamentGamesRef.off();
+    if (this.tournamentGamesRef) {
+      this.tournamentGamesRef.off();
+    }
   }
 
   public subscribeOnTournamentGames(tournamentId: string) {
@@ -50,6 +52,11 @@ export class TournamentGameService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearTournamentGamesAction());
+    if (this.tournamentGamesRef) {
+      this.tournamentGamesRef.off();
+    }
+
+    console.log('subscribeOnTournamentGames');
 
     this.tournamentGamesRef = this.fb.database().ref('tournament-games/' + tournamentId);
 

@@ -65,8 +65,9 @@ import {TournamentArmyListReducer} from './store/reducers/tournamentArmyListRedu
 import {TournamentGameService} from './service/tournament-game.service';
 import {TournamentGameReducer} from './store/reducers/tournamentGameReducer';
 import {
-  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule,  MdIconModule, MdInputModule,
-  MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdListModule,
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule,
+  MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdListModule, MdTooltip,
+  MdTooltipModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
@@ -154,7 +155,7 @@ export const firebaseConfDev = {
     MdlModule,
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
-    MdListModule, MdDialogModule
+    MdListModule, MdDialogModule, MdTooltipModule
   ],
   declarations: [
     AppComponent,

@@ -3,10 +3,11 @@ import {Tournament} from '../../../../shared/model/tournament';
 import {Registration} from '../../../../shared/model/registration';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {ArmyList} from '../../../../shared/model/armyList';
-import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
+import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration';
 import {TournamentGame} from "../../../../shared/model/tournament-game";
-import {GameResult} from "../../../../shared/model/game-result";
-import {PublishRound} from "../../../../shared/model/publish-round";
+import {GameResult} from "../../../../shared/dto/game-result";
+import {PublishRound} from "../../../../shared/dto/publish-round";
+import {RegistrationPush} from "../../../../shared/dto/registration-push";
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -75,7 +76,7 @@ export class RegistrationPushAction implements Action {
 
   readonly type = 'REGISTRATION_PUSH_ACTION';
 
-  constructor(public payload: Registration) {
+  constructor(public payload: RegistrationPush) {
   }
 }
 
@@ -85,7 +86,7 @@ export class RegistrationEraseAction implements Action {
 
   readonly type = 'REGISTRATION_ERASE_ACTION';
 
-  constructor(public payload: Registration) {
+  constructor(public payload: RegistrationPush) {
   }
 }
 

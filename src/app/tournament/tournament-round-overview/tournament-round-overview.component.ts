@@ -8,11 +8,11 @@ import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {Tournament} from '../../../../shared/model/tournament';
 
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
-import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
+import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration';
 
 import * as _ from 'lodash';
-import {GameResult} from '../../../../shared/model/game-result';
-import {PublishRound} from '../../../../shared/model/publish-round';
+import {GameResult} from '../../../../shared/dto/game-result';
+import {PublishRound} from '../../../../shared/dto/publish-round';
 
 @Component({
   selector: 'tournament-round-overview',

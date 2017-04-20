@@ -1,11 +1,11 @@
 <h1 class="heading">Online Tournaments ({{(allTournaments$| async) ?.length}})</h1>
 
-<md-card>
+<md-card class="tournament-list-card">
   <span *ngIf="(groupedTournaments$ | async).length == 0">No Tournaments found</span>
-  <md-list  *ngFor="let groupedTournaments of groupedTournaments$ | async">
+  <mdl-list  *ngFor="let groupedTournaments of groupedTournaments$ | async">
     <h3 md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h3>
     <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
     <md-divider></md-divider>
-  </md-list>
+  </mdl-list>
 </md-card>
 

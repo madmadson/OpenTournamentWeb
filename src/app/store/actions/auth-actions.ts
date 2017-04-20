@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {UserData} from '../../../../shared/model/userData';
+import {UserData} from '../../../../shared/model/user-data';
 import {Player} from '../../../../shared/model/player';
 
 

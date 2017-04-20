@@ -5,8 +5,8 @@ import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
 import {PairAgainDialogComponent} from '../tournament-round-overview/tournament-round-overview.component';
 import {ArmyList} from '../../../../shared/model/armyList';
-import {GameConfig, getWarmachineConfig} from '../../../../shared/model/game-config';
-import {GameResult} from '../../../../shared/model/game-result';
+import {GameConfig, getWarmachineConfig} from '../../../../shared/dto/game-config';
+import {GameResult} from '../../../../shared/dto/game-result';
 
 @Component({
   selector: 'tournament-game-list',

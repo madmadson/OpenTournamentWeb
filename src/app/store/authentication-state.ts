@@ -1,7 +1,7 @@
 
 
 import {Player} from '../../../shared/model/player';
-import {UserData} from '../../../shared/model/userData';
+import {UserData} from '../../../shared/model/user-data';
 
 export interface AuthenticationStoreState {
   currentUserId: string;

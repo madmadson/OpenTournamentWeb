@@ -13,17 +13,18 @@ import {ActivatedRoute} from '@angular/router';
 import * as _ from 'lodash';
 
 import {
-  TournamentPlayerPushAction, RegistrationAcceptAction, TournamentSubscribeAction,
+  TournamentPlayerPushAction,  TournamentSubscribeAction,
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
   ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
-  TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction
+  TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
+  RegistrationAcceptAction
 } from '../../store/actions/tournament-actions';
 
 
-import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
+import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration';
 import {AuthenticationStoreState} from 'app/store/authentication-state';
-import {GameResult} from '../../../../shared/model/game-result';
-import {PublishRound} from "../../../../shared/model/publish-round";
+import {GameResult} from '../../../../shared/dto/game-result';
+import {PublishRound} from '../../../../shared/dto/publish-round';
 
 @Component({
   selector: 'tournament-overview',
@@ -118,7 +119,8 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleAddTournamentRegistration(registration: Registration) {
-    this.store.dispatch(new RegistrationPushAction(registration));
+    this.store.dispatch(new RegistrationPushAction(
+      {tournament: this.actualTournament, registration: registration}));
   }
 
   handleAddArmyList(armyList: ArmyList) {
@@ -138,7 +140,8 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleDeleteRegistration(registration: Registration) {
-    this.store.dispatch(new RegistrationEraseAction(registration));
+    this.store.dispatch(new RegistrationEraseAction(
+      {tournament: this.actualTournament, registration: registration}));
   }
 
   handlePairAgain(config: PairingConfiguration ) {

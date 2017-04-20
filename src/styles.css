@@ -46,25 +46,6 @@ button:focus{
   background-color: deepskyblue !important;
 }
 
-@media only screen and (min-width: 1100px) {
-  .md-secondary-spacer {
-    padding-left: 40em;
-  }
-}
-
-@media only screen and (min-width: 800px) {
-  .md-secondary-spacer {
-    padding-left: 20em;
-  }
-}
-
-
-@media only screen and (min-width: 500px) {
-  .md-secondary-spacer {
-    padding-left: 5em;
-  }
-}
-
 .list-action{
   padding-left: 6px;
   padding-right: 6px;
@@ -156,3 +137,26 @@ md-card {
   flex-flow:row wrap;
   justify-content: center;
 }
+
+@media only screen and (min-width: 500px) {
+  .tournament-list-card {
+    width:400px;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .tournament-list-card {
+    width:800px;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .tournament-list-card {
+    width:1000px;
+  }
+}
+
+
+
+
+

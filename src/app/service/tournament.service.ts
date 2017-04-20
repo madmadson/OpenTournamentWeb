@@ -4,8 +4,7 @@ import {ApplicationState} from '../store/application-state';
 import {AngularFire, FirebaseRef} from 'angularfire2';
 
 import {
-  AddArmyListAction, ArmyListDeletedAction,
-  ClearArmyListsAction,
+  AddArmyListAction, ArmyListDeletedAction, ClearArmyListsAction,
   ClearRegistrationAction, ClearTournamentPlayerAction,
   SetActualTournamentAction, TournamentPlayerAdded, TournamentPlayerChanged, TournamentPlayerDeleted,
   TournamentRegistrationAdded,
@@ -18,13 +17,13 @@ import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyList} from '../../../shared/model/armyList';
 import {TournamentRankingService} from './tournament-ranking.service';
 import {TournamentGameService} from './tournament-game.service';
-import {PairingConfiguration} from '../../../shared/model/pairing-configuration';
+import {PairingConfiguration} from '../../../shared/dto/pairing-configuration';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {SubscribeTournamentRankingsAction} from '../store/actions/tournament-rankings-actions';
 import {SubscribeTournamentGamesAction} from '../store/actions/tournament-games-actions';
-import {TournamentGame} from '../../../shared/model/tournament-game';
-import {GameResult} from '../../../shared/model/game-result';
-import {PublishRound} from '../../../shared/model/publish-round';
+import {GameResult} from '../../../shared/dto/game-result';
+import {PublishRound} from '../../../shared/dto/publish-round';
+import {RegistrationPush} from '../../../shared/dto/registration-push';
 
 
 @Injectable()
@@ -45,9 +44,17 @@ export class TournamentService implements OnDestroy {
 
   ngOnDestroy(): void {
 
-    this.tournamentRegistrationsRef.off();
-    this.tournamentPlayerRef.off();
-    this.armyListsRef.off();
+    console.log('destroyed!');
+
+    if (this.tournamentRegistrationsRef) {
+      this.tournamentRegistrationsRef.off();
+    }
+    if (this.tournamentPlayerRef) {
+      this.tournamentPlayerRef.off();
+    }
+    if (this.armyListsRef) {
+      this.armyListsRef.off();
+    }
   }
 
 
@@ -63,6 +70,7 @@ export class TournamentService implements OnDestroy {
       }
     );
 
+
     this.subscribeOnRegistrations(tournamentId);
     this.subscribeOnTournamentPlayers(tournamentId);
     this.subscribeOnArmyLists(tournamentId);
@@ -75,6 +83,10 @@ export class TournamentService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearRegistrationAction());
+    if (this.tournamentRegistrationsRef) {
+      this.tournamentRegistrationsRef.off();
+    }
+
 
     this.tournamentRegistrationsRef = this.fb.database().ref('tournament-registration/' + tournamentId);
 
@@ -107,6 +119,9 @@ export class TournamentService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearTournamentPlayerAction());
+    if (this.tournamentPlayerRef) {
+      this.tournamentPlayerRef.off();
+    }
 
     console.log('subscribeOnTournamentPlayers');
 
@@ -140,6 +155,11 @@ export class TournamentService implements OnDestroy {
   private subscribeOnArmyLists(tournamentId: string) {
     const that = this;
 
+    this.store.dispatch(new ClearArmyListsAction());
+    if (this.armyListsRef) {
+      this.armyListsRef.off();
+    }
+
     this.armyListsRef = this.fb.database().ref('tournament-armyLists/' + tournamentId);
 
     this.armyListsRef.on('child_added', function (snapshot) {
@@ -158,10 +178,13 @@ export class TournamentService implements OnDestroy {
     });
   }
 
-  pushRegistration(newRegistration: Registration) {
+  pushRegistration(registrationPush: RegistrationPush) {
 
-    const registrations = this.afService.database.list('tournament-registration/' + newRegistration.tournamentId );
-    registrations.push(newRegistration);
+    const registrations = this.afService.database.list('tournament-registration/' + registrationPush.tournament.id);
+    registrations.push(registrationPush.registration);
+
+    const tournamentRef = this.afService.database.object('tournaments/' + registrationPush.tournament.id);
+    tournamentRef.update({actualParticipants: (registrationPush.tournament.actualParticipants + 1 )});
 
     this.snackBar.open('Registration saved successfully', '', {
       duration: 5000
@@ -184,10 +207,13 @@ export class TournamentService implements OnDestroy {
     });
   }
 
-  eraseRegistration(reg: Registration) {
+  eraseRegistration(regPush: RegistrationPush) {
 
-    const regRef = this.afService.database.list('tournament-registration/' + reg.tournamentId + '/' + reg.id);
+    const regRef = this.afService.database.list('tournament-registration/' + regPush.tournament.id + '/' + regPush.registration.id);
     regRef.remove();
+
+    const tournamentRef = this.afService.database.object('tournaments/' + regPush.tournament.id);
+    tournamentRef.update({actualParticipants: (regPush.tournament.actualParticipants - 1 )});
 
     this.snackBar.open('Registration deleted successfully', '', {
       duration: 5000
