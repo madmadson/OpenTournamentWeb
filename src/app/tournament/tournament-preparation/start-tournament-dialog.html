@@ -1,5 +1,5 @@
 <md-dialog-content>
-  <div *ngIf="(allActualTournamentPlayers$ |async).length % 2; else startButton">
+  <div *ngIf="allActualTournamentPlayers.length % 2; else startButton">
     <h2 class="warning">Uneven Tournament Players</h2>
     <button (click)="addDummyPlayer()"
             type="button"
@@ -9,6 +9,9 @@
       <md-icon>add</md-icon>
       Add Dummy Player
     </button>
+    <h4>
+      Pairing only works sufficient with even player count.
+    </h4>
   </div>
   <ng-template #startButton>
     <h2>Start Tournament</h2>
@@ -20,6 +23,10 @@
       <md-icon>play_arrow</md-icon>
       Start Tournament
     </button>
+    <h4>
+      There are {{allActualTournamentPlayers.length}} Players.
+      We suggest {{suggestedRoundsToPlay}} Rounds to play.
+    </h4>
   </ng-template>
 </md-dialog-content>
 <div md-dialog-actions>

@@ -1,3 +1,36 @@
+.registration-list-card{
+  width: 600px;
+}
+
+@media only screen and (min-width: 900px) {
+  .registration-list-card{
+    width: 800px;
+  }
+}
+
+@media only screen and (min-width: 1350px) {
+  .registration-list-card{
+    width: 600px;
+  }
+}
+
+.tournament-list-card{
+  width: 600px;
+}
+
+@media only screen and (min-width: 900px) {
+
+  .tournament-list-card{
+    width: 800px;
+  }
+}
+
+@media only screen and (min-width: 1350px) {
+
+  .tournament-list-card{
+    width: 600px;
+  }
+}
 
 
 

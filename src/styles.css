@@ -31,7 +31,6 @@ body {
 
 button:focus{
   box-shadow: 0 0 0 3px deepskyblue;
-
 }
 
 .my-item {
@@ -56,6 +55,10 @@ button:focus{
   background-color: #D32F2F;
 }
 
+.positive-background{
+  background-color: #388E3C;
+}
+
 .negative{
   color: #D32F2F;
 }
@@ -78,6 +81,14 @@ button:focus{
 
 .info:hover{
   color: black;
+}
+
+.warning-text{
+  color: #D32F2F;
+}
+
+.info-text{
+  color: blue;
 }
 
 
@@ -139,19 +150,19 @@ md-card {
 }
 
 @media only screen and (min-width: 500px) {
-  .tournament-list-card {
+  .single-list-card {
     width:400px;
   }
 }
 
 @media only screen and (min-width: 1000px) {
-  .tournament-list-card {
+  .single-list-card {
     width:800px;
   }
 }
 
 @media only screen and (min-width: 1200px) {
-  .tournament-list-card {
+  .single-list-card {
     width:1000px;
   }
 }

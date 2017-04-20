@@ -345,4 +345,17 @@ export class TournamentService implements OnDestroy {
       duration: 5000
     });
   }
+
+  endTournament(config: PairingConfiguration) {
+    this.rankingService.pushRankingForRound(config);
+
+    const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+    registrationRef.update(
+      {actualRound: config.round, finished: true}
+      );
+    this.snackBar.open('Successfully end Tournament', '', {
+      duration: 5000
+    });
+
+  }
 }

@@ -9,6 +9,7 @@
       [allActualTournamentPlayers$]="allActualTournamentPlayers$"
       [actualTournamentRegisteredPlayers$]="actualTournamentRegisteredPlayers$"
       (onStartTournament)="handleStartTournament($event)"
+      (onSaveTournament)="handleEditTournament($event)"
       (onAddDummyPlayer)="handleAddDummyPlayer($event)"
       (onAddTournamentPlayer)="handleAddTournamentPlayer($event)"
       (onAcceptRegistration)="handleAcceptRegistration($event)"
@@ -16,7 +17,8 @@
       (onAddArmyList)="handleAddArmyList($event)"
       (onDeleteArmyList)="handleDeleteArmyList($event)"
       (onDeleteTournamentPlayer)="handleDeleteTournamentPlayer($event)"
-      (onDeleteRegistration)="handleDeleteRegistration($event)"></tournament-preparation>
+      (onDeleteRegistration)="handleDeleteRegistration($event)"
+    ></tournament-preparation>
   </md-tab>
   <ng-container *ngIf="currentUserId === actualTournament?.creatorUid"><
     <md-tab  *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;" label="Round {{index +1}}">
@@ -32,6 +34,7 @@
           (onKillRound)="handleKillRound($event)"
           (onGameResult)="handleGameResult($event)"
           (onPublishRound)="handlePublishRound($event)"
+          (onEndTournament)="handleEndTournament($event)"
         ></tournament-round-overview>
     </md-tab>
   </ng-container>

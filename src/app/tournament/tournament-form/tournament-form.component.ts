@@ -1,11 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 import {MdSnackBar} from '@angular/material';
-import {Store} from '@ngrx/store';
-import {ApplicationState} from '../../store/application-state';
 import {CustomValidators} from 'ng2-validation';
-import {TournamentPushAction} from '../../store/actions/tournaments-actions';
-
 
 import * as moment from 'moment';
 import {Tournament} from '../../../../shared/model/tournament';
@@ -13,16 +9,16 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 
 @Component({
-  selector: 'tournament-new',
-  templateUrl: './tournament-new.component.html',
-  styleUrls: ['./tournament-new.component.css']
+  selector: 'tournament-form',
+  templateUrl: './tournament-form.component.html',
+  styleUrls: ['./tournament-form.component.css']
 })
-export class TournamentNewComponent implements OnInit {
+export class TournamentFormComponent implements OnInit {
+
+  @Input() tournament: Tournament;
+  @Output() onSaveTournament = new EventEmitter<Tournament>();
 
   tournamentForm: FormGroup;
-
-  creatorId: string;
-
   dateFormat = 'dd, M/D/YY HH:mm';
 
   validationMessages = {
@@ -48,43 +44,38 @@ export class TournamentNewComponent implements OnInit {
     }
   };
 
-  constructor(
+  constructor(protected fb: FormBuilder,
+              protected snackBar: MdSnackBar) {
 
-    protected fb: FormBuilder,
-    protected store: Store<ApplicationState>,
-    protected snackBar: MdSnackBar) {
+  }
 
-    this.store.select(state => state.authenticationStoreState.currentUserId)
-      .subscribe(currentUserId => this.creatorId = currentUserId);
+  ngOnInit() {
+    this.initForm();
+    this.handleError();
+    this.listenOnTeamTournamentCheckbox();
+  }
 
+  initForm() {
     const initialBeginDate = moment().weekday(6).hours(10).minutes(0).add(1, 'week').format(this.dateFormat);
     const initialEndDate = moment().weekday(6).hours(20).minutes(0).add(1, 'week').format(this.dateFormat);
 
 
     this.tournamentForm = this.fb.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
-      location: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
-      beginDate: [initialBeginDate, Validators.required],
-      endDate: [initialEndDate, Validators.required],
-      teamTournament: [''],
-      teamSize: [''],
-      maxParticipants: ['', Validators.compose([Validators.required, CustomValidators.min(2), CustomValidators.max(9999)])]
+      name: [this.tournament.name,
+        Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
+      location: [this.tournament.location,
+        Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
+      beginDate: [this.tournament.beginDate ?
+                  moment(this.tournament.beginDate).format(this.dateFormat) :
+                  initialBeginDate, Validators.required],
+      endDate: [this.tournament.endDate ?
+                moment(this.tournament.endDate).format(this.dateFormat) :
+                initialEndDate, Validators.required],
+      teamTournament: [this.tournament.teamSize > 0],
+      teamSize: [this.tournament.teamSize],
+      maxParticipants: [this.tournament.maxParticipants,
+        Validators.compose([Validators.required, CustomValidators.min(2), CustomValidators.max(9999)])]
     });
-  }
-
-  ngOnInit() {
-
-
-    this.initForm();
-
-    this.handleError();
-
-    this.listenOnTeamTournamentCheckbox();
-
-  }
-
-  initForm() {
-
 
 
   }
@@ -108,6 +99,7 @@ export class TournamentNewComponent implements OnInit {
       } else {
         this.tournamentForm.get('teamSize').clearValidators();
         this.tournamentForm.get('teamSize').updateValueAndValidity();
+        this.tournamentForm.get('teamSize').setValue(0);
       }
     });
   }
@@ -204,6 +196,7 @@ export class TournamentNewComponent implements OnInit {
     const formModel = this.tournamentForm.value;
 
     return  {
+      id: this.tournament.id ? this.tournament.id : '',
       name: formModel.name as string,
       location: formModel.location as string,
       beginDate: formModel.beginDate as string,
@@ -213,17 +206,14 @@ export class TournamentNewComponent implements OnInit {
       maxParticipants: formModel.maxParticipants as number,
       actualParticipants: 0,
       teamSize: formModel.teamSize as number,
-      creatorUid: this.creatorId
+      creatorUid: this.tournament.creatorUid,
+      finished: false,
+      uploaded: false
     };
   }
 
-
-  onSaveTournament() {
+  saveTournament() {
     const tournament = this.prepareSaveTournament();
-
-    this.store.dispatch(new TournamentPushAction(tournament));
-
+    this.onSaveTournament.emit(tournament);
   }
-
-
 }

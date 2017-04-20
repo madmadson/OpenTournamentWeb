@@ -280,3 +280,13 @@ export class PublishRoundAction implements Action {
   constructor(public payload: PublishRound) {
   }
 }
+
+export const END_TOURNAMENT_ACTION = 'END_TOURNAMENT_ACTION';
+
+export class EndTournamentAction implements Action {
+
+  readonly type = 'END_TOURNAMENT_ACTION';
+
+  constructor(public payload: PairingConfiguration) {
+  }
+}

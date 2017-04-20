@@ -6,7 +6,6 @@ import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {HomePageComponent} from './home-page/home-page.component';
 import {PageNotFoundComponent} from './not-found.component';
 import {MyTournamentsComponent} from './tournament/my-tournaments/my-tournaments.component';
-import {TournamentNewComponent} from './tournament/tournament-new/tournament-new.component';
 import {AuthGuard} from './service/auth-guard.service';
 import {TournamentRegistrationFormComponent} from './tournament/tournament-registration-form/tournament-registration-form.component';
 import {PlayerListOverviewComponent} from './player/player-list-overview/player-list-overview.component';
@@ -25,7 +24,6 @@ const routes: Routes = [
   {path: 'players', component: PlayerListOverviewComponent},
   {path: 'my-tournaments', component: MyTournamentsComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'tournament/:id', component: TournamentOverviewComponent},
-  {path: 'tournament-new', component: TournamentNewComponent},
   {path: 'player-profile', component: PlayerFormComponent},
   {path: 'tournament/:id/register', component: TournamentRegistrationFormComponent},
   {path: 'game', component: GameEditComponent},

@@ -1,11 +1,17 @@
 
 <div class="action-card-container">
-  <md-card class="action-card"  *ngIf="currentUserId === actualTournament?.creatorUid; else nonAdmin">
-    <button type="button" color="accent" md-raised-button>
+  <md-card
+    *ngIf="(actualTournament?.actualRound === 0 &&
+            currentUserId === actualTournament?.creatorUid); else nonAdmin"
+    class="action-card">
+    <button  (click)="openTournamentFormDialog()"
+             type="button"
+             color="accent"
+             md-raised-button>
       <md-icon>build</md-icon>
       Edit
     </button>
-    <button *ngIf="actualTournament?.actualRound === 0"
+    <button *ngIf="allActualTournamentPlayers?.length > 1"
             (click)="openStartTournamentDialog()"
             type="button"
             color="accent"
@@ -67,7 +73,7 @@
   </md-card>
 
 <div class="content-cards-container">
-  <md-card class="registration-card">
+  <md-card class="registration-list-card">
     <h4 *ngIf="allRegistrations.length == 0" class="heading">
       No Registrations found
     </h4>
@@ -86,7 +92,8 @@
       </tournament-registration-list>
     </mdl-list>
   </md-card>
-  <md-card *ngIf="currentUserId === actualTournament?.creatorUid" class="tournament-player-card">
+  <md-card *ngIf="currentUserId === actualTournament?.creatorUid"
+           class="tournament-list-card">
     <h4 *ngIf="allActualTournamentPlayers.length > 0" class="heading">
       Tournament Players ({{filteredActualTournamentPlayers.length}}/{{allActualTournamentPlayers.length}})
     </h4>

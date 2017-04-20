@@ -8,9 +8,9 @@
   <md-icon>warning</md-icon>
   I know what I do
 </button>
-<h4>All data is lost due to this action. There is no way back!</h4>
+<h4 class="warning-text">All data is lost due to this action. There is no way back!</h4>
 
-<button (click)="pairRoundAgain()"
+<button (click)="killIt()"
         class="full-width big-button negative-background"
         type="button"
         [disabled]="!enableKill"

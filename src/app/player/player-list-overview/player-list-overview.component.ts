@@ -5,6 +5,7 @@ import {PlayersSubscribeAction, PlayersUnsubscribeAction} from '../../store/acti
 
 import * as _ from 'lodash';
 import {Player} from '../../../../shared/model/player';
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'player-list-overview',
@@ -13,25 +14,25 @@ import {Player} from '../../../../shared/model/player';
 })
 export class PlayerListOverviewComponent implements OnInit, OnDestroy {
 
-  allPlayers: Player[];
+  orderedPlayers: Player[];
   filteredPlayers: Player[];
 
   constructor(private store: Store<ApplicationState>) {
-
+    this.store.dispatch(new PlayersSubscribeAction());
   }
 
   ngOnInit() {
 
-    this.store.select(state => state.players.players).subscribe(players => {
-      this.allPlayers = players;
-      this.filteredPlayers = players;
+    this.store.select(state => state.players.players).map(players => {
+      return _.orderBy(players, ['elo', 'nickname'], ['desc', 'asc']);
+    }).subscribe(orderedPlayers => {
+      this.orderedPlayers = orderedPlayers;
+      this.filteredPlayers = orderedPlayers;
     });
-    this.store.dispatch(new PlayersSubscribeAction());
+
   }
 
   ngOnDestroy(): void {
-
-
     this.store.dispatch(new PlayersUnsubscribeAction());
   }
 
@@ -40,10 +41,10 @@ export class PlayerListOverviewComponent implements OnInit, OnDestroy {
     console.log('searchString: ' + searchString);
 
     if (searchString === '') {
-      this.filteredPlayers = this.allPlayers;
+      this.filteredPlayers = this.orderedPlayers;
     }
 
-    this.filteredPlayers = _.filter(this.allPlayers, function (player) {
+    this.filteredPlayers = _.filter(this.orderedPlayers, function (player) {
       return player.firstName.startsWith(searchString) ||
         player.nickName.startsWith(searchString) ||
         player.lastName.startsWith(searchString);

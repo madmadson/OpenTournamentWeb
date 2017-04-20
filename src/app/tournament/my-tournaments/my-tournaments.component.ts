@@ -3,11 +3,13 @@ import {Observable} from 'rxjs/Observable';
 import {TournamentListVM} from '../tournamentList.vm';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../../store/application-state';
-import {Router} from '@angular/router';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
-
+import {TournamentFormDialogComponent} from '../../dialogs/tournament-form-dialog';
+import {MdDialog} from '@angular/material';
+import {Tournament} from '../../../../shared/model/tournament';
+import {TournamentPushAction} from "../../store/actions/tournaments-actions";
 
 @Component({
   selector: 'my-tournaments',
@@ -18,7 +20,13 @@ export class MyTournamentsComponent {
   groupedTournaments$: Observable<TournamentListVM[]>;
   allTournaments$: Observable<any[]>;
 
-  constructor(private store: Store<ApplicationState>, private router: Router) {
+  creatorId: string;
+
+  constructor(private store: Store<ApplicationState>,
+              public dialog: MdDialog) {
+
+    this.store.select(state => state.authenticationStoreState.currentUserId)
+      .subscribe(currentUserId => this.creatorId = currentUserId);
 
     this.allTournaments$ = store.select(state => {
       return _.filter(state.tournaments.tournaments, function (tournament) {
@@ -45,7 +53,23 @@ export class MyTournamentsComponent {
 
   }
 
-  createTournament(): void {
-    this.router.navigate(['/tournament-new']);
+  openCreateTournamentDialog(): void {
+    const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
+      data: {
+        tournament: new Tournament('', '', '', '', 0, 0, 0, 0, 0, this.creatorId, false, false)
+      }
+    });
+
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
+      if (tournament) {
+        this.store.dispatch(new TournamentPushAction(tournament));
+      }
+      dialogRef.close();
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+    });
   }
 }

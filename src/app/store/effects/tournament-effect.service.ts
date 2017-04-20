@@ -9,13 +9,18 @@ import {
   TOURNAMENT_SUBSCRIBE_ACTION,
   TOURNAMENT_UNSUBSCRIBE_ACTION, TOURNAMENT_PAIR_AGAIN_ACTION,
   GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION, ADD_DUMMY_PLAYER_ACTION, PUBLISH_ROUND_ACTION,
-  TOURNAMENT_KILL_ROUND_ACTION
+  TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
 
 
 @Injectable()
 export class TournamentEffectService {
+
+  @Effect({dispatch: false}) endTournament = this.actions$
+    .ofType(END_TOURNAMENT_ACTION)
+    .debug('END_TOURNAMENT_ACTION')
+    .map(action => this.tournamentService.endTournament(action.payload));
 
   @Effect({dispatch: false}) pairNewRound = this.actions$
     .ofType(TOURNAMENT_NEW_ROUND_ACTION)

@@ -1,13 +1,18 @@
-<h3>Pair Round {{data.round}} again</h3>
+<h3>Pair New Round</h3>
 
-<button (click)="pairRoundAgain()"
+<button (click)="pairNewRound()"
         class="full-width big-button"
         type="button"
         color="accent"
         md-raised-button>
   <md-icon>redo</md-icon>
-  Pair again
+  Pair New Round
 </button>
+
+<h4 class="warning-text" *ngIf="(round + 1) > suggestedRoundToPlay">
+  You are going to pair more Rounds than suggested!
+  There is no guarantee for successful pairing.
+</h4>
 <div md-dialog-actions>
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
 </div>

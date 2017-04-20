@@ -71,4 +71,14 @@ export class TournamentPushAction implements Action {
   }
 }
 
+export const TOURNAMENT_SET_ACTION = 'TOURNAMENT_SET_ACTION';
+
+export class TournamentSetAction implements Action {
+
+  readonly type = 'TOURNAMENT_SET_ACTION';
+
+  constructor(public payload: Tournament) {
+  }
+}
+
 

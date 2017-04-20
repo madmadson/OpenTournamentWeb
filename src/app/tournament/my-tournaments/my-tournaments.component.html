@@ -1,7 +1,9 @@
 <h1 class="heading">My organized Tournaments ({{(allTournaments$| async) ?.length}})</h1>
 
-<md-card class="tournament-list-card">
-  <button md-fab class="create-action" (click)="createTournament()"><md-icon>add</md-icon></button>
+<md-card class="single-list-card">
+  <button md-fab class="create-action" (click)="openCreateTournamentDialog()">
+    <md-icon>add</md-icon>
+  </button>
 
   <span *ngIf="(groupedTournaments$ | async).length == 0">No Tournaments found</span>
   <mdl-list class="tournament-list" *ngFor="let groupedTournaments of groupedTournaments$ | async">

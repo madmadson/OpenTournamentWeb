@@ -1,19 +1,21 @@
-<h1 class="heading">Online Players ({{filteredPlayers.length}}/{{allPlayers.length}})</h1>
+<h1 class="heading">Online Players ({{filteredPlayers.length}}/{{orderedPlayers?.length}})</h1>
 
-<md-card>
-  <md-input-container>
-    <input class="full-width"
-           type="text"
-           mdInput
-           placeholder="Filter Player"
-           #seachInput
-           (keyup)="search(seachInput.value)">
-  </md-input-container>
-</md-card>
+<div class="action-card-container">
+  <md-card>
+    <md-input-container>
+      <input class="full-width"
+             type="text"
+             mdInput
+             placeholder="Filter Player"
+             #seachInput
+             (keyup)="search(seachInput.value)">
+    </md-input-container>
+  </md-card>
+</div>
 
-<md-card>
-  <span *ngIf="filteredPlayers.length == 0">No Players found</span>
-  <md-list>
+<md-card class="single-list-card">
+  <span *ngIf="filteredPlayers?.length == 0">No Players found</span>
+  <mdl-list>
     <player-list [players]="filteredPlayers"></player-list>
-  </md-list>
+  </mdl-list>
 </md-card>

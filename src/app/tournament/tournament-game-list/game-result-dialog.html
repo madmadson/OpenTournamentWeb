@@ -58,7 +58,7 @@
             (click)="increasePlayerOneVP()">
             add_circle_outline</md-icon>
         </div>
-        <md-select
+        <md-select *ngIf="(playerTwoArmyLists$ | async).length > 0; else noArmyList"
           class="full-width"
           placeholder="PlayerOne ArmyList"
           #playerOneArmyList

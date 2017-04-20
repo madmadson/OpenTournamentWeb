@@ -13,11 +13,11 @@ import {ActivatedRoute} from '@angular/router';
 import * as _ from 'lodash';
 
 import {
-  TournamentPlayerPushAction,  TournamentSubscribeAction,
+  TournamentPlayerPushAction, TournamentSubscribeAction,
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
   ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
-  RegistrationAcceptAction
+  RegistrationAcceptAction, EndTournamentAction
 } from '../../store/actions/tournament-actions';
 
 
@@ -25,6 +25,9 @@ import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration
 import {AuthenticationStoreState} from 'app/store/authentication-state';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
+import {
+  TournamentSetAction
+} from '../../store/actions/tournaments-actions';
 
 @Component({
   selector: 'tournament-overview',
@@ -108,8 +111,12 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   handleStartTournament(config: PairingConfiguration ) {
     this.store.dispatch(new TournamentNewRoundAction(config));
     setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
-
   }
+
+  handleEditTournament(tournament: Tournament ) {
+    this.store.dispatch(new TournamentSetAction(tournament));
+  }
+
   handleAddDummyPlayer() {
     this.store.dispatch(new AddDummyPlayerAction(this.actualTournament.id));
   }
@@ -143,6 +150,9 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new RegistrationEraseAction(
       {tournament: this.actualTournament, registration: registration}));
   }
+  handleEndTournament(config: PairingConfiguration) {
+    this.store.dispatch(new EndTournamentAction(config));
+  }
 
   handlePairAgain(config: PairingConfiguration ) {
     this.store.dispatch(new TournamentPairAgainAction(config));
@@ -164,6 +174,5 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
   handleKillRound(config: PairingConfiguration) {
     this.store.dispatch(new TournamentKillRoundAction(config));
-    setTimeout(() =>  this.selectedIndex = (this.selectedIndex - 1), 500);
   }
 }

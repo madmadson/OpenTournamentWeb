@@ -17,6 +17,7 @@ import {Tournament} from '../../../../shared/model/tournament';
 import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration';
 import {AuthenticationStoreState} from '../../store/authentication-state';
 import {getAllFactions} from '../../../../shared/model/factions';
+import {TournamentFormDialogComponent} from "../../dialogs/tournament-form-dialog";
 
 
 @Component({
@@ -34,6 +35,7 @@ export class TournamentPreparationComponent implements OnInit {
 
   @Output() onStartTournament = new EventEmitter<PairingConfiguration>();
   @Output() onAddDummyPlayer = new EventEmitter();
+  @Output() onSaveTournament = new EventEmitter<Tournament>();
 
   @Output() onAddTournamentPlayer = new EventEmitter<TournamentPlayer>();
   @Output() onAcceptRegistration = new EventEmitter<Registration>();
@@ -53,10 +55,10 @@ export class TournamentPreparationComponent implements OnInit {
   loggedIn: boolean;
   currentUserId: string;
 
+  suggestedRoundsToPlay: number;
+
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar) {
-
-
   }
 
   ngOnInit() {
@@ -81,6 +83,7 @@ export class TournamentPreparationComponent implements OnInit {
     });
     this.allActualTournamentPlayers$.subscribe(players => {
       this.allActualTournamentPlayers = players;
+
       this.filteredActualTournamentPlayers = players;
     });
   }
@@ -158,7 +161,24 @@ export class TournamentPreparationComponent implements OnInit {
     }
 
   }
+  openTournamentFormDialog() {
 
+    const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
+      data: {
+        tournament: this.actualTournament
+      }
+    });
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
+      if (tournament) {
+        this.onSaveTournament.emit(tournament);
+      }
+      dialogRef.close();
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+    });
+  }
 
   openRegistrationDialog() {
     const dialogRef = this.dialog.open(RegisterDialogComponent, {
@@ -350,14 +370,20 @@ export class AddArmyListsDialogComponent {
 })
 export class StartTournamentDialogComponent {
 
-  allActualTournamentPlayers$: Observable<TournamentPlayer[]>;
+  allActualTournamentPlayers: TournamentPlayer[];
+  suggestedRoundsToPlay: number;
 
   @Output() onStartTournament = new EventEmitter<PairingConfiguration>();
   @Output() onAddDummyPlayer = new EventEmitter();
 
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
-    this.allActualTournamentPlayers$ = data.allActualTournamentPlayers$;
+     data.allActualTournamentPlayers$.subscribe(players => {
+        this.allActualTournamentPlayers = players;
+       this.suggestedRoundsToPlay = Math.round(Math.log2(players.length));
+     });
+
+
   }
 
   startTournament() {

@@ -15,17 +15,12 @@ import {Tournament} from '../../../../shared/model/tournament';
 })
 export class TournamentRegistrationFormComponent implements OnInit {
 
-  @Input()
-  actualTournament: Tournament;
-
-  @Input()
-  userPlayerData: Player;
+  @Input() actualTournament: Tournament;
+  @Input() userPlayerData: Player;
 
   @Output() onSaveRegistration = new EventEmitter<Registration>();
 
-
   tournamentRegistrationForm: FormGroup;
-
   factions: string[];
 
   constructor(private formBuilder: FormBuilder) {

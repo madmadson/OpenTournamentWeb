@@ -34,6 +34,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
   @Output() onKillRound = new EventEmitter<PairingConfiguration>();
   @Output() onGameResult = new EventEmitter<GameResult>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
+  @Output() onEndTournament = new EventEmitter<PairingConfiguration>();
 
   userPlayerData: Player;
   currentUserId: string;
@@ -118,17 +119,31 @@ export class TournamentRoundOverviewComponent implements OnInit {
   openNewRoundDialog() {
     const dialogRef = this.dialog.open(NewRoundDialogComponent, {
       data: {
-        round: this.round
+        round: this.round,
+        allPlayers$: this.rankingsForRound$
       },
     });
     const eventSubscribe = dialogRef.componentInstance.onNewRound
-      .subscribe((config: PairingConfiguration) => {
+      .subscribe(() => {
+          this.onNewRound.emit(
+            {tournamentId: this.actualTournament.id, round: this.round + 1}
+          );
+      });
+    dialogRef.afterClosed().subscribe(() => {
 
-        if (config !== undefined) {
-          config.tournamentId = this.actualTournament.id;
-          config.round = this.round + 1;
-          this.onNewRound.emit(config);
-        }
+      eventSubscribe.unsubscribe();
+    });
+  }
+  openFinishTournamentDialog() {
+    const dialogRef = this.dialog.open(FinishTournamentDialogComponent, {
+      data: {
+        round: this.round,
+        allPlayers$: this.rankingsForRound$
+      },
+    });
+    const eventSubscribe = dialogRef.componentInstance.onEndTournament
+      .subscribe(() => {
+        this.onEndTournament.emit({tournamentId: this.actualTournament.id, round: this.round});
       });
     dialogRef.afterClosed().subscribe(() => {
 
@@ -162,23 +177,23 @@ export class PairAgainDialogComponent {
 })
 export class NewRoundDialogComponent {
 
-  @Output() onNewRound = new EventEmitter<PairingConfiguration>();
+  suggestedRoundToPlay: number;
+  round: number;
 
-  killButtonDisabled: boolean;
+  @Output() onNewRound = new EventEmitter();
 
   constructor(public dialogRef: MdDialogRef<NewRoundDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
 
-    this.killButtonDisabled = true;
+    this.round = data.round;
+    data.allPlayers$.subscribe(allPlayers => {
+      this.suggestedRoundToPlay = Math.round(Math.log2(allPlayers.length));
+    });
   }
 
-  enableKillButton() {
-    this.killButtonDisabled = false;
-  }
+  pairNewRound() {
 
-  pairRoundAgain() {
-
-    this.onNewRound.emit({tournamentId: '', round: 1});
+    this.onNewRound.emit();
     this.dialogRef.close();
   }
 }
@@ -195,9 +210,36 @@ export class KillRoundDialogComponent {
               @Inject(MD_DIALOG_DATA) public data: any) {
   }
 
-  pairRoundAgain() {
+  killIt() {
 
     this.onKillRound.emit({tournamentId: '', round: 1});
+    this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'finish-tournament-dialog',
+  templateUrl: './finish-tournament-dialog.html'
+})
+export class FinishTournamentDialogComponent {
+
+  suggestedRoundToPlay: number;
+  round: number;
+
+  @Output() onEndTournament = new EventEmitter();
+
+  constructor(public dialogRef: MdDialogRef<FinishTournamentDialogComponent>,
+              @Inject(MD_DIALOG_DATA) public data: any) {
+
+    this.round = data.round;
+    data.allPlayers$.subscribe(allPlayers => {
+      this.suggestedRoundToPlay = Math.round(Math.log2(allPlayers.length));
+    });
+  }
+
+  endTournament() {
+
+    this.onEndTournament.emit();
     this.dialogRef.close();
   }
 }

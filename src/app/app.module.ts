@@ -31,14 +31,15 @@ import {PageNotFoundComponent} from './not-found.component';
 import {AppRoutingModule} from './app-routing.module';
 
 import 'hammerjs';
-import {TournamentNewComponent} from './tournament/tournament-new/tournament-new.component';
+import {TournamentFormComponent} from './tournament/tournament-form/tournament-form.component';
 import {DateTimePickerModule} from 'ng2-date-time-picker';
 import {CustomFormsModule} from 'ng2-validation';
 import {AuthGuard} from './service/auth-guard.service';
 import {
   AddArmyListsDialogComponent, NewTournamentPlayerDialogComponent,
   RegisterDialogComponent, StartTournamentDialogComponent,
-  TournamentPreparationComponent
+  TournamentPreparationComponent,
+
 } from './tournament/tournament-preparation/tournament-preparation.component';
 import {TournamentRegistrationFormComponent} from './tournament/tournament-registration-form/tournament-registration-form.component';
 import {TournamentEffectService} from './store/effects/tournament-effect.service';
@@ -75,7 +76,7 @@ import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/to
 import {
   PairAgainDialogComponent,
   TournamentRoundOverviewComponent,
-  KillRoundDialogComponent, NewRoundDialogComponent,
+  KillRoundDialogComponent, NewRoundDialogComponent, FinishTournamentDialogComponent,
 } from './tournament/tournament-round-overview/tournament-round-overview.component';
 import { TournamentGameListComponent, GameResultDialogComponent } from './tournament/tournament-game-list/tournament-game-list.component';
 import { TournamentRankingListComponent } from './tournament/tournament-ranking-list/tournament-ranking-list.component';
@@ -83,6 +84,7 @@ import {MdlModule} from 'angular2-mdl';
 import {RankingEffectService} from './store/effects/ranking-effect.service';
 import {TournamentGameEffectService} from './store/effects/tournament-game-effect.service';
 import {TruncatePipe} from '../pipes/truncate-pise';
+import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
 
 
 const reducers = {
@@ -166,7 +168,7 @@ export const firebaseConfDev = {
     TournamentListOverviewComponent,
     MyTournamentsComponent,
     PageNotFoundComponent,
-    TournamentNewComponent,
+    TournamentFormComponent,
     TournamentPreparationComponent,
     TournamentRegistrationFormComponent,
     PlayerListOverviewComponent,
@@ -189,6 +191,8 @@ export const firebaseConfDev = {
     GameResultDialogComponent,
     KillRoundDialogComponent,
     NewRoundDialogComponent,
+    TournamentFormDialogComponent,
+    FinishTournamentDialogComponent,
   ],
   providers: [
     LoginService,
@@ -208,6 +212,8 @@ export const firebaseConfDev = {
     GameResultDialogComponent,
     KillRoundDialogComponent,
     NewRoundDialogComponent,
+    TournamentFormDialogComponent,
+    FinishTournamentDialogComponent,
   ],
   bootstrap: [AppComponent]
 })

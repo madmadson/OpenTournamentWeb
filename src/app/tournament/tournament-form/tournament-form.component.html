@@ -1,7 +1,6 @@
-<h2 class="heading">New Tournament</h2>
+
 <md-card class="new-tournament-card">
   <form [formGroup]="tournamentForm"  novalidate>
-
     <div class="form-group">
       <md-input-container
         dividerColor="{{ (tournamentForm.get('name').invalid && tournamentForm.get('name').dirty) ? 'warn' : 'primary' }}"
@@ -96,10 +95,11 @@
       </md-hint>
     </md-input-container>
     <div class="form-button full-width">
-      <button  type="button" md-raised-button class="full-width-button"
-              (click)="onSaveTournament()"
-               color="primary"
-              [disabled]="tournamentForm.invalid">Save
+      <button  type="button" md-raised-button class="full-width-button big-button"
+              (click)="saveTournament()"
+               color="accent"
+              [disabled]="tournamentForm.invalid">
+        Save Tournament
       </button>
     </div>
   </form>

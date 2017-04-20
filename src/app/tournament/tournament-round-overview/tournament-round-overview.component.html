@@ -6,16 +6,32 @@
             type="button"
             color="accent"
             md-raised-button>
-      <md-icon>redo</md-icon>
+      <md-icon>undo</md-icon>
       Pair Again
     </button>
     <button *ngIf="allGamesFinished"
             (click)="openNewRoundDialog()"
             type="button"
-            color="accent"
+            class="positive-background"
             md-raised-button>
       <md-icon>play_arrow</md-icon>
       New Round
+    </button>
+    <button *ngIf="allGamesFinished"
+            (click)="openFinishTournamentDialog()"
+            type="button"
+            class="positive-background"
+            md-raised-button>
+      <md-icon>flag</md-icon>
+      End Tournament
+    </button>
+    <button *ngIf="round === (actualTournament.visibleRound - 1)"
+            (click)="publishRound()"
+            type="button"
+            class="positive-background"
+            md-raised-button>
+      <md-icon>cloud_upload</md-icon>
+      Publish Round
     </button>
     <button *ngIf="round === actualTournament.actualRound"
             (click)="openKillRoundDialog()"
@@ -23,15 +39,7 @@
             class="negative-background"
             md-raised-button>
       <md-icon>warning</md-icon>
-     Kill Round
-    </button>
-    <button *ngIf="round !== actualTournament.visibleRound"
-            (click)="publishRound()"
-            type="button"
-            color="accent"
-            md-raised-button>
-      <md-icon>cloud_upload</md-icon>
-      Publish Round
+      Kill Round
     </button>
   </md-card>
 </div>

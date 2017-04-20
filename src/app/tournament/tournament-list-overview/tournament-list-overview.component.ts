@@ -15,8 +15,8 @@ import {Tournament} from '../../../../shared/model/tournament';
 })
 export class TournamentListOverviewComponent  {
 
-    groupedTournaments$: Observable<TournamentListVM[]>;
-    allTournaments$: Observable<Tournament[]>;
+  groupedTournaments$: Observable<TournamentListVM[]>;
+  allTournaments$: Observable<Tournament[]>;
 
   constructor(private store: Store<ApplicationState>) {
 

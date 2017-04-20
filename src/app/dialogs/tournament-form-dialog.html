@@ -1,0 +1,9 @@
+<h3 class="heading">Edit Tournament</h3>
+
+<tournament-form
+  [tournament]="tournament"
+  (onSaveTournament)="handleSaveTournament($event)"></tournament-form>
+
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

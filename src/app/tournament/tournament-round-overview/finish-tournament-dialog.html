@@ -1,0 +1,21 @@
+<h2>Finished Tournament</h2>
+
+<button (click)="endTournament()"
+        class="full-width big-button"
+        type="button"
+        color="accent"
+        md-raised-button>
+  <md-icon>flag</md-icon>
+  End Tournament
+</button>
+<h3 class="info-text" >
+  After finishing Tournament you can redo this action.
+  Only after calculate new ELO (finishTournament) this Tournament will be read-only.
+</h3>
+
+<h4 class="info-text" *ngIf="(round ) < suggestedRoundToPlay">
+  You are going to end Tournament with less Rounds then suggested.
+</h4>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

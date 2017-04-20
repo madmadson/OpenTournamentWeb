@@ -22,10 +22,10 @@
     <span>{{tournament.name}}</span>
     <mdl-list-item-text-body>
       <div *ngIf="(tournament.beginDate | date:'MM/d/yy') === (tournament.endDate | date:'MM/d/yy')">
-        {{tournament.beginDate | date:'MM/d/yy HH:mm'}}-{{tournament.endDate | date:'HH:mm'}}
+        {{tournament.beginDate | date:'MM/d/yy HH:mm'}} - {{tournament.endDate | date:'HH:mm'}}
       </div>
       <div *ngIf="(tournament.beginDate | date:'MM/d/yy') !== (tournament.endDate | date:'MM/d/yy')">
-        {{tournament.beginDate | date:'MM/d/yy HH:mm'}}-{{tournament.endDate | date:'MM/d/yy HH:mm'}}
+        {{tournament.beginDate | date:'MM/d/yy HH:mm'}} - {{tournament.endDate | date:'MM/d/yy HH:mm'}}
       </div>
       <div>{{tournament.location}}</div>
     </mdl-list-item-text-body>
