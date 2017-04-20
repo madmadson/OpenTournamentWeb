@@ -65,15 +65,16 @@ import {TournamentArmyListReducer} from './store/reducers/tournamentArmyListRedu
 import {TournamentGameService} from './service/tournament-game.service';
 import {TournamentGameReducer} from './store/reducers/tournamentGameReducer';
 import {
-  MdButtonModule, MdCard, MdCardModule, MdCheckboxModule, MdDialogModule, MdIcon, MdIconModule, MdInputModule, MdSelect,
-  MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbar, MdToolbarModule, MdListModule
+  MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule,  MdIconModule, MdInputModule,
+  MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdListModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
 
 import {
   PairAgainDialogComponent,
-  TournamentRoundOverviewComponent
+  TournamentRoundOverviewComponent,
+  KillRoundDialogComponent, NewRoundDialogComponent,
 } from './tournament/tournament-round-overview/tournament-round-overview.component';
 import { TournamentGameListComponent, GameResultDialogComponent } from './tournament/tournament-game-list/tournament-game-list.component';
 import { TournamentRankingListComponent } from './tournament/tournament-ranking-list/tournament-ranking-list.component';
@@ -184,7 +185,9 @@ export const firebaseConfDev = {
     TournamentRankingListComponent,
     TruncatePipe,
     PairAgainDialogComponent,
-    GameResultDialogComponent
+    GameResultDialogComponent,
+    KillRoundDialogComponent,
+    NewRoundDialogComponent,
   ],
   providers: [
     LoginService,
@@ -202,6 +205,8 @@ export const firebaseConfDev = {
     StartTournamentDialogComponent,
     PairAgainDialogComponent,
     GameResultDialogComponent,
+    KillRoundDialogComponent,
+    NewRoundDialogComponent,
   ],
   bootstrap: [AppComponent]
 })

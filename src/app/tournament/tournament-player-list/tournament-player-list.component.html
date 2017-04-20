@@ -1,18 +1,28 @@
-<md-list-item
-  *ngFor="let tournamentPlayer of tournamentPlayers; let i = index; let even = even;"
-  [ngClass]="isItMe(tournamentPlayer.playerId)"
-  [ngClass]="{ even: even}">
-  <h4 md-list-avatar>{{i+1}}</h4>
-  <md-icon md-list-avatar *ngIf="!tournamentPlayer.playerId">cloud_off</md-icon>
-  <h4 md-line >{{tournamentPlayer.playerName}}</h4>
-  <p  md-line >
-    {{tournamentPlayer.faction}}</p>
-  <p  md-line >
-    {{tournamentPlayer.teamName}} - {{tournamentPlayer.meta}} - {{tournamentPlayer.origin}}</p>
+<mdl-list-item lines="3"
+               class="list-item"
+               *ngFor="let tournamentPlayer of tournamentPlayers; let i = index; let even = even;"
+               [ngClass]="{'even': even, 'my-item':isItMe(tournamentPlayer.playerId)} ">
 
-  <span class="md-secondary-spacer"></span>
+  <mdl-list-item-primary-content>
+    <mdl-icon mdl-list-item-avatar mdl-badge="{{i +1}}" mdl-badge-overlap>person</mdl-icon>
+    <span>{{tournamentPlayer.playerName}}</span>
 
-  <img *ngIf="tournamentPlayer.playerId" class="md-secondary" src="../../../assets/my_crown_small.png">
-  <span class="md-secondary">{{tournamentPlayer.elo}}</span>
-  <md-icon *ngIf="isAdmin" (click)="deleteTournamentPlayer(tournamentPlayer)" class="md-secondary list-action negative">delete</md-icon>
-</md-list-item>
+    <mdl-list-item-text-body>
+      <div>{{tournamentPlayer.faction}}</div>
+      <div>{{tournamentPlayer.teamName}} - {{tournamentPlayer.meta}} - {{tournamentPlayer.origin}}</div>
+    </mdl-list-item-text-body>
+  </mdl-list-item-primary-content>
+  <mdl-list-item-secondary-content *ngIf="!tournamentPlayer.playerId">
+    <md-icon>cloud_off</md-icon>
+  </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="tournamentPlayer.elo">
+    <mdl-list-item-secondary-info>ELO</mdl-list-item-secondary-info>
+    <span>{{tournamentPlayer.elo}}<img class="md-secondary" src="../../../assets/my_crown_small.png"></span>
+  </mdl-list-item-secondary-content>
+
+  <mdl-list-item-secondary-content *ngIf="isAdmin  && actualTournament.actualRound === 0">
+    <md-icon class="negative  list-action" (click)="deleteTournamentPlayer(tournamentPlayer)">delete</md-icon>
+  </mdl-list-item-secondary-content>
+
+</mdl-list-item>
+

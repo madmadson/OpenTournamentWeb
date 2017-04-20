@@ -61,16 +61,6 @@ export class TournamentDeletedAction implements Action {
   }
 }
 
-export const TOURNAMENT_LOAD_ACTION = 'TOURNAMENT_LOAD_ACTION';
-
-export class TournamentLoadAction implements Action {
-
-  readonly type = 'TOURNAMENT_LOAD_ACTION';
-
-  constructor(public payload: string) {
-  }
-}
-
 export const TOURNAMENT_PUSH_ACTION = 'TOURNAMENT_PUSH_ACTION';
 
 export class TournamentPushAction implements Action {

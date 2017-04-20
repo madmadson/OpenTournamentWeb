@@ -1,12 +1,27 @@
-<h1>Start Tournament</h1>
-
-<button (click)="startTournament()"
-        type="button"
-        color="accent"
-        md-raised-button>
-  <md-icon>play_arrow</md-icon>
-  Start Tournament
-</button>
+<md-dialog-content>
+  <div *ngIf="(allActualTournamentPlayers$ |async).length % 2; else startButton">
+    <h2 class="warning">Uneven Tournament Players</h2>
+    <button (click)="addDummyPlayer()"
+            type="button"
+            color="accent"
+            class="full-width-button"
+            md-raised-button>
+      <md-icon>add</md-icon>
+      Add Dummy Player
+    </button>
+  </div>
+  <ng-template #startButton>
+    <h2>Start Tournament</h2>
+    <button (click)="startTournament()"
+            type="button"
+            color="accent"
+            class="full-width-button"
+            md-raised-button>
+      <md-icon>play_arrow</md-icon>
+      Start Tournament
+    </button>
+  </ng-template>
+</md-dialog-content>
 <div md-dialog-actions>
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
 </div>

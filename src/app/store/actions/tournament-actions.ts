@@ -5,6 +5,8 @@ import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
 import {TournamentGame} from "../../../../shared/model/tournament-game";
+import {GameResult} from "../../../../shared/model/game-result";
+import {PublishRound} from "../../../../shared/model/publish-round";
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -218,16 +220,6 @@ export class ClearArmyListsAction implements Action {
   }
 }
 
-export const START_TOURNAMENT_ACTION = 'START_TOURNAMENT_ACTION';
-
-export class TournamentStartAction implements Action {
-
-  readonly type = 'START_TOURNAMENT_ACTION';
-
-  constructor(public payload: PairingConfiguration) {
-  }
-}
-
 export const TOURNAMENT_PAIR_AGAIN_ACTION = 'TOURNAMENT_PAIR_AGAIN_ACTION';
 
 export class TournamentPairAgainAction implements Action {
@@ -248,12 +240,42 @@ export class TournamentNewRoundAction implements Action {
   }
 }
 
+export const TOURNAMENT_KILL_ROUND_ACTION = 'TOURNAMENT_KILL_ROUND_ACTION';
+
+export class TournamentKillRoundAction implements Action {
+
+  readonly type = 'TOURNAMENT_KILL_ROUND_ACTION';
+
+  constructor(public payload: PairingConfiguration) {
+  }
+}
+
+export const ADD_DUMMY_PLAYER_ACTION = 'ADD_DUMMY_PLAYER_ACTION';
+
+export class AddDummyPlayerAction implements Action {
+
+  readonly type = 'ADD_DUMMY_PLAYER_ACTION';
+
+  constructor(public payload: string) {
+  }
+}
+
 export const GAME_RESULT_ENTERED_ACTION = 'GAME_RESULT_ENTERED_ACTION';
 
 export class GameResultEnteredAction implements Action {
 
   readonly type = 'GAME_RESULT_ENTERED_ACTION';
 
-  constructor(public payload: TournamentGame) {
+  constructor(public payload: GameResult) {
+  }
+}
+
+export const PUBLISH_ROUND_ACTION = 'PUBLISH_ROUND_ACTION';
+
+export class PublishRoundAction implements Action {
+
+  readonly type = 'PUBLISH_ROUND_ACTION';
+
+  constructor(public payload: PublishRound) {
   }
 }

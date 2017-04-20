@@ -13,16 +13,17 @@ import {ActivatedRoute} from '@angular/router';
 import * as _ from 'lodash';
 
 import {
-  TournamentPlayerPushAction,
-  TournamentStartAction, RegistrationAcceptAction, TournamentSubscribeAction,
+  TournamentPlayerPushAction, RegistrationAcceptAction, TournamentSubscribeAction,
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
   ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
-  TournamentNewRoundAction
+  TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction
 } from '../../store/actions/tournament-actions';
 
 
 import {PairingConfiguration} from '../../../../shared/model/pairing-configuration';
 import {AuthenticationStoreState} from 'app/store/authentication-state';
+import {GameResult} from '../../../../shared/model/game-result';
+import {PublishRound} from "../../../../shared/model/publish-round";
 
 @Component({
   selector: 'tournament-overview',
@@ -31,6 +32,7 @@ import {AuthenticationStoreState} from 'app/store/authentication-state';
 })
 export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
+  currentUserId: string;
   actualTournament: Tournament;
   actualTournamentRegisteredPlayers$: Observable<Registration[]>;
   actualTournamentArmyList$: Observable<ArmyList[]>;
@@ -74,8 +76,11 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
         if (state.actualTournament.actualTournament) {
           this.selectedIndex = state.actualTournament.actualTournament.actualRound;
         }
-      });
 
+        if (state.authenticationStoreState) {
+          this.currentUserId =  state.authenticationStoreState.currentUserId;
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -100,9 +105,12 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleStartTournament(config: PairingConfiguration ) {
-    this.store.dispatch(new TournamentStartAction(config));
+    this.store.dispatch(new TournamentNewRoundAction(config));
     setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
 
+  }
+  handleAddDummyPlayer() {
+    this.store.dispatch(new AddDummyPlayerAction(this.actualTournament.id));
   }
 
   handleAddTournamentPlayer(tournamentPlayer: TournamentPlayer) {
@@ -139,12 +147,20 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleNewRound(config: PairingConfiguration ) {
-    console.log('new round');
     this.store.dispatch(new TournamentNewRoundAction(config));
+    setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
   }
 
-  handleGameResult(game: TournamentGame) {
+  handleGameResult(gameResult: GameResult) {
 
-     this.store.dispatch(new GameResultEnteredAction(game));
+     this.store.dispatch(new GameResultEnteredAction(gameResult));
+  }
+
+  handlePublishRound(round: PublishRound) {
+    this.store.dispatch(new PublishRoundAction(round));
+  }
+  handleKillRound(config: PairingConfiguration) {
+    this.store.dispatch(new TournamentKillRoundAction(config));
+    setTimeout(() =>  this.selectedIndex = (this.selectedIndex - 1), 500);
   }
 }

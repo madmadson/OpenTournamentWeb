@@ -15,7 +15,7 @@ import {Router} from '@angular/router';
 @Injectable()
 export class TournamentsService implements OnDestroy {
 
-  private query: firebase.database.Reference;
+  private tournamentsReference: firebase.database.Reference;
 
   constructor(protected afService: AngularFire,
               protected store: Store<ApplicationState>,
@@ -26,21 +26,21 @@ export class TournamentsService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.query.off();
+    this.tournamentsReference.off();
   }
 
 
   subscribeOnTournaments() {
 
-    if (!this.query) {
+    if (!this.tournamentsReference) {
       console.log('subscribe on tournaments');
       this.store.dispatch(new TournamentsClearAction());
 
       const that = this;
 
-      this.query = this.fb.database().ref('tournaments').orderByChild('beginDate');
+      this.tournamentsReference = this.fb.database().ref('tournaments').orderByChild('beginDate');
 
-      this.query.on('child_added', function(snapshot) {
+      this.tournamentsReference.on('child_added', function(snapshot) {
 
         const tournament: Tournament = Tournament.fromJson(snapshot.val());
         tournament.id = snapshot.key;
@@ -49,7 +49,7 @@ export class TournamentsService implements OnDestroy {
 
       });
 
-      this.query.on('child_changed', function(snapshot) {
+      this.tournamentsReference.on('child_changed', function(snapshot) {
 
         const tournament: Tournament = Tournament.fromJson(snapshot.val());
         tournament.id = snapshot.key;
@@ -57,7 +57,7 @@ export class TournamentsService implements OnDestroy {
         that.store.dispatch(new TournamentChangedAction(tournament));
         });
 
-      this.query.on('child_removed', function(snapshot) {
+      this.tournamentsReference.on('child_removed', function(snapshot) {
 
         that.store.dispatch(new TournamentDeletedAction(snapshot.key));
       });
@@ -67,13 +67,7 @@ export class TournamentsService implements OnDestroy {
 
   unsubscribeOnTournaments() {
 
-    this.query.off();
-  }
-
-  pushTournament(tournament: Tournament) {
-    const tournaments = this.afService.database.list('tournaments');
-
-    tournaments.push(tournament);
+    this.tournamentsReference.off();
   }
 
 
@@ -91,30 +85,3 @@ export class TournamentsService implements OnDestroy {
   }
 }
 
-// this.pushTournament({
-//   playerName: 'Tournament1',
-//   location: 'Karlsruhe',
-//   beginDate: moment('2017-03-12').format(),
-//   endDate: moment('2017-03-12').format(),
-//   actualRound: 0,
-//   maxParticipants: 16,
-//   teamSize: 1
-// });
-// this.pushTournament({
-//   playerName: 'Tournament2',
-//   location: 'Oberhausen',
-//   beginDate: moment('2017-03-17').format(),
-//   endDate: moment('2017-03-18').format(),
-//   actualRound: 1,
-//   maxParticipants: 64,
-//   teamSize: 3
-// });
-// this.pushTournament({
-//   playerName: 'Tournament3',
-//   location: 'Erfurt',
-//   beginDate: moment('2017-04-01').format(),
-//   endDate: moment('2017-04-01').format(),
-//   actualRound: 0,
-//   maxParticipants: 32,
-//   teamSize: 1
-// });

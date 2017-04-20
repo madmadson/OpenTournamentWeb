@@ -1,0 +1,23 @@
+<h3>Kill Round {{data.round}} with Fire!</h3>
+
+
+<button (click)="enableKill = true"
+        class="big-button negative-background"
+        type="button"
+        md-raised-button>
+  <md-icon>warning</md-icon>
+  I know what I do
+</button>
+<h4>All data is lost due to this action. There is no way back!</h4>
+
+<button (click)="pairRoundAgain()"
+        class="full-width big-button negative-background"
+        type="button"
+        [disabled]="!enableKill"
+        md-raised-button>
+  <md-icon>warning</md-icon>
+ Kill it with Fire!
+</button>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

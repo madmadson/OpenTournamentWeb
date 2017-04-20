@@ -4,6 +4,7 @@ import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {Player} from '../../../../shared/model/player';
 
 import * as _ from 'lodash';
+import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 
 @Component({
   selector: 'tournament-ranking-table',

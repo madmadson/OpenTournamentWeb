@@ -209,6 +209,7 @@ export class TournamentNewComponent implements OnInit {
       beginDate: formModel.beginDate as string,
       endDate: formModel.endDate as string,
       actualRound: 0,
+      visibleRound: 0,
       maxParticipants: formModel.maxParticipants as number,
       teamSize: formModel.teamSize as number,
       creatorUid: this.creatorId

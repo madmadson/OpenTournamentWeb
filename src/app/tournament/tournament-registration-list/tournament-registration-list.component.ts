@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Registration} from '../../../../shared/model/registration';
 import {Player} from '../../../../shared/model/player';
-import {ArmyList} from "../../../../shared/model/armyList";
-import {TournamentPlayer} from "../../../../shared/model/tournament-player";
+import {Tournament} from '../../../../shared/model/tournament';
+
 
 @Component({
   selector: 'tournament-registration-list',
@@ -11,6 +11,7 @@ import {TournamentPlayer} from "../../../../shared/model/tournament-player";
 })
 export class TournamentRegistrationListComponent implements OnInit {
 
+  @Input() actualTournament: Tournament;
   @Input() registrations: Registration[];
   @Input() userPlayerData: Player;
   @Input() isAdmin: boolean;

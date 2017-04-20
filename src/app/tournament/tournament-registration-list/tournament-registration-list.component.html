@@ -1,7 +1,7 @@
 <mdl-list-item lines="3"
                class="list-item"
                *ngFor="let registration of registrations; let i = index; let even = even;"
-               [ngClass]="{'even': even, 'my-item-color':isItMe(registration.playerId)} ">
+               [ngClass]="{'even': even, 'my-item':isItMe(registration.playerId)} ">
   <mdl-list-item-primary-content>
     <mdl-icon mdl-list-item-avatar mdl-badge="{{i +1}}" mdl-badge-overlap>person</mdl-icon>
     <span>{{registration.playerName}}</span>
@@ -18,7 +18,7 @@
   </mdl-list-item-secondary-content>
 
 
-  <ng-container *ngIf="isAdmin && !registration.isTournamentPlayer">
+  <ng-container *ngIf="isAdmin && !registration.isTournamentPlayer  && actualTournament.actualRound === 0">
     <mdl-list-item-secondary-content>
       <md-icon class="negative  list-action" (click)="deleteRegistration(registration)">delete</md-icon>
     </mdl-list-item-secondary-content>

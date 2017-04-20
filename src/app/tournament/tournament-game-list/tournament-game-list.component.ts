@@ -6,6 +6,7 @@ import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/materi
 import {PairAgainDialogComponent} from '../tournament-round-overview/tournament-round-overview.component';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {GameConfig, getWarmachineConfig} from '../../../../shared/model/game-config';
+import {GameResult} from '../../../../shared/model/game-result';
 
 @Component({
   selector: 'tournament-game-list',
@@ -18,7 +19,7 @@ export class TournamentGameListComponent implements OnInit {
   @Input() gamesForRound$: Observable<TournamentGame[]>;
   @Input() userPlayerData: Player;
 
-  @Output() onGameResult = new EventEmitter<TournamentGame>();
+  @Output() onGameResult = new EventEmitter<GameResult>();
 
   constructor(public dialog: MdDialog) { }
 
@@ -36,11 +37,11 @@ export class TournamentGameListComponent implements OnInit {
       },
     });
     const eventSubscribe = dialogRef.componentInstance.onGameResult
-      .subscribe((game: TournamentGame) => {
+      .subscribe((gameResult: GameResult) => {
 
-        if (game !== undefined) {
+        if (gameResult !== undefined) {
 
-          this.onGameResult.emit(game);
+          this.onGameResult.emit(gameResult);
         }
       });
     dialogRef.afterClosed().subscribe(() => {
@@ -64,7 +65,7 @@ export class TournamentGameListComponent implements OnInit {
 })
 export class GameResultDialogComponent {
 
-  @Output() onGameResult = new EventEmitter<TournamentGame>();
+  @Output() onGameResult = new EventEmitter<GameResult>();
 
   gameModel: TournamentGame;
   givenGame: TournamentGame;
@@ -85,7 +86,6 @@ export class GameResultDialogComponent {
     this.givenGame = this.data.selectedGame;
     this.gameModel = TournamentGame.fromJson(this.givenGame);
 
-   // this.gameModel = data.selectedGame;
     this.armyLists$ = data.armyLists$;
 
     this.playerOneArmyLists$ = this.armyLists$.map(armyLists => armyLists.filter((list: ArmyList) => {
@@ -227,7 +227,7 @@ export class GameResultDialogComponent {
     this.gameModel.id = this.givenGame.id;
     this.gameModel.finished = true;
 
-    this.onGameResult.emit(this.gameModel);
+    this.onGameResult.emit({gameBefore: this.givenGame, gameAfter: this.gameModel});
     this.dialogRef.close();
   }
 }

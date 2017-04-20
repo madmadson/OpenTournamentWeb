@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {Player} from '../../../../shared/model/player';
+import {Tournament} from '../../../../shared/model/tournament';
 
 @Component({
   selector: 'tournament-player-list',
@@ -9,14 +10,10 @@ import {Player} from '../../../../shared/model/player';
 })
 export class TournamentPlayerListComponent implements OnInit {
 
-  @Input()
-  tournamentPlayers: TournamentPlayer[];
-
-  @Input()
-  userPlayerData: Player;
-
-  @Input()
-  isAdmin: boolean;
+  @Input() actualTournament: Tournament;
+  @Input() tournamentPlayers: TournamentPlayer[];
+  @Input() userPlayerData: Player;
+  @Input() isAdmin: boolean;
 
   @Output() onDeleteTournamentPlayer = new EventEmitter<TournamentPlayer>();
 
@@ -27,11 +24,8 @@ export class TournamentPlayerListComponent implements OnInit {
   }
 
   isItMe(playerId: string) {
-
     if (this.userPlayerData) {
-      if (playerId === this.userPlayerData.id) {
-        return 'my-item-color';
-      }
+      return playerId === this.userPlayerData.id;
     }
   }
 

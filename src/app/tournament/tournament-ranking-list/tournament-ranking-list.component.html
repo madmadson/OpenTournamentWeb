@@ -11,7 +11,7 @@
   </thead>
   <tbody *ngFor="let rank of orderedRankings$ | async; let i = index; let even = even"
          [ngClass]="{'even': even, 'my-item':isItMe(rank.playerId)} ">
-  <tr>
+  <tr class="table-row">
     <td>{{i +1}}</td>
     <td class="mdl-data-table__cell--non-numeric">
       <div class="player-name-table-cell">{{rank.playerName | truncate:40}}</div>
@@ -23,6 +23,8 @@
     <td>{{rank.sos}}</td>
     <td>{{rank.controlPoints}}</td>
     <td>{{rank.victoryPoints}}</td>
+
   </tr>
   </tbody>
 </table>
+

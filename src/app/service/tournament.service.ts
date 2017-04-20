@@ -23,6 +23,8 @@ import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {SubscribeTournamentRankingsAction} from '../store/actions/tournament-rankings-actions';
 import {SubscribeTournamentGamesAction} from '../store/actions/tournament-games-actions';
 import {TournamentGame} from '../../../shared/model/tournament-game';
+import {GameResult} from '../../../shared/model/game-result';
+import {PublishRound} from '../../../shared/model/publish-round';
 
 
 @Injectable()
@@ -42,9 +44,10 @@ export class TournamentService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroy  TournamentService');
+
     this.tournamentRegistrationsRef.off();
-    this.store.dispatch(new ClearRegistrationAction());
+    this.tournamentPlayerRef.off();
+    this.armyListsRef.off();
   }
 
 
@@ -225,38 +228,25 @@ export class TournamentService implements OnDestroy {
     });
   }
 
-  pushNewTournamentPlayer(player: TournamentPlayer) {
+  addDummyPlayer(tournamentId: string) {
+    const dummy = new TournamentPlayer(tournamentId, '', '', '', 'DUMMY', '', '', '', '', 0, '');
 
-    const tournamentPlayers = this.afService.database.list('tournament-player/' + player.tournamentId );
-    const newRef = tournamentPlayers.push(player);
+    const tournamentPlayers = this.afService.database.list('tournament-player/' + tournamentId );
+    tournamentPlayers.push(dummy);
 
-    if (!player.playerId) {
-      newRef.update({playerId: newRef.key});
-    }
-
-    this.snackBar.open('Tournament Player saved successfully', '', {
+    this.snackBar.open('Dummy Player successfully inserted', '', {
       duration: 5000
     });
   }
 
-  startTournament(config: PairingConfiguration) {
-    console.log('start Tournament with config : ' + JSON.stringify(config));
+  pushNewTournamentPlayer(player: TournamentPlayer) {
 
-    const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
-    const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
+    const tournamentPlayers = this.afService.database.list('tournament-player/' + player.tournamentId );
+    tournamentPlayers.push(player);
 
-    if (successFullyPaired) {
-      const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
-      registrationRef.update({actualRound: 1});
-      this.snackBar.open('new Round Paired', '', {
-        duration: 5000
-      });
-
-    } else {
-      this.snackBar.open('Failed to create Parings', '', {
-        duration: 5000
-      });
-    }
+    this.snackBar.open('Tournament Player saved successfully', '', {
+      duration: 5000
+    });
   }
 
   pairAgainTournament(config: PairingConfiguration) {
@@ -275,7 +265,6 @@ export class TournamentService implements OnDestroy {
   }
 
   pairNewRound(config: PairingConfiguration) {
-    console.log('pair new round with config : ' + JSON.stringify(config));
 
     const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
     const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
@@ -295,21 +284,39 @@ export class TournamentService implements OnDestroy {
   }
 
 
-  gameResultEntered(game: TournamentGame) {
+  gameResultEntered(gameResult: GameResult) {
 
-    const gameRef = this.afService.database.object('tournament-games/' + game.tournamentId + '/' + game.id);
-    gameRef.update(game);
+    this.rankingService.updateRanking(gameResult);
 
-    this.rankingService.updateRanking(game);
+    const gameRef = this.afService.database.object('tournament-games/' + gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
+    gameRef.update(gameResult.gameAfter);
+
+    this.snackBar.open('Game Result Entered Successfully', '', {
+      duration: 5000
+    });
   }
 
-  unsubscribeOnTournament() {
-    this.tournamentRegistrationsRef.off();
-    this.store.dispatch(new ClearRegistrationAction());
-    this.store.dispatch(new ClearTournamentPlayerAction());
-    this.store.dispatch(new ClearArmyListsAction());
+  publishRound(publish: PublishRound) {
+
+    const gameRef = this.afService.database.object('tournaments/' + publish.tournamentId);
+    gameRef.update({visibleRound: publish.roundToPublish});
+
+    this.snackBar.open('Round ' + publish.roundToPublish + ' successfully published', '', {
+      duration: 5000
+    });
   }
 
 
+  killRound(config: PairingConfiguration) {
+    this.rankingService.eraseRankingsForRound(config);
+    this.tournamentGameService.eraseGamesForRound(config);
 
+    const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+    registrationRef.update(
+      {actualRound: (config.round - 1), visibleRound: (config.round - 1)});
+
+    this.snackBar.open('Round ' + config.round + ' successfully killed with fire!', '', {
+      duration: 5000
+    });
+  }
 }

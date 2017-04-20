@@ -16,6 +16,7 @@ import {
 import * as _ from 'lodash';
 import {PairingConfiguration} from '../../../shared/model/pairing-configuration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
+import {GameResult} from '../../../shared/model/game-result';
 
 
 @Injectable()
@@ -25,6 +26,7 @@ export class TournamentRankingService implements OnDestroy {
 
   allPlayers: TournamentPlayer[];
   allRankings: TournamentRanking[];
+  allGames: TournamentGame[];
   actualTournament: Tournament;
 
   constructor(protected fireDB: AngularFireDatabase,
@@ -34,6 +36,7 @@ export class TournamentRankingService implements OnDestroy {
     this.store.select(state => state).subscribe(state => {
       this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
       this.allRankings = state.actualTournamentRankings.actualTournamentRankings;
+      this.allGames = state.actualTournamentGames.actualTournamentGames;
       this.actualTournament = state.actualTournament.actualTournament;
     });
 
@@ -78,7 +81,6 @@ export class TournamentRankingService implements OnDestroy {
     });
   }
 
-
   pushRankingForRound(config: PairingConfiguration): TournamentRanking[] {
 
     const that = this;
@@ -86,20 +88,15 @@ export class TournamentRankingService implements OnDestroy {
 
     this.eraseRankingsForRound(config);
 
-    console.log('push ranking for round: ' + config.round);
-
     const lastRoundRankings: TournamentRanking[] = _.filter(this.allRankings, function (ranking: TournamentRanking) {
       return (ranking.tournamentRound === (config.round - 1));
     });
-    console.log('lastRoundRankings: ' + JSON.stringify(lastRoundRankings));
 
     _.forEach(this.allPlayers, function (tournamentPlayer: TournamentPlayer) {
-
-      console.log('add ranking for: ' + JSON.stringify(tournamentPlayer));
-
       const newTournamentRanking = new TournamentRanking(
         tournamentPlayer.tournamentId,
-        tournamentPlayer.playerId,
+        tournamentPlayer.id,
+        tournamentPlayer.playerId ? tournamentPlayer.playerId : '',
         tournamentPlayer.playerName,
         tournamentPlayer.faction ? tournamentPlayer.faction : '',
         tournamentPlayer.teamName ? tournamentPlayer.teamName : '',
@@ -108,9 +105,10 @@ export class TournamentRankingService implements OnDestroy {
         tournamentPlayer.elo ? tournamentPlayer.elo : 0,
         0, 0, 0, 0, 1, []);
 
+
       _.each(lastRoundRankings, function (lastRoundRanking: TournamentRanking) {
 
-        if (lastRoundRanking.playerId === tournamentPlayer.playerId) {
+        if (lastRoundRanking.tournamentPlayerId === tournamentPlayer.id) {
           console.log('lastRoundRanking: ' + JSON.stringify(lastRoundRanking));
 
           newTournamentRanking.score = lastRoundRanking.score;
@@ -118,7 +116,7 @@ export class TournamentRankingService implements OnDestroy {
           newTournamentRanking.controlPoints = lastRoundRanking.controlPoints;
           newTournamentRanking.victoryPoints = lastRoundRanking.victoryPoints;
           newTournamentRanking.tournamentRound = config.round;
-          newTournamentRanking.opponentPlayerIds = lastRoundRanking.opponentPlayerIds;
+          newTournamentRanking.opponentTournamentPlayerIds = lastRoundRanking.opponentTournamentPlayerIds;
         }
       });
 
@@ -134,8 +132,6 @@ export class TournamentRankingService implements OnDestroy {
 
   eraseRankingsForRound(config: PairingConfiguration) {
 
-    console.log('erase ranking for round: ' + config.round);
-
     const query = this.fb.database().ref('tournament-rankings/' + config.tournamentId).orderByChild('tournamentRound')
       .equalTo(config.round);
 
@@ -147,110 +143,159 @@ export class TournamentRankingService implements OnDestroy {
     });
   }
 
-  updateRanking(game: TournamentGame) {
-
-    console.log('update ranking: ' + game.tournamentRound);
-
-    this.updatePlayerOneRanking(game);
-    this.updatePlayerTwoRanking(game);
-
-
-    this.updateSos(game);
-
-  }
-
-
-  private updatePlayerOneRanking(game: TournamentGame) {
-
-
-
-    const lastRoundRankingPlayerOne: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
-      return (ranking.tournamentRound === (game.tournamentRound - 1) && ranking.playerId === game.playerOnePlayerId);
-    })[0];
-
-    const rankingPlayerOne: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
-      return (ranking.tournamentRound === (game.tournamentRound) && ranking.playerId === game.playerOnePlayerId);
-    })[0];
-
-    let newScorePlayerOne = game.playerOneScore;
-    let newCPPlayerOne = game.playerOneControlPoints;
-    let newVPPlayerOne = game.playerOneVictoryPoints;
-    let newListOfOpponentPlayerIds = [game.playerTwoPlayerId];
-
-    if (lastRoundRankingPlayerOne) {
-      newScorePlayerOne = newScorePlayerOne + lastRoundRankingPlayerOne.score;
-      newCPPlayerOne = newCPPlayerOne + lastRoundRankingPlayerOne.controlPoints;
-      newVPPlayerOne = newVPPlayerOne + lastRoundRankingPlayerOne.victoryPoints;
-      newListOfOpponentPlayerIds = _.union(newListOfOpponentPlayerIds, lastRoundRankingPlayerOne.opponentPlayerIds);
-    }
-
-    const rankingRef = this.fireDB.object('tournament-rankings/' + game.tournamentId + '/' + rankingPlayerOne.id);
-    rankingRef.update(
-      {
-        score: newScorePlayerOne,
-        controlPoints: newCPPlayerOne,
-        victoryPoints: newVPPlayerOne,
-        opponentPlayerIds: newListOfOpponentPlayerIds
-      });
-
-  }
-
-  private updatePlayerTwoRanking(game: TournamentGame) {
-
-
-
-    const lastRoundRankingPlayerTwo: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
-      return (ranking.tournamentRound === (game.tournamentRound - 1) && ranking.playerId === game.playerTwoPlayerId);
-    })[0];
-
-    const rankingPlayerTwo: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
-      return (ranking.tournamentRound === (game.tournamentRound) && ranking.playerId === game.playerTwoPlayerId);
-    })[0];
-
-    let newScorePlayerTwo = game.playerTwoScore;
-    let newCPPlayerTwo = game.playerTwoControlPoints;
-    let newVPPlayerTwo = game.playerTwoVictoryPoints;
-    let newListOfOpponentPlayerIds = [game.playerOnePlayerId];
-
-    if (lastRoundRankingPlayerTwo) {
-      newScorePlayerTwo = newScorePlayerTwo + lastRoundRankingPlayerTwo.score;
-      newCPPlayerTwo = newCPPlayerTwo + lastRoundRankingPlayerTwo.controlPoints;
-      newVPPlayerTwo = newVPPlayerTwo + lastRoundRankingPlayerTwo.victoryPoints;
-      newListOfOpponentPlayerIds = _.union(newListOfOpponentPlayerIds, lastRoundRankingPlayerTwo.opponentPlayerIds);
-    }
-
-    const rankingRef = this.fireDB.object('tournament-rankings/' + game.tournamentId + '/' + rankingPlayerTwo.id);
-    rankingRef.update(
-      {
-        score: newScorePlayerTwo,
-        controlPoints: newCPPlayerTwo,
-        victoryPoints: newVPPlayerTwo,
-        opponentPlayerIds: newListOfOpponentPlayerIds
-      });
-  }
-
-  private updateSos(game: TournamentGame) {
+  updateRanking(gameResult: GameResult) {
 
     const that = this;
+    const roundOfGameResult = gameResult.gameAfter.tournamentRound;
 
-    const allActualRankings: TournamentRanking[] = _.filter(this.allRankings, function (ranking: TournamentRanking) {
-      return (ranking.tournamentRound === (game.tournamentRound));
-    });
+    for (let i = roundOfGameResult; i <= this.actualTournament.actualRound; i++) {
 
-    _.each(allActualRankings, function (myRanking: TournamentRanking) {
-      let newSosForOpponent = 0;
-
-      _.each(allActualRankings, function (innerRanking: TournamentRanking) {
-        const isOpponent = _.find(myRanking.opponentPlayerIds, function (enemyPlayerId) {
-          return enemyPlayerId === innerRanking.playerId;
-        });
-        if (isOpponent) {
-          newSosForOpponent  = newSosForOpponent + innerRanking.score;
-        }
+      const allRankingsFromSameRound: TournamentRanking[] = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+        return (ranking.tournamentRound === i);
       });
-      const opponentRankRef = that.fireDB.object('tournament-rankings/' + game.tournamentId + '/' + myRanking.id);
-      opponentRankRef.update({sos: newSosForOpponent});
-    });
+
+      const lastRoundRankingPlayerOne: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+        return (ranking.tournamentRound === (i - 1) &&
+        ranking.tournamentPlayerId === gameResult.gameAfter.playerOneTournamentPlayerId);
+      })[0];
+
+      const lastRoundRankingPlayerTwo: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+        return (ranking.tournamentRound === (i - 1) &&
+        ranking.tournamentPlayerId === gameResult.gameAfter.playerTwoTournamentPlayerId);
+      })[0];
+
+      const rankingPlayerOne: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+        return (ranking.tournamentRound === (i) &&
+        ranking.tournamentPlayerId === gameResult.gameAfter.playerOneTournamentPlayerId);
+      })[0];
+
+      const rankingPlayerTwo: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+        return (ranking.tournamentRound === (i) &&
+        ranking.tournamentPlayerId === gameResult.gameAfter.playerTwoTournamentPlayerId);
+      })[0];
+
+      let newScorePlayerOne = 0;
+      let newCPPlayerOne = 0;
+      let newVPPlayerOne = 0;
+      let newListOfOpponentsIdsPlayerOne = [];
+
+      if (i === gameResult.gameAfter.tournamentRound) {
+
+        newScorePlayerOne = newScorePlayerOne + gameResult.gameAfter.playerOneScore;
+        newCPPlayerOne = newCPPlayerOne + gameResult.gameAfter.playerOneControlPoints;
+        newVPPlayerOne = newVPPlayerOne + gameResult.gameAfter.playerOneVictoryPoints;
+
+        newListOfOpponentsIdsPlayerOne.push(gameResult.gameAfter.playerTwoTournamentPlayerId);
+      }
+
+      if (lastRoundRankingPlayerOne) {
+        newScorePlayerOne = newScorePlayerOne + lastRoundRankingPlayerOne.score;
+        newCPPlayerOne = newCPPlayerOne + lastRoundRankingPlayerOne.controlPoints;
+        newVPPlayerOne = newVPPlayerOne + lastRoundRankingPlayerOne.victoryPoints;
+
+        newListOfOpponentsIdsPlayerOne =
+          _.union(newListOfOpponentsIdsPlayerOne, lastRoundRankingPlayerOne.opponentTournamentPlayerIds);
+      }
+
+      const playerOneRankingRef = this.fireDB
+          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+      playerOneRankingRef.update(
+        {
+          score: newScorePlayerOne,
+          controlPoints: newCPPlayerOne,
+          victoryPoints: newVPPlayerOne,
+          opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
+        });
+
+      if (!gameResult.gameBefore.finished) {
+        let newSosPlayerOne = rankingPlayerTwo.score + gameResult.gameAfter.playerTwoScore;
+        if (lastRoundRankingPlayerOne) {
+          newSosPlayerOne = newSosPlayerOne + lastRoundRankingPlayerOne.sos;
+        }
+        playerOneRankingRef.update(
+          {
+            sos: newSosPlayerOne,
+          });
+      }
+
+      _.each(rankingPlayerOne.opponentTournamentPlayerIds, function (opponentTournamentPlayerId: string) {
+        _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
+          if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
+            const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
+
+            if (!gameResult.gameBefore.finished) {
+              opponentRankRef.update({'sos': (rank.sos + gameResult.gameAfter.playerOneScore)});
+            } else if (gameResult.gameBefore.playerOneScore < gameResult.gameAfter.playerOneScore) {
+              opponentRankRef.update({'sos': (rank.sos + 1)});
+            } else if (gameResult.gameBefore.playerOneScore > gameResult.gameAfter.playerOneScore) {
+              opponentRankRef.update({'sos': (rank.sos - 1)});
+            }
+          }
+        });
+      });
+
+      let newScorePlayerTwo = 0;
+      let newCPPlayerTwo = 0;
+      let newVPPlayerTwo = 0;
+      let newListOfOpponentsIdsPlayerTwo = [];
+
+      if (i === gameResult.gameAfter.tournamentRound) {
+
+        newScorePlayerTwo = newScorePlayerTwo + gameResult.gameAfter.playerTwoScore;
+        newCPPlayerTwo = newCPPlayerTwo + gameResult.gameAfter.playerTwoControlPoints;
+        newVPPlayerTwo = newVPPlayerTwo + gameResult.gameAfter.playerTwoVictoryPoints;
+
+        newListOfOpponentsIdsPlayerTwo.push(gameResult.gameAfter.playerOneTournamentPlayerId);
+      }
+
+      if (lastRoundRankingPlayerTwo) {
+        newScorePlayerTwo = newScorePlayerTwo + lastRoundRankingPlayerTwo.score;
+        newCPPlayerTwo = newCPPlayerTwo + lastRoundRankingPlayerTwo.controlPoints;
+        newVPPlayerTwo = newVPPlayerTwo + lastRoundRankingPlayerTwo.victoryPoints;
+
+        newListOfOpponentsIdsPlayerTwo =
+          _.union(newListOfOpponentsIdsPlayerTwo, lastRoundRankingPlayerTwo.opponentTournamentPlayerIds);
+      }
+
+      const playerTwoRankingRef = this.fireDB
+        .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
+      playerTwoRankingRef.update(
+        {
+          score: newScorePlayerTwo,
+          controlPoints: newCPPlayerTwo,
+          victoryPoints: newVPPlayerTwo,
+          opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerTwo
+        });
+
+
+      if (!gameResult.gameBefore.finished) {
+        let newSosPlayerTwo = rankingPlayerOne.score + gameResult.gameAfter.playerOneScore;
+        if (lastRoundRankingPlayerTwo) {
+          newSosPlayerTwo = newSosPlayerTwo + lastRoundRankingPlayerTwo.sos;
+        }
+        playerTwoRankingRef.update(
+          {
+            sos: newSosPlayerTwo,
+          });
+      }
+
+
+      _.each(rankingPlayerTwo.opponentTournamentPlayerIds, function (opponentTournamentPlayerId: string) {
+        _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
+          if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
+            const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
+
+            if (!gameResult.gameBefore.finished) {
+              opponentRankRef.update({'sos': (rank.sos + gameResult.gameAfter.playerTwoScore)});
+            } else if (gameResult.gameBefore.playerTwoScore < gameResult.gameAfter.playerTwoScore) {
+              opponentRankRef.update({'sos': (rank.sos + 1)});
+            } else if (gameResult.gameBefore.playerTwoScore > gameResult.gameAfter.playerTwoScore) {
+              opponentRankRef.update({'sos': (rank.sos - 1)});
+            }
+          }
+        });
+      });
+    }
   }
 
 }

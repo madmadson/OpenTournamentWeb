@@ -30,7 +30,8 @@ body {
 /*md-changes watch for improvement in lib*/
 
 button:focus{
-  border: 3px solid deepskyblue;
+  box-shadow: 0 0 0 3px deepskyblue;
+
 }
 
 .my-item {
@@ -39,7 +40,10 @@ button:focus{
 
 .list-item:hover{
   background-color: deepskyblue;
-  cursor: pointer;
+}
+
+.table-row:hover{
+  background-color: deepskyblue !important;
 }
 
 @media only screen and (min-width: 1100px) {
@@ -66,6 +70,9 @@ button:focus{
   padding-right: 6px;
   font-size:36px;
   cursor: pointer;
+}
+.negative-background{
+  background-color: #D32F2F;
 }
 
 .negative{
@@ -107,6 +114,12 @@ md-card {
   padding-top: 6px;
   padding-bottom: 6px;
 }
+.full-width-select-box{
+  width: 100%;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
 .big-button{
   height: 54px;
 }
@@ -135,8 +148,7 @@ md-card {
 }
 
 .action-card{
-  width: 400px;
-  justify-content: center;
+
 }
 
 .content-cards-container{

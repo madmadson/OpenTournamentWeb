@@ -10,7 +10,10 @@
       maxlength="50"
       required
       #fullPlayerName
+      (blur)="checkName()"
       [(ngModel)]="tournamentPlayerModel.playerName" name="playerName">
+    <md-hint *ngIf="nameWarning" align="start" class="negative">
+      There is already a Player with that name</md-hint>
     <md-hint align="end">{{fullPlayerName.value.length}} / 50</md-hint>
   </md-input-container>
   <md-input-container
@@ -30,6 +33,18 @@
     <input
       mdInput
       type="text"
+      placeholder="TeamName"
+      maxlength="50"
+      [(ngModel)]="tournamentPlayerModel.teamName"
+      name="teamName"
+      #teamName>
+    <md-hint align="end">{{origin.value.length}} / 50</md-hint>
+  </md-input-container>
+  <md-input-container
+    class="full-width">
+    <input
+      mdInput
+      type="text"
       placeholder="Meta"
       maxlength="50"
       [(ngModel)]="tournamentPlayerModel.meta"
@@ -38,7 +53,7 @@
     <md-hint align="end">{{meta.value.length}} / 50</md-hint>
   </md-input-container>
   <md-select
-    class="full-width"
+    class="full-width-select-box"
     placeholder="Country"
     #country
     name="country"
@@ -46,7 +61,7 @@
     <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>
   </md-select>
   <md-select
-    class="full-width"
+    class="full-width-select-box"
     placeholder="Faction"
     #faction
     name="faction"

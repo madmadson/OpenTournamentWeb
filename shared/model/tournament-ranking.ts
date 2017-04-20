@@ -1,8 +1,10 @@
 export class TournamentRanking {
 
+
   id: string;
 
   tournamentId: string;
+  tournamentPlayerId: string;
   playerId: string;
 
   playerName: string;
@@ -18,21 +20,30 @@ export class TournamentRanking {
   victoryPoints: number;
 
   tournamentRound: number;
-  opponentPlayerIds: string[];
+  opponentTournamentPlayerIds: string[];
 
-  static fromJson({tournamentId, playerId, playerName, teamName, faction, origin, meta, elo, score, sos,
-                    controlPoints, victoryPoints, tournamentRound,  opponentPlayerIds}): TournamentRanking {
-    return new TournamentRanking(tournamentId, playerId, playerName, faction, teamName, origin, meta, elo, score,
+
+
+  static fromJson({tournamentId, tournamentPlayerId, playerId, playerName,
+                    teamName, faction, origin, meta, elo, score, sos,
+                    controlPoints, victoryPoints, tournamentRound,  opponentTournamentPlayerIds}): TournamentRanking {
+    return new TournamentRanking(tournamentId, tournamentPlayerId, playerId,
+      playerName, faction, teamName, origin, meta, elo, score,
       sos, controlPoints, victoryPoints,
-      tournamentRound, opponentPlayerIds);
+      tournamentRound, opponentTournamentPlayerIds);
   }
 
-  constructor(tournamentId: string, playerId: string, playerName: string, faction: string, teamName: string,
+  public setScore(score: number) {
+
+  }
+
+  constructor(tournamentId: string, tournamentPlayerId: string, playerId: string, playerName: string, faction: string, teamName: string,
               origin: string, meta: string, elo: number, score: number, sos: number,
               controlPoints: number, victoryPoints: number,
-              tournamentRound: number, opponentPlayerIds: string[]) {
+              tournamentRound: number, opponentTournamentPlayerIds: string[]) {
 
     this.tournamentId = tournamentId;
+    this.tournamentPlayerId = tournamentPlayerId;
     this.playerId = playerId;
 
     this.playerName = playerName;
@@ -48,7 +59,7 @@ export class TournamentRanking {
     this.victoryPoints = victoryPoints;
 
     this.tournamentRound = tournamentRound;
-    this.opponentPlayerIds = opponentPlayerIds;
+    this.opponentTournamentPlayerIds = opponentTournamentPlayerIds;
   }
 
 

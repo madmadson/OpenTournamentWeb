@@ -42,7 +42,7 @@ export class TournamentGameService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    this.tournamentGamesRef.off();
   }
 
   public subscribeOnTournamentGames(tournamentId: string) {
@@ -51,16 +51,12 @@ export class TournamentGameService implements OnDestroy {
 
     this.store.dispatch(new ClearTournamentGamesAction());
 
-    console.log('subscribeOnTournamentGames');
-
     this.tournamentGamesRef = this.fb.database().ref('tournament-games/' + tournamentId);
 
     this.tournamentGamesRef.on('child_added', function (snapshot) {
 
       const tournamentGame: TournamentGame = TournamentGame.fromJson(snapshot.val());
       tournamentGame.id = snapshot.key;
-
-      console.log('child_added' + JSON.stringify(tournamentGame));
 
       that.store.dispatch(new AddTournamentGameAction(tournamentGame));
 
@@ -84,8 +80,6 @@ export class TournamentGameService implements OnDestroy {
 
 
   createGamesForRound(config: PairingConfiguration, newRankings: TournamentRanking[]): boolean {
-
-    console.log('actual rankings: ' + JSON.stringify(newRankings));
 
     this.eraseGamesForRound(config);
 
@@ -114,7 +108,6 @@ export class TournamentGameService implements OnDestroy {
   private matchGame(config: PairingConfiguration, copiedRankings: TournamentRanking[]): boolean {
 
     const gamesToCalculate = copiedRankings.length;
-    console.log('gamesToCalculate: ' + gamesToCalculate);
     if (gamesToCalculate === 0) {
       return true;
     }
@@ -124,20 +117,17 @@ export class TournamentGameService implements OnDestroy {
     for (i = 0; i < (gamesToCalculate - 1); i++) {
 
       const ranking1: TournamentRanking = copiedRankings[i];
-      console.log('ranking1: ' + JSON.stringify(ranking1));
 
       for (j = i + 1; j < (gamesToCalculate); j++) {
 
         const ranking2: TournamentRanking = copiedRankings[j];
-        console.log('ranking2: ' + JSON.stringify(ranking2));
 
-        const alreadyPlayingAgainstEachOther = _.find(ranking1.opponentPlayerIds,
-          function (player1OpponentPlayerId: string) {
-            return player1OpponentPlayerId === ranking2.playerId;
+        const alreadyPlayingAgainstEachOther = _.find(ranking1.opponentTournamentPlayerIds,
+          function (player1OpponentTournamentPlayerId: string) {
+            return player1OpponentTournamentPlayerId === ranking2.tournamentPlayerId;
           });
 
         if (alreadyPlayingAgainstEachOther) {
-          console.log('ranking1: ' + JSON.stringify(ranking1) + ' already played against ranking2: ' + JSON.stringify(ranking2));
           continue;
         }
 
@@ -147,7 +137,8 @@ export class TournamentGameService implements OnDestroy {
         const newCopiedRankings: TournamentRanking[] = copiedRankings;
 
          _.remove(newCopiedRankings, function (player: TournamentRanking) {
-          return player.playerId === ranking1.playerId || player.playerId === ranking2.playerId;
+          return player.tournamentPlayerId === ranking1.tournamentPlayerId ||
+                 player.tournamentPlayerId === ranking2.tournamentPlayerId;
         });
 
         const success = this.matchGame(config, newCopiedRankings);
@@ -155,9 +146,11 @@ export class TournamentGameService implements OnDestroy {
         if (success) {
           const newGame = new TournamentGame(
             config.tournamentId,
-            ranking1.playerId, ranking1.playerName, ranking1.elo, ranking1.faction,
+            ranking1.playerId, ranking1.tournamentPlayerId,
+            ranking1.playerName, ranking1.elo, ranking1.faction,
             0, 0, 0, '',
-            ranking2.playerId, ranking2.playerName, ranking2.elo, ranking2.faction,
+            ranking2.playerId, ranking2.tournamentPlayerId,
+            ranking2.playerName, ranking2.elo, ranking2.faction,
             0, 0, 0, '',
             ranking1.tournamentRound, config.round, false, '');
 
@@ -172,8 +165,6 @@ export class TournamentGameService implements OnDestroy {
   }
 
   eraseGamesForRound(config: PairingConfiguration) {
-
-    console.log('erase games for round: '  + config.round);
 
     const query = this.fb.database().ref('tournament-games/' + config.tournamentId).orderByChild('tournamentRound')
       .equalTo(config.round);
