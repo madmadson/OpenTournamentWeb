@@ -134,7 +134,7 @@ export class TournamentPreparationComponent implements OnInit {
       },
       width: '800px',
     });
-    const saveEventSubscribe = dialogRef.componentInstance.onSaveNewTournamentPlayer.subscribe(tournamentPlayer => {
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveNewTournamentPlayer.subscribe((tournamentPlayer: TournamentPlayer) => {
 
       if (tournamentPlayer !== undefined) {
         this.onAddTournamentPlayer.emit(tournamentPlayer);

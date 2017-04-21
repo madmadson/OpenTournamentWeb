@@ -206,6 +206,8 @@ export class KillRoundDialogComponent {
 
   @Output() onKillRound = new EventEmitter<PairingConfiguration>();
 
+  enableKill: boolean;
+
   constructor(public dialogRef: MdDialogRef<KillRoundDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
   }

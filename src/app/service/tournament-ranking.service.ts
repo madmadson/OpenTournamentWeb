@@ -116,7 +116,6 @@ export class TournamentRankingService implements OnDestroy {
       _.each(lastRoundRankings, function (lastRoundRanking: TournamentRanking) {
 
         if (lastRoundRanking.tournamentPlayerId === tournamentPlayer.id) {
-          console.log('lastRoundRanking: ' + JSON.stringify(lastRoundRanking));
 
           newTournamentRanking.score = lastRoundRanking.score;
           newTournamentRanking.sos = lastRoundRanking.sos;
