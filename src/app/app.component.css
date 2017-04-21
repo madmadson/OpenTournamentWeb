@@ -2,7 +2,11 @@
 
   width: 100vw;
   min-height: calc(100vh - 2px);
-  border: 2px solid rgba(0, 0, 0, 1);
+  border: 1px solid black;
+}
+
+.side-nav{
+  border-right: 1px solid  black;
 }
 
 .app-icon-button {

@@ -55,5 +55,15 @@
       ></tournament-round-overview>
     </md-tab>
   </ng-container>
+
+  <md-tab *ngIf="actualTournament?.finished"  label="Results">
+    <tournament-final-rankings
+      [actualTournament]="actualTournament"
+      [authenticationStoreState$]="authenticationStoreState$"
+      [actualTournamentArmyList$]="actualTournamentArmyList$"
+      [finalRankings$]="getFinalRanking()"
+      (onUndoTournamentEnd)="handleUndoTournamentEnd($event)"
+    ></tournament-final-rankings>
+  </md-tab>
 </md-tab-group>
 

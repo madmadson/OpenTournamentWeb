@@ -17,7 +17,7 @@ import {
   DeleteTournamentGameAction,
   ClearTournamentGamesAction,
 } from '../store/actions/tournament-games-actions';
-import {PairingConfiguration} from '../../../shared/dto/pairing-configuration';
+import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 
 
 @Injectable()
@@ -86,7 +86,7 @@ export class TournamentGameService implements OnDestroy {
   }
 
 
-  createGamesForRound(config: PairingConfiguration, newRankings: TournamentRanking[]): boolean {
+  createGamesForRound(config: TournamentManagementConfiguration, newRankings: TournamentRanking[]): boolean {
 
     this.eraseGamesForRound(config);
 
@@ -112,7 +112,7 @@ export class TournamentGameService implements OnDestroy {
 
   }
 
-  private matchGame(config: PairingConfiguration, copiedRankings: TournamentRanking[]): boolean {
+  private matchGame(config: TournamentManagementConfiguration, copiedRankings: TournamentRanking[]): boolean {
 
     const gamesToCalculate = copiedRankings.length;
     if (gamesToCalculate === 0) {
@@ -171,7 +171,7 @@ export class TournamentGameService implements OnDestroy {
     return false;
   }
 
-  eraseGamesForRound(config: PairingConfiguration) {
+  eraseGamesForRound(config: TournamentManagementConfiguration) {
 
     const query = this.fb.database().ref('tournament-games/' + config.tournamentId).orderByChild('tournamentRound')
       .equalTo(config.round);

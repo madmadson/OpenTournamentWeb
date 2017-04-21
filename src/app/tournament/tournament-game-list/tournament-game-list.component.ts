@@ -7,6 +7,8 @@ import {PairAgainDialogComponent} from '../tournament-round-overview/tournament-
 import {ArmyList} from '../../../../shared/model/armyList';
 import {GameConfig, getWarmachineConfig} from '../../../../shared/dto/game-config';
 import {GameResult} from '../../../../shared/dto/game-result';
+import {AuthenticationStoreState} from '../../store/authentication-state';
+import {Tournament} from '../../../../shared/model/tournament';
 
 @Component({
   selector: 'tournament-game-list',
@@ -15,44 +17,63 @@ import {GameResult} from '../../../../shared/dto/game-result';
 })
 export class TournamentGameListComponent implements OnInit {
 
+  @Input() actualTournament: Tournament;
+  @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() armyLists$: Observable<ArmyList[]>;
   @Input() gamesForRound$: Observable<TournamentGame[]>;
-  @Input() userPlayerData: Player;
 
   @Output() onGameResult = new EventEmitter<GameResult>();
 
-  constructor(public dialog: MdDialog) { }
+  userPlayerData: Player;
+  currentUserId: string;
+
+  constructor(public dialog: MdDialog) {
+  }
 
   ngOnInit() {
+
+    this.authenticationStoreState$.subscribe(auth => {
+      this.userPlayerData = auth.userPlayerData;
+      this.currentUserId = auth.currentUserId;
+    });
   }
 
 
   openGameResultDialog(selectedGame: TournamentGame) {
 
+    if (this.myGameOrAdmin(selectedGame)) {
 
-    const dialogRef = this.dialog.open(GameResultDialogComponent, {
-      data: {
-        selectedGame: selectedGame,
-        armyLists$: this.armyLists$
-      },
-    });
-    const eventSubscribe = dialogRef.componentInstance.onGameResult
-      .subscribe((gameResult: GameResult) => {
-
-        if (gameResult !== undefined) {
-
-          this.onGameResult.emit(gameResult);
-        }
+      const dialogRef = this.dialog.open(GameResultDialogComponent, {
+        data: {
+          selectedGame: selectedGame,
+          armyLists$: this.armyLists$
+        },
       });
-    dialogRef.afterClosed().subscribe(() => {
+      const eventSubscribe = dialogRef.componentInstance.onGameResult
+        .subscribe((gameResult: GameResult) => {
 
-      eventSubscribe.unsubscribe();
-    });
+          if (gameResult !== undefined) {
+
+            this.onGameResult.emit(gameResult);
+          }
+        });
+      dialogRef.afterClosed().subscribe(() => {
+
+        eventSubscribe.unsubscribe();
+      });
+    }
   }
 
-  isItMyGame(playerOne_id: string, playerTwo_id: string) {
+  private myGameOrAdmin(selectedGame: TournamentGame) {
+    return selectedGame.playerOnePlayerId === this.currentUserId ||
+      selectedGame.playerTwoPlayerId === this.currentUserId ||
+      this.currentUserId === this.actualTournament.creatorUid;
+  }
+
+  isItMyGame(game: TournamentGame) {
     if (this.userPlayerData) {
-      return (playerOne_id === this.userPlayerData.id) || (playerTwo_id === this.userPlayerData.id);
+      return (game.playerOnePlayerId === this.userPlayerData.id) ||
+        (game.playerTwoPlayerId === this.userPlayerData.id);
     }
   }
 }

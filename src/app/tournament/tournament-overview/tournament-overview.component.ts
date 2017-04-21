@@ -17,11 +17,11 @@ import {
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
   ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
-  RegistrationAcceptAction, EndTournamentAction
+  RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction
 } from '../../store/actions/tournament-actions';
 
 
-import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration';
+import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 import {AuthenticationStoreState} from 'app/store/authentication-state';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
@@ -101,6 +101,11 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
        return (rank.tournamentRound === round);
      }));
   }
+  getFinalRanking(): Observable<TournamentRanking[]> {
+    return this.actualTournamentRankings$.map(rankings => rankings.filter(rank => {
+      return (rank.tournamentRound === (this.actualTournament.actualRound + 1 ));
+    }));
+  }
 
   getGamesForRound(round: number): Observable<TournamentGame[]> {
     return this.actualTournamentGames$.map(games => games.filter(game => {
@@ -108,7 +113,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     }));
   }
 
-  handleStartTournament(config: PairingConfiguration ) {
+  handleStartTournament(config: TournamentManagementConfiguration ) {
     this.store.dispatch(new TournamentNewRoundAction(config));
     setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
   }
@@ -150,29 +155,32 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new RegistrationEraseAction(
       {tournament: this.actualTournament, registration: registration}));
   }
-  handleEndTournament(config: PairingConfiguration) {
+  handleEndTournament(config: TournamentManagementConfiguration) {
     this.store.dispatch(new EndTournamentAction(config));
+    setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
   }
 
-  handlePairAgain(config: PairingConfiguration ) {
+  handlePairAgain(config: TournamentManagementConfiguration ) {
     this.store.dispatch(new TournamentPairAgainAction(config));
-
   }
 
-  handleNewRound(config: PairingConfiguration ) {
+  handleNewRound(config: TournamentManagementConfiguration ) {
     this.store.dispatch(new TournamentNewRoundAction(config));
     setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
   }
 
   handleGameResult(gameResult: GameResult) {
-
      this.store.dispatch(new GameResultEnteredAction(gameResult));
   }
 
   handlePublishRound(round: PublishRound) {
     this.store.dispatch(new PublishRoundAction(round));
   }
-  handleKillRound(config: PairingConfiguration) {
+  handleKillRound(config: TournamentManagementConfiguration) {
     this.store.dispatch(new TournamentKillRoundAction(config));
+  }
+
+  handleUndoTournamentEnd(config: TournamentManagementConfiguration) {
+    this.store.dispatch(new UndoTournamentEndAction(config));
   }
 }

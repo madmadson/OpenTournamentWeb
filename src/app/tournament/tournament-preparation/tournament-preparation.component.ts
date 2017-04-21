@@ -14,7 +14,7 @@ import {getAllCountries} from '../../../../shared/model/countries';
 
 import {Tournament} from '../../../../shared/model/tournament';
 
-import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration';
+import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 import {AuthenticationStoreState} from '../../store/authentication-state';
 import {getAllFactions} from '../../../../shared/model/factions';
 import {TournamentFormDialogComponent} from "../../dialogs/tournament-form-dialog";
@@ -33,7 +33,7 @@ export class TournamentPreparationComponent implements OnInit {
   @Input() actualTournamentRegisteredPlayers$: Observable<Registration[]>;
   @Input() allActualTournamentPlayers$: Observable<TournamentPlayer[]>;
 
-  @Output() onStartTournament = new EventEmitter<PairingConfiguration>();
+  @Output() onStartTournament = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onAddDummyPlayer = new EventEmitter();
   @Output() onSaveTournament = new EventEmitter<Tournament>();
 
@@ -373,7 +373,7 @@ export class StartTournamentDialogComponent {
   allActualTournamentPlayers: TournamentPlayer[];
   suggestedRoundsToPlay: number;
 
-  @Output() onStartTournament = new EventEmitter<PairingConfiguration>();
+  @Output() onStartTournament = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onAddDummyPlayer = new EventEmitter();
 
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,

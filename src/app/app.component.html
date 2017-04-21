@@ -1,5 +1,5 @@
 <md-sidenav-container class="god-container">
-  <md-sidenav #sidenav>
+  <md-sidenav #sidenav mode="side" opened="true" class="side-nav">
     <nav>
       <img src="./assets/logo3.png" alt="logo" class="nav-img-logo">
       <hr>
@@ -8,19 +8,19 @@
       </p>
       <div class="nav-container">
         <md-icon class="nav-icon">home</md-icon>
-        <a class="nav-link" (click)="sidenav.close()" routerLink="/home">Home</a>
+        <a class="nav-link" routerLink="/home">Home</a>
       </div>
       <div *ngIf="(loggedIn)" class="nav-container">
         <img src="../assets/my_crown_small.png" class="nav-icon">
-        <a class="nav-link" (click)="sidenav.close()" routerLink="/my-tournaments">My Tournaments</a>
+        <a class="nav-link" routerLink="/my-tournaments">My Tournaments</a>
       </div>
       <div class="nav-container">
         <md-icon class="nav-icon">play_arrow</md-icon>
-        <a class="nav-link" (click)="sidenav.close()" routerLink="/tournaments">Tournaments</a>
+        <a class="nav-link" routerLink="/tournaments">Tournaments</a>
       </div>
-      <div  class="nav-container">
+      <div class="nav-container">
         <md-icon class="nav-icon">face</md-icon>
-        <a class="nav-link" (click)="sidenav.close()"  routerLink="/players">Players</a>
+        <a class="nav-link" routerLink="/players">Players</a>
       </div>
       <div class="nav-impress">
         <md-icon class="nav-icon">attachment</md-icon>
@@ -30,7 +30,7 @@
   </md-sidenav>
   <md-toolbar color="primary">
     <div>
-      <button class="app-icon-button" (click)="sidenav.open()">
+      <button class="app-icon-button" (click)="sidenav.toggle()">
         <i class="material-icons  app-toolbar-menu">menu</i>
       </button>
     </div>

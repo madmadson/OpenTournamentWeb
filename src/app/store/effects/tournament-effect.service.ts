@@ -9,7 +9,7 @@ import {
   TOURNAMENT_SUBSCRIBE_ACTION,
   TOURNAMENT_UNSUBSCRIBE_ACTION, TOURNAMENT_PAIR_AGAIN_ACTION,
   GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION, ADD_DUMMY_PLAYER_ACTION, PUBLISH_ROUND_ACTION,
-  TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION
+  TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION, UNDO_TOURNAMENT_END_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
 
@@ -31,6 +31,11 @@ export class TournamentEffectService {
     .ofType(TOURNAMENT_KILL_ROUND_ACTION)
     .debug('TOURNAMENT_KILL_ROUND_ACTION')
     .map(action => this.tournamentService.killRound(action.payload));
+
+  @Effect({dispatch: false}) undoTournamentEnd = this.actions$
+    .ofType(UNDO_TOURNAMENT_END_ACTION)
+    .debug('UNDO_TOURNAMENT_END_ACTION')
+    .map(action => this.tournamentService.undoTournamentEnd(action.payload));
 
   @Effect({dispatch: false}) addDummyPlayer = this.actions$
     .ofType(ADD_DUMMY_PLAYER_ACTION)

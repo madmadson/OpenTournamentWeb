@@ -14,7 +14,7 @@ import {
 } from '../store/actions/tournament-rankings-actions';
 
 import * as _ from 'lodash';
-import {PairingConfiguration} from '../../../shared/dto/pairing-configuration';
+import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {GameResult} from '../../../shared/dto/game-result';
 
@@ -88,7 +88,7 @@ export class TournamentRankingService implements OnDestroy {
     });
   }
 
-  pushRankingForRound(config: PairingConfiguration): TournamentRanking[] {
+  pushRankingForRound(config: TournamentManagementConfiguration): TournamentRanking[] {
 
     const that = this;
     const newRankings: TournamentRanking[] = [];
@@ -136,7 +136,7 @@ export class TournamentRankingService implements OnDestroy {
     return newRankings;
   }
 
-  eraseRankingsForRound(config: PairingConfiguration) {
+  eraseRankingsForRound(config: TournamentManagementConfiguration) {
 
     const query = this.fb.database().ref('tournament-rankings/' + config.tournamentId).orderByChild('tournamentRound')
       .equalTo(config.round);

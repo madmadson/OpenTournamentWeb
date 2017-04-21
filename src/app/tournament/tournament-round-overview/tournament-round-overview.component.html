@@ -1,5 +1,8 @@
 
-<div *ngIf="currentUserId === actualTournament?.creatorUid" class="action-card-container">
+<div *ngIf="(currentUserId === actualTournament?.creatorUid)  &&
+            (round === actualTournament.actualRound) &&
+             !actualTournament.finished"
+     class="action-card-container">
   <md-card class="action-card" >
     <button *ngIf="allGamesUntouched"
             (click)="openPairAgainDialog()"
@@ -25,16 +28,14 @@
       <md-icon>flag</md-icon>
       End Tournament
     </button>
-    <button *ngIf="round === (actualTournament.visibleRound - 1)"
-            (click)="publishRound()"
+    <button (click)="publishRound()"
             type="button"
             class="positive-background"
             md-raised-button>
       <md-icon>cloud_upload</md-icon>
       Publish Round
     </button>
-    <button *ngIf="round === actualTournament.actualRound"
-            (click)="openKillRoundDialog()"
+    <button (click)="openKillRoundDialog()"
             type="button"
             class="negative-background"
             md-raised-button>
@@ -48,9 +49,10 @@
     <h3 class="heading">Games for round {{round}}</h3>
 
     <tournament-game-list
+      [actualTournament]="actualTournament"
+      [authenticationStoreState$]="authenticationStoreState$"
       [armyLists$]="actualTournamentArmyLists$"
       [gamesForRound$]="gamesForRound$"
-      [userPlayerData]="userPlayerData"
       (onGameResult)="handleGameResult($event)"
     ></tournament-game-list>
   </md-card>

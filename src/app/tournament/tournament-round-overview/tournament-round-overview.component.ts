@@ -8,7 +8,7 @@ import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {Tournament} from '../../../../shared/model/tournament';
 
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
-import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration';
+import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 
 import * as _ from 'lodash';
 import {GameResult} from '../../../../shared/dto/game-result';
@@ -29,12 +29,12 @@ export class TournamentRoundOverviewComponent implements OnInit {
   @Input() rankingsForRound$: Observable<TournamentRanking[]>;
   @Input() gamesForRound$: Observable<TournamentGame[]>;
 
-  @Output() onPairAgain = new EventEmitter<PairingConfiguration>();
-  @Output() onNewRound = new EventEmitter<PairingConfiguration>();
-  @Output() onKillRound = new EventEmitter<PairingConfiguration>();
+  @Output() onPairAgain = new EventEmitter<TournamentManagementConfiguration>();
+  @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
+  @Output() onKillRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onGameResult = new EventEmitter<GameResult>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
-  @Output() onEndTournament = new EventEmitter<PairingConfiguration>();
+  @Output() onEndTournament = new EventEmitter<TournamentManagementConfiguration>();
 
   userPlayerData: Player;
   currentUserId: string;
@@ -81,7 +81,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
       },
     });
     const eventSubscribe = dialogRef.componentInstance.onKillRound
-      .subscribe((config: PairingConfiguration) => {
+      .subscribe((config: TournamentManagementConfiguration) => {
 
         if (config !== undefined) {
           config.tournamentId = this.actualTournament.id;
@@ -102,7 +102,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
       },
     });
     const eventSubscribe = dialogRef.componentInstance.onPairAgain
-      .subscribe((config: PairingConfiguration) => {
+      .subscribe((config: TournamentManagementConfiguration) => {
 
       if (config !== undefined) {
         config.tournamentId = this.actualTournament.id;
@@ -143,7 +143,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
     });
     const eventSubscribe = dialogRef.componentInstance.onEndTournament
       .subscribe(() => {
-        this.onEndTournament.emit({tournamentId: this.actualTournament.id, round: this.round});
+        this.onEndTournament.emit({tournamentId: this.actualTournament.id, round: (this.round + 1)});
       });
     dialogRef.afterClosed().subscribe(() => {
 
@@ -158,7 +158,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
 })
 export class PairAgainDialogComponent {
 
-  @Output() onPairAgain = new EventEmitter<PairingConfiguration>();
+  @Output() onPairAgain = new EventEmitter<TournamentManagementConfiguration>();
 
   constructor(public dialogRef: MdDialogRef<PairAgainDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
@@ -204,7 +204,7 @@ export class NewRoundDialogComponent {
 })
 export class KillRoundDialogComponent {
 
-  @Output() onKillRound = new EventEmitter<PairingConfiguration>();
+  @Output() onKillRound = new EventEmitter<TournamentManagementConfiguration>();
 
   enableKill: boolean;
 

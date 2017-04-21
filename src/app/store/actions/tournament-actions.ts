@@ -3,11 +3,11 @@ import {Tournament} from '../../../../shared/model/tournament';
 import {Registration} from '../../../../shared/model/registration';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {ArmyList} from '../../../../shared/model/armyList';
-import {PairingConfiguration} from '../../../../shared/dto/pairing-configuration';
-import {TournamentGame} from "../../../../shared/model/tournament-game";
-import {GameResult} from "../../../../shared/dto/game-result";
-import {PublishRound} from "../../../../shared/dto/publish-round";
-import {RegistrationPush} from "../../../../shared/dto/registration-push";
+import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
+
+import {GameResult} from '../../../../shared/dto/game-result';
+import {PublishRound} from '../../../../shared/dto/publish-round';
+import {RegistrationPush} from '../../../../shared/dto/registration-push';
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -227,7 +227,7 @@ export class TournamentPairAgainAction implements Action {
 
   readonly type = 'TOURNAMENT_PAIR_AGAIN_ACTION';
 
-  constructor(public payload: PairingConfiguration) {
+  constructor(public payload: TournamentManagementConfiguration) {
   }
 }
 
@@ -237,7 +237,7 @@ export class TournamentNewRoundAction implements Action {
 
   readonly type = 'TOURNAMENT_NEW_ROUND_ACTION';
 
-  constructor(public payload: PairingConfiguration) {
+  constructor(public payload: TournamentManagementConfiguration) {
   }
 }
 
@@ -247,9 +247,21 @@ export class TournamentKillRoundAction implements Action {
 
   readonly type = 'TOURNAMENT_KILL_ROUND_ACTION';
 
-  constructor(public payload: PairingConfiguration) {
+  constructor(public payload: TournamentManagementConfiguration) {
   }
 }
+
+export const UNDO_TOURNAMENT_END_ACTION = 'UNDO_TOURNAMENT_END_ACTION';
+
+export class UndoTournamentEndAction implements Action {
+
+  readonly type = 'UNDO_TOURNAMENT_END_ACTION';
+
+  constructor(public payload: TournamentManagementConfiguration) {
+  }
+}
+
+
 
 export const ADD_DUMMY_PLAYER_ACTION = 'ADD_DUMMY_PLAYER_ACTION';
 
@@ -287,6 +299,6 @@ export class EndTournamentAction implements Action {
 
   readonly type = 'END_TOURNAMENT_ACTION';
 
-  constructor(public payload: PairingConfiguration) {
+  constructor(public payload: TournamentManagementConfiguration) {
   }
 }

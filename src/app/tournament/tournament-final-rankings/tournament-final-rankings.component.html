@@ -1,0 +1,27 @@
+
+<div *ngIf="currentUserId === actualTournament?.creatorUid" class="action-card-container">
+  <md-card class="action-card" >
+
+    <button (click)="publishTournament()"
+            type="button"
+            class="positive-background"
+            md-raised-button>
+      <md-icon>cloud_upload</md-icon>
+      Publish Tournament
+    </button>
+    <button (click)="undoTournamentEnd()"
+            type="button"
+            class="negative-background"
+            md-raised-button>
+      <md-icon>undo</md-icon>
+      Undo TournamentEnd
+    </button>
+  </md-card>
+</div>
+<md-card >
+  <h3 class="heading">Final Rankings</h3>
+  <tournament-ranking-table
+    [rankingsForRound$]="finalRankings$"
+    [userPlayerData]="userPlayerData"
+  ></tournament-ranking-table>
+</md-card>

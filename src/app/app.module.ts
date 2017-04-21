@@ -32,7 +32,6 @@ import {AppRoutingModule} from './app-routing.module';
 
 import 'hammerjs';
 import {TournamentFormComponent} from './tournament/tournament-form/tournament-form.component';
-import {DateTimePickerModule} from 'ng2-date-time-picker';
 import {CustomFormsModule} from 'ng2-validation';
 import {AuthGuard} from './service/auth-guard.service';
 import {
@@ -85,6 +84,9 @@ import {RankingEffectService} from './store/effects/ranking-effect.service';
 import {TournamentGameEffectService} from './store/effects/tournament-game-effect.service';
 import {TruncatePipe} from '../pipes/truncate-pise';
 import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
+import { TournamentFinalRankingsComponent } from './tournament/tournament-final-rankings/tournament-final-rankings.component';
+import {DateTimePickerModule} from "ng-pick-datetime";
+
 
 
 const reducers = {
@@ -151,13 +153,13 @@ export const firebaseConfDev = {
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
     MomentModule,
     AppRoutingModule,
-    DateTimePickerModule,
     CustomFormsModule,
     BrowserAnimationsModule,
     MdlModule,
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
-    MdListModule, MdDialogModule, MdTooltipModule
+    MdListModule, MdDialogModule, MdTooltipModule,
+    DateTimePickerModule
   ],
   declarations: [
     AppComponent,
@@ -193,6 +195,7 @@ export const firebaseConfDev = {
     NewRoundDialogComponent,
     TournamentFormDialogComponent,
     FinishTournamentDialogComponent,
+    TournamentFinalRankingsComponent,
   ],
   providers: [
     LoginService,

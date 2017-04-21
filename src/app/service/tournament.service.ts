@@ -17,7 +17,7 @@ import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyList} from '../../../shared/model/armyList';
 import {TournamentRankingService} from './tournament-ranking.service';
 import {TournamentGameService} from './tournament-game.service';
-import {PairingConfiguration} from '../../../shared/dto/pairing-configuration';
+import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {SubscribeTournamentRankingsAction} from '../store/actions/tournament-rankings-actions';
 import {SubscribeTournamentGamesAction} from '../store/actions/tournament-games-actions';
@@ -275,7 +275,7 @@ export class TournamentService implements OnDestroy {
     });
   }
 
-  pairAgainTournament(config: PairingConfiguration) {
+  pairAgainTournament(config: TournamentManagementConfiguration) {
     const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
     const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
     if (successFullyPaired) {
@@ -290,14 +290,14 @@ export class TournamentService implements OnDestroy {
     }
   }
 
-  pairNewRound(config: PairingConfiguration) {
+  pairNewRound(config: TournamentManagementConfiguration) {
 
     const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
     const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
 
     if (successFullyPaired) {
       const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
-      registrationRef.update({actualRound: config.round});
+      registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
       this.snackBar.open('new Round Paired', '', {
         duration: 5000
       });
@@ -333,7 +333,7 @@ export class TournamentService implements OnDestroy {
   }
 
 
-  killRound(config: PairingConfiguration) {
+  killRound(config: TournamentManagementConfiguration) {
     this.rankingService.eraseRankingsForRound(config);
     this.tournamentGameService.eraseGamesForRound(config);
 
@@ -346,16 +346,28 @@ export class TournamentService implements OnDestroy {
     });
   }
 
-  endTournament(config: PairingConfiguration) {
+  endTournament(config: TournamentManagementConfiguration) {
     this.rankingService.pushRankingForRound(config);
 
     const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
     registrationRef.update(
-      {actualRound: config.round, finished: true}
+      { finished: true, visibleRound: (config.round - 1)}
       );
     this.snackBar.open('Successfully end Tournament', '', {
       duration: 5000
     });
 
+  }
+
+  undoTournamentEnd(config: TournamentManagementConfiguration) {
+    this.rankingService.eraseRankingsForRound(config);
+
+    const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+    registrationRef.update(
+      { finished: false }
+    );
+    this.snackBar.open('Successfully undo end Tournament', '', {
+      duration: 5000
+    });
   }
 }

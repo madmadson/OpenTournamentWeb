@@ -24,7 +24,7 @@
   font-weight: bold;
 }
 
-.tournament-game:hover{
+.clickable-tournament-game:hover{
   background-color: deepskyblue;
   cursor: pointer;
 }
