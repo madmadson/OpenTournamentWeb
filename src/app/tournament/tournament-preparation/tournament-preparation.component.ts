@@ -221,7 +221,9 @@ export class TournamentPreparationComponent implements OnInit {
         data: {
           registration: registration,
           armyListForRegistration: this.actualTournamentArmyList$
-        }
+        },
+        width: '800px',
+        height: '800px'
       });
       const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyList.subscribe(armyList => {
 

@@ -12,3 +12,8 @@
 .small-three-space-table-cell {
   width:20px;
 }
+
+.army-list-icon:hover {
+  cursor: pointer;
+  color: deepskyblue;
+}

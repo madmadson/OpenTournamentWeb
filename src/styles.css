@@ -41,13 +41,13 @@ button:focus{
   background-color: deepskyblue;
 }
 
-.table-row:hover{
-  background-color: deepskyblue !important;
-}
+/*.table-row:hover{*/
+  /*background-color: deepskyblue !important;*/
+/*}*/
 
 .list-action{
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left: 3px;
+  padding-right: 3px;
   font-size:36px;
   cursor: pointer;
 }
@@ -117,11 +117,12 @@ md-card {
 }
 
 .max-height {
-  max-height: 350px;
+  height: 350px;
+  max-height: 370px;
 }
 
 .fix-height{
-  height: 350px;
+  height: 370px;
 }
 
 .even{

@@ -70,14 +70,22 @@
   margin-left: 15px;
 }
 
-.nav-impress{
+.version-tag{
+  font-size: 0.7em;
+  font-weight: lighter;
+  position: absolute;
+  right: 0;
+  bottom: 50px;
+  left: 30px;
+}
+
+.nav-about{
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
   padding: 1rem;
   background-color: #efefef;
-  text-align: center;
 }
 
 .spacer {

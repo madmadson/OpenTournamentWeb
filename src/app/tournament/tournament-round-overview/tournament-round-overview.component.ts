@@ -42,10 +42,13 @@ export class TournamentRoundOverviewComponent implements OnInit {
   allGamesFinished: boolean;
   allGamesUntouched: boolean;
 
+  armyLists$: Observable<ArmyList[]>;
+
   constructor(public dialog: MdDialog) { }
 
   ngOnInit() {
 
+    this.armyLists$ = this.actualTournamentArmyLists$;
 
     this.authenticationStoreState$.subscribe(auth => {
       this.userPlayerData = auth.userPlayerData;

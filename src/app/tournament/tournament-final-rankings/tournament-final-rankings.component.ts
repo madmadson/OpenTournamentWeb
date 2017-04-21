@@ -24,9 +24,13 @@ export class TournamentFinalRankingsComponent implements OnInit {
   userPlayerData: Player;
   currentUserId: string;
 
+  armyLists: Observable<ArmyList[]>;
+
   constructor() { }
 
   ngOnInit() {
+
+    this.armyLists = this.actualTournamentArmyList$;
 
     this.authenticationStoreState$.subscribe(auth => {
       this.userPlayerData = auth.userPlayerData;

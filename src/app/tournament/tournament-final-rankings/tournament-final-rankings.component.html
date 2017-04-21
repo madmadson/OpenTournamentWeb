@@ -21,6 +21,7 @@
 <md-card >
   <h3 class="heading">Final Rankings</h3>
   <tournament-ranking-table
+    [actualTournamentArmyList$]="armyLists"
     [rankingsForRound$]="finalRankings$"
     [userPlayerData]="userPlayerData"
   ></tournament-ranking-table>

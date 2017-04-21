@@ -13,11 +13,13 @@ import {PlayerFormComponent} from './player/player-form/player-form.component';
 import {RegisterPageComponent} from './auth/register-page/register-page.component';
 import {PasswordForgetComponent} from './auth/password-forget/password-forget.component';
 import {TournamentOverviewComponent} from './tournament/tournament-overview/tournament-overview.component';
+import {AboutComponent} from './about/about.component';
 
 
 const routes: Routes = [
   {path: 'home', component: HomePageComponent},
   {path: 'login', component: LoginPageComponent},
+  {path: 'about', component: AboutComponent},
   {path: 'register', component: RegisterPageComponent},
   {path: 'password-forget', component: PasswordForgetComponent},
   {path: 'tournaments', component: TournamentListOverviewComponent},

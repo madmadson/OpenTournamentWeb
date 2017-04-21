@@ -18,15 +18,18 @@
   </mdl-list-item-secondary-content>
 
 
+  <mdl-list-item-secondary-content *ngIf="isItMe(registration.playerId)">
+    <md-icon class="positive  list-action" (click)="addArmyLists(registration)">playlist_add</md-icon>
+  </mdl-list-item-secondary-content>
   <ng-container *ngIf="isAdmin && !registration.isTournamentPlayer  && actualTournament.actualRound === 0">
     <mdl-list-item-secondary-content>
       <md-icon class="negative  list-action" (click)="deleteRegistration(registration)">delete</md-icon>
     </mdl-list-item-secondary-content>
     <mdl-list-item-secondary-content>
-      <md-icon class="positive  list-action" (click)="acceptRegistration(registration)">check_circle</md-icon>
+      <a href='mailto:{{registration.email}}'><md-icon class="info list-action">email</md-icon></a>
     </mdl-list-item-secondary-content>
     <mdl-list-item-secondary-content>
-      <a href='mailto:{{registration.email}}'><md-icon class="info list-action">email</md-icon></a>
+      <md-icon class="positive  list-action" (click)="acceptRegistration(registration)">check_circle</md-icon>
     </mdl-list-item-secondary-content>
   </ng-container>
 </mdl-list-item>

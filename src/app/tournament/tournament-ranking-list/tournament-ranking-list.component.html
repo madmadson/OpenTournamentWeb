@@ -1,7 +1,8 @@
-<table style="width: 100%" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--3dp">
+<table class="full-width mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--3dp">
   <thead>
   <tr>
     <th class="small-three-space-table-cell">#</th>
+    <th class="small-three-space-table-cell">Lists</th>
     <th class="mdl-data-table__cell--non-numeric">Player</th>
     <th class="small-three-space-table-cell">Score</th>
     <th class="small-three-space-table-cell">SOS</th>
@@ -13,6 +14,12 @@
          [ngClass]="{'even': even, 'my-item':isItMe(rank.playerId)} ">
   <tr class="table-row">
     <td class="small-three-space-table-cell rank-table-cell">{{i +1}}</td>
+    <td class="small-three-space-table-cell rank-table-cell">
+      <md-icon class="army-list-icon"
+               *ngIf="hasArmyList(rank)"
+                (click)="openArmyListDialog(rank)">
+        list</md-icon>
+    </td>
     <td class="mdl-data-table__cell--non-numeric">
       <div class="player-name-table-cell">{{rank.playerName | truncate:40}}</div>
       <div>{{rank.faction}}</div>

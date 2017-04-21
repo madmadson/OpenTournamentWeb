@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import {TournamentFormDialogComponent} from '../../dialogs/tournament-form-dialog';
 import {MdDialog} from '@angular/material';
 import {Tournament} from '../../../../shared/model/tournament';
-import {TournamentPushAction} from "../../store/actions/tournaments-actions";
+import {TournamentPushAction} from '../../store/actions/tournaments-actions';
 
 @Component({
   selector: 'my-tournaments',
@@ -56,8 +56,9 @@ export class MyTournamentsComponent {
   openCreateTournamentDialog(): void {
     const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
       data: {
-        tournament: new Tournament('', '', '', '', 0, 0, 0, 0, 0, this.creatorId, false, false)
-      }
+        tournament: new Tournament('', '', '', '', 16, 0, 0, 0, 0, this.creatorId, false, false)
+      },
+      width: '800px'
     });
 
     const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {

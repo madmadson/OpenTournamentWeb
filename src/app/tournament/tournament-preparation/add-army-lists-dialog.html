@@ -1,5 +1,4 @@
-<h1>ArmyLists</h1>
-<h3>{{registration.playerName}}</h3>
+<h3>ArmyLists for {{registration.playerName}}</h3>
 <md-card>
   <p *ngIf="armyListForRegistration.length > 6" style="color: red">Maximum reached for ArmyLists</p>
   <md-tab-group [selectedIndex]="selectedTab">
@@ -11,15 +10,15 @@
             mdInput
             type="text"
             placeholder="Army List Name"
-            maxlength="50"
+            maxlength="30"
             required
             #armyListName
             [(ngModel)]="armyListModel.name" name="name">
-          <md-hint align="end">{{armyListName.value.length}} / 50</md-hint>
+          <md-hint align="end">{{armyListName.value.length}} / 30</md-hint>
         </md-input-container>
 
         <md-input-container
-          class="full-width">
+          class="full-width max-height">
         <textarea
           mdTextareaAutosize
           mdInput

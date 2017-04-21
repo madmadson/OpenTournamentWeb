@@ -59,6 +59,7 @@
   <md-card >
     <h3 class="heading">Ranking for round {{round}}</h3>
     <tournament-ranking-table
+      [actualTournamentArmyList$]="armyLists$"
       [rankingsForRound$]="rankingsForRound$"
       [userPlayerData]="userPlayerData"
     ></tournament-ranking-table>
