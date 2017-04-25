@@ -18,6 +18,7 @@ import {
   ClearTournamentGamesAction,
 } from '../store/actions/tournament-games-actions';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
+import {Tournament} from '../../../shared/model/tournament';
 
 
 @Injectable()
@@ -26,6 +27,8 @@ export class TournamentGameService implements OnDestroy {
   tournamentGamesRef: firebase.database.Reference;
   allRankings: TournamentRanking[];
   allPlayers: TournamentPlayer[];
+  allGames: TournamentGame[];
+  actualTournament: Tournament;
 
   private newGames: TournamentGame[];
 
@@ -35,8 +38,10 @@ export class TournamentGameService implements OnDestroy {
 
     this.store.select(state => state).subscribe(state => {
 
+      this.actualTournament = state.actualTournament.actualTournament;
       this.allRankings = state.actualTournamentRankings.actualTournamentRankings;
       this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
+      this.allGames = state.actualTournamentGames.actualTournamentGames;
 
     });
   }
@@ -181,6 +186,74 @@ export class TournamentGameService implements OnDestroy {
       snapshot.forEach(function (child) {
         child.ref.remove();
       });
+    });
+  }
+
+  calculateEloForTournament() {
+
+    const that = this;
+
+    const gamesRef = this.fireDB.list('games');
+
+    _.each(this.allPlayers, function (tournamentPlayer: TournamentPlayer) {
+
+      if (tournamentPlayer.playerId) {
+        const playersTournamentRef = that.fireDB.list('players-tournaments/' + tournamentPlayer.playerId);
+        playersTournamentRef.push(that.actualTournament);
+      }
+
+    });
+
+    _.each(this.allGames, function (game: TournamentGame) {
+      gamesRef.push(game);
+      if (game.playerOnePlayerId) {
+        const playersGamesTournamentRef = that.fireDB.list('players-games/' + game.playerOnePlayerId);
+        playersGamesTournamentRef.push(that.actualTournament);
+      }
+      if (game.playerTwoPlayerId) {
+        const playersGamesTournamentRef = that.fireDB.list('players-games/' + game.playerTwoPlayerId);
+        playersGamesTournamentRef.push(that.actualTournament);
+      }
+
+      if (game.playerOnePlayerId && game.playerTwoPlayerId) {
+        const valueOnePlayerOne = ((game.playerOneElo - game.playerTwoElo) / 400);
+        const valueTwoPlayerOne = 1 + Math.pow(10, valueOnePlayerOne);
+        const expectancyValuePlayerOne = 1 / valueTwoPlayerOne;
+
+        const valueOnePlayerTwo = ((game.playerTwoElo - game.playerOneElo) / 400);
+        const valueTwoPlayerTwo = 1 + Math.pow(10, valueOnePlayerTwo);
+        const expectancyValuePlayerTwo = 1 / valueTwoPlayerTwo;
+
+        let newEloPlayerOne;
+        let newEloPlayerTwo;
+
+        if (game.playerOneScore > game.playerTwoScore) {
+          newEloPlayerOne = Math.round(game.playerOneElo + 40 * (1 - expectancyValuePlayerOne));
+        } else if (game.playerOneScore === game.playerTwoScore) {
+          newEloPlayerOne = Math.round(game.playerOneElo + 40 * (0.5 - expectancyValuePlayerOne));
+        } else {
+          newEloPlayerOne = Math.round(game.playerOneElo + 40 * (0 - expectancyValuePlayerOne));
+        }
+
+        if (game.playerOneScore > game.playerTwoScore) {
+          newEloPlayerTwo = Math.round(game.playerTwoElo + 40 * (1 - expectancyValuePlayerTwo));
+        } else if (game.playerOneScore === game.playerTwoElo) {
+          newEloPlayerTwo =  Math.round(game.playerTwoElo + 40 * (0.5 - expectancyValuePlayerTwo));
+        } else {
+          newEloPlayerTwo = Math.round(game.playerTwoElo + 40 * (0 - expectancyValuePlayerTwo));
+        }
+        const playerOneGameTournamentRef = that.fireDB.object('players-games/' + game.playerOnePlayerId + '/' + game.id);
+        playerOneGameTournamentRef.update({'playerOneEloChanging': (newEloPlayerOne - game.playerOneElo)});
+
+        const playerTwoGameTournamentRef = that.fireDB.object('players-games/' + game.playerTwoPlayerId + '/' + game.id);
+        playerTwoGameTournamentRef.update({'playerTwoEloChanging': (newEloPlayerTwo - game.playerTwoElo)});
+
+        const playerOneRef = that.fireDB.object('players/' + game.playerOnePlayerId);
+        playerOneRef.update({'elo': newEloPlayerOne});
+
+        const playerTwoRef = that.fireDB.object('players/' + game.playerTwoPlayerId);
+        playerTwoRef.update({'elo': newEloPlayerTwo});
+      }
     });
   }
 }

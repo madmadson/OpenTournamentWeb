@@ -57,6 +57,8 @@ export class TournamentPreparationComponent implements OnInit {
 
   suggestedRoundsToPlay: number;
 
+  armyLists$: Observable<ArmyList[]>;
+
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar) {
   }
@@ -64,6 +66,7 @@ export class TournamentPreparationComponent implements OnInit {
   ngOnInit() {
     const that = this;
 
+    this.armyLists$ = this.actualTournamentArmyList$;
 
     this.authenticationStoreState$.subscribe(auth => {
       this.userPlayerData = auth.userPlayerData;

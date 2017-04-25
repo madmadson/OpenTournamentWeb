@@ -262,6 +262,15 @@ export class UndoTournamentEndAction implements Action {
   }
 }
 
+export const UPLOAD_TOURNAMENT_ACTION = 'UPLOAD_TOURNAMENT_ACTION';
+
+export class UploadTournamentAction implements Action {
+
+  readonly type = 'UPLOAD_TOURNAMENT_ACTION';
+
+  constructor(public payload: string) {
+  }
+}
 
 
 export const ADD_DUMMY_PLAYER_ACTION = 'ADD_DUMMY_PLAYER_ACTION';

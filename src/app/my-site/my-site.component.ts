@@ -1,22 +1,24 @@
-import {Component} from '@angular/core';
+
 import {Observable} from 'rxjs/Observable';
-import {TournamentListVM} from '../tournamentList.vm';
+import {TournamentListVM} from '../tournament/tournamentList.vm';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../../store/application-state';
+import {ApplicationState} from '../store/application-state';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {TournamentFormDialogComponent} from '../../dialogs/tournament-form-dialog';
+import {TournamentFormDialogComponent} from '../dialogs/tournament-form-dialog';
 import {MdDialog} from '@angular/material';
-import {Tournament} from '../../../../shared/model/tournament';
-import {TournamentPushAction} from '../../store/actions/tournaments-actions';
+
+import {Tournament} from '../../../shared/model/tournament';
+import {TournamentPushAction} from '../store/actions/tournaments-actions';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'my-tournaments',
-  templateUrl: './my-tournaments.component.html',
-  styleUrls: ['./my-tournaments.component.css']
+  templateUrl: './my-site.component.html',
+  styleUrls: ['./my-site.component.css']
 })
-export class MyTournamentsComponent {
+export class MySiteComponent {
   groupedTournaments$: Observable<TournamentListVM[]>;
   allTournaments$: Observable<any[]>;
 

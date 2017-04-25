@@ -20,6 +20,7 @@ export class TournamentFinalRankingsComponent implements OnInit {
   @Input() finalRankings$: Observable<TournamentRanking[]>;
 
   @Output() onUndoTournamentEnd = new EventEmitter<TournamentManagementConfiguration>();
+  @Output() onUploadTournament = new EventEmitter();
 
   userPlayerData: Player;
   currentUserId: string;
@@ -38,12 +39,11 @@ export class TournamentFinalRankingsComponent implements OnInit {
     });
   }
 
-  uploadTournament() {
-
+  publishTournament() {
+    this.onUploadTournament.emit();
   }
 
   undoTournamentEnd() {
-
     this.onUndoTournamentEnd.emit({tournamentId: this.actualTournament.id, round: (this.actualTournament.actualRound + 1 )});
   }
 }

@@ -30,7 +30,8 @@
           [(ngModel)]="armyListModel.list" name="list"></textarea>
           <md-hint align="end">{{armyList.value.length}} / 1000</md-hint>
         </md-input-container>
-        <button type="button"
+        <button class="save-button"
+                type="button"
                 color="accent"
                 md-raised-button
                 (click)="addArmyList()"
@@ -49,7 +50,8 @@
         disabled
         >{{armyList.list}}</textarea>
       </md-input-container>
-      <button type="button"
+      <button class="save-button"
+              type="button"
               color="accent"
               md-raised-button
               (click)="deleteArmyList(armyList)">

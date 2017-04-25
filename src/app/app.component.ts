@@ -1,11 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from './store/application-state';
-import {Subscription} from 'rxjs/Subscription';
+
 import {AuthSubscribeAction, LogoutAction} from './store/actions/auth-actions';
 import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from './store/actions/tournaments-actions';
 import {Router} from '@angular/router';
-import * as _ from 'lodash';
 
 @Component({
   selector: 'app-root',

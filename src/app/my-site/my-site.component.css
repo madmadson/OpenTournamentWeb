@@ -5,8 +5,16 @@
 .create-action{
   display: inline-block;
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 100px;
+  right: 25px;
+}
+
+.my-site-tournaments{
+  height: 100%;
+}
+
+.mat-tab-body-content{
+  height: auto;
 }
 
 

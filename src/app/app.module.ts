@@ -26,7 +26,7 @@ import {routerReducer, RouterStoreModule} from '@ngrx/router-store';
 import {MomentModule} from 'angular2-moment';
 import {TournamentListOverviewComponent} from './tournament/tournament-list-overview/tournament-list-overview.component';
 
-import {MyTournamentsComponent} from './tournament/my-tournaments/my-tournaments.component';
+import {MySiteComponent} from './my-site/my-site.component';
 import {PageNotFoundComponent} from './not-found.component';
 import {AppRoutingModule} from './app-routing.module';
 
@@ -51,7 +51,10 @@ import {PlayerFormComponent} from './player/player-form/player-form.component';
 import { RegisterPageComponent } from './auth/register-page/register-page.component';
 import { PasswordForgetComponent } from './auth/password-forget/password-forget.component';
 import { TournamentRegistrationListComponent } from './tournament/tournament-registration-list/tournament-registration-list.component';
-import { TournamentPlayerListComponent } from './tournament/tournament-player-list/tournament-player-list.component';
+import {
+  ShowArmyListInTournamentPlayerDialogComponent,
+  TournamentPlayerListComponent
+} from './tournament/tournament-player-list/tournament-player-list.component';
 import {TournamentRankingService} from './service/tournament-ranking.service';
 
 import {AuthenticationReducer} from './store/reducers/authenticationReducer';
@@ -171,7 +174,7 @@ export const firebaseConfDev = {
     LoginPageComponent,
     HomePageComponent,
     TournamentListOverviewComponent,
-    MyTournamentsComponent,
+    MySiteComponent,
     PageNotFoundComponent,
     TournamentFormComponent,
     TournamentPreparationComponent,
@@ -200,7 +203,8 @@ export const firebaseConfDev = {
     FinishTournamentDialogComponent,
     TournamentFinalRankingsComponent,
     AboutComponent,
-    ShowArmyListInTournamentRankingDialogComponent
+    ShowArmyListInTournamentRankingDialogComponent,
+    ShowArmyListInTournamentPlayerDialogComponent,
   ],
   providers: [
     LoginService,
@@ -223,6 +227,7 @@ export const firebaseConfDev = {
     TournamentFormDialogComponent,
     FinishTournamentDialogComponent,
     ShowArmyListInTournamentRankingDialogComponent,
+    ShowArmyListInTournamentPlayerDialogComponent,
   ],
   bootstrap: [AppComponent]
 })

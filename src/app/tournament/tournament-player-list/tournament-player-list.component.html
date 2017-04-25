@@ -19,7 +19,9 @@
     <mdl-list-item-secondary-info>ELO</mdl-list-item-secondary-info>
     <span>{{tournamentPlayer.elo}}<img class="md-secondary" src="../../../assets/my_crown_small.png"></span>
   </mdl-list-item-secondary-content>
-
+  <mdl-list-item-secondary-content *ngIf="tournamentPlayer.playerId">
+    <md-icon class="positive  list-action" (click)="openArmyListDialog(tournamentPlayer)">list</md-icon>
+  </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="isAdmin  && actualTournament.actualRound === 0">
     <md-icon class="negative  list-action" (click)="deleteTournamentPlayer(tournamentPlayer)">delete</md-icon>
   </mdl-list-item-secondary-content>

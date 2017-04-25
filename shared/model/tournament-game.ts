@@ -14,6 +14,7 @@ export class TournamentGame {
   playerOneControlPoints: number;
   playerOneVictoryPoints: number;
   playerOneArmyList: string;
+  playerOneEloChanging?: number;
 
   playerTwoPlayerId: string;
   playerTwoTournamentPlayerId: string;
@@ -24,6 +25,7 @@ export class TournamentGame {
   playerTwoControlPoints: number;
   playerTwoVictoryPoints: number;
   playerTwoArmyList: string;
+  playerTwoEloChanging?: number;
 
   playingField: number;
   tournamentRound: number;

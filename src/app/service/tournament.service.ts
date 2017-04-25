@@ -197,7 +197,7 @@ export class TournamentService implements OnDestroy {
 
     const tournamentPlayer = TournamentPlayer.fromRegistration(registration);
 
-    const tournamentPlayers = this.afService.database.list('tournament-player/' + registration.tournamentId );
+    const tournamentPlayers = this.afService.database.list('tournament-player/' + registration.tournamentId);
     tournamentPlayers.push(tournamentPlayer);
 
 
@@ -238,7 +238,7 @@ export class TournamentService implements OnDestroy {
 
   pushArmyList(armyList: ArmyList) {
 
-    const tournamentPlayers = this.afService.database.list('tournament-armyLists/' + armyList.tournamentId );
+    const tournamentPlayers = this.afService.database.list('tournament-armyLists/' + armyList.tournamentId);
     tournamentPlayers.push(armyList);
 
     this.snackBar.open('Army List saved successfully', '', {
@@ -259,7 +259,7 @@ export class TournamentService implements OnDestroy {
   addDummyPlayer(tournamentId: string) {
     const dummy = new TournamentPlayer(tournamentId, '', '', '', 'DUMMY', '', '', '', '', 0, '');
 
-    const tournamentPlayers = this.afService.database.list('tournament-player/' + tournamentId );
+    const tournamentPlayers = this.afService.database.list('tournament-player/' + tournamentId);
     tournamentPlayers.push(dummy);
 
     this.snackBar.open('Dummy Player successfully inserted', '', {
@@ -269,7 +269,7 @@ export class TournamentService implements OnDestroy {
 
   pushNewTournamentPlayer(player: TournamentPlayer) {
 
-    const tournamentPlayers = this.afService.database.list('tournament-player/' + player.tournamentId );
+    const tournamentPlayers = this.afService.database.list('tournament-player/' + player.tournamentId);
     tournamentPlayers.push(player);
 
     this.snackBar.open('Tournament Player saved successfully', '', {
@@ -281,7 +281,7 @@ export class TournamentService implements OnDestroy {
     const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
     const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
     if (successFullyPaired) {
-       this.snackBar.open('Round ' + config.round + ' paired again successfully ', '', {
+      this.snackBar.open('Round ' + config.round + ' paired again successfully ', '', {
         duration: 5000
       });
 
@@ -353,8 +353,8 @@ export class TournamentService implements OnDestroy {
 
     const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
     registrationRef.update(
-      { finished: true, visibleRound: (config.round - 1)}
-      );
+      {finished: true, visibleRound: (config.round - 1)}
+    );
     this.snackBar.open('Successfully end Tournament', '', {
       duration: 5000
     });
@@ -366,7 +366,7 @@ export class TournamentService implements OnDestroy {
 
     const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
     registrationRef.update(
-      { finished: false }
+      {finished: false}
     );
     this.snackBar.open('Successfully undo end Tournament', '', {
       duration: 5000
@@ -377,14 +377,10 @@ export class TournamentService implements OnDestroy {
 
     const game1: TournamentGame = swapPlayer.gameOne;
 
-    console.log('game1: ' + JSON.stringify(game1));
-
     const gameOneRef = this.fb.database().ref('tournament-games/' + game1.tournamentId + '/' + game1.id);
     gameOneRef.update(game1);
 
     const game2: TournamentGame = swapPlayer.gameTwo;
-
-    console.log('game2: ' + JSON.stringify(game2));
 
     const gameTwoRef = this.fb.database().ref('tournament-games/' + game1.tournamentId + '/' + game2.id);
     gameTwoRef.update(game2);
@@ -393,5 +389,18 @@ export class TournamentService implements OnDestroy {
       duration: 5000
     });
 
+  }
+
+  uploadTournament(tournamentId: string) {
+
+    this.tournamentGameService.calculateEloForTournament();
+
+    const registrationRef = this.afService.database.object('tournaments/' + tournamentId);
+    registrationRef.update(
+      {uploaded: true}
+    );
+    this.snackBar.open('Successfully upload Tournament', '', {
+      duration: 5000
+    });
   }
 }

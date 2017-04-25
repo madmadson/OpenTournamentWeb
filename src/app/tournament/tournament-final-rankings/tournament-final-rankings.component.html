@@ -1,6 +1,6 @@
 
 <div *ngIf="currentUserId === actualTournament?.creatorUid" class="action-card-container">
-  <md-card class="action-card" >
+  <md-card *ngIf="!actualTournament.uploaded" class="action-card" >
 
     <button (click)="publishTournament()"
             type="button"

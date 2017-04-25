@@ -5,7 +5,7 @@ import {TournamentListOverviewComponent} from './tournament/tournament-list-over
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {HomePageComponent} from './home-page/home-page.component';
 import {PageNotFoundComponent} from './not-found.component';
-import {MyTournamentsComponent} from './tournament/my-tournaments/my-tournaments.component';
+import {MySiteComponent} from './my-site/my-site.component';
 import {AuthGuard} from './service/auth-guard.service';
 import {TournamentRegistrationFormComponent} from './tournament/tournament-registration-form/tournament-registration-form.component';
 import {PlayerListOverviewComponent} from './player/player-list-overview/player-list-overview.component';
@@ -24,7 +24,7 @@ const routes: Routes = [
   {path: 'password-forget', component: PasswordForgetComponent},
   {path: 'tournaments', component: TournamentListOverviewComponent},
   {path: 'players', component: PlayerListOverviewComponent},
-  {path: 'my-tournaments', component: MyTournamentsComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
+  {path: 'my-site', component: MySiteComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'tournament/:id', component: TournamentOverviewComponent},
   {path: 'player-profile', component: PlayerFormComponent},
   {path: 'tournament/:id/register', component: TournamentRegistrationFormComponent},

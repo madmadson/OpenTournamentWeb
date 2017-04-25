@@ -113,6 +113,7 @@
     </md-input-container>
     <mdl-list>
       <tournament-player-list
+          [actualTournamentArmyList$]="armyLists$"
           [actualTournament] = "actualTournament"
           [isAdmin]="currentUserId === actualTournament?.creatorUid"
           [userPlayerData]="userPlayerData"

@@ -17,7 +17,7 @@ import {
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
   ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
-  RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction
+  RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction
 } from '../../store/actions/tournament-actions';
 
 
@@ -187,5 +187,9 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleUndoTournamentEnd(config: TournamentManagementConfiguration) {
     this.store.dispatch(new UndoTournamentEndAction(config));
+  }
+
+  handleUploadTournament() {
+    this.store.dispatch(new UploadTournamentAction(this.actualTournament.id));
   }
 }

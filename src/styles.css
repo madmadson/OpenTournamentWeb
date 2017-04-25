@@ -115,6 +115,11 @@ md-card {
   padding-bottom: 12px;
 }
 
+.save-button {
+  margin-bottom: 6px !important;
+  margin-left: 6px !important;
+}
+
 .big-button{
   height: 54px;
 }
