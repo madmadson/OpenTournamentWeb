@@ -108,12 +108,14 @@ export class TournamentGameListComponent implements OnInit {
 
     event.preventDefault();
 
-    if (this.draggedTournamentPlayerId === tournamentPlayerId ||
-      this.draggedTournamentPlayerId === opponentTournamentPlayerId ||
-      _.includes(this.draggedTournamentPlayerOpponentIds, opponentTournamentPlayerId)) {
-      event.target.classList.add('drag-over-disable');
-    } else {
-      event.target.classList.add('drag-over-enable');
+    if (this.draggedGame) {
+      if (this.draggedTournamentPlayerId === tournamentPlayerId ||
+        this.draggedTournamentPlayerId === opponentTournamentPlayerId ||
+        _.includes(this.draggedTournamentPlayerOpponentIds, opponentTournamentPlayerId)) {
+        event.target.classList.add('drag-over-disable');
+      } else {
+        event.target.classList.add('drag-over-enable');
+      }
     }
     return true;
   }
@@ -129,11 +131,6 @@ export class TournamentGameListComponent implements OnInit {
 
 
   endDrag(event: any) {
-
-    this.dragStarted = false;
-    this.draggedTournamentPlayerId = undefined;
-    this.draggedTournamentPlayerCurrentOpponentId = undefined;
-    this.draggedGame = undefined;
 
     event.target.classList.remove('drag-over-disable');
     event.target.classList.remove('drag-over-enable');
@@ -155,9 +152,7 @@ export class TournamentGameListComponent implements OnInit {
     event.target.classList.remove('drag-over-disable');
     event.target.classList.remove('drag-over-enable');
 
-
-
-    if (!droppedGame.finished) {
+    if (!droppedGame.finished && this.draggedGame) {
 
       // Don't do anything if dropping the same column we're dragging.
       if (droppedTournamentPlayerId !== this.draggedTournamentPlayerId &&
@@ -437,6 +432,7 @@ export class GameResultDialogComponent {
   playerOneArmyLists$: Observable<ArmyList[]>;
   playerTwoArmyLists$: Observable<ArmyList[]>;
 
+  sureButton: boolean;
 
   constructor(public dialogRef: MdDialogRef<PairAgainDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
@@ -580,11 +576,13 @@ export class GameResultDialogComponent {
   enterGameResultSubmitted() {
 
     if (this.gameModel.playerOneScore === 0 && this.gameModel.playerTwoScore === 0) {
-      this.snackBar.open('Attention! No match winner.', '', {
-        duration: 5000
-      });
+      this.sureButton = true;
+    } else {
+      this.pushGameResult();
     }
+  }
 
+  private pushGameResult() {
     this.gameModel.id = this.givenGame.id;
     this.gameModel.finished = true;
 

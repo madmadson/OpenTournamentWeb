@@ -9,10 +9,10 @@
     <md-card
       draggable="true"
       (dragstart)="startDrag($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
-      (dragend)="endDrag($event)"
       (dragover)="dragOver($event, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       (dragleave)="dragLeave($event)"
       (dragout)="dragLeave($event)"
+      (dragend)="endDrag($event)"
       (drop)="dropped($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       class="game-card"
       [ngClass]="{  'move-able:': !game.finished,

@@ -5,7 +5,7 @@ export function getWarmachineConfig(): GameConfig {
 
   return new GameConfig('warmachine',
     [new GamePoint('score', 'sc', 0, 1),
-      new GamePoint('controlPoints', 'cp', 0, 5),
+      new GamePoint('controlPoints', 'cp', 0, 30),
       new GamePoint('victoryPoints', 'vp', 0, 500)]);
 }
 

@@ -25,7 +25,7 @@
             <input
               mdInput
               type="number"
-              min="0" max="5"
+              min="0" max="{{gameConfig.points[1].max}}"
               placeholder="CP"
               #playerOneControlPoints
               (blur)="correctPlayerOneCPInput()"
@@ -46,7 +46,7 @@
             <input
               mdInput
               type="number"
-              min="0" max="10000"
+              min="0" max="{{gameConfig.points[2].max}}"
               placeholder="VP"
               #playerOneVictoryPoints
               (blur)="correctPlayerOneVPInput()"
@@ -93,7 +93,8 @@
             <input
               mdInput
               type="number"
-              min="0" max="5"
+              min="0" max="{{gameConfig.points[1].max}}"
+              maxlength="2"
               placeholder="CP"
               #playerTwoControlPoints
               (blur)="correctPlayerTwoCPInput()"
@@ -114,7 +115,8 @@
             <input
               mdInput
               type="number"
-              min="0" max="10000"
+              min="0" max="{{gameConfig.points[2].max}}"
+              maxlength="3"
               placeholder="VP"
               #playerTwoVictoryPoints
               (blur)="correctPlayerTwoVPInput()"
@@ -137,7 +139,17 @@
         <ng-template #noArmyList>No ArmyList for Player found</ng-template>
       </md-card>
     </div>
-    <button (click)="enterGameResultSubmitted()"
+
+    <button *ngIf="sureButton"
+            (click)="pushGameResult()"
+            class="full-width big-button positive-background"
+            type="button"
+            md-raised-button>
+      <md-icon>check</md-icon>
+      Really no winner?
+    </button>
+    <button *ngIf="!sureButton"
+            (click)="enterGameResultSubmitted()"
             class="full-width big-button"
             type="button"
             color="accent"
