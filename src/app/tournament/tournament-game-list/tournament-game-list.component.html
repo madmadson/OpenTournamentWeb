@@ -1,16 +1,25 @@
-
-
-<div  *ngFor="let game of gamesForRound$ | async; let i = index; let even = even"
+<div *ngFor="let game of gamesForRound$ | async; let i = index; let even = even"
      [ngClass]="{'even': even,
                  'my-item':isItMyGame(game),
                  'clickable-tournament-game': myGameOrAdmin(game)
                  }"
-      (click)="openGameResultDialog(game)">
+     (click)="openGameResultDialog(game)">
   <div class="table-info">Table {{i +1}}</div>
   <div class="game-cards-container">
-    <md-card class="game-card"
-             [ngClass]="{'card-won': (game.playerOneScore == 1 && game.finished),
-                           'card-not-won': (game.playerOneScore == 0 && game.finished)} ">
+    <md-card
+      draggable="true"
+      (dragstart)="startDrag($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
+      (dragend)="endDrag($event)"
+      (dragover)="dragOver($event, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
+      (dragleave)="dragLeave($event)"
+      (dragout)="dragLeave($event)"
+      (drop)="dropped($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
+      class="game-card"
+      [ngClass]="{  'move-able:': !game.finished,
+                    'drop-enable': dragStarted && !game.finished && dragEnable(game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId),
+                    'drop-disable': dragStarted && !game.finished && !dragEnable(game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId),
+                    'card-won': (game.playerOneScore == 1 && game.finished),
+                    'card-not-won': (game.playerOneScore == 0 && game.finished)} ">
       <div class="game-card-line game-card-line-playerName">{{game.playerOnePlayerName | truncate:40}}</div>
       <div class="game-card-line">{{game.playerOneFaction}}</div>
       <div class="game-card-line">
@@ -21,17 +30,29 @@
       <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
     </md-card>
     <div>VS</div>
-    <md-card class="game-card"
-             [ngClass]="{'card-won': (game.playerTwoScore == 1 && game.finished),
-                           'card-not-won': (game.playerTwoScore == 0 && game.finished)} ">
-      <div class="game-card-line game-card-line-playerName">{{game.playerTwoPlayerName | truncate:40}}</div>
-      <div class="game-card-line">{{game.playerTwoFaction}}</div>
-      <div class="game-card-line">
+    <md-card
+      draggable="true"
+      (dragstart)="startDrag($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
+      (dragover)="dragOver($event, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
+      (dragleave)="dragLeave($event)"
+      (dragend)="endDrag($event)"
+      (drop)="dropped($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
+      class="game-card"
+      [ngClass]="{  'move-able:': !game.finished,
+                    'drop-enable': dragStarted && !game.finished && dragEnable(game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId),
+                    'drop-disable': dragStarted && !game.finished && !dragEnable(game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId),
+                    'card-won': (game.playerTwoScore == 1 && game.finished),
+                    'card-not-won': (game.playerTwoScore == 0 && game.finished)} ">
+      <div  class="game-card-line game-card-line-playerName">{{game.playerTwoPlayerName | truncate:40}}</div>
+      <div  class="game-card-line">{{game.playerTwoFaction}}</div>
+      <div  class="game-card-line">
         Score: {{game.playerTwoScore}}
         CP: {{game.playerTwoControlPoints}}
         VP: {{game.playerTwoVictoryPoints}}
       </div>
-      <div *ngIf="game.playerTwoArmyList" class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
+      <div *ngIf="game.playerTwoArmyList " class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
     </md-card>
+
   </div>
 </div>
+

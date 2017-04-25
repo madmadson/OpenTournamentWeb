@@ -17,7 +17,7 @@ import {
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
   ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
-  RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction
+  RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction
 } from '../../store/actions/tournament-actions';
 
 
@@ -28,6 +28,7 @@ import {PublishRound} from '../../../../shared/dto/publish-round';
 import {
   TournamentSetAction
 } from '../../store/actions/tournaments-actions';
+import {SwapPlayer} from '../../../../shared/dto/swap-player';
 
 @Component({
   selector: 'tournament-overview',
@@ -171,6 +172,10 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleGameResult(gameResult: GameResult) {
      this.store.dispatch(new GameResultEnteredAction(gameResult));
+  }
+
+  handleSwapPlayer(swapPlayer: SwapPlayer) {
+    this.store.dispatch(new SwapPlayerAction(swapPlayer));
   }
 
   handlePublishRound(round: PublishRound) {

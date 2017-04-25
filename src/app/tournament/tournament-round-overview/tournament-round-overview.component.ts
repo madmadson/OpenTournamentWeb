@@ -13,6 +13,7 @@ import {TournamentManagementConfiguration} from '../../../../shared/dto/tourname
 import * as _ from 'lodash';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
+import {SwapPlayer} from "../../../../shared/dto/swap-player";
 
 @Component({
   selector: 'tournament-round-overview',
@@ -33,6 +34,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
   @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onKillRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onGameResult = new EventEmitter<GameResult>();
+  @Output() onSwapPlayer= new EventEmitter<SwapPlayer>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
   @Output() onEndTournament = new EventEmitter<TournamentManagementConfiguration>();
 
@@ -73,6 +75,12 @@ export class TournamentRoundOverviewComponent implements OnInit {
 
     this.onGameResult.emit(gameResult);
   }
+
+  handleSwapPlayer(swapPlayer: SwapPlayer) {
+
+    this.onSwapPlayer.emit(swapPlayer);
+  }
+
   publishRound() {
     this.onPublishRound.emit({tournamentId: this.actualTournament.id, roundToPublish: this.round});
   }

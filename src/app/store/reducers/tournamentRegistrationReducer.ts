@@ -82,9 +82,9 @@ function handleRegistrationChangedData(
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
-    console.log('new reducer!' + JSON.stringify(action.payload));
+
     const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload.id]);
-    console.log('index!' + indexOfSearchedRegistration);
+
     newStoreState.actualTournamentRegisteredPlayers[indexOfSearchedRegistration] = action.payload;
   }
   return newStoreState;

@@ -24,6 +24,8 @@ import {SubscribeTournamentGamesAction} from '../store/actions/tournament-games-
 import {GameResult} from '../../../shared/dto/game-result';
 import {PublishRound} from '../../../shared/dto/publish-round';
 import {RegistrationPush} from '../../../shared/dto/registration-push';
+import {SwapPlayer} from '../../../shared/dto/swap-player';
+import {TournamentGame} from '../../../shared/model/tournament-game';
 
 
 @Injectable()
@@ -369,5 +371,27 @@ export class TournamentService implements OnDestroy {
     this.snackBar.open('Successfully undo end Tournament', '', {
       duration: 5000
     });
+  }
+
+  swapPlayer(swapPlayer: SwapPlayer) {
+
+    const game1: TournamentGame = swapPlayer.gameOne;
+
+    console.log('game1: ' + JSON.stringify(game1));
+
+    const gameOneRef = this.fb.database().ref('tournament-games/' + game1.tournamentId + '/' + game1.id);
+    gameOneRef.update(game1);
+
+    const game2: TournamentGame = swapPlayer.gameTwo;
+
+    console.log('game2: ' + JSON.stringify(game2));
+
+    const gameTwoRef = this.fb.database().ref('tournament-games/' + game1.tournamentId + '/' + game2.id);
+    gameTwoRef.update(game2);
+
+    this.snackBar.open('Successfully swap player', '', {
+      duration: 5000
+    });
+
   }
 }

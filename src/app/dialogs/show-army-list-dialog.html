@@ -1,0 +1,64 @@
+<h3>ArmyLists for {{registration.playerName}}</h3>
+<md-card>
+  <p *ngIf="armyListForRegistration.length > 6" style="color: red">Maximum reached for ArmyLists</p>
+  <md-tab-group [selectedIndex]="selectedTab">
+    <md-tab *ngIf="armyListForRegistration.length <= 6" label="AddArmyList">
+      <form #armyListForm="ngForm">
+        <md-input-container
+          class="full-width">
+          <input
+            mdInput
+            type="text"
+            placeholder="Army List Name"
+            maxlength="50"
+            required
+            #armyListName
+            [(ngModel)]="armyListModel.name" name="name">
+          <md-hint align="end">{{armyListName.value.length}} / 50</md-hint>
+        </md-input-container>
+
+        <md-input-container
+          class="full-width max-height">
+        <textarea
+          mdTextareaAutosize
+          mdInput
+          placeholder="Army List - (paste ArmyList here (Warroom/Troopcreator or something)"
+          class="max-height"
+          maxlength="1000"
+          required
+          #armyList
+          [(ngModel)]="armyListModel.list" name="list"></textarea>
+          <md-hint align="end">{{armyList.value.length}} / 1000</md-hint>
+        </md-input-container>
+        <button type="button"
+                color="accent"
+                md-raised-button
+                (click)="addArmyList()"
+                [disabled]="armyListForm.invalid">
+          <md-icon>add</md-icon>
+          Save ArmyList
+        </button>
+      </form>
+    </md-tab>
+    <md-tab *ngFor="let armyList of armyListForRegistration" label="{{armyList.name}}">
+      <md-input-container
+        class="full-width">
+      <textarea
+        mdInput
+        class="fix-height"
+        disabled
+        >{{armyList.list}}</textarea>
+      </md-input-container>
+      <button type="button"
+              color="accent"
+              md-raised-button
+              (click)="deleteArmyList(armyList)">
+        <md-icon>remove</md-icon>
+        Delete ArmyList
+      </button>
+    </md-tab>
+  </md-tab-group>
+</md-card>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

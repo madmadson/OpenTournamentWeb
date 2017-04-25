@@ -51,9 +51,11 @@
     <tournament-game-list
       [actualTournament]="actualTournament"
       [authenticationStoreState$]="authenticationStoreState$"
-      [armyLists$]="actualTournamentArmyLists$"
+      [actualTournamentArmyLists$]="actualTournamentArmyLists$"
       [gamesForRound$]="gamesForRound$"
+      [rankingsForRound$]="rankingsForRound$"
       (onGameResult)="handleGameResult($event)"
+      (onSwapPlayer)="handleSwapPlayer($event)"
     ></tournament-game-list>
   </md-card>
   <md-card >

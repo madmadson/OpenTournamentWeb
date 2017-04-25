@@ -99,7 +99,7 @@
     </h4>
     <h4 *ngIf="allActualTournamentPlayers.length == 0" class="heading">
       No Tournament Players found</h4>
-    <button *ngIf="currentUserId === actualTournament?.creatorUid"
+    <button *ngIf="actualTournament?.actualRound === 0"
             type="button" color="accent" md-raised-button (click)="addTournamentPlayer()">
       <md-icon>add</md-icon>
       Add Player

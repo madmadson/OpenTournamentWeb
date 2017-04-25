@@ -78,17 +78,18 @@ import {
   KillRoundDialogComponent, NewRoundDialogComponent, FinishTournamentDialogComponent,
 } from './tournament/tournament-round-overview/tournament-round-overview.component';
 import { TournamentGameListComponent, GameResultDialogComponent } from './tournament/tournament-game-list/tournament-game-list.component';
-import { TournamentRankingListComponent, ShowArmyListInTournamentRankingDialogComponent } from './tournament/tournament-ranking-list/tournament-ranking-list.component';
+import { TournamentRankingListComponent,
+          ShowArmyListInTournamentRankingDialogComponent
+} from './tournament/tournament-ranking-list/tournament-ranking-list.component';
 import {MdlModule} from 'angular2-mdl';
 import {RankingEffectService} from './store/effects/ranking-effect.service';
 import {TournamentGameEffectService} from './store/effects/tournament-game-effect.service';
 import {TruncatePipe} from '../pipes/truncate-pise';
 import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
 import { TournamentFinalRankingsComponent } from './tournament/tournament-final-rankings/tournament-final-rankings.component';
-import {DateTimePickerModule} from "ng-pick-datetime";
+import {DateTimePickerModule} from 'ng-pick-datetime';
 import { AboutComponent } from './about/about.component';
-
-
+import {   DragulaModule} from 'ng2-dragula';
 
 const reducers = {
   routerState: routerReducer,
@@ -160,7 +161,8 @@ export const firebaseConfDev = {
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule, MdTooltipModule,
-    DateTimePickerModule
+    DateTimePickerModule,
+    DragulaModule,
   ],
   declarations: [
     AppComponent,
@@ -198,7 +200,7 @@ export const firebaseConfDev = {
     FinishTournamentDialogComponent,
     TournamentFinalRankingsComponent,
     AboutComponent,
-    ShowArmyListInTournamentRankingDialogComponent,
+    ShowArmyListInTournamentRankingDialogComponent
   ],
   providers: [
     LoginService,

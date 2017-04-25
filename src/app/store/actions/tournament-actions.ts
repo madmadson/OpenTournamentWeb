@@ -8,6 +8,7 @@ import {TournamentManagementConfiguration} from '../../../../shared/dto/tourname
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
+import {SwapPlayer} from "../../../../shared/dto/swap-player";
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -280,6 +281,16 @@ export class GameResultEnteredAction implements Action {
   readonly type = 'GAME_RESULT_ENTERED_ACTION';
 
   constructor(public payload: GameResult) {
+  }
+}
+
+export const SWAP_PLAYER_ACTION = 'SWAP_PLAYER_ACTION';
+
+export class SwapPlayerAction implements Action {
+
+  readonly type = 'SWAP_PLAYER_ACTION';
+
+  constructor(public payload: SwapPlayer) {
   }
 }
 
