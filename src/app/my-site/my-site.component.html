@@ -1,12 +1,9 @@
 <h2 class="heading">MySite</h2>
 
 <md-card class="single-list-card">
-  <mdl-tabs mdl-ripple mdl-tab-active-index="0">
-    <mdl-tab-panel>
-      <mdl-tab-panel-title>
-        <span>My Tournaments</span>
-      </mdl-tab-panel-title>
-      <mdl-tab-panel-content>
+  <mdl-tabs mdl-ripple >
+    <mdl-tab-panel mdl-tab-panel-title="My Tournaments">
+
         <h3 class="heading">My organized Tournaments ({{(allTournaments$| async) ?.length}})</h3>
         <button md-fab class="create-action" (click)="openCreateTournamentDialog()">
           <md-icon>add</md-icon>
@@ -18,7 +15,22 @@
           <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
           <md-divider></md-divider>
         </mdl-list>
-      </mdl-tab-panel-content>
+
+    </mdl-tab-panel>
+    <mdl-tab-panel mdl-tab-panel-title="My Registrations">
+
+        Will soon be added !
+
+    </mdl-tab-panel>
+    <mdl-tab-panel mdl-tab-panel-title="Played Tournaments">
+
+          Will soon be added !
+
+    </mdl-tab-panel>
+    <mdl-tab-panel mdl-tab-panel-title="Played Games">
+
+        Will soon be added !
+
     </mdl-tab-panel>
   </mdl-tabs>
 </md-card>
