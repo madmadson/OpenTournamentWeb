@@ -17,7 +17,7 @@ import {Tournament} from '../../../../shared/model/tournament';
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 import {AuthenticationStoreState} from '../../store/authentication-state';
 import {getAllFactions} from '../../../../shared/model/factions';
-import {TournamentFormDialogComponent} from "../../dialogs/tournament-form-dialog";
+import {TournamentFormDialogComponent} from '../../dialogs/tournament-form-dialog';
 
 
 @Component({
@@ -290,6 +290,8 @@ export class NewTournamentPlayerDialogComponent {
   factions: string[];
 
   nameWarning: boolean;
+  playerNameAlreadyInUse: boolean;
+  dummyNotAllowed: boolean;
 
   @Output() onSaveNewTournamentPlayer = new EventEmitter<TournamentPlayer>();
 
@@ -311,15 +313,30 @@ export class NewTournamentPlayerDialogComponent {
   }
 
   checkName() {
+
     const that = this;
+    that.playerNameAlreadyInUse = false;
+    that.dummyNotAllowed = false;
+
+    if (that.tournamentPlayerModel.playerName.toLowerCase() === 'dummy') {
+      that.dummyNotAllowed = true;
+    }
 
     _.each(this.allPlayers, function (player: TournamentPlayer) {
       that.nameWarning = _.includes(
-        player.playerName.toLowerCase(), that.tournamentPlayerModel.playerName.toLowerCase());
+        player.playerName.toLowerCase(), that.tournamentPlayerModel.playerName.toLowerCase()
+      );
+
+       if (player.playerName.toLowerCase() === that.tournamentPlayerModel.playerName.toLowerCase()){
+         that.playerNameAlreadyInUse = true;
+       }
     });
+
   }
 
   saveTournamentPlayer() {
+
+
     if (this.tournamentPlayerModel.playerName !== '') {
       this.onSaveNewTournamentPlayer.emit(this.tournamentPlayerModel);
       this.dialogRef.close();
@@ -347,8 +364,7 @@ export class AddArmyListsDialogComponent {
     const that = this;
     this.registration = dialogRef._containerInstance.dialogConfig.data.registration;
 
-    this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.playerId, '', '');
-
+    this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.id, this.registration.playerId, '', '');
     dialogRef._containerInstance.dialogConfig.data.armyListForRegistration.subscribe(armyLists => {
       this.armyListForRegistration = _.filter(armyLists, function (armyList: ArmyList) {
         if (that.registration !== undefined) {
@@ -361,7 +377,7 @@ export class AddArmyListsDialogComponent {
   addArmyList() {
     this.selectedTab = (this.armyListForRegistration.length + 1);
     this.onSaveArmyList.emit(this.armyListModel);
-    this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.playerId, '', '');
+    this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.id, this.registration.playerId, '', '');
   };
 
   deleteArmyList(armyList: ArmyList) {

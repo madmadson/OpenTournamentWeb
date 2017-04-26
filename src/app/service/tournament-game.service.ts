@@ -19,6 +19,7 @@ import {
 } from '../store/actions/tournament-games-actions';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {Tournament} from '../../../shared/model/tournament';
+import {Registration} from "../../../shared/model/registration";
 
 
 @Injectable()
@@ -29,6 +30,7 @@ export class TournamentGameService implements OnDestroy {
   allPlayers: TournamentPlayer[];
   allGames: TournamentGame[];
   actualTournament: Tournament;
+  allRegistrations: Registration[];
 
   private newGames: TournamentGame[];
 
@@ -42,6 +44,7 @@ export class TournamentGameService implements OnDestroy {
       this.allRankings = state.actualTournamentRankings.actualTournamentRankings;
       this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
       this.allGames = state.actualTournamentGames.actualTournamentGames;
+      this.allRegistrations = state.actualTournamentRegistrations.actualTournamentRegisteredPlayers;
 
     });
   }
@@ -201,8 +204,16 @@ export class TournamentGameService implements OnDestroy {
         const playersTournamentRef = that.fireDB.list('players-tournaments/' + tournamentPlayer.playerId);
         playersTournamentRef.push(that.actualTournament);
       }
-
     });
+
+    _.each(this.allRegistrations, function (reg: Registration) {
+
+      const playersRegRef = that.fireDB.object('players-registrations/' + reg.playerId + '/' + reg.id);
+      playersRegRef.remove();
+    });
+
+    const tournamentRegRef = that.fireDB.list('tournament-registrations/' + that.actualTournament.id);
+    tournamentRegRef.remove();
 
     _.each(this.allGames, function (game: TournamentGame) {
       gamesRef.push(game);

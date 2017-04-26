@@ -73,14 +73,14 @@ export class TournamentService implements OnDestroy {
     );
 
 
-    this.subscribeOnRegistrations(tournamentId);
+    this.subscribeOnTournamentRegistrations(tournamentId);
     this.subscribeOnTournamentPlayers(tournamentId);
     this.subscribeOnArmyLists(tournamentId);
     this.store.dispatch(new SubscribeTournamentRankingsAction(tournamentId));
     this.store.dispatch(new SubscribeTournamentGamesAction(tournamentId));
   }
 
-  private subscribeOnRegistrations(tournamentId: string) {
+  private subscribeOnTournamentRegistrations(tournamentId: string) {
 
     const that = this;
 
@@ -90,7 +90,7 @@ export class TournamentService implements OnDestroy {
     }
 
 
-    this.tournamentRegistrationsRef = this.fb.database().ref('tournament-registration/' + tournamentId);
+    this.tournamentRegistrationsRef = this.fb.database().ref('tournament-registrations/' + tournamentId);
 
     this.tournamentRegistrationsRef.on('child_added', function (snapshot) {
 
@@ -127,7 +127,7 @@ export class TournamentService implements OnDestroy {
 
     console.log('subscribeOnTournamentPlayers');
 
-    this.tournamentPlayerRef = this.fb.database().ref('tournament-player/' + tournamentId);
+    this.tournamentPlayerRef = this.fb.database().ref('tournament-players/' + tournamentId);
 
     this.tournamentPlayerRef.on('child_added', function (snapshot) {
 
@@ -182,8 +182,12 @@ export class TournamentService implements OnDestroy {
 
   pushRegistration(registrationPush: RegistrationPush) {
 
-    const registrations = this.afService.database.list('tournament-registration/' + registrationPush.tournament.id);
-    registrations.push(registrationPush.registration);
+    const tournamentRegRef = this.afService.database.list('tournament-registrations/' + registrationPush.tournament.id);
+    const newRegistrationRef: firebase.database.Reference = tournamentRegRef.push(registrationPush.registration);
+
+    const playerRegRef = this.afService.database.
+      object('players-registrations/' + registrationPush.registration.playerId + '/' + newRegistrationRef.key);
+    playerRegRef.set(registrationPush.registration);
 
     const tournamentRef = this.afService.database.object('tournaments/' + registrationPush.tournament.id);
     tournamentRef.update({actualParticipants: (registrationPush.tournament.actualParticipants + 1 )});
@@ -197,11 +201,11 @@ export class TournamentService implements OnDestroy {
 
     const tournamentPlayer = TournamentPlayer.fromRegistration(registration);
 
-    const tournamentPlayers = this.afService.database.list('tournament-player/' + registration.tournamentId);
+    const tournamentPlayers = this.afService.database.list('tournament-players/' + registration.tournamentId);
     tournamentPlayers.push(tournamentPlayer);
 
 
-    const registrationRef = this.afService.database.object('tournament-registration/' + registration.tournamentId + '/' + registration.id);
+    const registrationRef = this.afService.database.object('tournament-registrations/' + registration.tournamentId + '/' + registration.id);
     registrationRef.update({isTournamentPlayer: true});
 
     this.snackBar.open('Tournament Player saved successfully', '', {
@@ -211,8 +215,11 @@ export class TournamentService implements OnDestroy {
 
   eraseRegistration(regPush: RegistrationPush) {
 
-    const regRef = this.afService.database.list('tournament-registration/' + regPush.tournament.id + '/' + regPush.registration.id);
+    const regRef = this.afService.database.list('tournament-registrations/' + regPush.tournament.id + '/' + regPush.registration.id);
     regRef.remove();
+
+    const playerRegRef = this.afService.database.list('players-registrations/' + regPush.registration.playerId + '/' + regPush.registration.id);
+    playerRegRef.remove();
 
     const tournamentRef = this.afService.database.object('tournaments/' + regPush.tournament.id);
     tournamentRef.update({actualParticipants: (regPush.tournament.actualParticipants - 1 )});
@@ -223,12 +230,12 @@ export class TournamentService implements OnDestroy {
   }
 
   eraseTournamentPlayer(player: TournamentPlayer) {
-    const playerRef = this.afService.database.list('tournament-player/' + player.tournamentId + '/' + player.id);
+    const playerRef = this.afService.database.list('tournament-players/' + player.tournamentId + '/' + player.id);
     playerRef.remove();
 
     if (player.registrationId) {
       const registrationRef = this.afService.database
-        .object('tournament-registration/' + player.tournamentId + '/' + player.registrationId);
+        .object('tournament-registrations/' + player.tournamentId + '/' + player.registrationId);
       registrationRef.update({isTournamentPlayer: false});
     }
     this.snackBar.open('Tournament Player deleted successfully', '', {
@@ -238,8 +245,8 @@ export class TournamentService implements OnDestroy {
 
   pushArmyList(armyList: ArmyList) {
 
-    const tournamentPlayers = this.afService.database.list('tournament-armyLists/' + armyList.tournamentId);
-    tournamentPlayers.push(armyList);
+    const tournamentArmyListRef = this.afService.database.list('tournament-armyLists/' + armyList.tournamentId);
+    tournamentArmyListRef.push(armyList);
 
     this.snackBar.open('Army List saved successfully', '', {
       duration: 5000
@@ -259,7 +266,7 @@ export class TournamentService implements OnDestroy {
   addDummyPlayer(tournamentId: string) {
     const dummy = new TournamentPlayer(tournamentId, '', '', '', 'DUMMY', '', '', '', '', 0, '');
 
-    const tournamentPlayers = this.afService.database.list('tournament-player/' + tournamentId);
+    const tournamentPlayers = this.afService.database.list('tournament-players/' + tournamentId);
     tournamentPlayers.push(dummy);
 
     this.snackBar.open('Dummy Player successfully inserted', '', {
@@ -269,7 +276,7 @@ export class TournamentService implements OnDestroy {
 
   pushNewTournamentPlayer(player: TournamentPlayer) {
 
-    const tournamentPlayers = this.afService.database.list('tournament-player/' + player.tournamentId);
+    const tournamentPlayers = this.afService.database.list('tournament-players/' + player.tournamentId);
     tournamentPlayers.push(player);
 
     this.snackBar.open('Tournament Player saved successfully', '', {

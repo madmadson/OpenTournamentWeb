@@ -16,7 +16,7 @@ import {Router} from '@angular/router';
 @Injectable()
 export class PlayersService implements OnDestroy {
 
-  private query: any;
+  private playersRef: firebase.database.Reference;
 
   constructor(protected afService: AngularFire,
               protected store: Store<ApplicationState>,
@@ -27,47 +27,52 @@ export class PlayersService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.query.off();
+    if (this.playersRef) {
+      this.playersRef.off();
+    }
+
   }
 
   subscribeOnPlayers() {
 
-    if (!this.query) {
-      console.log('subscribe on tournaments');
-      this.store.dispatch(new PlayersClearAction());
-
-      const that = this;
-
-      this.query = this.fb.database().ref('players').orderByChild('firstname');
-
-      this.query.on('child_added', function (snapshot) {
-
-        const tournament: Player = Player.fromJson(snapshot.val());
-        tournament.id = snapshot.key;
-
-        that.store.dispatch(new PlayerAddedAction(tournament));
-
-      });
-
-      this.query.on('child_changed', function (snapshot) {
-
-        const tournament: Player = Player.fromJson(snapshot.val());
-        tournament.id = snapshot.key;
-
-        that.store.dispatch(new PlayerChangedAction(tournament));
-      });
-
-      this.query.on('child_removed', function (snapshot) {
-
-        that.store.dispatch(new PlayerDeletedAction(snapshot.key));
-      });
+    console.log('subscribe on players');
+    this.store.dispatch(new PlayersClearAction());
+    if (this.playersRef) {
+      this.playersRef.off();
     }
+
+    const that = this;
+
+    this.playersRef = this.fb.database().ref('players').orderByChild('firstname');
+
+    this.playersRef.on('child_added', function (snapshot) {
+
+      const tournament: Player = Player.fromJson(snapshot.val());
+      tournament.id = snapshot.key;
+
+      that.store.dispatch(new PlayerAddedAction(tournament));
+
+    });
+
+    this.playersRef.on('child_changed', function (snapshot) {
+
+      const tournament: Player = Player.fromJson(snapshot.val());
+      tournament.id = snapshot.key;
+
+      that.store.dispatch(new PlayerChangedAction(tournament));
+    });
+
+    this.playersRef.on('child_removed', function (snapshot) {
+
+      that.store.dispatch(new PlayerDeletedAction(snapshot.key));
+    });
+
 
   }
 
   unsubscribeOnPlayers() {
 
-    this.query.off();
+    this.playersRef.off();
   }
 
   pushPlayer(player: Player) {

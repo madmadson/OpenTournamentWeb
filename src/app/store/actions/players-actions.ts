@@ -22,16 +22,6 @@ export class PlayersClearAction implements Action {
   }
 }
 
-export const PLAYERS_UNSUBSCRIBE_ACTION = 'PLAYERS_UNSUBSCRIBE_ACTION';
-
-export class PlayersUnsubscribeAction implements Action {
-
-  readonly type = 'PLAYERS_UNSUBSCRIBE_ACTION';
-
-  constructor() {
-  }
-}
-
 
 export const PLAYER_ADDED_ACTION = 'PLAYER_ADDED_ACTION';
 

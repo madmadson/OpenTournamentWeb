@@ -53,6 +53,9 @@ export class TournamentRegistrationFormComponent implements OnInit {
 
     return {
       tournamentId: this.actualTournament.id,
+      tournamentName: this.actualTournament.name,
+      tournamentLocation: this.actualTournament.location,
+      tournamentDate: this.actualTournament.beginDate,
       playerName: this.userPlayerData.getFullPlayerName(),
       email: this.userPlayerData.userEmail,
       origin: this.userPlayerData.origin,
@@ -64,7 +67,6 @@ export class TournamentRegistrationFormComponent implements OnInit {
       country: this.userPlayerData.country,
       elo: this.userPlayerData.elo,
       faction: formModel.faction,
-      armyLists: [],
       isTournamentPlayer: false
     };
   }

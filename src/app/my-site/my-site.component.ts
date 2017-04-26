@@ -12,6 +12,8 @@ import {MdDialog} from '@angular/material';
 import {Tournament} from '../../../shared/model/tournament';
 import {TournamentPushAction} from '../store/actions/tournaments-actions';
 import {Component} from '@angular/core';
+import {MySiteSubscribeAction} from '../store/actions/my-site-actions';
+import {Registration} from '../../../shared/model/registration';
 
 @Component({
   selector: 'my-tournaments',
@@ -20,15 +22,22 @@ import {Component} from '@angular/core';
 })
 export class MySiteComponent {
   groupedTournaments$: Observable<TournamentListVM[]>;
-  allTournaments$: Observable<any[]>;
+  allTournaments$: Observable<Tournament[]>;
 
   creatorId: string;
+
+  myRegistrations$: Observable<Registration[]>;
 
   constructor(private store: Store<ApplicationState>,
               public dialog: MdDialog) {
 
-    this.store.select(state => state.authenticationStoreState.currentUserId)
-      .subscribe(currentUserId => this.creatorId = currentUserId);
+    this.store.select(state => state.authenticationStoreState).subscribe(
+      authenticationStoreState => {
+        this.creatorId = authenticationStoreState.currentUserId;
+        if (authenticationStoreState.userPlayerData) {
+          this.store.dispatch(new MySiteSubscribeAction(authenticationStoreState.userPlayerData.id));
+        }
+      });
 
     this.allTournaments$ = store.select(state => {
       return _.filter(state.tournaments.tournaments, function (tournament) {
@@ -52,6 +61,9 @@ export class MySiteComponent {
           })
           .value();
       });
+
+    this.myRegistrations$ = this.store.select(state => state.mySiteSoreData.myRegistrations);
+
 
   }
 

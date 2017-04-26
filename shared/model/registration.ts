@@ -4,6 +4,9 @@ export class Registration {
 
   id?: string;
   tournamentId: string;
+  tournamentName: string;
+  tournamentLocation: string;
+  tournamentDate: string;
   playerName: string;
   email: string;
   origin: string;
@@ -15,25 +18,29 @@ export class Registration {
   country: string;
   elo: number;
   faction: string;
-  armyLists: ArmyList[];
   isTournamentPlayer: boolean;
 
-  static fromJson({tournamentId, playerName, email,
+  static fromJson({ tournamentId, tournamentName, tournamentLocation, tournamentDate, playerName, email,
                     origin, meta,
                     registrationDate, teamName, playerId, teamId, country, elo, faction, isTournamentPlayer}): Registration {
     return new Registration(
-      tournamentId, playerName, email, origin,
+      tournamentId, tournamentName, tournamentLocation, tournamentDate, playerName, email, origin,
       meta, registrationDate,
       teamName, playerId, teamId, country, elo, faction, isTournamentPlayer);
   }
 
 
-  constructor(tournamentId: string, playerName: string, email: string, origin: string,
+  constructor(tournamentId: string, tournamentName: string, tournamentLocation: string, tournamentDate: string,
+              playerName: string, email: string, origin: string,
               meta: string, registrationDate: string,
               teamName: string, playerId: string, teamId: string,
               country: string, elo: number, faction: string, isTournamentPlayer: boolean) {
 
     this.tournamentId = tournamentId;
+    this.tournamentName = tournamentName;
+    this.tournamentLocation = tournamentLocation;
+    this.tournamentDate = tournamentDate;
+
     this.playerName = playerName;
     this.email = email;
     this.origin = origin;
@@ -45,7 +52,6 @@ export class Registration {
     this.country = country;
     this.elo = elo;
     this.faction = faction;
-    this.armyLists = [];
     this.isTournamentPlayer = isTournamentPlayer;
   }
 }

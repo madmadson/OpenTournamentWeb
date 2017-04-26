@@ -92,13 +92,17 @@ import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
 import { TournamentFinalRankingsComponent } from './tournament/tournament-final-rankings/tournament-final-rankings.component';
 import {DateTimePickerModule} from 'ng-pick-datetime';
 import { AboutComponent } from './about/about.component';
-import {   DragulaModule} from 'ng2-dragula';
+import {MySiteService} from './service/my-site.service';
+import {MySiteEffectService} from './store/effects/my-registrations-effect.service';
+import {MySiteReducer} from './store/reducers/mySiteReducer';
+import { PlayerRegistrationsTableComponent } from './my-site/player-registrations-table/player-registrations-table.component';
 
 const reducers = {
   routerState: routerReducer,
   tournaments: TournamentsReducer,
   players: PlayersReducer,
   authenticationStoreState: AuthenticationReducer,
+  mySiteSoreData: MySiteReducer,
 
   actualTournament: TournamentReducer,
   actualTournamentRegistrations: TournamentRegistrationReducer,
@@ -153,6 +157,7 @@ export const firebaseConfDev = {
     EffectsModule.run(PlayersEffectService),
     EffectsModule.run(RankingEffectService),
     EffectsModule.run(TournamentGameEffectService),
+    EffectsModule.run(MySiteEffectService),
     StoreModule.provideStore(storeReducer),
     RouterStoreModule.connectRouter(),
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
@@ -165,7 +170,6 @@ export const firebaseConfDev = {
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule, MdTooltipModule,
     DateTimePickerModule,
-    DragulaModule,
   ],
   declarations: [
     AppComponent,
@@ -205,6 +209,7 @@ export const firebaseConfDev = {
     AboutComponent,
     ShowArmyListInTournamentRankingDialogComponent,
     ShowArmyListInTournamentPlayerDialogComponent,
+    PlayerRegistrationsTableComponent,
   ],
   providers: [
     LoginService,
@@ -213,7 +218,8 @@ export const firebaseConfDev = {
     TournamentService,
     PlayersService,
     TournamentRankingService,
-    TournamentGameService
+    TournamentGameService,
+    MySiteService
   ],
   entryComponents: [
     RegisterDialogComponent,

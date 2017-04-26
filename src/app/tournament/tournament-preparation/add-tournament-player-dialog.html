@@ -68,7 +68,25 @@
     [(ngModel)]="tournamentPlayerModel.faction">
     <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
   </md-select>
-  <button type="button"
+
+  <button *ngIf="playerNameAlreadyInUse"
+          type="button"
+          class="negative-background"
+          md-raised-button
+          [disabled]="true">
+    <md-icon>warning</md-icon>
+    PlayerName already in use
+  </button>
+  <button *ngIf="dummyNotAllowed"
+          type="button"
+          class="negative-background"
+          md-raised-button
+          [disabled]="true">
+    <md-icon>warning</md-icon>
+    Dummy ist not a valid name
+  </button>
+  <button *ngIf="!playerNameAlreadyInUse && !dummyNotAllowed"
+          type="button"
           color="accent"
           md-raised-button
           (click)="saveTournamentPlayer()"

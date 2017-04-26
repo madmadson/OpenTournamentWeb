@@ -1,18 +1,18 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../../store/application-state';
-import {PlayersSubscribeAction, PlayersUnsubscribeAction} from '../../store/actions/players-actions';
+import {PlayersSubscribeAction} from '../../store/actions/players-actions';
 
 import * as _ from 'lodash';
 import {Player} from '../../../../shared/model/player';
-import {Observable} from "rxjs/Observable";
+
 
 @Component({
   selector: 'player-list-overview',
   templateUrl: './player-list-overview.component.html',
   styleUrls: ['./player-list-overview.component.css']
 })
-export class PlayerListOverviewComponent implements OnInit, OnDestroy {
+export class PlayerListOverviewComponent implements OnInit {
 
   orderedPlayers: Player[];
   filteredPlayers: Player[];
@@ -32,9 +32,6 @@ export class PlayerListOverviewComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy(): void {
-    this.store.dispatch(new PlayersUnsubscribeAction());
-  }
 
   search(searchString: string) {
 

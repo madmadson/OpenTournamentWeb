@@ -1,0 +1,19 @@
+.tournament-name-table-cell{
+  font-size: 1.2em;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.reg-table-cell {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.small-three-space-table-cell {
+  width:20px;
+}
+
+.army-list-icon:hover {
+  cursor: pointer;
+  color: deepskyblue;
+}
