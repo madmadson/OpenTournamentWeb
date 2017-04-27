@@ -14,7 +14,7 @@ export class TournamentGame {
   playerOneControlPoints: number;
   playerOneVictoryPoints: number;
   playerOneArmyList: string;
-  playerOneEloChanging?: number;
+  playerOneEloChanging: number;
 
   playerTwoPlayerId: string;
   playerTwoTournamentPlayerId: string;
@@ -25,7 +25,7 @@ export class TournamentGame {
   playerTwoControlPoints: number;
   playerTwoVictoryPoints: number;
   playerTwoArmyList: string;
-  playerTwoEloChanging?: number;
+  playerTwoEloChanging: number;
 
   playingField: number;
   tournamentRound: number;
@@ -35,27 +35,30 @@ export class TournamentGame {
   static fromJson({tournamentId, playerOnePlayerId, playerOneTournamentPlayerId,
                     playerOnePlayerName, playerOneFaction, playerOneElo, playerOneScore,
                     playerOneControlPoints, playerOneVictoryPoints, playerOneArmyList,
+                    playerOneEloChanging,
                     playerTwoPlayerId, playerTwoTournamentPlayerId, playerTwoPlayerName,
                     playerTwoFaction, playerTwoElo, playerTwoScore, playerTwoControlPoints,
-                    playerTwoVictoryPoints, playerTwoArmyList,
+                    playerTwoVictoryPoints, playerTwoArmyList, playerTwoEloChanging,
                     playingField, tournamentRound, finished, scenario
   }): TournamentGame {
     return new TournamentGame(tournamentId, playerOnePlayerId, playerOneTournamentPlayerId,
       playerOnePlayerName, playerOneElo, playerOneFaction, playerOneScore,
-      playerOneControlPoints, playerOneVictoryPoints, playerOneArmyList,
+      playerOneControlPoints, playerOneVictoryPoints, playerOneArmyList, playerOneEloChanging,
       playerTwoPlayerId, playerTwoTournamentPlayerId, playerTwoPlayerName,
       playerTwoElo,  playerTwoFaction, playerTwoScore, playerTwoControlPoints,
-      playerTwoVictoryPoints, playerTwoArmyList,
+      playerTwoVictoryPoints, playerTwoArmyList, playerTwoEloChanging,
       playingField, tournamentRound, finished, scenario);
   }
 
   constructor(tournamentId: string, playerOnePlayerId: string, playerOneTournamentPlayerId: string,
               playerOnePlayerName: string, playerOneElo: number,
               playerOneFaction: string, playerOneScore: number, playerOneControlPoints: number,
-              playerOneVictoryPoints: number, playerOneArmyList: string, playerTwoPlayerId: string,
+              playerOneVictoryPoints: number, playerOneArmyList: string, playerOneEloChanging: number,
+              playerTwoPlayerId: string,
               playerTwoTournamentPlayerId: string, playerTwoPlayerName: string,
               playerTwoElo: number, playerTwoFaction: string,  playerTwoScore: number,
               playerTwoControlPoints: number, playerTwoVictoryPoints: number, playerTwoArmyList: string,
+              playerTwoEloChanging: number,
               tournamentRound: number, playingField: number, finished: boolean, scenario: string) {
 
     this.tournamentId = tournamentId;
@@ -69,6 +72,7 @@ export class TournamentGame {
     this.playerOneControlPoints = playerOneControlPoints;
     this.playerOneVictoryPoints = playerOneVictoryPoints;
     this.playerOneArmyList = playerOneArmyList;
+    this.playerOneEloChanging = playerOneEloChanging;
 
     this.playerTwoPlayerId = playerTwoPlayerId;
     this.playerTwoTournamentPlayerId = playerTwoTournamentPlayerId;
@@ -79,6 +83,7 @@ export class TournamentGame {
     this.playerTwoControlPoints = playerTwoControlPoints;
     this.playerTwoVictoryPoints = playerTwoVictoryPoints;
     this.playerTwoArmyList = playerTwoArmyList;
+    this.playerTwoEloChanging = playerTwoEloChanging;
 
     this.tournamentRound = tournamentRound;
     this.playingField = playingField;

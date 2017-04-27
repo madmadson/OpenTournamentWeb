@@ -17,7 +17,7 @@
     </mdl-tab-panel>
     <mdl-tab-panel mdl-tab-panel-title="My Registrations">
       <h4 class="heading" *ngIf="(myRegistrations$ | async).length == 0">No Registrations found</h4>
-      <player-registrations-table *ngIf="(myRegistrations$ | async).length > 0">
+      <player-registrations-table *ngIf="(myRegistrations$ | async).length > 0"
           [myRegistrations$]="myRegistrations$">
       </player-registrations-table>
 
@@ -28,9 +28,10 @@
 
     </mdl-tab-panel>
     <mdl-tab-panel mdl-tab-panel-title="Played Games">
-
-        Will soon be added !
-
+      <h4 class="heading" *ngIf="(myGames$ | async).length == 0">No Played Games found</h4>
+      <player-games-table *ngIf="(myGames$ | async).length > 0"
+        [myGames$]="myGames$">
+      </player-games-table>
     </mdl-tab-panel>
   </mdl-tabs>
 </md-card>

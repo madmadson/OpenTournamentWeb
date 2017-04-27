@@ -1,0 +1,14 @@
+.player-name-table-cell{
+  font-size: 1.2em;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+
+.game-table-won {
+  background-color: #a4ff9c;
+}
+
+.game-table-lost {
+  background-color: #ff7e72;
+}

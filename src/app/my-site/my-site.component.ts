@@ -14,6 +14,7 @@ import {TournamentPushAction} from '../store/actions/tournaments-actions';
 import {Component} from '@angular/core';
 import {MySiteSubscribeAction} from '../store/actions/my-site-actions';
 import {Registration} from '../../../shared/model/registration';
+import {TournamentGame} from '../../../shared/model/tournament-game';
 
 @Component({
   selector: 'my-tournaments',
@@ -27,6 +28,7 @@ export class MySiteComponent {
   creatorId: string;
 
   myRegistrations$: Observable<Registration[]>;
+  myGames$: Observable<TournamentGame[]>;
 
   constructor(private store: Store<ApplicationState>,
               public dialog: MdDialog) {
@@ -63,6 +65,7 @@ export class MySiteComponent {
       });
 
     this.myRegistrations$ = this.store.select(state => state.mySiteSoreData.myRegistrations);
+    this.myGames$ = this.store.select(state => state.mySiteSoreData.myGames);
 
 
   }

@@ -1,7 +1,7 @@
 <div *ngFor="let game of gamesForRound$ | async; let i = index; let even = even"
      [ngClass]="{'even': even,
                  'my-item':isItMyGame(game),
-                 'clickable-tournament-game': myGameOrAdmin(game)
+                 'clickable-tournament-game': (myGameOrAdmin(game) && !dragStarted)
                  }"
      (click)="openGameResultDialog(game)">
   <div class="table-info">Table {{i +1}}</div>

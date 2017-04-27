@@ -96,6 +96,7 @@ import {MySiteService} from './service/my-site.service';
 import {MySiteEffectService} from './store/effects/my-registrations-effect.service';
 import {MySiteReducer} from './store/reducers/mySiteReducer';
 import { PlayerRegistrationsTableComponent } from './my-site/player-registrations-table/player-registrations-table.component';
+import { PlayerGamesTableComponent } from './my-site/player-games-table/player-games-table.component';
 
 const reducers = {
   routerState: routerReducer,
@@ -210,6 +211,7 @@ export const firebaseConfDev = {
     ShowArmyListInTournamentRankingDialogComponent,
     ShowArmyListInTournamentPlayerDialogComponent,
     PlayerRegistrationsTableComponent,
+    PlayerGamesTableComponent,
   ],
   providers: [
     LoginService,

@@ -135,6 +135,8 @@ export class TournamentGameListComponent implements OnInit {
     event.target.classList.remove('drag-over-disable');
     event.target.classList.remove('drag-over-enable');
 
+    this.dragStarted = false;
+
     return false;
   }
 
@@ -243,6 +245,7 @@ export class TournamentGameListComponent implements OnInit {
       playerOneControlPoints: 0,
       playerOneVictoryPoints: 0,
       playerOneArmyList: '',
+      playerOneEloChanging: 0,
 
       playerTwoPlayerId: gameTwoPlayerTwoPlayerId ? gameTwoPlayerTwoPlayerId : droppedGame.playerTwoPlayerId,
       playerTwoTournamentPlayerId: gameTwoPlayerTwoTournamentPlayerId ?
@@ -255,6 +258,7 @@ export class TournamentGameListComponent implements OnInit {
       playerTwoControlPoints: 0,
       playerTwoVictoryPoints: 0,
       playerTwoArmyList: '',
+      playerTwoEloChanging: 0,
 
       playingField: droppedGame.playingField,
       tournamentRound: droppedGame.tournamentRound,
@@ -322,6 +326,7 @@ export class TournamentGameListComponent implements OnInit {
       playerOneControlPoints: 0,
       playerOneVictoryPoints: 0,
       playerOneArmyList: '',
+      playerOneEloChanging: 0,
 
       playerTwoPlayerId: gameOnePlayerTwoPlayerId ? gameOnePlayerTwoPlayerId : this.draggedGame.playerTwoPlayerId,
       playerTwoTournamentPlayerId: gameOnePlayerTwoTournamentPlayerId ?
@@ -334,6 +339,7 @@ export class TournamentGameListComponent implements OnInit {
       playerTwoControlPoints: 0,
       playerTwoVictoryPoints: 0,
       playerTwoArmyList: '',
+      playerTwoEloChanging: 0,
 
       playingField: this.draggedGame.playingField,
       tournamentRound: this.draggedGame.tournamentRound,
