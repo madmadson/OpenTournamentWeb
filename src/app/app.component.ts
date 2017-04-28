@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from './store/application-state';
 
@@ -7,6 +7,7 @@ import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from './store/
 import {Router} from '@angular/router';
 import {GlobalEventService} from './service/global-event-service';
 import { Subscription } from 'rxjs/Subscription';
+import {MdSidenav} from "@angular/material";
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,8 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
+
+  @ViewChild('sidenav') sidenav: MdSidenav;
 
   private fullScreenModeSub: Subscription;
 
@@ -30,6 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.fullScreenModeSub = messageService.subscribe('fullScreenMode', (payload: boolean) => {
       this.fullscreenMode = payload;
+      this.sidenav.close();
     });
 
     this.store.select(state => state.authenticationStoreState).subscribe(authenticationStoreState => {
