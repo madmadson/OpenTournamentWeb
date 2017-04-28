@@ -42,9 +42,9 @@ export class PlayerListOverviewComponent implements OnInit {
     }
 
     this.filteredPlayers = _.filter(this.orderedPlayers, function (player) {
-      return player.firstName.startsWith(searchString) ||
-        player.nickName.startsWith(searchString) ||
-        player.lastName.startsWith(searchString);
+      return player.firstName.toLowerCase().startsWith(searchString.toLowerCase()) ||
+        player.nickName.toLowerCase().startsWith(searchString.toLowerCase()) ||
+        player.lastName.toLowerCase().startsWith(searchString.toLowerCase());
     });
 
   }

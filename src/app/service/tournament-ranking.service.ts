@@ -109,6 +109,7 @@ export class TournamentRankingService implements OnDestroy {
         tournamentPlayer.teamName ? tournamentPlayer.teamName : '',
         tournamentPlayer.origin ? tournamentPlayer.origin : '',
         tournamentPlayer.meta ? tournamentPlayer.meta : '',
+        tournamentPlayer.country ? tournamentPlayer.country : '',
         tournamentPlayer.elo ? tournamentPlayer.elo : 0,
         0, 0, 0, 0, 1, []);
 

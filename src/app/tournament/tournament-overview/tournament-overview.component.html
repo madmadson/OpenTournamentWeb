@@ -1,7 +1,8 @@
 <h1 class="heading">{{actualTournament?.name}}</h1>
 
-<md-tab-group  [selectedIndex]="selectedIndex">
-  <md-tab  label="TournamentPreparation">
+
+<mdl-tabs mdl-ripple [mdl-tab-active-index]="selectedIndex">
+  <mdl-tab-panel mdl-tab-panel-title="Tournament Preparation">
     <tournament-preparation
       [authenticationStoreState$]="authenticationStoreState$"
       [actualTournament]="actualTournament"
@@ -19,9 +20,9 @@
       (onDeleteTournamentPlayer)="handleDeleteTournamentPlayer($event)"
       (onDeleteRegistration)="handleDeleteRegistration($event)"
     ></tournament-preparation>
-  </md-tab>
-  <ng-container *ngIf="currentUserId === actualTournament?.creatorUid"><
-    <md-tab  *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;" label="Round {{index +1}}">
+  </mdl-tab-panel>
+  <ng-container *ngIf="currentUserId === actualTournament?.creatorUid">
+    <mdl-tab-panel *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;" mdl-tab-panel-title="Round {{index +1}}">
         <tournament-round-overview
           [round]="round"
           [actualTournament]="actualTournament"
@@ -37,10 +38,10 @@
           (onPublishRound)="handlePublishRound($event)"
           (onEndTournament)="handleEndTournament($event)"
         ></tournament-round-overview>
-    </md-tab>
+      </mdl-tab-panel>
   </ng-container>
   <ng-container *ngIf="currentUserId !== actualTournament?.creatorUid" >
-    <md-tab  *ngFor=" let round of getArrayForNumber(actualTournament?.visibleRound) ;let index = index;" label="Round {{index +1}}">
+    <mdl-tab-panel *ngFor=" let round of getArrayForNumber(actualTournament?.visibleRound) ;let index = index;" mdl-tab-panel-title="Round {{index +1}}">
       <tournament-round-overview
         [round]="round"
         [actualTournament]="actualTournament"
@@ -54,10 +55,10 @@
         (onGameResult)="handleGameResult($event)"
         (onPublishRound)="handlePublishRound($event)"
       ></tournament-round-overview>
-    </md-tab>
+      </mdl-tab-panel>
   </ng-container>
 
-  <md-tab *ngIf="actualTournament?.finished"  label="Results">
+  <mdl-tab-panel *ngIf="actualTournament?.finished"  mdl-tab-panel-title="Results">
     <tournament-final-rankings
       [actualTournament]="actualTournament"
       [authenticationStoreState$]="authenticationStoreState$"
@@ -66,6 +67,6 @@
       (onUndoTournamentEnd)="handleUndoTournamentEnd($event)"
       (onUploadTournament)="handleUploadTournament()"
     ></tournament-final-rankings>
-  </md-tab>
-</md-tab-group>
+    </mdl-tab-panel>
+</mdl-tabs>
 

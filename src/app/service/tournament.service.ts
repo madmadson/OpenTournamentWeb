@@ -293,7 +293,7 @@ export class TournamentService implements OnDestroy {
       });
 
     } else {
-      this.snackBar.open('Failed to pair Round ' + config.round + ' again', '', {
+      this.snackBar.open('Failed to pair Round ' + config.round + ' again. Check Pairing Options.', '', {
         duration: 5000
       });
     }
@@ -312,7 +312,7 @@ export class TournamentService implements OnDestroy {
       });
 
     } else {
-      this.snackBar.open('Failed to create Parings', '', {
+      this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
         duration: 5000
       });
     }

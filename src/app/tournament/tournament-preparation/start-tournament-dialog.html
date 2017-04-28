@@ -1,6 +1,6 @@
 <md-dialog-content>
   <div *ngIf="allActualTournamentPlayers.length % 2; else startButton">
-    <h2 class="warning">Uneven Tournament Players</h2>
+    <h3 class="heading warning">Uneven Tournament Players</h3>
     <button (click)="addDummyPlayer()"
             type="button"
             color="accent"
@@ -14,19 +14,63 @@
     </h4>
   </div>
   <ng-template #startButton>
-    <h2>Start Tournament</h2>
-    <button (click)="startTournament()"
-            type="button"
-            color="accent"
+    <h3 class="heading">Start Tournament</h3>
+    <div class="content-cards-container">
+      <mdl-card class="pairing-options-card-wide" mdl-shadow="4">
+        <mdl-card-title>
+          <h4 mdl-card-title-text>Pairing Options</h4>
+        </mdl-card-title>
+        <mdl-card-supporting-text>
+          <div class="full-width">
+            <mdl-switch [(ngModel)]="teamRestriction" mdl-ripple>
+              <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
+                info
+              </md-icon>
+              Team Restriction
+            </mdl-switch>
+          </div>
+          <div class="full-width">
+            <mdl-switch [(ngModel)]="metaRestriction" mdl-ripple>
+              <md-icon class="align-fix" mdTooltip="Player in same Meta don't play against each other">
+                info
+              </md-icon>
+              Meta Restriction
+            </mdl-switch>
+          </div>
+          <div class="full-width">
+            <mdl-switch [(ngModel)]="originRestriction" mdl-ripple>
+              <md-icon class="align-fix" mdTooltip="Player in same Origin don't play against each other">
+                info
+              </md-icon>
+              Origin Restriction
+            </mdl-switch>
+          </div>
+          <div class="full-width">
+            <mdl-switch [(ngModel)]="countryRestriction" mdl-ripple>
+              <md-icon class="align-fix" mdTooltip="Player in same Country don't play against each other">
+                info
+              </md-icon>
+              Country Restriction
+            </mdl-switch>
+          </div>
+        </mdl-card-supporting-text>
+        <mdl-card-actions mdl-card-border>
+          <button
             class="full-width-button"
-            md-raised-button>
-      <md-icon>play_arrow</md-icon>
-      Start Tournament
-    </button>
-    <h4>
-      There are {{allActualTournamentPlayers.length}} Players.
-      We suggest {{suggestedRoundsToPlay}} Rounds to play.
-    </h4>
+            (click)="startTournament()"
+            mdl-button
+            mdl-colored="accent"
+            mdl-button-type="raised"
+            mdl-ripple>
+            Start Tournament
+          </button>
+        </mdl-card-actions>
+      </mdl-card>
+      <h4>
+        There are {{allActualTournamentPlayers.length}} Players.
+        We suggest {{suggestedRoundsToPlay}} Rounds to play.
+      </h4>
+    </div>
   </ng-template>
 </md-dialog-content>
 <div md-dialog-actions>

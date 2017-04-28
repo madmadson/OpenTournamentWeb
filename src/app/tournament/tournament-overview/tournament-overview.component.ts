@@ -116,7 +116,6 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleStartTournament(config: TournamentManagementConfiguration ) {
     this.store.dispatch(new TournamentNewRoundAction(config));
-    setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
   }
 
   handleEditTournament(tournament: Tournament ) {
@@ -158,7 +157,6 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
   handleEndTournament(config: TournamentManagementConfiguration) {
     this.store.dispatch(new EndTournamentAction(config));
-    setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
   }
 
   handlePairAgain(config: TournamentManagementConfiguration ) {
@@ -167,7 +165,6 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleNewRound(config: TournamentManagementConfiguration ) {
     this.store.dispatch(new TournamentNewRoundAction(config));
-    setTimeout(() =>  this.selectedIndex = (this.selectedIndex + 1), 500);
   }
 
   handleGameResult(gameResult: GameResult) {

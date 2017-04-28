@@ -22,7 +22,7 @@
         <md-icon class="nav-icon">face</md-icon>
         <a class="nav-link" routerLink="/players">Players</a>
       </div>
-      <div class="version-tag">OpenTournament 0.0.1 Beta</div>
+      <div class="version-tag">OpenTournament 0.0.2 Beta</div>
       <div class="nav-about">
         <md-icon class="nav-icon">attachment</md-icon>
         <a class="nav-link" routerLink="/about">About</a>
@@ -35,7 +35,7 @@
         <i class="material-icons  app-toolbar-menu">menu</i>
       </button>
     </div>
-    <span class="app-name-label">OpenTournament</span>
+    <span class="app-name-label">OpenTournament BETA</span>
     <span class="spacer"></span>
     <span *ngIf="(currentUserName)" class="user-welcome-panel">{{currentUserName}}</span>
     <img *ngIf="(currentUserImage)" class="avatar" src="{{currentUserImage}}">
@@ -45,7 +45,6 @@
   </md-toolbar>
 
   <div class="app-content">
-
     <router-outlet></router-outlet>
   </div>
 </md-sidenav-container>

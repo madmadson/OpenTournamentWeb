@@ -10,8 +10,9 @@ export class TournamentRanking {
   playerName: string;
   faction: string;
   teamName: string;
-  origin: string;
   meta: string;
+  origin: string;
+  country: string;
   elo: number;
 
   score: number;
@@ -25,20 +26,16 @@ export class TournamentRanking {
 
 
   static fromJson({tournamentId, tournamentPlayerId, playerId, playerName,
-                    teamName, faction, origin, meta, elo, score, sos,
+                    teamName, faction, origin, meta, country, elo, score, sos,
                     controlPoints, victoryPoints, tournamentRound,  opponentTournamentPlayerIds}): TournamentRanking {
     return new TournamentRanking(tournamentId, tournamentPlayerId, playerId,
-      playerName, faction, teamName, origin, meta, elo, score,
+      playerName, faction, teamName, origin, meta, country, elo, score,
       sos, controlPoints, victoryPoints,
       tournamentRound, opponentTournamentPlayerIds);
   }
 
-  public setScore(score: number) {
-
-  }
-
   constructor(tournamentId: string, tournamentPlayerId: string, playerId: string, playerName: string, faction: string, teamName: string,
-              origin: string, meta: string, elo: number, score: number, sos: number,
+              origin: string, meta: string, country: string, elo: number, score: number, sos: number,
               controlPoints: number, victoryPoints: number,
               tournamentRound: number, opponentTournamentPlayerIds: string[]) {
 
@@ -51,6 +48,7 @@ export class TournamentRanking {
     this.teamName = teamName;
     this.origin = origin;
     this.meta = meta;
+    this.country = country;
     this.elo = elo;
 
     this.score = score;

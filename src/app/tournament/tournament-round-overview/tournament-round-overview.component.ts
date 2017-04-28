@@ -13,7 +13,7 @@ import {TournamentManagementConfiguration} from '../../../../shared/dto/tourname
 import * as _ from 'lodash';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
-import {SwapPlayer} from "../../../../shared/dto/swap-player";
+import {SwapPlayer} from '../../../../shared/dto/swap-player';
 
 @Component({
   selector: 'tournament-round-overview',
@@ -34,7 +34,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
   @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onKillRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onGameResult = new EventEmitter<GameResult>();
-  @Output() onSwapPlayer= new EventEmitter<SwapPlayer>();
+  @Output() onSwapPlayer = new EventEmitter<SwapPlayer>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
   @Output() onEndTournament = new EventEmitter<TournamentManagementConfiguration>();
 
@@ -46,7 +46,11 @@ export class TournamentRoundOverviewComponent implements OnInit {
 
   armyLists$: Observable<ArmyList[]>;
 
-  constructor(public dialog: MdDialog) { }
+  allGames: TournamentGame[];
+  allGamesFiltered: TournamentGame[];
+
+  constructor(public dialog: MdDialog) {
+  }
 
   ngOnInit() {
 
@@ -58,6 +62,10 @@ export class TournamentRoundOverviewComponent implements OnInit {
     });
 
     this.gamesForRound$.subscribe((games: TournamentGame[]) => {
+
+      this.allGames = games;
+      this.allGamesFiltered = games;
+
       const unfinishedGames = _.find(games, function (game: TournamentGame) {
         return !game.finished;
       });
@@ -83,6 +91,21 @@ export class TournamentRoundOverviewComponent implements OnInit {
 
   publishRound() {
     this.onPublishRound.emit({tournamentId: this.actualTournament.id, roundToPublish: this.round});
+  }
+
+  search(searchString: string) {
+
+    console.log('searchString: ' + searchString);
+
+    if (searchString === '') {
+      this.allGamesFiltered = this.allGames;
+    }
+
+    this.allGamesFiltered = _.filter(this.allGames, function (game) {
+      return game.playerOnePlayerName.toLowerCase().startsWith(searchString.toLowerCase()) ||
+        game.playerTwoPlayerName.toLowerCase().startsWith(searchString.toLowerCase());
+    });
+
   }
 
   openKillRoundDialog() {
@@ -115,12 +138,12 @@ export class TournamentRoundOverviewComponent implements OnInit {
     const eventSubscribe = dialogRef.componentInstance.onPairAgain
       .subscribe((config: TournamentManagementConfiguration) => {
 
-      if (config !== undefined) {
-        config.tournamentId = this.actualTournament.id;
-        config.round = this.round;
-        this.onPairAgain.emit(config);
-      }
-    });
+        if (config !== undefined) {
+          config.tournamentId = this.actualTournament.id;
+          config.round = this.round;
+          this.onPairAgain.emit(config);
+        }
+      });
     dialogRef.afterClosed().subscribe(() => {
 
       eventSubscribe.unsubscribe();
@@ -135,26 +158,35 @@ export class TournamentRoundOverviewComponent implements OnInit {
       },
     });
     const eventSubscribe = dialogRef.componentInstance.onNewRound
-      .subscribe(() => {
-          this.onNewRound.emit(
-            {tournamentId: this.actualTournament.id, round: this.round + 1}
-          );
+      .subscribe((config: TournamentManagementConfiguration) => {
+        if (config !== undefined) {
+          config.tournamentId = this.actualTournament.id;
+          this.onNewRound.emit(config);
+        }
       });
     dialogRef.afterClosed().subscribe(() => {
 
       eventSubscribe.unsubscribe();
     });
   }
+
   openFinishTournamentDialog() {
     const dialogRef = this.dialog.open(FinishTournamentDialogComponent, {
       data: {
         round: this.round,
         allPlayers$: this.rankingsForRound$
-      },
+      }
     });
     const eventSubscribe = dialogRef.componentInstance.onEndTournament
       .subscribe(() => {
-        this.onEndTournament.emit({tournamentId: this.actualTournament.id, round: (this.round + 1)});
+        this.onEndTournament.emit({
+          tournamentId: this.actualTournament.id,
+          round: (this.round + 1),
+          teamRestriction: false,
+          metaRestriction: false,
+          originRestriction: false,
+          countryRestriction: false,
+        });
       });
     dialogRef.afterClosed().subscribe(() => {
 
@@ -171,13 +203,25 @@ export class PairAgainDialogComponent {
 
   @Output() onPairAgain = new EventEmitter<TournamentManagementConfiguration>();
 
+  teamRestriction: boolean;
+  metaRestriction: boolean;
+  originRestriction: boolean;
+  countryRestriction: boolean;
+
   constructor(public dialogRef: MdDialogRef<PairAgainDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
   }
 
   pairRoundAgain() {
 
-    this.onPairAgain.emit({tournamentId: '', round: 1});
+    this.onPairAgain.emit({
+      tournamentId: '',
+      round: this.data.round,
+      teamRestriction: this.teamRestriction,
+      metaRestriction: this.metaRestriction,
+      originRestriction: this.originRestriction,
+      countryRestriction: this.countryRestriction,
+    });
     this.dialogRef.close();
   }
 }
@@ -191,7 +235,12 @@ export class NewRoundDialogComponent {
   suggestedRoundToPlay: number;
   round: number;
 
-  @Output() onNewRound = new EventEmitter();
+  teamRestriction: boolean;
+  metaRestriction: boolean;
+  originRestriction: boolean;
+  countryRestriction: boolean;
+
+  @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
 
   constructor(public dialogRef: MdDialogRef<NewRoundDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
@@ -204,7 +253,14 @@ export class NewRoundDialogComponent {
 
   pairNewRound() {
 
-    this.onNewRound.emit();
+    this.onNewRound.emit({
+      tournamentId: '',
+      round: this.round + 1,
+      teamRestriction: this.teamRestriction,
+      metaRestriction: this.metaRestriction,
+      originRestriction: this.originRestriction,
+      countryRestriction: this.countryRestriction,
+    });
     this.dialogRef.close();
   }
 }
@@ -225,7 +281,14 @@ export class KillRoundDialogComponent {
 
   killIt() {
 
-    this.onKillRound.emit({tournamentId: '', round: 1});
+    this.onKillRound.emit({
+      tournamentId: '',
+      round: this.data.round,
+      teamRestriction: false,
+      metaRestriction: false,
+      originRestriction: false,
+      countryRestriction: false,
+    });
     this.dialogRef.close();
   }
 }

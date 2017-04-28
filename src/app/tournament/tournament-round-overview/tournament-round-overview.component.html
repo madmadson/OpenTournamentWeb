@@ -48,11 +48,18 @@
   <md-card >
     <h3 class="heading">Games for round {{round}}</h3>
 
+    <mdl-textfield type="text"
+                   maxlength="50"
+                   placeholder="Filter by PlayerName"
+                   #seachInput
+                   (keyup)="search(seachInput.value)" >
+    </mdl-textfield>
+    <h4 *ngIf="allGamesFiltered?.length == 0" class="warning-text">No Games found (Filter?)</h4>
     <tournament-game-list
       [actualTournament]="actualTournament"
       [authenticationStoreState$]="authenticationStoreState$"
       [actualTournamentArmyLists$]="actualTournamentArmyLists$"
-      [gamesForRound$]="gamesForRound$"
+      [gamesForRound]="allGamesFiltered"
       [rankingsForRound$]="rankingsForRound$"
       (onGameResult)="handleGameResult($event)"
       (onSwapPlayer)="handleSwapPlayer($event)"

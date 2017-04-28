@@ -112,6 +112,10 @@ md-card {
   height: 50px;
 }
 
+.full-width-only{
+  width: 100%;
+}
+
 .full-width{
   width: 100%;
   padding-top: 6px;

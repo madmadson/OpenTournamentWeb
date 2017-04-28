@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {TournamentRanking} from "../../../../shared/model/tournament-ranking";
-import {ArmyList} from "../../../../shared/model/armyList";
-import {AuthenticationStoreState} from "../../store/authentication-state";
-import {Tournament} from "../../../../shared/model/tournament";
-import {Player} from "../../../../shared/model/player";
-import {TournamentManagementConfiguration} from "../../../../shared/dto/tournament-management-configuration";
+import {Observable} from 'rxjs/Observable';
+import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
+import {ArmyList} from '../../../../shared/model/armyList';
+import {AuthenticationStoreState} from '../../store/authentication-state';
+import {Tournament} from '../../../../shared/model/tournament';
+import {Player} from '../../../../shared/model/player';
+import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 
 @Component({
   selector: 'tournament-final-rankings',
@@ -44,6 +44,13 @@ export class TournamentFinalRankingsComponent implements OnInit {
   }
 
   undoTournamentEnd() {
-    this.onUndoTournamentEnd.emit({tournamentId: this.actualTournament.id, round: (this.actualTournament.actualRound + 1 )});
+    this.onUndoTournamentEnd.emit({
+      tournamentId: this.actualTournament.id,
+      round: (this.actualTournament.actualRound + 1 ),
+      teamRestriction: false,
+      metaRestriction: false,
+      originRestriction: false,
+      countryRestriction: false,
+    });
   }
 }

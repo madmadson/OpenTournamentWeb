@@ -24,6 +24,7 @@
       <div class="player-name-table-cell">{{rank.playerName | truncate:40}}</div>
       <div>{{rank.faction}}</div>
       <div>{{rank.teamName}} - {{rank.meta}} - {{rank.origin}}</div>
+      <div>{{rank.country}}</div>
       <div *ngIf="rank.elo != 0">{{rank.elo}}<img class="md-secondary" src="../../../assets/my_crown_small.png"></div>
     </td>
     <td class="small-three-space-table-cell">{{rank.score}}</td>

@@ -2,14 +2,13 @@
 
 <div class="action-card-container">
   <md-card>
-    <md-input-container>
-      <input class="full-width"
-             type="text"
-             mdInput
-             placeholder="Filter Player"
-             #seachInput
-             (keyup)="search(seachInput.value)">
-    </md-input-container>
+    <mdl-textfield type="text"
+                   icon="search"
+                   maxlength="50"
+                   placeholder="Filter Player"
+                   #seachInput
+                   (keyup)="search(seachInput.value)" >
+    </mdl-textfield>
   </md-card>
 </div>
 

@@ -108,7 +108,7 @@ export class TournamentPreparationComponent implements OnInit {
       data: {
         allActualTournamentPlayers$: this.allActualTournamentPlayers$
       },
-      width: '800px',
+      width: '600px',
     });
     const startTournamentSub = dialogRef.componentInstance.onStartTournament.subscribe(config => {
       if (config !== undefined) {
@@ -316,11 +316,9 @@ export class NewTournamentPlayerDialogComponent {
 
     const that = this;
     that.playerNameAlreadyInUse = false;
-    that.dummyNotAllowed = false;
 
-    if (that.tournamentPlayerModel.playerName.toLowerCase() === 'dummy') {
-      that.dummyNotAllowed = true;
-    }
+
+    that.dummyNotAllowed = that.tournamentPlayerModel.playerName.toLowerCase() === 'dummy';
 
     _.each(this.allPlayers, function (player: TournamentPlayer) {
       that.nameWarning = _.includes(
@@ -387,6 +385,7 @@ export class AddArmyListsDialogComponent {
 
 @Component({
   selector: 'start-tournament-dialog',
+  styleUrls: ['./start-tournament-dialog.css'],
   templateUrl: './start-tournament-dialog.html'
 })
 export class StartTournamentDialogComponent {
@@ -396,6 +395,11 @@ export class StartTournamentDialogComponent {
 
   @Output() onStartTournament = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onAddDummyPlayer = new EventEmitter();
+
+  teamRestriction: boolean;
+  metaRestriction: boolean;
+  originRestriction: boolean;
+  countryRestriction: boolean;
 
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
@@ -409,7 +413,14 @@ export class StartTournamentDialogComponent {
 
   startTournament() {
 
-    this.onStartTournament.emit({tournamentId: '', round: 1});
+    this.onStartTournament.emit({
+      tournamentId: '',
+      round: 1,
+      teamRestriction: this.teamRestriction,
+      metaRestriction: this.metaRestriction,
+      originRestriction: this.originRestriction,
+      countryRestriction: this.countryRestriction,
+    });
     this.dialogRef.close();
   }
   addDummyPlayer() {

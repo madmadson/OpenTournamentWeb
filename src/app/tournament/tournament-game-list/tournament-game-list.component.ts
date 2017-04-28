@@ -27,7 +27,7 @@ export class TournamentGameListComponent implements OnInit {
   @Input() actualTournament: Tournament;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
-  @Input() gamesForRound$: Observable<TournamentGame[]>;
+  @Input() gamesForRound: TournamentGame[];
   @Input() rankingsForRound$: Observable<TournamentRanking[]>;
 
   @Output() onGameResult = new EventEmitter<GameResult>();
@@ -44,7 +44,7 @@ export class TournamentGameListComponent implements OnInit {
   draggedGame: TournamentGame;
 
   rankingsForRound: TournamentRanking[];
-  gamesForRound: TournamentGame[];
+  allVisibleGames: TournamentGame[];
 
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar) {
@@ -63,9 +63,7 @@ export class TournamentGameListComponent implements OnInit {
       this.rankingsForRound = rankings;
     });
 
-    this.gamesForRound$.subscribe(games => {
-      this.gamesForRound = games;
-    });
+    this.allVisibleGames = this.gamesForRound;
   }
 
   startDrag(event: any, game: TournamentGame, dragTournamentPlayerId: string,
@@ -407,10 +405,10 @@ export class TournamentGameListComponent implements OnInit {
   }
 
   myGameOrAdmin(selectedGame: TournamentGame) {
-    return selectedGame.playerOnePlayerId === this.currentUserId ||
-      selectedGame.playerTwoPlayerId === this.currentUserId ||
+    return (selectedGame.playerOnePlayerId === this.currentUserId && !selectedGame.finished) ||
+      (selectedGame.playerTwoPlayerId === this.currentUserId && !selectedGame.finished) ||
       this.currentUserId === this.actualTournament.creatorUid;
-  }
+}
 
   isItMyGame(droppedGame: TournamentGame) {
     if (this.userPlayerData) {
