@@ -5,6 +5,8 @@ import {ApplicationState} from './store/application-state';
 import {AuthSubscribeAction, LogoutAction} from './store/actions/auth-actions';
 import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from './store/actions/tournaments-actions';
 import {Router} from '@angular/router';
+import {GlobalEventService} from './service/global-event-service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-root',
@@ -13,12 +15,23 @@ import {Router} from '@angular/router';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
+  private fullScreenModeSub: Subscription;
+
   currentUserName: string;
   loggedIn: boolean;
   currentUserEmail: string;
   currentUserImage: string;
 
-  constructor(private router: Router, private store: Store<ApplicationState>) {
+  fullscreenMode: boolean;
+
+  constructor(private router: Router,
+              private store: Store<ApplicationState>,
+              private messageService: GlobalEventService) {
+
+    this.fullScreenModeSub = messageService.subscribe('fullScreenMode', (payload: boolean) => {
+      this.fullscreenMode = payload;
+    });
+
     this.store.select(state => state.authenticationStoreState).subscribe(authenticationStoreState => {
         this.currentUserName = authenticationStoreState.currentUserName;
         this.loggedIn = authenticationStoreState.loggedIn;
@@ -37,6 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.store.dispatch(new TournamentsUnsubscribeAction());
+    this.fullScreenModeSub.unsubscribe();
   }
 
 

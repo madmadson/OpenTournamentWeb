@@ -29,6 +29,8 @@ import {
   TournamentSetAction
 } from '../../store/actions/tournaments-actions';
 import {SwapPlayer} from '../../../../shared/dto/swap-player';
+import {GlobalEventService} from "../../service/global-event-service";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'tournament-overview',
@@ -36,6 +38,8 @@ import {SwapPlayer} from '../../../../shared/dto/swap-player';
   styleUrls: ['./tournament-overview.component.css']
 })
 export class TournamentOverviewComponent implements OnInit, OnDestroy {
+
+  private fullScreenModeSub: Subscription;
 
   currentUserId: string;
   actualTournament: Tournament;
@@ -50,8 +54,15 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   selectedIndex: number;
 
+  fullscreenMode: boolean;
+
   constructor(private store: Store<ApplicationState>,
-              private activeRouter: ActivatedRoute) {
+              private activeRouter: ActivatedRoute,
+              private messageService: GlobalEventService) {
+
+    this.fullScreenModeSub = messageService.subscribe('fullScreenMode', (payload: boolean) => {
+      this.fullscreenMode = payload;
+    });
 
     this.activeRouter.params.subscribe(
       params => {
@@ -90,6 +101,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.store.dispatch(new TournamentUnsubscribeAction());
+    this.fullScreenModeSub.unsubscribe();
   }
 
   getArrayForNumber(round: number): number[]  {

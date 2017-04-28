@@ -1,0 +1,46 @@
+<table class="full-width mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--3dp">
+  <thead>
+  <tr>
+    <th class="small-three-space-table-cell">Table</th>
+    <th class="mdl-data-table__cell--non-numeric">Player1</th>
+    <th class="small-three-space-table-cell">
+      <div>SC/CP/VP</div>
+    </th>
+    <th class="mdl-data-table__cell--non-numeric">Player2</th>
+    <th class="small-three-space-table-cell">SC/CP/VP</th>
+
+  </tr>
+  </thead>
+  <tbody *ngFor="let game of games; let i = index; let even = even"
+         [ngClass]="{'even': even} ">
+  <tr class="table-row">
+    <td class="small-three-space-table-cell reg-table-cell">{{i +1}}</td>
+    <td [ngClass]="{'game-table-won': (playerOneWon(game)),
+                    'game-table-lost': (playerTwoWon(game))}"
+        class="mdl-data-table__cell--non-numeric">
+      <div class="player-name-table-cell">{{game.playerOnePlayerName | truncate:40}}</div>
+      <div>{{game.playerOneFaction}}</div>
+      <div>{{game.playerOneArmyList}}</div>
+    </td>
+    <td [ngClass]="{'game-table-won': (playerOneWon(game)),
+                    'game-table-lost': (playerTwoWon(game))}"
+        class="small-three-space-table-cell">
+      {{game.playerOneScore}}/{{game.playerOneControlPoints}}/{{game.playerOneVictoryPoints}}
+    </td>
+    <td [ngClass]="{'game-table-lost': (playerOneWon(game)),
+                    'game-table-won': (playerTwoWon(game))}"
+        class="mdl-data-table__cell--non-numeric">
+      <div  class="player-name-table-cell">{{game.playerTwoPlayerName | truncate:40}}</div>
+      <div>{{game.playerTwoFaction}}</div>
+      <div>{{game.playerTwoArmyList}}</div>
+    </td>
+    <td [ngClass]="{'game-table-lost': (playerOneWon(game)),
+                    'game-table-won': (playerTwoWon(game))}"
+        class="small-three-space-table-cell">
+      <div>{{game.playerTwoScore}}/{{game.playerTwoControlPoints}}/{{game.playerTwoVictoryPoints}}</div>
+    </td>
+
+  </tr>
+  </tbody>
+</table>
+

@@ -1,7 +1,7 @@
 
 <div *ngIf="(currentUserId === actualTournament?.creatorUid)  &&
             (round === actualTournament.actualRound) &&
-             !actualTournament.finished"
+             !actualTournament.finished && !rankingsFullscreenMode && !gamesFullscreenMode"
      class="action-card-container">
   <md-card class="action-card" >
     <button *ngIf="allGamesUntouched"
@@ -28,7 +28,8 @@
       <md-icon>flag</md-icon>
       End Tournament
     </button>
-    <button (click)="publishRound()"
+    <button *ngIf="actualTournament.visibleRound < actualTournament.actualRound"
+            (click)="publishRound()"
             type="button"
             class="positive-background"
             md-raised-button>
@@ -45,17 +46,22 @@
   </md-card>
 </div>
 <div class="content-cards-container">
-  <md-card >
+  <md-card *ngIf="!rankingsFullscreenMode">
     <h3 class="heading">Games for round {{round}}</h3>
+    <mdl-icon *ngIf="!gamesFullscreenMode" (click)="openGamesFullScreenMode(true)" mdTooltip="Fullscreen Mode" class="fullscreen-mode">fullscreen</mdl-icon>
+    <mdl-icon *ngIf="gamesFullscreenMode" (click)="openGamesFullScreenMode(false)" mdTooltip="Exit Fullscreen Mode" class="fullscreen-mode">fullscreen_exit</mdl-icon>
+    <mdl-icon *ngIf="!gamesTableMode" (click)="changeToTableMode(true)" mdTooltip="Table Mode" class="table-mode">list</mdl-icon>
+    <mdl-icon *ngIf="gamesTableMode" (click)="changeToTableMode(false)" mdTooltip="Exit Table Mode" class="table-mode">view_list</mdl-icon>
 
-    <mdl-textfield type="text"
+    <mdl-textfield *ngIf="!gamesFullscreenMode"
+                   type="text"
                    maxlength="50"
                    placeholder="Filter by PlayerName"
                    #seachInput
                    (keyup)="search(seachInput.value)" >
     </mdl-textfield>
     <h4 *ngIf="allGamesFiltered?.length == 0" class="warning-text">No Games found (Filter?)</h4>
-    <tournament-game-list
+    <tournament-game-list *ngIf="!gamesTableMode"
       [actualTournament]="actualTournament"
       [authenticationStoreState$]="authenticationStoreState$"
       [actualTournamentArmyLists$]="actualTournamentArmyLists$"
@@ -64,9 +70,15 @@
       (onGameResult)="handleGameResult($event)"
       (onSwapPlayer)="handleSwapPlayer($event)"
     ></tournament-game-list>
+
+    <tournament-game-table *ngIf="gamesTableMode"
+                          [games]="allGamesFiltered"
+    ></tournament-game-table>
   </md-card>
-  <md-card >
+  <md-card *ngIf="!gamesFullscreenMode">
     <h3 class="heading">Ranking for round {{round}}</h3>
+    <mdl-icon *ngIf="!rankingsFullscreenMode" (click)="openRankingsFullScreenMode(true)" mdTooltip="Fullscreen Mode" class="fullscreen-mode">fullscreen</mdl-icon>
+    <mdl-icon *ngIf="rankingsFullscreenMode" (click)="openRankingsFullScreenMode(false)" mdTooltip="Exit Fullscreen Mode" class="fullscreen-mode">fullscreen_exit</mdl-icon>
     <tournament-ranking-table
       [actualTournamentArmyList$]="armyLists$"
       [rankingsForRound$]="rankingsForRound$"

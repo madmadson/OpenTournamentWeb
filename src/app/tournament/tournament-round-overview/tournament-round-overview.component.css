@@ -1,0 +1,24 @@
+
+.fullscreen-mode{
+  position: absolute;
+  display: inline-block;
+  top: 10px;
+  right: 10px;
+}
+
+.fullscreen-mode:hover{
+  color: blue;
+  cursor: pointer;
+}
+
+.table-mode{
+  position: absolute;
+  display: inline-block;
+  top: 10px;
+  right: 50px;
+}
+
+.table-mode:hover{
+  color: blue;
+  cursor: pointer;
+}

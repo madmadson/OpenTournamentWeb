@@ -7,13 +7,14 @@ import {AuthenticationStoreState} from '../../store/authentication-state';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {Tournament} from '../../../../shared/model/tournament';
 
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
+import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 
 import * as _ from 'lodash';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
 import {SwapPlayer} from '../../../../shared/dto/swap-player';
+import {GlobalEventService} from "app/service/global-event-service";
 
 @Component({
   selector: 'tournament-round-overview',
@@ -49,7 +50,14 @@ export class TournamentRoundOverviewComponent implements OnInit {
   allGames: TournamentGame[];
   allGamesFiltered: TournamentGame[];
 
-  constructor(public dialog: MdDialog) {
+  gamesFullscreenMode: boolean;
+  rankingsFullscreenMode: boolean;
+
+  gamesTableMode: boolean;
+
+  constructor(public dialog: MdDialog,
+              private messageService: GlobalEventService,
+              private snackBar: MdSnackBar) {
   }
 
   ngOnInit() {
@@ -79,9 +87,31 @@ export class TournamentRoundOverviewComponent implements OnInit {
 
   }
 
+  changeToTableMode(mode: boolean) {
+
+    this.gamesTableMode = mode;
+
+    this.snackBar.open('Note: TableMode is only for presentation.', '', {
+      duration: 5000
+    });
+  }
+
+  openGamesFullScreenMode(mode: boolean) {
+    this.gamesFullscreenMode = mode;
+
+    this.messageService.broadcast('fullScreenMode', mode);
+  }
+
+  openRankingsFullScreenMode(mode: boolean) {
+    this.rankingsFullscreenMode = mode;
+
+    this.messageService.broadcast('fullScreenMode', mode);
+  }
+
   handleGameResult(gameResult: GameResult) {
 
     this.onGameResult.emit(gameResult);
+
   }
 
   handleSwapPlayer(swapPlayer: SwapPlayer) {
@@ -113,6 +143,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
       data: {
         round: this.round
       },
+      width: '600px',
     });
     const eventSubscribe = dialogRef.componentInstance.onKillRound
       .subscribe((config: TournamentManagementConfiguration) => {
@@ -134,6 +165,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
       data: {
         round: this.round
       },
+      width: '600px',
     });
     const eventSubscribe = dialogRef.componentInstance.onPairAgain
       .subscribe((config: TournamentManagementConfiguration) => {
@@ -156,6 +188,7 @@ export class TournamentRoundOverviewComponent implements OnInit {
         round: this.round,
         allPlayers$: this.rankingsForRound$
       },
+      width: '600px',
     });
     const eventSubscribe = dialogRef.componentInstance.onNewRound
       .subscribe((config: TournamentManagementConfiguration) => {
@@ -175,7 +208,8 @@ export class TournamentRoundOverviewComponent implements OnInit {
       data: {
         round: this.round,
         allPlayers$: this.rankingsForRound$
-      }
+      },
+      width: '600px',
     });
     const eventSubscribe = dialogRef.componentInstance.onEndTournament
       .subscribe(() => {

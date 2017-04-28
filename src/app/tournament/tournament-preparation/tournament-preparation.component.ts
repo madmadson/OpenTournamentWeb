@@ -385,7 +385,6 @@ export class AddArmyListsDialogComponent {
 
 @Component({
   selector: 'start-tournament-dialog',
-  styleUrls: ['./start-tournament-dialog.css'],
   templateUrl: './start-tournament-dialog.html'
 })
 export class StartTournamentDialogComponent {

@@ -218,7 +218,8 @@ export class TournamentService implements OnDestroy {
     const regRef = this.afService.database.list('tournament-registrations/' + regPush.tournament.id + '/' + regPush.registration.id);
     regRef.remove();
 
-    const playerRegRef = this.afService.database.list('players-registrations/' + regPush.registration.playerId + '/' + regPush.registration.id);
+    const playerRegRef = this.afService.database
+          .list('players-registrations/' + regPush.registration.playerId + '/' + regPush.registration.id);
     playerRegRef.remove();
 
     const tournamentRef = this.afService.database.object('tournaments/' + regPush.tournament.id);

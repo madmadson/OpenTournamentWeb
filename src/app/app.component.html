@@ -1,5 +1,5 @@
 <md-sidenav-container class="god-container">
-  <md-sidenav #sidenav mode="side" opened="true" class="side-nav">
+  <md-sidenav *ngIf="!fullscreenMode" #sidenav mode="side" opened="true" class="side-nav">
     <nav>
       <img src="./assets/logo3.png" alt="logo" class="nav-img-logo">
       <hr>
@@ -29,7 +29,7 @@
       </div>
     </nav>
   </md-sidenav>
-  <md-toolbar color="primary">
+  <md-toolbar *ngIf="!fullscreenMode" color="primary">
     <div>
       <button class="app-icon-button" (click)="sidenav.toggle()">
         <i class="material-icons  app-toolbar-menu">menu</i>

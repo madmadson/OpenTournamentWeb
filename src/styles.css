@@ -160,9 +160,20 @@ md-card {
   align-items: center;
 }
 
-.action-card{
-
+.pairing-options-card-wide{
+  width: 400px;
+  margin-right:1rem;
 }
+
+.full-width-input {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.align-fix {
+  vertical-align: middle !important;
+}
+
 
 .content-cards-container{
   display: flex;
@@ -231,4 +242,10 @@ md-card {
 
 .move-able{
   cursor: move;
+}
+
+
+.mdl-tabs__tab.disabled {
+  cursor: not-allowed !important;
+  opacity: 0.2 !important;
 }

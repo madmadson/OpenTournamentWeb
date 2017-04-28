@@ -1,5 +1,5 @@
+<md-dialog-content>
 <h3 class="heading">Pair New Round</h3>
-
 <div class="content-cards-container">
   <mdl-card class="pairing-options-card-wide" mdl-shadow="4">
     <mdl-card-title>
@@ -51,12 +51,12 @@
       </button>
     </mdl-card-actions>
   </mdl-card>
-
   <h4 class="warning-text" *ngIf="(round + 1) > suggestedRoundToPlay">
     You are going to pair more Rounds than suggested!
     There is no guarantee for successful pairing.
   </h4>
 </div>
+</md-dialog-content>
 <div md-dialog-actions>
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
 </div>
