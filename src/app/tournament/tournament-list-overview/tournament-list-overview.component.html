@@ -1,4 +1,4 @@
-<h1 class="heading">Online Tournaments ({{(allTournaments$| async) ?.length}})</h1>
+<h2 class="heading">Online Tournaments ({{(allTournaments$| async) ?.length}})</h2>
 
 <md-card class="single-list-card">
   <span *ngIf="(groupedTournaments$ | async).length == 0">No Tournaments found</span>

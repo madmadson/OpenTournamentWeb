@@ -5,6 +5,7 @@ import {PlayersSubscribeAction} from '../../store/actions/players-actions';
 
 import * as _ from 'lodash';
 import {Player} from '../../../../shared/model/player';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Component({
@@ -12,8 +13,9 @@ import {Player} from '../../../../shared/model/player';
   templateUrl: './player-list-overview.component.html',
   styleUrls: ['./player-list-overview.component.css']
 })
-export class PlayerListOverviewComponent implements OnInit {
+export class PlayerListOverviewComponent implements OnInit, OnDestroy {
 
+  playerSub: Subscription;
   orderedPlayers: Player[];
   filteredPlayers: Player[];
 
@@ -23,13 +25,17 @@ export class PlayerListOverviewComponent implements OnInit {
 
   ngOnInit() {
 
-    this.store.select(state => state.players.players).map(players => {
+    this.playerSub = this.store.select(state => state.players.players).map(players => {
       return _.orderBy(players, ['elo', 'nickname'], ['desc', 'asc']);
     }).subscribe(orderedPlayers => {
       this.orderedPlayers = orderedPlayers;
       this.filteredPlayers = orderedPlayers;
     });
 
+  }
+
+  ngOnDestroy() {
+    this.playerSub.unsubscribe();
   }
 
 

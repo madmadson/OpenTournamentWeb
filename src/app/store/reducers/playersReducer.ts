@@ -2,7 +2,10 @@ import {Action} from '@ngrx/store';
 
 
 import * as _ from 'lodash';
-import {PLAYER_ADDED_ACTION, PLAYER_CHANGED_ACTION, PLAYER_DELETED_ACTION} from '../actions/players-actions';
+import {
+  PLAYER_ADDED_ACTION, PLAYER_CHANGED_ACTION, PLAYER_DELETED_ACTION,
+  PLAYERS_CLEAR_ACTION
+} from '../actions/players-actions';
 import {Player} from '../../../../shared/model/player';
 
 export interface PlayerStoreData {
@@ -20,6 +23,10 @@ export function PlayersReducer(state: PlayerStoreData = INITIAL_STATE, action: A
 
   switch (action.type) {
 
+    case PLAYERS_CLEAR_ACTION:
+
+      return handlePlayersClearAction(state, action);
+
     case PLAYER_ADDED_ACTION:
 
       return handlePlayerAddedData(state, action);
@@ -36,6 +43,16 @@ export function PlayersReducer(state: PlayerStoreData = INITIAL_STATE, action: A
       return state;
 
   }
+}
+
+function handlePlayersClearAction(
+  state: PlayerStoreData, action: Action): PlayerStoreData {
+
+  const playersStoreData: PlayerStoreData = _.cloneDeep(state);
+
+  playersStoreData.players = [];
+
+  return playersStoreData;
 }
 
 function handlePlayerAddedData(state: PlayerStoreData, action: Action): PlayerStoreData {
