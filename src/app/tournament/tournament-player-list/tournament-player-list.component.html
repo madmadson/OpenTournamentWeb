@@ -5,22 +5,25 @@
 
   <mdl-list-item-primary-content>
     <mdl-icon mdl-list-item-avatar mdl-badge="{{i +1}}" mdl-badge-overlap>person</mdl-icon>
-    <span>{{tournamentPlayer.playerName}}</span>
+    <span>{{tournamentPlayer.playerName  | truncate:truncateMax}}</span>
 
     <mdl-list-item-text-body>
       <div>{{tournamentPlayer.faction}}</div>
-      <div>{{tournamentPlayer.teamName}} - {{tournamentPlayer.meta}} - {{tournamentPlayer.origin}}</div>
+      <div *ngIf="smallScreen">{{tournamentPlayer.teamName }}</div>
+      <div *ngIf="!smallScreen">{{tournamentPlayer.teamName }} - {{tournamentPlayer.meta}} - {{tournamentPlayer.origin}}
+      </div>
       <div>{{tournamentPlayer.country}}</div>
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>
-  <mdl-list-item-secondary-content *ngIf="!tournamentPlayer.playerId">
+  <mdl-list-item-secondary-content *ngIf="!tournamentPlayer.playerId && !smallScreen">
     <md-icon>cloud_off</md-icon>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="tournamentPlayer.elo">
-    <mdl-list-item-secondary-info>ELO</mdl-list-item-secondary-info>
-    <span>{{tournamentPlayer.elo}}<img class="md-secondary" src="../../../assets/my_crown_small.png"></span>
-  </mdl-list-item-secondary-content>
-  <mdl-list-item-secondary-content *ngIf="tournamentPlayer.playerId">
+    <mdl-list-item-secondary-info class="align-fix elo-info">ELO<img class="padding-fix-icon"
+                                                                     src="../../../assets/my_crown_small.png">
+    </mdl-list-item-secondary-info>
+    <span>{{tournamentPlayer.elo}}</span></mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="tournamentPlayer.playerId && !smallScreen">
     <md-icon class="positive  list-action" (click)="openArmyListDialog(tournamentPlayer)">list</md-icon>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="isAdmin  && actualTournament.actualRound === 0">

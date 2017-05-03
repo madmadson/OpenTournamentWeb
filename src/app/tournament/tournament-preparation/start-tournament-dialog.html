@@ -1,7 +1,7 @@
 <md-dialog-content>
   <div *ngIf="allActualTournamentPlayers.length % 2; else startButton">
     <h3 class="heading warning">Uneven Tournament Players</h3>
-    <button (click)="addDummyPlayer()"
+    <button *ngIf="!dummyPlayerAlreadyIn()" (click)="addDummyPlayer()"
             type="button"
             color="accent"
             class="full-width-button"
@@ -9,6 +9,7 @@
       <md-icon>add</md-icon>
       Add Dummy Player
     </button>
+    <h4 *ngIf="dummyPlayerAlreadyIn()"  class="warning-text">There is already a DUMMY. Please delete him first.</h4>
     <h4>
       Pairing only works sufficient with even player count.
     </h4>

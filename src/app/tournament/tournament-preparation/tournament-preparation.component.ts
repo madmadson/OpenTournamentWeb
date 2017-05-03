@@ -406,8 +406,18 @@ export class StartTournamentDialogComponent {
         this.allActualTournamentPlayers = players;
        this.suggestedRoundsToPlay = Math.round(Math.log2(players.length));
      });
+  }
+
+  dummyPlayerAlreadyIn(): TournamentPlayer {
 
 
+    const foundDummy = _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+        if (player.playerName === 'DUMMY') {
+         return player;
+        }
+    });
+
+    return foundDummy;
   }
 
   startTournament() {

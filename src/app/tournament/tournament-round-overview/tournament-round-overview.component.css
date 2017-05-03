@@ -22,3 +22,41 @@
   color: blue;
   cursor: pointer;
 }
+
+.games-for-round-card{
+  width: 300px;
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+}
+
+@media only screen and (min-width: 500px) {
+  .games-for-round-card{
+    width: 400px;
+    align-items: center;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .games-for-round-card{
+    width: 700px;
+    align-items: center;
+  }
+}
+
+.tournament-ranking-table-card{
+  width: 300px;
+}
+
+@media only screen and (min-width: 500px) {
+  .tournament-ranking-table-card{
+    width: 400px;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .tournament-ranking-table-card{
+    width: 700px;
+    align-items: center;
+  }
+}

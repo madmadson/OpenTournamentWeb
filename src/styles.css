@@ -8,6 +8,11 @@ body {
   overflow-x: hidden;
 }
 
+.prevent-scrolling {
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
 a {
   color: deepskyblue;
 }
@@ -32,7 +37,19 @@ a:hover {
 
 .heading{
   text-align: center;
-  font-size: 2.4em;
+  font-size: 1.2em;
+  margin-right: 12px;
+  margin-left: 12px;
+  width: 100%;
+}
+@media only screen and (min-width: 500px) {
+  .heading {
+    text-align: center;
+    font-size: 2.4em;
+    margin-right: 12px;
+    margin-left: 12px;
+    width: 100%;
+  }
 }
 
 /*md-changes watch for improvement in lib*/
@@ -49,12 +66,10 @@ button:hover{
 }
 
 .list-item:hover{
+  cursor: pointer;
   background-color: deepskyblue;
 }
 
-/*.table-row:hover{*/
-  /*background-color: deepskyblue !important;*/
-/*}*/
 
 .list-action{
   padding-left: 3px;
@@ -62,6 +77,11 @@ button:hover{
   font-size:36px;
   cursor: pointer;
 }
+
+.mdl-list__item .mdl-list__item-secondary-content{
+  margin-left: 3px;
+}
+
 .negative-background{
   background-color: #D32F2F;
 }
@@ -102,9 +122,20 @@ button:hover{
   color: blue;
 }
 
-
 md-card {
-  margin: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+@media only screen and (min-width: 500px) {
+  md-card {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
 }
 
 .full-width-button{
@@ -156,8 +187,45 @@ md-card {
 .action-card-container{
   display: flex;
   flex-flow:column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+}
+
+.action-card{
+  width: 300px;
+  padding: 0;
+}
+@media only screen and (min-width: 500px) {
+  .action-card{
+    width: 400px;
+  }
+}
+@media only screen and (min-width: 800px) {
+  .action-card{
+    width: 700px;
+  }
+}
+
+.action-button-wrapper{
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+@media only screen and (min-width: 800px) {
+  .action-button-wrapper{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.action-button {
+  margin: 6px !important;
+  width: 160px !important;
 }
 
 .pairing-options-card-wide{
@@ -172,6 +240,11 @@ md-card {
 
 .align-fix {
   vertical-align: middle !important;
+}
+
+.padding-fix-icon {
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 
@@ -248,4 +321,25 @@ md-card {
 .mdl-tabs__tab.disabled {
   cursor: not-allowed !important;
   opacity: 0.2 !important;
+}
+
+.player-name{
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+@media only screen and (min-width: 500px) {
+  .player-name {
+    font-size: 1em;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .player-name {
+    font-size: 1.2em;
+  }
+}
+
+.elo-info {
+ width: 54px;
 }

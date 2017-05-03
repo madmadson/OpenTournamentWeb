@@ -3,10 +3,10 @@ import {ApplicationState} from '../../store/application-state';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {TournamentListVM} from '../tournamentList.vm';
+import {Tournament} from '../../../../shared/model/tournament';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {Tournament} from '../../../../shared/model/tournament';
 
 @Component({
   selector: 'tournament-list-overview',

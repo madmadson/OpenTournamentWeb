@@ -1,7 +1,30 @@
-.player-name-table-cell{
-  font-size: 1.2em;
+.rank-number{
+  padding-right: 12px !important;
+  padding-left: 12px !important;
+}
+
+.player-name-table-cell {
+  font-size: 0.8em;
   margin-bottom: 6px;
   font-weight: bold;
+}
+
+@media only screen and (min-width: 800px) {
+  .player-name-table-cell {
+    font-size: 1.2em;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+}
+
+.other-player-data-table-cell{
+  font-size: 0.7em;
+}
+
+@media only screen and (min-width: 800px) {
+  .other-player-data-table-cell{
+    font-size: 1.0em;
+  }
 }
 
 .rank-table-cell {
@@ -10,10 +33,44 @@
 }
 
 .small-three-space-table-cell {
-  width:20px;
+  width: 10px;
+  font-size: 0.8em;
+  text-align: center;
+}
+
+@media only screen and (min-width: 800px) {
+  .small-three-space-table-cell {
+    width: 20px;
+  }
 }
 
 .army-list-icon:hover {
   cursor: pointer;
   color: deepskyblue;
+}
+
+.mdl-data-table th {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+@media only screen and (min-width: 800px) {
+
+  .mdl-data-table th {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}
+
+.mdl-data-table td {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+@media only screen and (min-width: 800px) {
+  .mdl-data-table td {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
 }

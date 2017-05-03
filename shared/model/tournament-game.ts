@@ -27,8 +27,8 @@ export class TournamentGame {
   playerTwoArmyList: string;
   playerTwoEloChanging: number;
 
-  playingField: number;
   tournamentRound: number;
+  playingField: number;
   finished: boolean;
   scenario: string;
 
@@ -39,7 +39,7 @@ export class TournamentGame {
                     playerTwoPlayerId, playerTwoTournamentPlayerId, playerTwoPlayerName,
                     playerTwoFaction, playerTwoElo, playerTwoScore, playerTwoControlPoints,
                     playerTwoVictoryPoints, playerTwoArmyList, playerTwoEloChanging,
-                    playingField, tournamentRound, finished, scenario
+                    tournamentRound, playingField, finished, scenario
   }): TournamentGame {
     return new TournamentGame(tournamentId, playerOnePlayerId, playerOneTournamentPlayerId,
       playerOnePlayerName, playerOneElo, playerOneFaction, playerOneScore,
@@ -47,7 +47,7 @@ export class TournamentGame {
       playerTwoPlayerId, playerTwoTournamentPlayerId, playerTwoPlayerName,
       playerTwoElo,  playerTwoFaction, playerTwoScore, playerTwoControlPoints,
       playerTwoVictoryPoints, playerTwoArmyList, playerTwoEloChanging,
-      playingField, tournamentRound, finished, scenario);
+      tournamentRound, playingField, finished, scenario);
   }
 
   constructor(tournamentId: string, playerOnePlayerId: string, playerOneTournamentPlayerId: string,

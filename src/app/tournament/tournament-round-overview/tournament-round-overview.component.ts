@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {ArmyList} from '../../../../shared/model/armyList';
@@ -14,14 +14,19 @@ import * as _ from 'lodash';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
 import {SwapPlayer} from '../../../../shared/dto/swap-player';
-import {GlobalEventService} from "app/service/global-event-service";
+import {GlobalEventService} from 'app/service/global-event-service';
+import {WindowRefService} from '../../service/window-ref-service';
+import {Subscription} from 'rxjs/Subscription';
+
 
 @Component({
   selector: 'tournament-round-overview',
   templateUrl: './tournament-round-overview.component.html',
   styleUrls: ['./tournament-round-overview.component.css']
 })
-export class TournamentRoundOverviewComponent implements OnInit {
+export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
+
+  private swapPlayerModeSub: Subscription;
 
   @Input() round: number;
   @Input() actualTournament: Tournament;
@@ -52,12 +57,21 @@ export class TournamentRoundOverviewComponent implements OnInit {
 
   gamesFullscreenMode: boolean;
   rankingsFullscreenMode: boolean;
+  swapPlayerMode: boolean;
 
   gamesTableMode: boolean;
+  smallScreen: boolean;
 
   constructor(public dialog: MdDialog,
               private messageService: GlobalEventService,
-              private snackBar: MdSnackBar) {
+              private snackBar: MdSnackBar,
+              private winRef: WindowRefService) {
+
+    this.smallScreen = this.winRef.nativeWindow.screen.width < 800;
+
+    this.swapPlayerModeSub = messageService.subscribe('swapPlayerMode', (payload: boolean) => {
+      this.swapPlayerMode = payload;
+    });
   }
 
   ngOnInit() {
@@ -85,6 +99,10 @@ export class TournamentRoundOverviewComponent implements OnInit {
       this.allGamesUntouched = !startedGames;
     });
 
+  }
+
+  ngOnDestroy() {
+    this.swapPlayerModeSub.unsubscribe();
   }
 
   changeToTableMode(mode: boolean) {
@@ -133,7 +151,8 @@ export class TournamentRoundOverviewComponent implements OnInit {
 
     this.allGamesFiltered = _.filter(this.allGames, function (game) {
       return game.playerOnePlayerName.toLowerCase().startsWith(searchString.toLowerCase()) ||
-        game.playerTwoPlayerName.toLowerCase().startsWith(searchString.toLowerCase());
+        game.playerTwoPlayerName.toLowerCase().startsWith(searchString.toLowerCase()) ||
+        game.playingField.toString() === searchString;
     });
 
   }

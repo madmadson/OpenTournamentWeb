@@ -1,8 +1,8 @@
-<h1 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h1>
+<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
 
 
 <mdl-tabs  mdl-ripple [mdl-tab-active-index]="selectedIndex">
-  <mdl-tab-panel   mdl-tab-panel-title="Tournament Preparation" [disabled]="fullscreenMode">
+  <mdl-tab-panel   mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">
     <tournament-preparation
       [authenticationStoreState$]="authenticationStoreState$"
       [actualTournament]="actualTournament"
@@ -23,8 +23,8 @@
   </mdl-tab-panel>
   <ng-container *ngIf="currentUserId === actualTournament?.creatorUid">
     <mdl-tab-panel  *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
-                    mdl-tab-panel-title="Round {{index +1}}"
-                    [disabled]="fullscreenMode">
+                    mdl-tab-panel-title="{{getRoundPageTitle(index +1)}}"
+                    [disabled]="fullscreenMode || swapPlayerMode">
         <tournament-round-overview
           [round]="round"
           [actualTournament]="actualTournament"
@@ -44,8 +44,8 @@
   </ng-container>
   <ng-container *ngIf="currentUserId !== actualTournament?.creatorUid" >
     <mdl-tab-panel *ngFor=" let round of getArrayForNumber(actualTournament?.visibleRound) ;let index = index;"
-                   mdl-tab-panel-title="Round {{index +1}}"
-                   [disabled]="fullscreenMode">
+                   mdl-tab-panel-title="{{getRoundPageTitle(index +1)}}"
+                   [disabled]="fullscreenMode || swapPlayerMode">
       <tournament-round-overview
         [round]="round"
         [actualTournament]="actualTournament"
@@ -62,7 +62,8 @@
       </mdl-tab-panel>
   </ng-container>
 
-  <mdl-tab-panel [disabled]="fullscreenMode" *ngIf="actualTournament?.finished"  mdl-tab-panel-title="Results">
+  <mdl-tab-panel [disabled]="fullscreenMode || swapPlayerMode"
+                 *ngIf="actualTournament?.finished"  mdl-tab-panel-title="Results">
     <tournament-final-rankings
       [actualTournament]="actualTournament"
       [authenticationStoreState$]="authenticationStoreState$"

@@ -187,7 +187,7 @@ export class TournamentGameService implements OnDestroy {
             ranking2.playerId, ranking2.tournamentPlayerId,
             ranking2.playerName, ranking2.elo, ranking2.faction,
             0, 0, 0, '', 0,
-            ranking1.tournamentRound, config.round, false, '');
+            config.round, (gamesToCalculate / 2),  false, '');
 
           this.newGames.push(newGame);
 

@@ -1,13 +1,23 @@
+
+<md-select
+  class="full-width-select-box"
+  placeholder="Scenario"
+  #scenario
+  [(ngModel)]="selectedScenario"
+  name="scenario">
+  <md-option *ngFor="let scenario of scenarios" [value]="scenario">{{ scenario }}</md-option>
+</md-select>
 <div *ngFor="let game of gamesForRound; let i = index; let even = even"
      [ngClass]="{'even': even,
                  'my-item':isItMyGame(game),
                  'clickable-tournament-game': (myGameOrAdmin(game) && !dragStarted)
                  }"
      (click)="openGameResultDialog(game)">
-  <div class="table-info">Table {{i +1}}</div>
+  <div class="table-info">Table {{game.playingField}}</div>
   <div class="game-cards-container">
     <md-card
       draggable="true"
+      (click)="confirmSwapPlayer($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       (dragstart)="startDrag($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       (dragover)="dragOver($event, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       (dragleave)="dragLeave($event)"
@@ -28,10 +38,20 @@
         VP: {{game.playerOneVictoryPoints}}
       </div>
       <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished"
+                (click)="startSwapPlayer($event,game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)" mdTooltip="Swap Player Mode"
+                class="swap-player-mode">swap_horiz
+      </mdl-icon>
+      <mdl-icon *ngIf="swapPlayerMode && !game.finished" (click)="endSwapPlayer($event)" mdTooltip="Exit Swap Player Mode"
+                class="swap-player-mode">cancel
+      </mdl-icon>
     </md-card>
-    <div>VS</div>
+    <div class="game-result-card-divider">
+      VS
+    </div>
     <md-card
       draggable="true"
+      (click)="confirmSwapPlayer($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
       (dragstart)="startDrag($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
       (dragover)="dragOver($event, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
       (dragleave)="dragLeave($event)"
@@ -51,8 +71,14 @@
         VP: {{game.playerTwoVictoryPoints}}
       </div>
       <div *ngIf="game.playerTwoArmyList " class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished"
+                (click)="startSwapPlayer($event,game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)" mdTooltip="Swap Player Mode"
+                class="swap-player-mode">swap_horiz
+      </mdl-icon>
+      <mdl-icon *ngIf="swapPlayerMode && !game.finished" (click)="endSwapPlayer($event)" mdTooltip="Exit Swap Player Mode"
+                class="swap-player-mode">cancel
+      </mdl-icon>
     </md-card>
-
   </div>
 </div>
 

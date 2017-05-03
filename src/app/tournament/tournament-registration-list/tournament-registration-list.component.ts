@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Registration} from '../../../../shared/model/registration';
 import {Player} from '../../../../shared/model/player';
 import {Tournament} from '../../../../shared/model/tournament';
+import {WindowRefService} from "../../service/window-ref-service";
 
 
 @Component({
@@ -17,12 +18,25 @@ export class TournamentRegistrationListComponent implements OnInit {
   @Input() isAdmin: boolean;
 
   @Output() onAcceptRegistration = new EventEmitter<Registration>();
-
   @Output() onDeleteRegistration = new EventEmitter<Registration>();
-
   @Output() onAddArmyLists = new EventEmitter<Registration>();
 
-  constructor() {
+  smallScreen: boolean;
+  truncateMax: number;
+
+  constructor( private winRef: WindowRefService) {
+
+    if (this.winRef.nativeWindow.screen.width < 500) {
+      this.smallScreen = true;
+      this.truncateMax = 10;
+    } else if (this.winRef.nativeWindow.screen.width < 800) {
+      this.smallScreen = true;
+      this.truncateMax = 20;
+    } else {
+      this.smallScreen = false;
+      this.truncateMax = 40;
+    }
+
   }
 
   ngOnInit() {

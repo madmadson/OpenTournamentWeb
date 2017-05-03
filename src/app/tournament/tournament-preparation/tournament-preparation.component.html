@@ -1,61 +1,65 @@
-
 <div class="action-card-container">
   <md-card
     *ngIf="(actualTournament?.actualRound === 0 &&
             currentUserId === actualTournament?.creatorUid); else nonAdmin"
     class="action-card">
-    <button  (click)="openTournamentFormDialog()"
-             type="button"
-             color="accent"
-             md-raised-button>
-      <md-icon>build</md-icon>
-      Edit
-    </button>
-    <button *ngIf="allActualTournamentPlayers?.length > 1"
-            (click)="openStartTournamentDialog()"
-            type="button"
-            color="accent"
-            md-raised-button>
-      <md-icon>play_arrow</md-icon>
-      Start Tournament
-    </button>
-    <ng-container *ngIf="actualTournament?.actualRound === 0">
-      <button *ngIf="userPlayerData && !myRegistration "
-              (click)="openRegistrationDialog()"
+    <div class="action-button-wrapper">
+      <button (click)="openTournamentFormDialog()"
               type="button"
-              color="accent"
+              class="positive-background action-button"
+
               md-raised-button>
-        <md-icon>add</md-icon>
-        Register me
+        <md-icon>build</md-icon>
+        Edit
       </button>
-      <button *ngIf="myRegistration"
-              (click)="deleteMyRegistration(myRegistration)"
+      <button *ngIf="allActualTournamentPlayers?.length > 1"
+              (click)="openStartTournamentDialog()"
               type="button"
-              color="accent"
+              class=" positive-background action-button"
               md-raised-button>
-        <md-icon>delete</md-icon>
-        Delete my Registration
+        <md-icon>play_arrow</md-icon>
+        Start Tournament
       </button>
-    </ng-container>
+      <ng-container *ngIf="actualTournament?.actualRound === 0">
+        <button *ngIf="userPlayerData && !myRegistration "
+                type="button"
+                (click)="openRegistrationDialog()"
+                class="positive-background action-button"
+                md-raised-button>
+          <md-icon>add</md-icon>
+          Register me
+        </button>
+        <button *ngIf="myRegistration"
+                (click)="deleteMyRegistration(myRegistration)"
+                type="button"
+                class="negative-background action-button"
+                md-raised-button>
+          <md-icon>delete</md-icon>
+          Delete my Registration
+        </button>
+      </ng-container>
+    </div>
   </md-card>
   <ng-template #nonAdmin>
-    <md-card class="action-card" *ngIf="actualTournament?.actualRound === 0">
-      <button *ngIf="userPlayerData && !myRegistration "
-        (click)="openRegistrationDialog()"
-        type="button"
-        color="accent"
-        md-raised-button>
-      <md-icon>add</md-icon>
-      Register me
-      </button>
-      <button *ngIf="myRegistration"
-              (click)="deleteMyRegistration(myRegistration)"
-              type="button"
-              color="accent"
-              md-raised-button>
-        <md-icon>delete</md-icon>
-      Delete my Registration
-      </button>
+    <md-card class="action-card" *ngIf="actualTournament?.actualRound === 0 && userPlayerData">
+      <div class="action-button-wrapper">
+        <button *ngIf="!myRegistration "
+                (click)="openRegistrationDialog()"
+                type="button"
+                class="positive-background action-button"
+                md-raised-button>
+          <md-icon>add</md-icon>
+          Register me
+        </button>
+        <button *ngIf="myRegistration"
+                (click)="deleteMyRegistration(myRegistration)"
+                type="button"
+                class="negative-background action-button"
+                md-raised-button>
+          <md-icon>delete</md-icon>
+          I'm out
+        </button>
+      </div>
     </md-card>
   </ng-template>
 
@@ -72,55 +76,55 @@
     </md-card-actions>
   </md-card>
 
-<div class="content-cards-container">
-  <md-card class="registration-list-card">
-    <h4 *ngIf="allRegistrations.length == 0" class="heading">
-      No Registrations found
-    </h4>
-    <h4 *ngIf="allRegistrations.length > 0" class="heading">
-      Registrations ({{allRegistrations.length}})
-    </h4>
-    <mdl-list>
-      <tournament-registration-list
-        [actualTournament] = "actualTournament"
-        [isAdmin]="currentUserId === actualTournament?.creatorUid"
-        [userPlayerData]="userPlayerData"
-        [registrations]="allRegistrations"
-        (onAcceptRegistration)="acceptRegistration($event)"
-        (onDeleteRegistration)="deleteMyRegistration($event)"
-        (onAddArmyLists)="addArmyList($event)">
-      </tournament-registration-list>
-    </mdl-list>
-  </md-card>
-  <md-card *ngIf="currentUserId === actualTournament?.creatorUid"
-           class="tournament-list-card">
-    <h4 *ngIf="allActualTournamentPlayers.length > 0" class="heading">
-      Tournament Players ({{filteredActualTournamentPlayers.length}}/{{allActualTournamentPlayers.length}})
-    </h4>
-    <h4 *ngIf="allActualTournamentPlayers.length == 0" class="heading">
-      No Tournament Players found</h4>
-    <button *ngIf="actualTournament?.actualRound === 0"
-            type="button" color="accent" md-raised-button (click)="addTournamentPlayer()">
-      <md-icon>add</md-icon>
-      Add Player
-    </button>
-    <md-input-container class="search-field">
-      <input type="text"
-             mdInput
-             placeholder="Filter Tournament Player"
-             #searchInput
-             (keyup)="filter(searchInput.value)">
-    </md-input-container>
-    <mdl-list>
-      <tournament-player-list
+  <div class="content-cards-container">
+    <md-card class="registration-list-card">
+      <h4 *ngIf="allRegistrations.length == 0" class="heading">
+        No Registrations found
+      </h4>
+      <h4 *ngIf="allRegistrations.length > 0" class="heading">
+        Registrations ({{allRegistrations.length}})
+      </h4>
+      <mdl-list>
+        <tournament-registration-list
+          [actualTournament]="actualTournament"
+          [isAdmin]="currentUserId === actualTournament?.creatorUid"
+          [userPlayerData]="userPlayerData"
+          [registrations]="allRegistrations"
+          (onAcceptRegistration)="acceptRegistration($event)"
+          (onDeleteRegistration)="deleteMyRegistration($event)"
+          (onAddArmyLists)="addArmyList($event)">
+        </tournament-registration-list>
+      </mdl-list>
+    </md-card>
+    <md-card *ngIf="currentUserId === actualTournament?.creatorUid"
+             class="tournament-list-card">
+      <h4 *ngIf="allActualTournamentPlayers.length > 0" class="heading">
+        Tournament Players ({{filteredActualTournamentPlayers.length}}/{{allActualTournamentPlayers.length}})
+      </h4>
+      <h4 *ngIf="allActualTournamentPlayers.length == 0" class="heading">
+        No Tournament Players found</h4>
+      <button *ngIf="actualTournament?.actualRound === 0"
+              type="button" color="accent" md-raised-button (click)="addTournamentPlayer()">
+        <md-icon>add</md-icon>
+        Add Player
+      </button>
+      <md-input-container class="search-field">
+        <input type="text"
+               mdInput
+               placeholder="Filter Tournament Player"
+               #searchInput
+               (keyup)="filter(searchInput.value)">
+      </md-input-container>
+      <mdl-list>
+        <tournament-player-list
           [actualTournamentArmyList$]="armyLists$"
-          [actualTournament] = "actualTournament"
+          [actualTournament]="actualTournament"
           [isAdmin]="currentUserId === actualTournament?.creatorUid"
           [userPlayerData]="userPlayerData"
           [tournamentPlayers]="filteredActualTournamentPlayers"
           (onDeleteTournamentPlayer)="deleteTournamentPlayer($event)">
-      </tournament-player-list>
-    </mdl-list>
-  </md-card>
-</div>
+        </tournament-player-list>
+      </mdl-list>
+    </md-card>
+  </div>
 </div>

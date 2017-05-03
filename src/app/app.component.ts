@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from './store/application-state';
 
@@ -7,14 +7,16 @@ import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from './store/
 import {Router} from '@angular/router';
 import {GlobalEventService} from './service/global-event-service';
 import { Subscription } from 'rxjs/Subscription';
-import {MdSidenav} from "@angular/material";
+import {MdSidenav} from '@angular/material';
+import {WindowRefService} from './service/window-ref-service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
+
 
   @ViewChild('sidenav') sidenav: MdSidenav;
 
@@ -27,9 +29,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   fullscreenMode: boolean;
 
+  sideNavOpen: boolean;
+
   constructor(private router: Router,
               private store: Store<ApplicationState>,
-              private messageService: GlobalEventService) {
+              private messageService: GlobalEventService,
+              private winRef: WindowRefService) {
 
     this.fullScreenModeSub = messageService.subscribe('fullScreenMode', (payload: boolean) => {
       this.fullscreenMode = payload;
@@ -46,6 +51,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(new AuthSubscribeAction());
     this.store.dispatch(new TournamentsSubscribeAction());
+    // console.log('window width: ' + winRef.nativeWindow.screen.width);
+    if (this.winRef.nativeWindow.screen.width < 800) {
+      this.sideNavOpen = false;
+    } else {
+      this.sideNavOpen = true;
+    }
+
   }
 
   ngOnInit() {
@@ -55,6 +67,10 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.store.dispatch(new TournamentsUnsubscribeAction());
     this.fullScreenModeSub.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+
   }
 
 

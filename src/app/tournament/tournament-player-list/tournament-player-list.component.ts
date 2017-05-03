@@ -9,6 +9,7 @@ import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 
 import * as _ from 'lodash';
+import {WindowRefService} from "../../service/window-ref-service";
 
 @Component({
   selector: 'tournament-player-list',
@@ -26,8 +27,23 @@ export class TournamentPlayerListComponent implements OnInit {
   @Output() onDeleteTournamentPlayer = new EventEmitter<TournamentPlayer>();
 
   armyLists: ArmyList[];
+  smallScreen: boolean;
+  truncateMax: number;
 
-  constructor(public dialog: MdDialog) { }
+  constructor(public dialog: MdDialog,
+              private winRef: WindowRefService) {
+
+    if (this.winRef.nativeWindow.screen.width < 500) {
+      this.smallScreen = true;
+      this.truncateMax = 10;
+    } else if (this.winRef.nativeWindow.screen.width < 800) {
+      this.smallScreen = true;
+      this.truncateMax = 20;
+    } else {
+      this.smallScreen = false;
+      this.truncateMax = 40;
+    }
+  }
 
   ngOnInit() {
 

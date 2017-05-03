@@ -99,6 +99,7 @@ import { PlayerRegistrationsTableComponent } from './my-site/player-registration
 import { PlayerGamesTableComponent } from './my-site/player-games-table/player-games-table.component';
 import {GlobalEventService} from './service/global-event-service';
 import { TournamentGameTableComponent } from './tournament/tournament-game-table/tournament-game-table.component';
+import {WindowRefService} from "./service/window-ref-service";
 
 const reducers = {
   routerState: routerReducer,
@@ -225,7 +226,8 @@ export const firebaseConfDev = {
     TournamentRankingService,
     TournamentGameService,
     MySiteService,
-    GlobalEventService
+    GlobalEventService,
+    WindowRefService,
   ],
   entryComponents: [
     RegisterDialogComponent,

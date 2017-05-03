@@ -96,6 +96,13 @@
 
 .app-name-label{
   margin-left: 1em;
+  font-size: 0.8em;
+}
+
+@media only screen and (min-width: 500px) {
+  .app-name-label {
+    font-size: 1em;
+  }
 }
 
 .app-content {
@@ -145,15 +152,3 @@
   cursor: pointer;
   color: deepskyblue;
 }
-
-.list-item:hover {
-  cursor: pointer;
-  color: deepskyblue;
-}
-
-.demo{
-  display: flex;
-  flex-flow: row wrap;
-}
-
-

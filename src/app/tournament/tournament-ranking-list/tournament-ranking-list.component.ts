@@ -4,9 +4,10 @@ import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {Player} from '../../../../shared/model/player';
 
 import * as _ from 'lodash';
-import {TournamentPlayer} from '../../../../shared/model/tournament-player';
+
 import {ArmyList} from '../../../../shared/model/armyList';
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from "@angular/material";
+import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
+import {WindowRefService} from '../../service/window-ref-service';
 
 @Component({
   selector: 'tournament-ranking-table',
@@ -22,7 +23,19 @@ export class TournamentRankingListComponent implements OnInit {
   armyLists: ArmyList[];
   orderedRankings$: Observable<TournamentRanking[]>;
 
-  constructor(public dialog: MdDialog) {
+  smallScreen: boolean;
+  truncateMax: number;
+
+  constructor(public dialog: MdDialog,
+              private winRef: WindowRefService) {
+
+   if (this.winRef.nativeWindow.screen.width < 800) {
+      this.smallScreen = true;
+      this.truncateMax = 20;
+    } else {
+      this.smallScreen = false;
+      this.truncateMax = 40;
+    }
   }
 
   ngOnInit() {

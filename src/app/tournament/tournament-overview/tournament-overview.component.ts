@@ -29,8 +29,9 @@ import {
   TournamentSetAction
 } from '../../store/actions/tournaments-actions';
 import {SwapPlayer} from '../../../../shared/dto/swap-player';
-import {GlobalEventService} from "../../service/global-event-service";
-import {Subscription} from "rxjs/Subscription";
+import {GlobalEventService} from '../../service/global-event-service';
+import {Subscription} from 'rxjs/Subscription';
+import {WindowRefService} from '../../service/window-ref-service';
 
 @Component({
   selector: 'tournament-overview',
@@ -40,6 +41,7 @@ import {Subscription} from "rxjs/Subscription";
 export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   private fullScreenModeSub: Subscription;
+  private swapPlayerModeSub: Subscription;
 
   currentUserId: string;
   actualTournament: Tournament;
@@ -55,22 +57,28 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   selectedIndex: number;
 
   fullscreenMode: boolean;
+  swapPlayerMode: boolean;
+
+  smallScreen: boolean;
 
   constructor(private store: Store<ApplicationState>,
               private activeRouter: ActivatedRoute,
-              private messageService: GlobalEventService) {
+              private messageService: GlobalEventService,
+              private winRef: WindowRefService) {
 
-    this.fullScreenModeSub = messageService.subscribe('fullScreenMode', (payload: boolean) => {
+     this.fullScreenModeSub = messageService.subscribe('fullScreenMode', (payload: boolean) => {
       this.fullscreenMode = payload;
     });
+    this.swapPlayerModeSub = messageService.subscribe('swapPlayerMode', (payload: boolean) => {
+      this.swapPlayerMode = payload;
+    });
+
 
     this.activeRouter.params.subscribe(
       params => {
         this.store.dispatch(new TournamentSubscribeAction(params['id']));
       }
     );
-
-
   }
   ngOnInit() {
     this.actualTournamentArmyList$ = this.store.select(state => state.actualTournamentArmyLists.actualTournamentArmyLists);
@@ -97,11 +105,29 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
           this.currentUserId =  state.authenticationStoreState.currentUserId;
         }
       });
+
+    this.smallScreen = this.winRef.nativeWindow.screen.width < 800;
   }
 
   ngOnDestroy() {
     this.store.dispatch(new TournamentUnsubscribeAction());
     this.fullScreenModeSub.unsubscribe();
+    this.swapPlayerModeSub.unsubscribe();
+  }
+
+  getRoundPageTitle(index: number): string {
+    if (this.smallScreen) {
+      return 'R ' + index;
+    } else {
+      return 'Round ' + index;
+    }
+  }
+  getPrepPageTitle(): string {
+    if (this.smallScreen) {
+      return 'R 0';
+    } else {
+      return 'Tournament Preparation';
+    }
   }
 
   getArrayForNumber(round: number): number[]  {

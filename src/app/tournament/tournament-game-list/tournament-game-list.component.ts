@@ -1,10 +1,13 @@
 import {
-  Component, EventEmitter, Inject, Input, OnInit, Output
+  AfterContentChecked,
+  AfterViewChecked,
+  AfterViewInit,
+  Component, EventEmitter, Inject, Input, OnInit, Output, Renderer2, ViewChild
 } from '@angular/core';
 import {Player} from '../../../../shared/model/player';
 import {Observable} from 'rxjs/Observable';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar, MdSelect} from '@angular/material';
 import {PairAgainDialogComponent} from '../tournament-round-overview/tournament-round-overview.component';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {GameConfig, getWarmachineConfig} from '../../../../shared/dto/game-config';
@@ -15,6 +18,9 @@ import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 
 import * as _ from 'lodash';
 import {SwapPlayer} from '../../../../shared/dto/swap-player';
+import {WindowRefService} from '../../service/window-ref-service';
+import {GlobalEventService} from "app/service/global-event-service";
+import {getAllScenarios} from "../../../../shared/model/szenarios";
 
 
 @Component({
@@ -22,7 +28,7 @@ import {SwapPlayer} from '../../../../shared/dto/swap-player';
   templateUrl: './tournament-game-list.component.html',
   styleUrls: ['./tournament-game-list.component.css']
 })
-export class TournamentGameListComponent implements OnInit {
+export class TournamentGameListComponent implements OnInit, AfterContentChecked {
 
   @Input() actualTournament: Tournament;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
@@ -46,8 +52,20 @@ export class TournamentGameListComponent implements OnInit {
   rankingsForRound: TournamentRanking[];
   allVisibleGames: TournamentGame[];
 
+  smallScreen: boolean;
+  swapPlayerMode: boolean;
+  scenarios: string[];
+
+  selectedScenario: string;
+
+
   constructor(public dialog: MdDialog,
-              private snackBar: MdSnackBar) {
+              private snackBar: MdSnackBar,
+              private renderer: Renderer2,
+              private messageService: GlobalEventService,
+              private winRef: WindowRefService) {
+    this.smallScreen = this.winRef.nativeWindow.screen.width < 800;
+    this.scenarios = getAllScenarios();
   }
 
   ngOnInit() {
@@ -66,12 +84,81 @@ export class TournamentGameListComponent implements OnInit {
     this.allVisibleGames = this.gamesForRound;
   }
 
+  ngAfterContentChecked(): void {
+
+    if (this.gamesForRound[0] && !this.selectedScenario) {
+      this.selectedScenario = this.gamesForRound[0].scenario;
+    }
+  }
+
+  startSwapPlayer(event: any, game: TournamentGame, dragTournamentPlayerId: string,
+                  dragTournamentPlayerOpponentId: string) {
+
+    const that = this;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.swapPlayerMode = true;
+    this.draggedTournamentPlayerId = dragTournamentPlayerId;
+    this.draggedTournamentPlayerCurrentOpponentId = dragTournamentPlayerOpponentId;
+    this.draggedGame = game;
+    this.dragStarted = true;
+
+    _.each(this.rankingsForRound, function (ranking: TournamentRanking) {
+      if (ranking.tournamentPlayerId === dragTournamentPlayerId) {
+        that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
+      }
+    });
+
+    this.messageService.broadcast('swapPlayerMode', true);
+  }
+
+  endSwapPlayer(event: any) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.swapPlayerMode = false;
+    this.dragStarted = false;
+
+    this.messageService.broadcast('swapPlayerMode', false);
+  }
+
+  confirmSwapPlayer(event: any, droppedGame: TournamentGame,
+                    droppedTournamentPlayerId: string,
+                    droppedTournamentPlayerOpponentId: string) {
+
+    if (this.dragStarted) {
+
+      event.stopPropagation();
+
+      if (!droppedGame.finished && this.draggedGame) {
+        this.swapPlayerMode = false;
+        this.dragStarted = false;
+
+        // Don't do anything if dropping the same column we're dragging.
+        if (droppedTournamentPlayerId !== this.draggedTournamentPlayerId &&
+          droppedGame !== this.draggedGame) {
+          if (!this.playedAgainstOthers(this.draggedTournamentPlayerId, droppedTournamentPlayerOpponentId, droppedGame) &&
+            !this.playedAgainstOthers(droppedTournamentPlayerId, this.draggedTournamentPlayerCurrentOpponentId, this.draggedGame)) {
+            this.doSwapping(droppedGame, droppedTournamentPlayerId);
+          }
+        }
+
+      }
+    }
+  }
+
   startDrag(event: any, game: TournamentGame, dragTournamentPlayerId: string,
             dragTournamentPlayerOpponentId: string) {
 
     if (!game.finished) {
       const that = this;
 
+      console.log('drag started');
+      if (this.smallScreen) {
+        this.renderer.addClass(document.body, 'prevent-scrolling');
+      }
       // firefox foo
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('text/plain', null);
@@ -83,7 +170,6 @@ export class TournamentGameListComponent implements OnInit {
 
       _.each(this.rankingsForRound, function (ranking: TournamentRanking) {
         if (ranking.tournamentPlayerId === dragTournamentPlayerId) {
-          console.log('drag opponent ids: ' + ranking.opponentTournamentPlayerIds);
           that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
         }
       });
@@ -134,6 +220,9 @@ export class TournamentGameListComponent implements OnInit {
     event.target.classList.remove('drag-over-enable');
 
     this.dragStarted = false;
+    if (this.smallScreen) {
+      this.renderer.removeClass(document.body, 'prevent-scrolling');
+    }
 
     return false;
   }
@@ -151,6 +240,9 @@ export class TournamentGameListComponent implements OnInit {
 
     event.target.classList.remove('drag-over-disable');
     event.target.classList.remove('drag-over-enable');
+    if (this.smallScreen) {
+      this.renderer.removeClass(document.body, 'prevent-scrolling');
+    }
 
     if (!droppedGame.finished && this.draggedGame) {
 
@@ -394,6 +486,10 @@ export class TournamentGameListComponent implements OnInit {
 
           if (gameResult !== undefined) {
 
+            if (this.selectedScenario) {
+              gameResult.gameAfter.scenario = this.selectedScenario;
+            }
+
             this.onGameResult.emit(gameResult);
           }
         });
@@ -401,6 +497,7 @@ export class TournamentGameListComponent implements OnInit {
 
         eventSubscribe.unsubscribe();
       });
+
     }
   }
 
@@ -408,7 +505,7 @@ export class TournamentGameListComponent implements OnInit {
     return (selectedGame.playerOnePlayerId === this.currentUserId && !selectedGame.finished) ||
       (selectedGame.playerTwoPlayerId === this.currentUserId && !selectedGame.finished) ||
       this.currentUserId === this.actualTournament.creatorUid;
-}
+  }
 
   isItMyGame(droppedGame: TournamentGame) {
     if (this.userPlayerData) {
@@ -439,8 +536,7 @@ export class GameResultDialogComponent {
   sureButton: boolean;
 
   constructor(public dialogRef: MdDialogRef<PairAgainDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any,
-              private snackBar: MdSnackBar) {
+              @Inject(MD_DIALOG_DATA) public data: any) {
 
     // TODO make this generic
     this.gameConfig = getWarmachineConfig();
