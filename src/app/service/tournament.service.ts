@@ -26,6 +26,10 @@ import {PublishRound} from '../../../shared/dto/publish-round';
 import {RegistrationPush} from '../../../shared/dto/registration-push';
 import {SwapPlayer} from '../../../shared/dto/swap-player';
 import {TournamentGame} from '../../../shared/model/tournament-game';
+import {
+  SubscribeTournamentTeamRegistrationsAction,
+  SubscribeTournamentTeamsAction
+} from '../store/actions/tournament-teams-actions';
 
 
 @Injectable()
@@ -34,6 +38,8 @@ export class TournamentService implements OnDestroy {
   private tournamentRegistrationsRef: firebase.database.Reference;
   private tournamentPlayerRef: firebase.database.Reference;
   private armyListsRef: firebase.database.Reference;
+  private tournamentTeamsRef: firebase.database.Reference;
+  private tournamentTeamRegistrationsRef: firebase.database.Reference;
 
   constructor(protected rankingService: TournamentRankingService,
               protected tournamentGameService: TournamentGameService,
@@ -57,6 +63,12 @@ export class TournamentService implements OnDestroy {
     if (this.armyListsRef) {
       this.armyListsRef.off();
     }
+    if (this.tournamentTeamsRef) {
+      this.tournamentTeamsRef.off();
+    }
+    if (this.tournamentTeamRegistrationsRef) {
+      this.tournamentTeamRegistrationsRef.off();
+    }
   }
 
 
@@ -72,10 +84,11 @@ export class TournamentService implements OnDestroy {
       }
     );
 
-
     this.subscribeOnTournamentRegistrations(tournamentId);
     this.subscribeOnTournamentPlayers(tournamentId);
     this.subscribeOnArmyLists(tournamentId);
+    this.store.dispatch(new SubscribeTournamentTeamsAction(tournamentId));
+    this.store.dispatch(new SubscribeTournamentTeamRegistrationsAction(tournamentId));
     this.store.dispatch(new SubscribeTournamentRankingsAction(tournamentId));
     this.store.dispatch(new SubscribeTournamentGamesAction(tournamentId));
   }
@@ -219,7 +232,7 @@ export class TournamentService implements OnDestroy {
     regRef.remove();
 
     const playerRegRef = this.afService.database
-          .list('players-registrations/' + regPush.registration.playerId + '/' + regPush.registration.id);
+      .list('players-registrations/' + regPush.registration.playerId + '/' + regPush.registration.id);
     playerRegRef.remove();
 
     const tournamentRef = this.afService.database.object('tournaments/' + regPush.tournament.id);

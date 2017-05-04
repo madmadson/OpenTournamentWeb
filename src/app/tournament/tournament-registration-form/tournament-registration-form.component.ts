@@ -4,8 +4,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
 import {Player} from '../../../../shared/model/player';
 import {getAllFactions} from '../../../../shared/model/factions';
-import {Registration} from '../../../../shared/model/registration';
+
 import {Tournament} from '../../../../shared/model/tournament';
+import {TournamentTeam} from '../../../../shared/model/tournament-team';
+import {Registration} from '../../../../shared/model/registration';
 
 
 @Component({
@@ -17,6 +19,7 @@ export class TournamentRegistrationFormComponent implements OnInit {
 
   @Input() actualTournament: Tournament;
   @Input() userPlayerData: Player;
+  @Input() team: TournamentTeam;
 
   @Output() onSaveRegistration = new EventEmitter<Registration>();
 
@@ -30,16 +33,25 @@ export class TournamentRegistrationFormComponent implements OnInit {
 
   ngOnInit() {
 
-    this.tournamentRegistrationForm = this.formBuilder.group({
-      playerName: [ {
-        value: this.userPlayerData.getFullPlayerName(), disabled: true
-      } , [Validators.required]],
-      faction: [''],
-      meta: [this.userPlayerData.meta],
-      team: [''],
-    });
-
-
+    if (this.team) {
+      this.tournamentRegistrationForm = this.formBuilder.group({
+        playerName: [ {
+          value: this.userPlayerData.getFullPlayerName(), disabled: true
+        } , [Validators.required]],
+        faction: [''],
+        meta: [this.userPlayerData.meta],
+        teamName: [{value: this.team.teamName, disabled: true}, [Validators.required]],
+      });
+    } else {
+      this.tournamentRegistrationForm = this.formBuilder.group({
+        playerName: [ {
+          value: this.userPlayerData.getFullPlayerName(), disabled: true
+        } , [Validators.required]],
+        faction: [''],
+        meta: [this.userPlayerData.meta],
+        teamName: [''],
+      });
+    }
   }
 
   saveTournamentRegistration() {
@@ -49,7 +61,7 @@ export class TournamentRegistrationFormComponent implements OnInit {
   }
 
   prepareSaveRegistration(): Registration {
-    const formModel = this.tournamentRegistrationForm.value;
+    const formModel = this.tournamentRegistrationForm.getRawValue();
 
     return {
       tournamentId: this.actualTournament.id,
@@ -61,7 +73,7 @@ export class TournamentRegistrationFormComponent implements OnInit {
       origin: this.userPlayerData.origin,
       meta: formModel.meta,
       registrationDate: moment().format(),
-      teamName: formModel.team,
+      teamName: formModel.teamName,
       playerId: this.userPlayerData.id,
       teamId: '',
       country: this.userPlayerData.country,

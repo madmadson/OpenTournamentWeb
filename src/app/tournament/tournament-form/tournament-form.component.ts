@@ -95,6 +95,7 @@ export class TournamentFormComponent implements OnInit {
           Validators.compose([Validators.required, CustomValidators.min(2), CustomValidators.max(20)])
         );
         this.tournamentForm.get('teamSize').updateValueAndValidity();
+        this.tournamentForm.get('teamSize').setValue(3);
 
       } else {
         this.tournamentForm.get('teamSize').clearValidators();

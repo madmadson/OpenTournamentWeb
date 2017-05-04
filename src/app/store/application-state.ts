@@ -13,6 +13,7 @@ import {ActualTournamentArmyListsStoreData} from './reducers/tournamentArmyListR
 import {ActualTournamentGamesStoreData} from './reducers/tournamentGameReducer';
 import {AuthenticationStoreState} from './authentication-state';
 import {MySiteStoreData} from './reducers/mySiteReducer';
+import {ActualTournamentTeamsStoreData} from './reducers/tournamentTeamReducer';
 
 
 export interface ApplicationState {
@@ -29,6 +30,7 @@ export interface ApplicationState {
   actualTournamentGames: ActualTournamentGamesStoreData;
   actualTournamentPlayers: ActualTournamentPlayersStoreData;
   actualTournamentArmyLists: ActualTournamentArmyListsStoreData;
+  actualTournamentTeams: ActualTournamentTeamsStoreData;
 
 
 }

@@ -35,8 +35,8 @@ import {TournamentFormComponent} from './tournament/tournament-form/tournament-f
 import {CustomFormsModule} from 'ng2-validation';
 import {AuthGuard} from './service/auth-guard.service';
 import {
-  AddArmyListsDialogComponent, NewTournamentPlayerDialogComponent,
-  RegisterDialogComponent, StartTournamentDialogComponent,
+  AddArmyListsDialogComponent, CreateTeamDialogComponent,
+  RegisterDialogComponent, RegisterTeamDialogComponent, StartTournamentDialogComponent,
   TournamentPreparationComponent,
 
 } from './tournament/tournament-preparation/tournament-preparation.component';
@@ -99,7 +99,17 @@ import { PlayerRegistrationsTableComponent } from './my-site/player-registration
 import { PlayerGamesTableComponent } from './my-site/player-games-table/player-games-table.component';
 import {GlobalEventService} from './service/global-event-service';
 import { TournamentGameTableComponent } from './tournament/tournament-game-table/tournament-game-table.component';
-import {WindowRefService} from "./service/window-ref-service";
+import {WindowRefService} from './service/window-ref-service';
+import {TournamentTeamReducer} from './store/reducers/tournamentTeamReducer';
+import {TournamentTeamService} from './service/tournament-team.service';
+import {TournamentTeamEffectService} from './store/effects/tournament-teams-effect.service';
+import { TournamentTeamListComponent } from './tournament/tournament-team-list/tournament-team-list.component';
+import { TournamentTeamRegistrationListComponent } from './tournament/tournament-team-registration-list/tournament-team-registration-list.component';
+import {MdlExpansionPanelModule} from '@angular-mdl/expansion-panel';
+import {ShowTeamRegistrationDialogComponent} from './dialogs/show-team-registration-dialog';
+import {ShowTeamDialogComponent} from './dialogs/show-team-dialog';
+import {NewTournamentPlayerDialogComponent} from './dialogs/add-tournament-player-dialog';
+
 
 const reducers = {
   routerState: routerReducer,
@@ -114,6 +124,7 @@ const reducers = {
   actualTournamentGames: TournamentGameReducer,
   actualTournamentPlayers: TournamentPlayerReducer,
   actualTournamentArmyLists: TournamentArmyListReducer,
+  actualTournamentTeams: TournamentTeamReducer,
 
 };
 
@@ -162,6 +173,7 @@ export const firebaseConfDev = {
     EffectsModule.run(RankingEffectService),
     EffectsModule.run(TournamentGameEffectService),
     EffectsModule.run(MySiteEffectService),
+    EffectsModule.run(TournamentTeamEffectService),
     StoreModule.provideStore(storeReducer),
     RouterStoreModule.connectRouter(),
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
@@ -174,6 +186,7 @@ export const firebaseConfDev = {
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule, MdTooltipModule,
     DateTimePickerModule,
+    MdlExpansionPanelModule
   ],
   declarations: [
     AppComponent,
@@ -216,6 +229,12 @@ export const firebaseConfDev = {
     PlayerRegistrationsTableComponent,
     PlayerGamesTableComponent,
     TournamentGameTableComponent,
+    CreateTeamDialogComponent,
+    RegisterTeamDialogComponent,
+    TournamentTeamListComponent,
+    TournamentTeamRegistrationListComponent,
+    ShowTeamRegistrationDialogComponent,
+    ShowTeamDialogComponent,
   ],
   providers: [
     LoginService,
@@ -225,6 +244,7 @@ export const firebaseConfDev = {
     PlayersService,
     TournamentRankingService,
     TournamentGameService,
+    TournamentTeamService,
     MySiteService,
     GlobalEventService,
     WindowRefService,
@@ -242,6 +262,10 @@ export const firebaseConfDev = {
     FinishTournamentDialogComponent,
     ShowArmyListInTournamentRankingDialogComponent,
     ShowArmyListInTournamentPlayerDialogComponent,
+    CreateTeamDialogComponent,
+    RegisterTeamDialogComponent,
+    ShowTeamRegistrationDialogComponent,
+    ShowTeamDialogComponent
   ],
   bootstrap: [AppComponent]
 })

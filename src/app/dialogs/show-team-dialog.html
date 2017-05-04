@@ -1,0 +1,35 @@
+<h3 class="heading">Team {{team.teamName}}</h3>
+<h6 *ngIf="allTournamentPlayerForTeam.length === 0">
+  No  Player found for Team
+</h6>
+<mdl-list>
+  <mdl-list-item lines="3"
+                 class="list-item"
+                 *ngFor="let player of allTournamentPlayerForTeam; let i = index; let even = even;"
+                 [ngClass]="{'even': even, 'my-item':isItMe(player.playerId)} ">
+    <mdl-list-item-primary-content>
+      <mdl-icon mdl-list-item-avatar mdl-badge="{{i +1}}" mdl-badge-overlap>person</mdl-icon>
+      <span class="player-name">{{player.playerName | truncate:30}}</span>
+
+      <mdl-list-item-text-body>
+        <div>{{player.faction}}</div>
+      </mdl-list-item-text-body>
+    </mdl-list-item-primary-content>
+
+
+    <mdl-list-item-secondary-content>
+      <mdl-list-item-secondary-info class="align-fix elo-info">ELO<img class="padding-fix-icon"
+                                                                       src="../../assets/my_crown_small.png">
+      </mdl-list-item-secondary-info>
+      <span>{{player.elo}}</span>
+    </mdl-list-item-secondary-content>
+    <mdl-list-item-secondary-content *ngIf="isAdmin() ">
+      <md-icon md-tooltip="Kick Player" class="negative  list-action" (click)="kickPlayer(player)">delete</md-icon>
+    </mdl-list-item-secondary-content>
+  </mdl-list-item>
+</mdl-list>
+
+
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

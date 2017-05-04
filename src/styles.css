@@ -343,3 +343,10 @@ md-card {
 .elo-info {
  width: 54px;
 }
+
+.team-capacity{
+  font-weight: bold;
+  font-size: 1.4em;
+  margin-top: 12px;
+  margin-right: 50px;
+}

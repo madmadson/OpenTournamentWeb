@@ -32,6 +32,14 @@ import {SwapPlayer} from '../../../../shared/dto/swap-player';
 import {GlobalEventService} from '../../service/global-event-service';
 import {Subscription} from 'rxjs/Subscription';
 import {WindowRefService} from '../../service/window-ref-service';
+import {TournamentTeam} from '../../../../shared/model/tournament-team';
+import {
+  TournamentTeamEraseAction,
+  TournamentTeamPushAction,
+  TournamentTeamRegistrationPushAction
+} from '../../store/actions/tournament-teams-actions';
+import {TeamRegistrationPush} from "../../../../shared/dto/team-registration-push";
+import {TournamentTeamEraseModel} from "../../../../shared/dto/tournament-team-erase";
 
 @Component({
   selector: 'tournament-overview',
@@ -48,6 +56,8 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   actualTournamentRegisteredPlayers$: Observable<Registration[]>;
   actualTournamentArmyList$: Observable<ArmyList[]>;
   allActualTournamentPlayers$: Observable<TournamentPlayer[]>;
+  actualTournamentTeams$: Observable<TournamentTeam[]>;
+  actualTournamentTeamRegistrations$: Observable<TournamentTeam[]>;
 
   actualTournamentRankings$:  Observable<TournamentRanking[]>;
   actualTournamentGames$:  Observable<TournamentGame[]>;
@@ -94,11 +104,22 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.actualTournamentGames$ =  this.store.select(
       state => state.actualTournamentGames.actualTournamentGames);
 
+    this.actualTournamentTeams$ =  this.store.select(
+      state => state.actualTournamentTeams.teams);
+
+    this.actualTournamentTeamRegistrations$ =  this.store.select(
+      state => state.actualTournamentTeams.registeredTeams);
+
     this.store.select(state => state)
       .subscribe(state => {
         this.actualTournament = state.actualTournament.actualTournament;
         if (state.actualTournament.actualTournament) {
-          this.selectedIndex = state.actualTournament.actualTournament.actualRound;
+
+          if (state.actualTournament.actualTournament.finished) {
+            this.selectedIndex = state.actualTournament.actualTournament.actualRound + 1;
+          } else {
+            this.selectedIndex = state.actualTournament.actualTournament.actualRound;
+          }
         }
 
         if (state.authenticationStoreState) {
@@ -226,5 +247,21 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleUploadTournament() {
     this.store.dispatch(new UploadTournamentAction(this.actualTournament.id));
+  }
+
+  handleRegisterTeamForTeamTournament(team: TournamentTeam) {
+
+  }
+
+  handleAcceptTeamRegistration(teamRegPush: TeamRegistrationPush) {
+    this.store.dispatch(new TournamentTeamRegistrationPushAction(teamRegPush));
+  }
+
+  handleCreateTeamForTeamTournament(team: TournamentTeam) {
+    this.store.dispatch(new TournamentTeamPushAction(team));
+  }
+
+  handleEraseTeam(eraseModel: TournamentTeamEraseModel) {
+    this.store.dispatch(new TournamentTeamEraseAction(eraseModel));
   }
 }

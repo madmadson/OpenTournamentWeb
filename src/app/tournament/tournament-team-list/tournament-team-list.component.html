@@ -1,0 +1,31 @@
+<mdl-list-item lines="3"
+               class="list-item"
+               *ngFor="let team of actualTournamentTeams$ | async; let i = index; let even = even;"
+               (click)="showTeam(team)"
+               [ngClass]="{'even': even} ">
+
+  <mdl-list-item-primary-content>
+    <mdl-icon mdl-list-item-avatar mdl-badge="{{getPlayersForTeam(team.teamName)}}" mdl-badge-overlap>group</mdl-icon>
+    <span class="player-name">{{team.teamName  | truncate:truncateMax}}</span>
+
+    <mdl-list-item-text-body>
+      <div>{{team.country}}</div>
+    </mdl-list-item-text-body>
+  </mdl-list-item-primary-content>
+  <mdl-list-item-secondary-content *ngIf="checkTournamentFull(team)" >
+    <div class="align-fix negative team-capacity">Team Full</div>
+  </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="!checkTournamentFull(team)">
+    <button (click)="addPlayerToTeam($event, team)"
+            type="button"
+            class="positive-background"
+            md-raised-button>
+      <md-icon>add</md-icon>
+      Add Player
+    </button>
+  </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="isAdmin()">
+    <md-icon md-tooltip="Delete Team" class="negative  list-action" (click)="eraseTeam($event, team)">delete</md-icon>
+  </mdl-list-item-secondary-content>
+</mdl-list-item>
+
