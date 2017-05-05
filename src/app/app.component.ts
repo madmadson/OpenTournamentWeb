@@ -15,7 +15,7 @@ import {WindowRefService} from './service/window-ref-service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AppComponent implements OnDestroy {
 
 
   @ViewChild('sidenav') sidenav: MdSidenav;
@@ -60,19 +60,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  ngOnInit() {
-
-  }
-
   ngOnDestroy(): void {
     this.store.dispatch(new TournamentsUnsubscribeAction());
     this.fullScreenModeSub.unsubscribe();
   }
-
-  ngAfterViewInit(): void {
-
-  }
-
 
   logout() {
 

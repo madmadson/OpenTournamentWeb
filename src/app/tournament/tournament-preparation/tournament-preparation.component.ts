@@ -427,6 +427,7 @@ export class CreateTeamDialogComponent implements OnInit {
     const formModel = this.createTournamentForm.value;
 
     return {
+      isRegisteredTeam: false,
       tournamentId: this.actualTournament.id,
       creatorUid: this.userPlayerData.userUid,
       teamName: formModel.teamName,
@@ -479,6 +480,7 @@ export class RegisterTeamDialogComponent implements OnInit {
     const formModel = this.registerTournamentForm.value;
 
     return {
+      isRegisteredTeam: true,
       tournamentId: this.actualTournament.id,
       creatorUid: this.userPlayerData.userUid,
       teamName: formModel.teamName,

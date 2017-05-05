@@ -32,12 +32,21 @@
   width: 200px;
 }
 
+.nav-welcome{
+  padding: 10px 10px;
+  font-size: 1.4em;
+  font-weight: bold;
+  text-align: center;
+}
+
 .nav-user-welcome{
   padding: 10px 10px;
   max-width: 180px;
+  max-height: 80px;
   font-size: large;
   font-weight: bold;
   text-align: center;
+  word-wrap: break-word;
 }
 
 .nav-container{

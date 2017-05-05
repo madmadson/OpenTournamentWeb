@@ -68,16 +68,16 @@
   <ng-template #nonAdmin>
     <md-card class="action-card" *ngIf="actualTournament?.actualRound === 0 && userPlayerData">
       <div class="action-button-wrapper">
-        <button *ngIf="!myRegistration && actualTournament?.teamSize === 0"
-                (click)="openRegistrationDialog()"
-                type="button"
-                class="positive-background action-button"
-                md-raised-button>
-          <md-icon>add</md-icon>
-          Register me
-        </button>
-        <h4 *ngIf="!myRegistration && actualTournament?.teamSize > 0">
-               Join a Team!
+        <button *ngIf="!myTeam "
+                 type="button"
+                 (click)="openRegisterTeamDialog()"
+                 class="positive-background action-button"
+                 md-raised-button>
+        <md-icon>group_add</md-icon>
+        Register Team
+      </button>
+        <h4 *ngIf="!myRegistration && actualTournament?.teamSize > 0 && myTeam">
+          Join a Team!
         </h4>
         <button *ngIf="myRegistration"
                 (click)="deleteMyRegistration(myRegistration)"

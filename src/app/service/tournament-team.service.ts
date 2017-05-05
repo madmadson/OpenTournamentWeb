@@ -116,7 +116,16 @@ export class TournamentTeamService implements OnDestroy {
     });
   }
 
-  pushTournamentTeamRegistration(teamRegistrationPush: TeamRegistrationPush) {
+  pushTournamentTeamRegistration(team: TournamentTeam) {
+    const tournamentTeamsRef = this.afService.database.list('tournament-team-registrations/' + team.tournamentId);
+    tournamentTeamsRef.push(team);
+
+    this.snackBar.open('Team registered successfully', '', {
+      duration: 5000
+    });
+  }
+
+  acceptTournamentTeamRegistration(teamRegistrationPush: TeamRegistrationPush) {
 
     const that = this;
 
@@ -139,7 +148,7 @@ export class TournamentTeamService implements OnDestroy {
       registrationRef.update({isTournamentPlayer: true});
     });
 
-    this.snackBar.open('Team Registration saved successfully', '', {
+    this.snackBar.open('Team Registration accepted successfully', '', {
       duration: 5000
     });
   }
@@ -161,10 +170,11 @@ export class TournamentTeamService implements OnDestroy {
         object('tournament-teams/' + tournamentTeamErase.tournament.id + '/' + tournamentTeamErase.team.id);
     tournamentTeamsRef.remove();
 
-    const tournamentTeamsRegRef = that.afService.database.
+    if (tournamentTeamErase.team.isRegisteredTeam) {
+      const tournamentTeamsRegRef = that.afService.database.
         object('tournament-team-registrations/' + tournamentTeamErase.tournament.id + '/' + tournamentTeamErase.team.id);
-    tournamentTeamsRegRef.update({isAcceptedTournamentTeam: false});
-
+      tournamentTeamsRegRef.update({isAcceptedTournamentTeam: false});
+    }
 
     _.each(tournamentTeamErase.players, function (player: TournamentPlayer) {
         const playerRef = that.afService.database.list('tournament-players/' + player.tournamentId + '/' + player.id);

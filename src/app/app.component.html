@@ -3,9 +3,10 @@
     <nav>
       <img src="./assets/logo3.png" alt="logo" class="nav-img-logo">
       <hr>
-      <p class="nav-user-welcome" *ngIf="(loggedIn)">
-        Welcome {{currentUserName ? currentUserName : currentUserEmail}}
-      </p>
+      <div class="nav-welcome" *ngIf="(loggedIn)">Welcome</div>
+      <div class="nav-user-welcome" *ngIf="(loggedIn)">
+        {{currentUserName ? currentUserName : currentUserEmail}}
+      </div>
       <div class="nav-container">
         <md-icon class="nav-icon">home</md-icon>
         <a class="nav-link" routerLink="/home">Home</a>

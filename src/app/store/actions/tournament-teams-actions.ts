@@ -20,6 +20,16 @@ export class TournamentTeamRegistrationPushAction implements Action {
 
   readonly type = 'TOURNAMENT_TEAM_REGISTRATION_PUSH_ACTION';
 
+  constructor(public payload: TournamentTeam) {
+  }
+}
+
+export const TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION = 'TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION';
+
+export class TournamentTeamRegistrationAcceptAction implements Action {
+
+  readonly type = 'TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION';
+
   constructor(public payload: TeamRegistrationPush) {
   }
 }

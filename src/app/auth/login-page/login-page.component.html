@@ -8,7 +8,12 @@
         <input mdInput type="email" placeholder="Email" formControlName="email" required>
       </md-input-container>
       <md-input-container class="full-width">
-        <input mdInput type="password" placeholder="Password" formControlName="password" required>
+        <input mdInput
+               type="password"
+               placeholder="Password"
+               (keyup.enter)="login()"
+               formControlName="password"
+               required>
       </md-input-container>
     </div>
 

@@ -35,11 +35,11 @@ import {WindowRefService} from '../../service/window-ref-service';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
 import {
   TournamentTeamEraseAction,
-  TournamentTeamPushAction,
+  TournamentTeamPushAction, TournamentTeamRegistrationAcceptAction,
   TournamentTeamRegistrationPushAction
 } from '../../store/actions/tournament-teams-actions';
-import {TeamRegistrationPush} from "../../../../shared/dto/team-registration-push";
-import {TournamentTeamEraseModel} from "../../../../shared/dto/tournament-team-erase";
+import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
+import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 
 @Component({
   selector: 'tournament-overview',
@@ -250,11 +250,11 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleRegisterTeamForTeamTournament(team: TournamentTeam) {
-
+    this.store.dispatch(new TournamentTeamRegistrationPushAction(team));
   }
 
   handleAcceptTeamRegistration(teamRegPush: TeamRegistrationPush) {
-    this.store.dispatch(new TournamentTeamRegistrationPushAction(teamRegPush));
+    this.store.dispatch(new TournamentTeamRegistrationAcceptAction(teamRegPush));
   }
 
   handleCreateTeamForTeamTournament(team: TournamentTeam) {
