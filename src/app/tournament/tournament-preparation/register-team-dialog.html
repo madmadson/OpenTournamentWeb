@@ -7,12 +7,12 @@
       <md-input-container
         class="full-width">
         <input mdInput type="text" placeholder="Team Name" maxlength="50" formControlName="teamName" required>
-        <md-hint align="end">{{createTournamentForm.get('teamName').value.length}} / 50</md-hint>
+        <md-hint align="end">{{registerTournamentForm.get('teamName').value.length}} / 50</md-hint>
       </md-input-container>
       <md-input-container
         class="full-width">
         <input mdInput type="text" placeholder="Meta"  maxlength="50" formControlName="meta">
-        <md-hint align="end">{{createTournamentForm.get('meta').value.length}} / 50</md-hint>
+        <md-hint align="end">{{registerTournamentForm.get('meta').value.length}} / 50</md-hint>
       </md-input-container>
       <md-select class="full-width" placeholder="Country" formControlName="country">
         <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>

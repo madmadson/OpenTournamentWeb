@@ -40,7 +40,7 @@ export class NewTournamentPlayerDialogComponent {
     this.tournamentPlayerModel = {
       tournamentId: this.tournament.id,
       playerName: '',
-      teamName: data.team.teamName,
+      teamName: data.team ? data.team.teamName : '',
       origin: '',
       meta: '',
       country: '',
