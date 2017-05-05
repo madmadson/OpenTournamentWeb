@@ -3,10 +3,11 @@
   <form [formGroup]="createTournamentForm" novalidate>
 
     <div class="form-group">
-
       <md-input-container
         class="full-width">
-        <input mdInput type="text" placeholder="Team Name" maxlength="50" formControlName="teamName" required>
+        <input mdInput type="text" (blur)="checkTeamName()" placeholder="Team Name" maxlength="50" formControlName="teamName" required>
+        <md-hint *ngIf="teamNameAlreadyInUse" align="start" class="negative">
+          There is already a Team with that name</md-hint>
         <md-hint align="end">{{createTournamentForm.get('teamName').value.length}} / 50</md-hint>
       </md-input-container>
       <md-input-container
@@ -19,9 +20,30 @@
       </md-select>
 
       <div class="form-button form-input">
-        <button md-raised-button type="button" color="accent" class="full-width-button"
+        <button *ngIf="teamNameAlreadyInUse"
+                type="button"
+                class="negative-background"
+                md-raised-button
+                [disabled]="true">
+          <md-icon>warning</md-icon>
+          TeamName already in use
+        </button>
+        <button *ngIf="dummyNotAllowed"
+                type="button"
+                class="negative-background"
+                md-raised-button
+                [disabled]="true">
+          <md-icon>warning</md-icon>
+          Dummy ist not a valid teamName
+        </button>
+        <button *ngIf="!teamNameAlreadyInUse && !dummyNotAllowed"
+                md-raised-button
+                type="button"
+                color="accent"
+                class="full-width-button"
                 (click)="onSaveTeam()"
-                [disabled]="createTournamentForm.invalid">Create Team
+                [disabled]="createTournamentForm.invalid">
+          Create Team
         </button>
       </div>
     </div>

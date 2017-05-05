@@ -185,4 +185,23 @@ export class TournamentTeamService implements OnDestroy {
       duration: 5000
     });
   }
+
+  eraseTournamentTeamRegistration(teamRegistrationErase: TeamRegistrationPush) {
+
+    const that = this;
+
+    const teamRegistrationRef = this.afService.database.
+    object('tournament-team-registrations/' + teamRegistrationErase.tournament.id + '/' + teamRegistrationErase.team.id);
+      teamRegistrationRef.remove();
+
+    _.each(teamRegistrationErase.registrations, function (reg: Registration) {
+      const regRef = that.afService.database.list('tournament-registrations/' + reg.tournamentId + '/' + reg.id);
+      regRef.remove();
+    });
+
+
+    this.snackBar.open('Tournament Team Registration deleted successfully', '', {
+      duration: 5000
+    });
+  }
 }

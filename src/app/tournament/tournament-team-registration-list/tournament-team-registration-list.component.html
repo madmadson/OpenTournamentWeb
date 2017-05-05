@@ -10,6 +10,7 @@
 
     <mdl-list-item-text-body>
       <div>{{team.country}}</div>
+      <div>{{team.meta}}</div>
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>
   <mdl-list-item-secondary-content *ngIf="checkTournamentFull(team)" >
@@ -24,6 +25,9 @@
       <md-icon>add</md-icon>
       Join Team
     </button>
+  </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="isAdminOrCreator(team)">
+    <md-icon md-tooltip="Delete Team Registration" class="negative  list-action" (click)="eraseTeamRegistration($event, team)">delete</md-icon>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="isAdmin() && !team.isAcceptedTournamentTeam  && actualTournament.actualRound === 0">
     <md-icon class="positive  list-action" (click)="acceptTeamRegistration($event, team)">check_circle</md-icon>

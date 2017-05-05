@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 
 import {Player} from '../../../../shared/model/player';
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
@@ -16,14 +16,13 @@ import {Tournament} from '../../../../shared/model/tournament';
 
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 import {AuthenticationStoreState} from '../../store/authentication-state';
-import {getAllFactions} from '../../../../shared/model/factions';
 import {TournamentFormDialogComponent} from '../../dialogs/tournament-form-dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
 import {ShowTeamRegistrationDialogComponent} from '../../dialogs/show-team-registration-dialog';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
-import {NewTournamentPlayerDialogComponent} from "../../dialogs/add-tournament-player-dialog";
+import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-player-dialog';
 
 
 @Component({
@@ -52,6 +51,7 @@ export class TournamentPreparationComponent implements OnInit {
   @Output() onCreateTeamForTeamTournament = new EventEmitter<TournamentTeam>();
   @Output() onRegisterTeamForTeamTournament = new EventEmitter<TournamentTeam>();
   @Output() onAcceptTeamRegistration = new EventEmitter<TeamRegistrationPush>();
+  @Output() onEraseTeamRegistration = new EventEmitter<TeamRegistrationPush>();
 
   @Output() onDeleteTournamentPlayer = new EventEmitter<TournamentPlayer>();
   @Output() onDeleteRegistration = new EventEmitter<Registration>();
@@ -69,6 +69,10 @@ export class TournamentPreparationComponent implements OnInit {
   currentUserId: string;
 
   suggestedRoundsToPlay: number;
+
+
+  tournamentTeamRegistrations: number;
+  tournamentTeams: number;
 
   armyLists$: Observable<ArmyList[]>;
 
@@ -101,6 +105,12 @@ export class TournamentPreparationComponent implements OnInit {
             return team.creatorUid === that.userPlayerData.userUid;
           }
         });
+        this.tournamentTeamRegistrations = teams.length;
+      });
+
+      this.actualTournamentTeams$.subscribe(teams => {
+
+        this.tournamentTeams = teams.length;
       });
 
     });
@@ -124,29 +134,34 @@ export class TournamentPreparationComponent implements OnInit {
   }
 
   openStartTournamentDialog() {
-    const dialogRef = this.dialog.open(StartTournamentDialogComponent, {
-      data: {
-        allActualTournamentPlayers$: this.allActualTournamentPlayers$
-      },
-      width: '600px',
-    });
-    const startTournamentSub = dialogRef.componentInstance.onStartTournament.subscribe(config => {
-      if (config !== undefined) {
-        config.tournamentId = this.actualTournament.id;
-        config.round = 1;
-        this.onStartTournament.emit(config);
-      }
-    });
-    const onAddDummyPlayer = dialogRef.componentInstance.onAddDummyPlayer.subscribe(() => {
+
+
+      const dialogRef = this.dialog.open(StartTournamentDialogComponent, {
+        data: {
+          allActualTournamentPlayers$: this.allActualTournamentPlayers$,
+          allActualTournamentTeams$: this.actualTournamentTeams$,
+          actualTournament: this.actualTournament,
+        },
+        width: '600px',
+      });
+      const startTournamentSub = dialogRef.componentInstance.onStartTournament.subscribe(config => {
+        if (config !== undefined) {
+          config.tournamentId = this.actualTournament.id;
+          config.round = 1;
+          this.onStartTournament.emit(config);
+        }
+      });
+      const onAddDummyPlayer = dialogRef.componentInstance.onAddDummyPlayer.subscribe(() => {
 
         this.onAddDummyPlayer.emit();
 
-    });
-    dialogRef.afterClosed().subscribe(() => {
+      });
+      dialogRef.afterClosed().subscribe(() => {
 
-      onAddDummyPlayer.unsubscribe();
-      startTournamentSub.unsubscribe();
-    });
+        onAddDummyPlayer.unsubscribe();
+        startTournamentSub.unsubscribe();
+      });
+
   }
 
   addTournamentPlayer() {
@@ -228,7 +243,9 @@ export class TournamentPreparationComponent implements OnInit {
     const dialogRef = this.dialog.open(CreateTeamDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
-        userPlayerData: this.userPlayerData
+        userPlayerData: this.userPlayerData,
+        tournamentTeamRegistrations$: this.actualTournamentTeamRegistrations$,
+        tournamentTeams$: this.actualTournamentTeams$
       }
     });
 
@@ -248,7 +265,9 @@ export class TournamentPreparationComponent implements OnInit {
     const dialogRef = this.dialog.open(RegisterTeamDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
-        userPlayerData: this.userPlayerData
+        userPlayerData: this.userPlayerData,
+        tournamentTeamRegistrations$: this.actualTournamentTeamRegistrations$,
+        tournamentTeams$: this.actualTournamentTeams$
       }
     });
 
@@ -349,6 +368,10 @@ export class TournamentPreparationComponent implements OnInit {
     this.onAcceptTeamRegistration.emit(teamRegPush);
   }
 
+  handleEraseTeamRegistration(teamRegPush: TeamRegistrationPush) {
+    this.onEraseTeamRegistration.emit(teamRegPush);
+  }
+
   handleEraseTournamentTeam(eraseModel: TournamentTeamEraseModel) {
     this.onEraseTournamentTeam.emit(eraseModel);
   }
@@ -391,20 +414,35 @@ export class RegisterDialogComponent {
   templateUrl: './create-team-dialog.html'
 })
 export class CreateTeamDialogComponent implements OnInit {
-  userPlayerData: Player;
-  actualTournament: Tournament;
-  countries: string[];
-
-  createTournamentForm: FormGroup;
 
   @Output() onCreateTeamForTeamTournament = new EventEmitter<TournamentTeam>();
 
+  userPlayerData: Player;
+  actualTournament: Tournament;
+  countries: string[];
+  tournamentTeams: TournamentTeam[];
+  tournamentTeamRegistrations: TournamentTeam[];
+
+  createTournamentForm: FormGroup;
+
+  teamNameAlreadyInUse: boolean;
+  dummyNotAllowed: boolean;
+
   constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>,
+              @Inject(MD_DIALOG_DATA) public data: any,
               private formBuilder: FormBuilder) {
 
     this.countries = getAllCountries();
-    this.userPlayerData = dialogRef._containerInstance.dialogConfig.data.userPlayerData;
-    this.actualTournament = dialogRef._containerInstance.dialogConfig.data.actualTournament;
+    this.userPlayerData = data.userPlayerData;
+    this.actualTournament = data.actualTournament;
+
+    this.actualTournament = data.actualTournament;
+    data.tournamentTeamRegistrations$.subscribe((teamRegs: TournamentTeam[]) =>{
+      this.tournamentTeamRegistrations = teamRegs;
+    });
+    data.tournamentTeams$.subscribe((teams: TournamentTeam[]) =>{
+      this.tournamentTeams = teams;
+    });
   }
 
   ngOnInit(): void {
@@ -436,6 +474,27 @@ export class CreateTeamDialogComponent implements OnInit {
       isAcceptedTournamentTeam: false
     };
   }
+
+  checkTeamName() {
+
+    const that = this;
+    that.teamNameAlreadyInUse = false;
+
+    that.dummyNotAllowed = that.createTournamentForm.get('teamName').value.toLowerCase() === 'dummy';
+
+    _.each(this.tournamentTeams, function (team: TournamentTeam) {
+      if (team.teamName.toLowerCase() === that.createTournamentForm.get('teamName').value.toLowerCase()) {
+        that.teamNameAlreadyInUse = true;
+      }
+    });
+
+    _.each(this.tournamentTeamRegistrations, function (team: TournamentTeam) {
+      if (team.teamName.toLowerCase() === that.createTournamentForm.get('teamName').value.toLowerCase()) {
+        that.teamNameAlreadyInUse = true;
+      }
+    });
+
+  }
 }
 
 @Component({
@@ -443,13 +502,19 @@ export class CreateTeamDialogComponent implements OnInit {
   templateUrl: './register-team-dialog.html'
 })
 export class RegisterTeamDialogComponent implements OnInit {
+
+  @Output() onRegisterTeamForTeamTournament = new EventEmitter<TournamentTeam>();
+
   userPlayerData: Player;
   actualTournament: Tournament;
   countries: string[];
+  tournamentTeams: TournamentTeam[];
+  tournamentTeamRegistrations: TournamentTeam[];
 
   registerTournamentForm: FormGroup;
 
-  @Output() onRegisterTeamForTeamTournament = new EventEmitter<TournamentTeam>();
+  teamNameAlreadyInUse: boolean;
+  dummyNotAllowed: boolean;
 
   constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
@@ -458,6 +523,12 @@ export class RegisterTeamDialogComponent implements OnInit {
     this.countries = getAllCountries();
     this.userPlayerData = data.userPlayerData;
     this.actualTournament = data.actualTournament;
+     data.tournamentTeamRegistrations$.subscribe((teamRegs: TournamentTeam[]) =>{
+       this.tournamentTeamRegistrations = teamRegs;
+     });
+    data.tournamentTeams$.subscribe((teams: TournamentTeam[]) =>{
+      this.tournamentTeams = teams;
+    });
   }
 
   ngOnInit(): void {
@@ -488,6 +559,27 @@ export class RegisterTeamDialogComponent implements OnInit {
       meta: formModel.meta,
       isAcceptedTournamentTeam: false
     };
+  }
+
+  checkTeamName() {
+
+    const that = this;
+    that.teamNameAlreadyInUse = false;
+
+    that.dummyNotAllowed = that.registerTournamentForm.get('teamName').value.toLowerCase() === 'dummy';
+
+    _.each(this.tournamentTeams, function (team: TournamentTeam) {
+      if (team.teamName.toLowerCase() === that.registerTournamentForm.get('teamName').value.toLowerCase()) {
+        that.teamNameAlreadyInUse = true;
+      }
+    });
+
+    _.each(this.tournamentTeamRegistrations, function (team: TournamentTeam) {
+      if (team.teamName.toLowerCase() === that.registerTournamentForm.get('teamName').value.toLowerCase()) {
+        that.teamNameAlreadyInUse = true;
+      }
+    });
+
   }
 }
 
@@ -541,7 +633,9 @@ export class AddArmyListsDialogComponent {
 export class StartTournamentDialogComponent {
 
   allActualTournamentPlayers: TournamentPlayer[];
+  allActualTournamentTeams: TournamentTeam[];
   suggestedRoundsToPlay: number;
+  actualTournament: Tournament;
 
   @Output() onStartTournament = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onAddDummyPlayer = new EventEmitter();
@@ -553,10 +647,22 @@ export class StartTournamentDialogComponent {
 
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
+
+    this.actualTournament = data.actualTournament;
+
      data.allActualTournamentPlayers$.subscribe(players => {
         this.allActualTournamentPlayers = players;
-       this.suggestedRoundsToPlay = Math.round(Math.log2(players.length));
+        if ( data.actualTournament.teamSize === 0) {
+          this.suggestedRoundsToPlay = Math.round(Math.log2(players.length));
+        }
      });
+
+    data.allActualTournamentTeams$.subscribe(teams => {
+      this.allActualTournamentTeams = teams;
+      if ( data.actualTournament.teamSize > 0) {
+        this.suggestedRoundsToPlay = Math.round(Math.log2(teams.length));
+      }
+    });
   }
 
   dummyPlayerAlreadyIn(): TournamentPlayer {
@@ -566,6 +672,16 @@ export class StartTournamentDialogComponent {
         if (player.playerName === 'DUMMY') {
          return player;
         }
+    });
+
+    return foundDummy;
+  }
+
+  dummyTeamAlreadyIn(): TournamentTeam {
+    const foundDummy = _.find(this.allActualTournamentTeams, function (team: TournamentTeam) {
+      if (team.teamName === 'DUMMY') {
+        return team;
+      }
     });
 
     return foundDummy;
@@ -585,5 +701,9 @@ export class StartTournamentDialogComponent {
   }
   addDummyPlayer() {
     this.onAddDummyPlayer.emit();
+  }
+
+  addDummyTeam() {
+
   }
 }

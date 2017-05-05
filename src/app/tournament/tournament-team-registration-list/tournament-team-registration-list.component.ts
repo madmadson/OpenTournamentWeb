@@ -31,6 +31,7 @@ export class TournamentTeamRegistrationListComponent {
   @Output() onAddTournamentRegistration = new EventEmitter<Registration>();
   @Output() onKickPlayer = new EventEmitter<Registration>();
   @Output() onAcceptTeamRegistration = new EventEmitter<TeamRegistrationPush>();
+  @Output() onEraseTeamRegistration = new EventEmitter<TeamRegistrationPush>();
 
   truncateMax: number;
   smallScreen: boolean;
@@ -53,6 +54,14 @@ export class TournamentTeamRegistrationListComponent {
   isAdmin(): boolean {
     if (this.actualTournament && this.userPlayerData) {
       return this.actualTournament.creatorUid === this.userPlayerData.userUid;
+    }
+    return false;
+  }
+
+  isAdminOrCreator(team: TournamentTeam): boolean {
+    if (this.actualTournament && this.userPlayerData) {
+      return this.actualTournament.creatorUid === this.userPlayerData.userUid ||
+              team.creatorUid === this.userPlayerData.userUid;
     }
     return false;
   }
@@ -91,6 +100,21 @@ export class TournamentTeamRegistrationListComponent {
     });
 
     this.onAcceptTeamRegistration.emit({
+      tournament: this.actualTournament,
+      team: team,
+      registrations: allPlayersForTeam
+    });
+  }
+
+  eraseTeamRegistration(event: any, team: TournamentTeam) {
+
+    event.stopPropagation();
+
+    const allPlayersForTeam = _.filter(this.allRegistrations, function (reg: Registration) {
+      return reg.teamName === team.teamName;
+    });
+
+    this.onEraseTeamRegistration.emit({
       tournament: this.actualTournament,
       team: team,
       registrations: allPlayersForTeam

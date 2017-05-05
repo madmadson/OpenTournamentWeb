@@ -22,7 +22,6 @@ export class NewTournamentPlayerDialogComponent {
 
   preselectTeam: string;
 
-  nameWarning: boolean;
   playerNameAlreadyInUse: boolean;
   dummyNotAllowed: boolean;
 
@@ -57,9 +56,6 @@ export class NewTournamentPlayerDialogComponent {
     that.dummyNotAllowed = that.tournamentPlayerModel.playerName.toLowerCase() === 'dummy';
 
     _.each(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
-      that.nameWarning = _.includes(
-        player.playerName.toLowerCase(), that.tournamentPlayerModel.playerName.toLowerCase()
-      );
 
       if (player.playerName.toLowerCase() === that.tournamentPlayerModel.playerName.toLowerCase()) {
         that.playerNameAlreadyInUse = true;

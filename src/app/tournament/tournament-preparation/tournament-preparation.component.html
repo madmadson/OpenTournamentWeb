@@ -125,11 +125,11 @@
       </mdl-list>
     </md-card>
     <md-card class="registration-list-card" *ngIf="actualTournament?.teamSize > 0">
-      <h4 *ngIf="(actualTournamentTeamRegistrations$ | async).length === 0" class="heading">
+      <h4 *ngIf="tournamentTeamRegistrations === 0" class="heading">
         No Registered Teams found
       </h4>
-      <h4 *ngIf="(actualTournamentTeamRegistrations$ | async).length > 0" class="heading">
-        Registered Teams {{(actualTournamentTeamRegistrations$ | async).length}}
+      <h4 *ngIf="tournamentTeamRegistrations > 0" class="heading">
+        Registered Teams {{tournamentTeamRegistrations}}
       </h4>
       <mdl-list>
         <tournament-team-registration-list
@@ -140,7 +140,8 @@
           [actualTournamentTeamRegistrations$]="actualTournamentTeamRegistrations$"
           (onAddTournamentRegistration)="handleAddTournamentRegistration($event)"
           (onKickPlayer)="handleKickPlayer($event)"
-          (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)">
+          (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)"
+          (onEraseTeamRegistration)="handleEraseTeamRegistration($event)">
         </tournament-team-registration-list>
       </mdl-list>
     </md-card>
@@ -179,11 +180,11 @@
     </md-card>
     <md-card *ngIf="currentUserId === actualTournament?.creatorUid && actualTournament?.teamSize > 0"
              class="tournament-list-card">
-      <h4 *ngIf="(actualTournamentTeams$ | async).length == 0" class="heading">
+      <h4 *ngIf="tournamentTeams == 0" class="heading">
         No Teams found
       </h4>
-      <h4 *ngIf="(actualTournamentTeams$ | async).length > 0" class="heading">
-        Tournament Teams {{(actualTournamentTeams$ | async).length}}
+      <h4 *ngIf="tournamentTeams > 0" class="heading">
+        Tournament Teams {{tournamentTeams}}
       </h4>
       <div class="action-button-wrapper">
         <button *ngIf="actualTournament?.actualRound === 0"

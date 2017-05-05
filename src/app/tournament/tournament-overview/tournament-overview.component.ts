@@ -36,7 +36,8 @@ import {TournamentTeam} from '../../../../shared/model/tournament-team';
 import {
   TournamentTeamEraseAction,
   TournamentTeamPushAction, TournamentTeamRegistrationAcceptAction,
-  TournamentTeamRegistrationPushAction
+  TournamentTeamRegistrationPushAction,
+  TournamentTeamRegistrationEraseAction,
 } from '../../store/actions/tournament-teams-actions';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
@@ -255,6 +256,10 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleAcceptTeamRegistration(teamRegPush: TeamRegistrationPush) {
     this.store.dispatch(new TournamentTeamRegistrationAcceptAction(teamRegPush));
+  }
+
+  handleEraseTeamRegistration(teamRegPush: TeamRegistrationPush) {
+    this.store.dispatch(new TournamentTeamRegistrationEraseAction(teamRegPush));
   }
 
   handleCreateTeamForTeamTournament(team: TournamentTeam) {

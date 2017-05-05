@@ -34,6 +34,16 @@ export class TournamentTeamRegistrationAcceptAction implements Action {
   }
 }
 
+export const TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION = 'TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION';
+
+export class TournamentTeamRegistrationEraseAction implements Action {
+
+  readonly type = 'TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION';
+
+  constructor(public payload: TeamRegistrationPush) {
+  }
+}
+
 export const TOURNAMENT_TEAM_REGISTRATIONS_CLEAR_ACTION = 'TOURNAMENT_TEAM_REGISTRATIONS_CLEAR_ACTION';
 
 export class ClearTournamentTeamRegistrationsAction implements Action {
