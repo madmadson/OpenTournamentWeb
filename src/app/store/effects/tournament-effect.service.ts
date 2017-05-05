@@ -7,10 +7,10 @@ import {
   REGISTRATION_ERASE_ACTION,
   REGISTRATION_PUSH_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, REGISTRATION_ACCEPT_ACTION,
   TOURNAMENT_SUBSCRIBE_ACTION,
-  TOURNAMENT_UNSUBSCRIBE_ACTION, TOURNAMENT_PAIR_AGAIN_ACTION,
+  TOURNAMENT_PAIR_AGAIN_ACTION,
   GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION, ADD_DUMMY_PLAYER_ACTION, PUBLISH_ROUND_ACTION,
   TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION, UNDO_TOURNAMENT_END_ACTION, SWAP_PLAYER_ACTION,
-  UPLOAD_TOURNAMENT_ACTION
+  UPLOAD_TOURNAMENT_ACTION, TEAM_TOURNAMENT_NEW_ROUND_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
 
@@ -27,6 +27,11 @@ export class TournamentEffectService {
     .ofType(TOURNAMENT_NEW_ROUND_ACTION)
     .debug('TOURNAMENT_NEW_ROUND_ACTION')
     .map(action => this.tournamentService.pairNewRound(action.payload));
+
+  @Effect({dispatch: false}) pairNewRoundTeam = this.actions$
+    .ofType(TEAM_TOURNAMENT_NEW_ROUND_ACTION)
+    .debug('TEAM_TOURNAMENT_NEW_ROUND_ACTION')
+    .map(action => this.tournamentService.pairNewTeamTournamentRound(action.payload));
 
   @Effect({dispatch: false}) killRound = this.actions$
     .ofType(TOURNAMENT_KILL_ROUND_ACTION)

@@ -241,6 +241,16 @@ export class TournamentNewRoundAction implements Action {
   constructor(public payload: TournamentManagementConfiguration) {
   }
 }
+export const TEAM_TOURNAMENT_NEW_ROUND_ACTION = 'TEAM_TOURNAMENT_NEW_ROUND_ACTION';
+
+
+export class TeamTournamentNewRoundAction implements Action {
+
+  readonly type = 'TEAM_TOURNAMENT_NEW_ROUND_ACTION';
+
+  constructor(public payload: TournamentManagementConfiguration) {
+  }
+}
 
 export const TOURNAMENT_KILL_ROUND_ACTION = 'TOURNAMENT_KILL_ROUND_ACTION';
 

@@ -121,7 +121,7 @@ export class TournamentTeamListComponent implements OnInit {
     const dialogRef = this.dialog.open(NewTournamentPlayerDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
-        allActualTournamentPlayers$: this.allActualTournamentPlayers,
+        allActualTournamentPlayers: this.allActualTournamentPlayers,
         team: team
       },
       width: '800px',

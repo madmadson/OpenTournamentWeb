@@ -76,20 +76,23 @@
     </ng-template>
   </ng-container>
   <ng-container *ngIf="actualTournament.teamSize > 0">
-    <ng-container *ngIf="allActualTournamentTeams.length % 2; else startTeam">
-      <h3 class="heading warning">Uneven Tournament Teams</h3>
-      <button *ngIf="!dummyTeamAlreadyIn()" (click)="addDummyTeam()"
-              type="button"
-              color="accent"
-              class="full-width-button"
-              md-raised-button>
-        <md-icon>add</md-icon>
-        Add Dummy Team
-      </button>
-      <h4 *ngIf="dummyTeamAlreadyIn()" class="warning-text">There is already a DUMMY. Please delete first.</h4>
-      <h4>
-        Pairing only works sufficient with even team count.
-      </h4>
+    <h3 class="heading negative" *ngIf="!checkAllTeamsAreFull()">All Teams have to be fully loaded</h3>
+    <ng-container *ngIf="checkAllTeamsAreFull()">
+      <ng-container *ngIf="allActualTournamentTeams.length % 2; else startTeam">
+        <h3 class="heading negative">Uneven Tournament Teams</h3>
+        <button *ngIf="!dummyTeamAlreadyIn()" (click)="addDummyTeam()"
+                type="button"
+                color="accent"
+                class="full-width-button"
+                md-raised-button>
+          <md-icon>add</md-icon>
+          Add Dummy Team
+        </button>
+        <h4 *ngIf="dummyTeamAlreadyIn()" class="warning-text">There is already a DUMMY. Please delete first.</h4>
+        <h4>
+          Pairing only works sufficient with even team count.
+        </h4>
+      </ng-container>
     </ng-container>
     <ng-template #startTeam>
       <h3 class="heading">Start Team Tournament</h3>

@@ -332,6 +332,12 @@ export class TournamentService implements OnDestroy {
     }
   }
 
+  pairNewTeamTournamentRound(config: TournamentManagementConfiguration) {
+    this.snackBar.open('new Round Paired', '', {
+      duration: 5000
+    });
+  }
+
 
   gameResultEntered(gameResult: GameResult) {
 
@@ -424,4 +430,6 @@ export class TournamentService implements OnDestroy {
       duration: 5000
     });
   }
+
+
 }

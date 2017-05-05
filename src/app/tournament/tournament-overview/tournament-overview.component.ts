@@ -17,7 +17,8 @@ import {
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
   ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
-  RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction
+  RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction,
+  TeamTournamentNewRoundAction
 } from '../../store/actions/tournament-actions';
 
 
@@ -37,7 +38,7 @@ import {
   TournamentTeamEraseAction,
   TournamentTeamPushAction, TournamentTeamRegistrationAcceptAction,
   TournamentTeamRegistrationPushAction,
-  TournamentTeamRegistrationEraseAction,
+  TournamentTeamRegistrationEraseAction, AddDummyTeamAction,
 } from '../../store/actions/tournament-teams-actions';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
@@ -177,6 +178,9 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   handleStartTournament(config: TournamentManagementConfiguration ) {
     this.store.dispatch(new TournamentNewRoundAction(config));
   }
+  handleStartTeamTournament(config: TournamentManagementConfiguration ) {
+    this.store.dispatch(new TeamTournamentNewRoundAction(config));
+  }
 
   handleEditTournament(tournament: Tournament ) {
     this.store.dispatch(new TournamentSetAction(tournament));
@@ -184,6 +188,10 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleAddDummyPlayer() {
     this.store.dispatch(new AddDummyPlayerAction(this.actualTournament.id));
+  }
+
+  handleAddDummyTeam() {
+    this.store.dispatch(new AddDummyTeamAction(this.actualTournament.id));
   }
 
   handleAddTournamentPlayer(tournamentPlayer: TournamentPlayer) {

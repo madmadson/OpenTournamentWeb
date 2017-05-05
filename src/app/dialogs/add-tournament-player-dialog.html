@@ -12,7 +12,7 @@
       #fullPlayerName
       (blur)="checkName()"
       [(ngModel)]="tournamentPlayerModel.playerName" name="playerName">
-    <md-hint *ngIf="nameWarning" align="start" class="negative">
+    <md-hint *ngIf="playerNameAlreadyInUse" align="start" class="negative">
       There is already a Player with that name</md-hint>
     <md-hint align="end">{{fullPlayerName.value.length}} / 50</md-hint>
   </md-input-container>
