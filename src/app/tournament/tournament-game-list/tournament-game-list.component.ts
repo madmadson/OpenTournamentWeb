@@ -179,12 +179,10 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   dragEnable(tournamentPlayerId: string, opponentTournamentPlayerId: string): boolean {
 
-    if (this.draggedTournamentPlayerId === tournamentPlayerId ||
-      this.draggedTournamentPlayerId === opponentTournamentPlayerId ||
-      _.includes(this.draggedTournamentPlayerOpponentIds, opponentTournamentPlayerId)) {
-      return false;
-    }
-    return true;
+    return !(this.draggedTournamentPlayerId === tournamentPlayerId ||
+    this.draggedTournamentPlayerId === opponentTournamentPlayerId ||
+    _.includes(this.draggedTournamentPlayerOpponentIds, opponentTournamentPlayerId));
+
   }
 
 
@@ -276,88 +274,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     this.onSwapPlayer.emit(swapPlayer);
   }
 
-  private createGameTwo(droppedGame: TournamentGame, droppedTournamentPlayerId: string) {
-    let gameTwoPlayerOnePlayerId: string;
-    let gameTwoPlayerOneTournamentPlayerId: string;
-    let gameTwoPlayerOnePlayerName: string;
-    let gameTwoPlayerOneFaction: string;
-    let gameTwoPlayerOneElo: number;
-
-    let gameTwoPlayerTwoPlayerId: string;
-    let gameTwoPlayerTwoTournamentPlayerId: string;
-    let gameTwoPlayerTwoPlayerName: string;
-    let gameTwoPlayerTwoFaction: string;
-    let gameTwoPlayerTwoElo: number;
-
-    if (this.draggedGame.playerOneTournamentPlayerId === this.draggedTournamentPlayerId) {
-      if (droppedGame.playerOneTournamentPlayerId === droppedTournamentPlayerId) {
-        gameTwoPlayerOnePlayerId = this.draggedGame.playerOnePlayerId;
-        gameTwoPlayerOneTournamentPlayerId = this.draggedGame.playerOneTournamentPlayerId;
-        gameTwoPlayerOnePlayerName = this.draggedGame.playerOnePlayerName;
-        gameTwoPlayerOneFaction = this.draggedGame.playerOneFaction;
-        gameTwoPlayerOneElo = this.draggedGame.playerOneElo;
-      } else {
-        gameTwoPlayerTwoPlayerId = this.draggedGame.playerOnePlayerId;
-        gameTwoPlayerTwoTournamentPlayerId = this.draggedGame.playerOneTournamentPlayerId;
-        gameTwoPlayerTwoPlayerName = this.draggedGame.playerOnePlayerName;
-        gameTwoPlayerTwoFaction = this.draggedGame.playerOneFaction;
-        gameTwoPlayerTwoElo = this.draggedGame.playerOneElo;
-      }
-    } else {
-      if (droppedGame.playerOneTournamentPlayerId === droppedTournamentPlayerId) {
-        gameTwoPlayerOnePlayerId = this.draggedGame.playerTwoPlayerId;
-        gameTwoPlayerOneTournamentPlayerId = this.draggedGame.playerTwoTournamentPlayerId;
-        gameTwoPlayerOnePlayerName = this.draggedGame.playerTwoPlayerName;
-        gameTwoPlayerOneFaction = this.draggedGame.playerTwoFaction;
-        gameTwoPlayerOneElo = this.draggedGame.playerTwoElo;
-      } else {
-        gameTwoPlayerTwoPlayerId = this.draggedGame.playerTwoPlayerId;
-        gameTwoPlayerTwoTournamentPlayerId = this.draggedGame.playerTwoTournamentPlayerId;
-        gameTwoPlayerTwoPlayerName = this.draggedGame.playerTwoPlayerName;
-        gameTwoPlayerTwoFaction = this.draggedGame.playerTwoFaction;
-        gameTwoPlayerTwoElo = this.draggedGame.playerTwoElo;
-      }
-    }
-
-
-    const newGameTwo: TournamentGame = {
-      id: droppedGame.id,
-      tournamentId: droppedGame.tournamentId,
-
-      playerOnePlayerId: gameTwoPlayerOnePlayerId ? gameTwoPlayerOnePlayerId : droppedGame.playerOnePlayerId,
-      playerOneTournamentPlayerId: gameTwoPlayerOneTournamentPlayerId ?
-        gameTwoPlayerOneTournamentPlayerId : droppedGame.playerOneTournamentPlayerId,
-      playerOnePlayerName: gameTwoPlayerOnePlayerName ?
-        gameTwoPlayerOnePlayerName : droppedGame.playerOnePlayerName,
-      playerOneFaction: gameTwoPlayerOneFaction ? gameTwoPlayerOneFaction : droppedGame.playerOneFaction,
-      playerOneElo: gameTwoPlayerOneElo ? gameTwoPlayerOneElo : droppedGame.playerOneElo,
-      playerOneScore: 0,
-      playerOneControlPoints: 0,
-      playerOneVictoryPoints: 0,
-      playerOneArmyList: '',
-      playerOneEloChanging: 0,
-
-      playerTwoPlayerId: gameTwoPlayerTwoPlayerId ? gameTwoPlayerTwoPlayerId : droppedGame.playerTwoPlayerId,
-      playerTwoTournamentPlayerId: gameTwoPlayerTwoTournamentPlayerId ?
-        gameTwoPlayerTwoTournamentPlayerId : droppedGame.playerTwoTournamentPlayerId,
-      playerTwoPlayerName: gameTwoPlayerTwoPlayerName ?
-        gameTwoPlayerTwoPlayerName : droppedGame.playerTwoPlayerName,
-      playerTwoFaction: gameTwoPlayerTwoFaction ? gameTwoPlayerTwoFaction : droppedGame.playerTwoFaction,
-      playerTwoElo: gameTwoPlayerTwoElo ? gameTwoPlayerTwoElo : droppedGame.playerTwoElo,
-      playerTwoScore: 0,
-      playerTwoControlPoints: 0,
-      playerTwoVictoryPoints: 0,
-      playerTwoArmyList: '',
-      playerTwoEloChanging: 0,
-
-      playingField: droppedGame.playingField,
-      tournamentRound: droppedGame.tournamentRound,
-      finished: droppedGame.finished,
-      scenario: droppedGame.scenario
-    };
-    return newGameTwo;
-  }
-
   private createGameOne(droppedGame: TournamentGame, droppedTournamentPlayerId: string) {
     let gameOnePlayerOnePlayerId: string;
     let gameOnePlayerOneTournamentPlayerId: string;
@@ -402,7 +318,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       }
     }
 
-    const newGameOne: TournamentGame = {
+    return {
       id: this.draggedGame.id,
       tournamentId: this.draggedGame.tournamentId,
 
@@ -436,8 +352,90 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       finished: this.draggedGame.finished,
       scenario: this.draggedGame.scenario
     };
-    return newGameOne;
   }
+
+  private createGameTwo(droppedGame: TournamentGame, droppedTournamentPlayerId: string) {
+    let gameTwoPlayerOnePlayerId: string;
+    let gameTwoPlayerOneTournamentPlayerId: string;
+    let gameTwoPlayerOnePlayerName: string;
+    let gameTwoPlayerOneFaction: string;
+    let gameTwoPlayerOneElo: number;
+
+    let gameTwoPlayerTwoPlayerId: string;
+    let gameTwoPlayerTwoTournamentPlayerId: string;
+    let gameTwoPlayerTwoPlayerName: string;
+    let gameTwoPlayerTwoFaction: string;
+    let gameTwoPlayerTwoElo: number;
+
+    if (this.draggedGame.playerOneTournamentPlayerId === this.draggedTournamentPlayerId) {
+      if (droppedGame.playerOneTournamentPlayerId === droppedTournamentPlayerId) {
+        gameTwoPlayerOnePlayerId = this.draggedGame.playerOnePlayerId;
+        gameTwoPlayerOneTournamentPlayerId = this.draggedGame.playerOneTournamentPlayerId;
+        gameTwoPlayerOnePlayerName = this.draggedGame.playerOnePlayerName;
+        gameTwoPlayerOneFaction = this.draggedGame.playerOneFaction;
+        gameTwoPlayerOneElo = this.draggedGame.playerOneElo;
+      } else {
+        gameTwoPlayerTwoPlayerId = this.draggedGame.playerOnePlayerId;
+        gameTwoPlayerTwoTournamentPlayerId = this.draggedGame.playerOneTournamentPlayerId;
+        gameTwoPlayerTwoPlayerName = this.draggedGame.playerOnePlayerName;
+        gameTwoPlayerTwoFaction = this.draggedGame.playerOneFaction;
+        gameTwoPlayerTwoElo = this.draggedGame.playerOneElo;
+      }
+    } else {
+      if (droppedGame.playerOneTournamentPlayerId === droppedTournamentPlayerId) {
+        gameTwoPlayerOnePlayerId = this.draggedGame.playerTwoPlayerId;
+        gameTwoPlayerOneTournamentPlayerId = this.draggedGame.playerTwoTournamentPlayerId;
+        gameTwoPlayerOnePlayerName = this.draggedGame.playerTwoPlayerName;
+        gameTwoPlayerOneFaction = this.draggedGame.playerTwoFaction;
+        gameTwoPlayerOneElo = this.draggedGame.playerTwoElo;
+      } else {
+        gameTwoPlayerTwoPlayerId = this.draggedGame.playerTwoPlayerId;
+        gameTwoPlayerTwoTournamentPlayerId = this.draggedGame.playerTwoTournamentPlayerId;
+        gameTwoPlayerTwoPlayerName = this.draggedGame.playerTwoPlayerName;
+        gameTwoPlayerTwoFaction = this.draggedGame.playerTwoFaction;
+        gameTwoPlayerTwoElo = this.draggedGame.playerTwoElo;
+      }
+    }
+
+
+    return {
+      id: droppedGame.id,
+      tournamentId: droppedGame.tournamentId,
+
+      playerOnePlayerId: gameTwoPlayerOnePlayerId ? gameTwoPlayerOnePlayerId : droppedGame.playerOnePlayerId,
+      playerOneTournamentPlayerId: gameTwoPlayerOneTournamentPlayerId ?
+        gameTwoPlayerOneTournamentPlayerId : droppedGame.playerOneTournamentPlayerId,
+      playerOnePlayerName: gameTwoPlayerOnePlayerName ?
+        gameTwoPlayerOnePlayerName : droppedGame.playerOnePlayerName,
+      playerOneFaction: gameTwoPlayerOneFaction ? gameTwoPlayerOneFaction : droppedGame.playerOneFaction,
+      playerOneElo: gameTwoPlayerOneElo ? gameTwoPlayerOneElo : droppedGame.playerOneElo,
+      playerOneScore: 0,
+      playerOneControlPoints: 0,
+      playerOneVictoryPoints: 0,
+      playerOneArmyList: '',
+      playerOneEloChanging: 0,
+
+      playerTwoPlayerId: gameTwoPlayerTwoPlayerId ? gameTwoPlayerTwoPlayerId : droppedGame.playerTwoPlayerId,
+      playerTwoTournamentPlayerId: gameTwoPlayerTwoTournamentPlayerId ?
+        gameTwoPlayerTwoTournamentPlayerId : droppedGame.playerTwoTournamentPlayerId,
+      playerTwoPlayerName: gameTwoPlayerTwoPlayerName ?
+        gameTwoPlayerTwoPlayerName : droppedGame.playerTwoPlayerName,
+      playerTwoFaction: gameTwoPlayerTwoFaction ? gameTwoPlayerTwoFaction : droppedGame.playerTwoFaction,
+      playerTwoElo: gameTwoPlayerTwoElo ? gameTwoPlayerTwoElo : droppedGame.playerTwoElo,
+      playerTwoScore: 0,
+      playerTwoControlPoints: 0,
+      playerTwoVictoryPoints: 0,
+      playerTwoArmyList: '',
+      playerTwoEloChanging: 0,
+
+      playingField: droppedGame.playingField,
+      tournamentRound: droppedGame.tournamentRound,
+      finished: droppedGame.finished,
+      scenario: droppedGame.scenario
+    };
+  }
+
+
 
   playedAgainstOthers(tournamentPlayerOneId: string, tournamentPlayerTwoId: string, game: TournamentGame): boolean {
 

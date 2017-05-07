@@ -214,7 +214,7 @@ export class TournamentRankingService implements OnDestroy {
           opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
         });
 
-      if (!gameResult.gameBefore.finished) {
+      if (gameResult.gameBefore.finished) {
         let newSosPlayerOne = rankingPlayerTwo.score + gameResult.gameAfter.playerTwoScore;
         if (lastRoundRankingPlayerOne) {
           newSosPlayerOne = newSosPlayerOne + lastRoundRankingPlayerOne.sos;
@@ -225,7 +225,7 @@ export class TournamentRankingService implements OnDestroy {
           });
       }
 
-      _.each(rankingPlayerOne.opponentTournamentPlayerIds, function (opponentTournamentPlayerId: string) {
+      _.each(newListOfOpponentsIdsPlayerOne, function (opponentTournamentPlayerId: string) {
         _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
           if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
             const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
@@ -275,7 +275,7 @@ export class TournamentRankingService implements OnDestroy {
         });
 
 
-      if (!gameResult.gameBefore.finished) {
+      if (gameResult.gameBefore.finished) {
         let newSosPlayerTwo = rankingPlayerOne.score + gameResult.gameAfter.playerOneScore;
         if (lastRoundRankingPlayerTwo) {
           newSosPlayerTwo = newSosPlayerTwo + lastRoundRankingPlayerTwo.sos;
@@ -287,7 +287,7 @@ export class TournamentRankingService implements OnDestroy {
       }
 
 
-      _.each(rankingPlayerTwo.opponentTournamentPlayerIds, function (opponentTournamentPlayerId: string) {
+      _.each(newListOfOpponentsIdsPlayerTwo, function (opponentTournamentPlayerId: string) {
         _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
           if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
             const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
