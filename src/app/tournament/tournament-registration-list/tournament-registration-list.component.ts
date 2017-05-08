@@ -3,6 +3,7 @@ import {Registration} from '../../../../shared/model/registration';
 import {Player} from '../../../../shared/model/player';
 import {Tournament} from '../../../../shared/model/tournament';
 import {WindowRefService} from "../../service/window-ref-service";
+import {TournamentPlayer} from "../../../../shared/model/tournament-player";
 
 
 @Component({

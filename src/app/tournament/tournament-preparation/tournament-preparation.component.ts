@@ -365,6 +365,16 @@ export class TournamentPreparationComponent implements OnInit {
     }
   }
 
+  alreadyInTournament(): TournamentPlayer {
+
+    const that = this;
+
+    return _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      return player.playerId === that.userPlayerData.id;
+    });
+
+  }
+
   handleAddTournamentRegistration(registration: Registration) {
 
     this.onAddTournamentRegistration.emit(registration);

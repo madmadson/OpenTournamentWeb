@@ -28,7 +28,7 @@
           <md-icon>add</md-icon>
           Register me
         </button>
-        <button *ngIf="myRegistration"
+        <button *ngIf="myRegistration && !alreadyInTournament()"
                 (click)="deleteMyRegistration(myRegistration)"
                 type="button"
                 class="negative-background action-button"
@@ -54,7 +54,7 @@
           <md-icon>edit</md-icon>
           Manage Team
         </button>
-        <button *ngIf="myRegistration"
+        <button *ngIf="myRegistration && !alreadyInTournament()"
                 (click)="deleteMyRegistration(myRegistration)"
                 type="button"
                 class="negative-background action-button"
@@ -68,18 +68,34 @@
   <ng-template #nonAdmin>
     <md-card class="action-card" *ngIf="actualTournament?.actualRound === 0 && userPlayerData">
       <div class="action-button-wrapper">
-        <button *ngIf="!myTeam "
-                 type="button"
-                 (click)="openRegisterTeamDialog()"
-                 class="positive-background action-button"
-                 md-raised-button>
-        <md-icon>group_add</md-icon>
-        Register Team
-      </button>
+        <button *ngIf="!myRegistration && actualTournament?.teamSize === 0"
+                type="button"
+                (click)="openRegistrationDialog()"
+                class="positive-background action-button"
+                md-raised-button>
+          <md-icon>add</md-icon>
+          Register
+        </button>
+        <button *ngIf="userPlayerData && myTeam "
+                type="button"
+                class="positive-background action-button"
+                (click)="openShowTeamDialog()"
+                md-raised-button>
+          <md-icon>edit</md-icon>
+          Manage Team
+        </button>
+        <button *ngIf="!myTeam && actualTournament?.teamSize > 0"
+                type="button"
+                (click)="openRegisterTeamDialog()"
+                class="positive-background action-button"
+                md-raised-button>
+          <md-icon>group_add</md-icon>
+          Register Team
+        </button>
         <h4 *ngIf="!myRegistration && actualTournament?.teamSize > 0 && myTeam">
           Join a Team!
         </h4>
-        <button *ngIf="myRegistration"
+        <button *ngIf="myRegistration && !alreadyInTournament()"
                 (click)="deleteMyRegistration(myRegistration)"
                 type="button"
                 class="negative-background action-button"
@@ -87,10 +103,13 @@
           <md-icon>delete</md-icon>
           I'm out
         </button>
+        <div *ngIf="myRegistration && alreadyInTournament()">
+          <md-icon class="positive align-fix">done</md-icon>
+          You are added to the Tournament
+        </div>
       </div>
     </md-card>
   </ng-template>
-
   <md-card class="action-card" *ngIf="!userPlayerData">
     <md-card-title>Want to register for Tournament?</md-card-title>
     <md-card-subtitle>No Problem just create your Player-Profile</md-card-subtitle>

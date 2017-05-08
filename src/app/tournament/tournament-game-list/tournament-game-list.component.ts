@@ -1,13 +1,11 @@
 import {
   AfterContentChecked,
-  AfterViewChecked,
-  AfterViewInit,
-  Component, EventEmitter, Inject, Input, OnInit, Output, Renderer2, ViewChild
+  Component, EventEmitter, Inject, Input, OnInit, Output, Renderer2
 } from '@angular/core';
 import {Player} from '../../../../shared/model/player';
 import {Observable} from 'rxjs/Observable';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar, MdSelect} from '@angular/material';
+import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
 import {PairAgainDialogComponent} from '../tournament-round-overview/tournament-round-overview.component';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {GameConfig, getWarmachineConfig} from '../../../../shared/dto/game-config';
@@ -19,8 +17,8 @@ import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import * as _ from 'lodash';
 import {SwapPlayer} from '../../../../shared/dto/swap-player';
 import {WindowRefService} from '../../service/window-ref-service';
-import {GlobalEventService} from "app/service/global-event-service";
-import {getAllScenarios} from "../../../../shared/model/szenarios";
+import {GlobalEventService} from 'app/service/global-event-service';
+import {getAllScenarios} from '../../../../shared/model/szenarios';
 
 
 @Component({
@@ -64,7 +62,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
               private renderer: Renderer2,
               private messageService: GlobalEventService,
               private winRef: WindowRefService) {
-    this.smallScreen = this.winRef.nativeWindow.screen.width < 800;
+    this.smallScreen = this.winRef.nativeWindow.screen.width < 1024;
     this.scenarios = getAllScenarios();
   }
 
@@ -152,7 +150,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   startDrag(event: any, game: TournamentGame, dragTournamentPlayerId: string,
             dragTournamentPlayerOpponentId: string) {
 
-    if (!game.finished) {
+    if (!game.finished && this.actualTournament.creatorUid === this.userPlayerData.userUid) {
       const that = this;
 
       console.log('drag started');
@@ -274,47 +272,32 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     this.onSwapPlayer.emit(swapPlayer);
   }
 
-  private createGameOne(droppedGame: TournamentGame, droppedTournamentPlayerId: string) {
-    let gameOnePlayerOnePlayerId: string;
-    let gameOnePlayerOneTournamentPlayerId: string;
-    let gameOnePlayerOnePlayerName: string;
-    let gameOnePlayerOneFaction: string;
-    let gameOnePlayerOneElo: number;
+  private createGameOne(droppedGame: TournamentGame, droppedTournamentPlayerId: string): TournamentGame {
 
-    let gameOnePlayerTwoPlayerId: string;
-    let gameOnePlayerTwoTournamentPlayerId: string;
-    let gameOnePlayerTwoPlayerName: string;
-    let gameOnePlayerTwoFaction: string;
-    let gameOnePlayerTwoElo: number;
-
+    let gameOnePlayerOneAffected = false;
+    let gameOnePlayerTwoAffected = false;
+    let gameTwoPlayerOneAffected = false;
+    let gameTwoPlayerTwoAffected = false;
 
     if (this.draggedGame.playerOneTournamentPlayerId === this.draggedTournamentPlayerId) {
+      // X-1 / X-2
       if (droppedGame.playerOneTournamentPlayerId === droppedTournamentPlayerId) {
-        gameOnePlayerOnePlayerId = droppedGame.playerOnePlayerId;
-        gameOnePlayerOneTournamentPlayerId = droppedGame.playerOneTournamentPlayerId;
-        gameOnePlayerOnePlayerName = droppedGame.playerOnePlayerName;
-        gameOnePlayerOneFaction = droppedGame.playerOneFaction;
-        gameOnePlayerOneElo = droppedGame.playerOneElo;
+        gameOnePlayerOneAffected = true;
+        gameTwoPlayerOneAffected = true;
       } else {
-        gameOnePlayerOnePlayerId = droppedGame.playerTwoPlayerId;
-        gameOnePlayerOneTournamentPlayerId = droppedGame.playerTwoTournamentPlayerId;
-        gameOnePlayerOnePlayerName = droppedGame.playerTwoPlayerName;
-        gameOnePlayerOneFaction = droppedGame.playerTwoFaction;
-        gameOnePlayerOneElo = droppedGame.playerTwoElo;
+        // X-1 / 2-X
+        gameOnePlayerOneAffected = true;
+        gameTwoPlayerTwoAffected = true;
       }
     } else {
+      // 1-X / X-2
       if (droppedGame.playerOneTournamentPlayerId === droppedTournamentPlayerId) {
-        gameOnePlayerTwoPlayerId = droppedGame.playerOnePlayerId;
-        gameOnePlayerTwoTournamentPlayerId = droppedGame.playerOneTournamentPlayerId;
-        gameOnePlayerTwoPlayerName = droppedGame.playerOnePlayerName;
-        gameOnePlayerTwoFaction = droppedGame.playerOneFaction;
-        gameOnePlayerTwoElo = droppedGame.playerOneElo;
+        gameOnePlayerTwoAffected = true;
+        gameTwoPlayerOneAffected = true;
       } else {
-        gameOnePlayerTwoPlayerId = droppedGame.playerTwoPlayerId;
-        gameOnePlayerTwoTournamentPlayerId = droppedGame.playerTwoTournamentPlayerId;
-        gameOnePlayerTwoPlayerName = droppedGame.playerTwoPlayerName;
-        gameOnePlayerTwoFaction = droppedGame.playerTwoFaction;
-        gameOnePlayerTwoElo = droppedGame.playerTwoElo;
+        // 1-X / 2-X
+        gameOnePlayerTwoAffected = true;
+        gameTwoPlayerTwoAffected = true;
       }
     }
 
@@ -322,25 +305,32 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       id: this.draggedGame.id,
       tournamentId: this.draggedGame.tournamentId,
 
-      playerOnePlayerId: gameOnePlayerOnePlayerId ? gameOnePlayerOnePlayerId : this.draggedGame.playerOnePlayerId,
-      playerOneTournamentPlayerId: gameOnePlayerOneTournamentPlayerId ?
-        gameOnePlayerOneTournamentPlayerId : this.draggedGame.playerOneTournamentPlayerId,
-      playerOnePlayerName: gameOnePlayerOnePlayerName ? gameOnePlayerOnePlayerName : this.draggedGame.playerOnePlayerName,
-      playerOneFaction: gameOnePlayerOneFaction ? gameOnePlayerOneFaction : this.draggedGame.playerOneFaction,
-      playerOneElo: gameOnePlayerOneElo ? gameOnePlayerOneElo : this.draggedGame.playerOneElo,
+      playerOnePlayerId: gameOnePlayerTwoAffected ? this.draggedGame.playerOnePlayerId :
+        gameTwoPlayerOneAffected ? droppedGame.playerOnePlayerId : droppedGame.playerTwoPlayerId,
+      playerOneTournamentPlayerId: gameOnePlayerTwoAffected ? this.draggedGame.playerOneTournamentPlayerId :
+        gameTwoPlayerOneAffected ? droppedGame.playerOneTournamentPlayerId : droppedGame.playerTwoTournamentPlayerId,
+      playerOnePlayerName: gameOnePlayerTwoAffected ? this.draggedGame.playerOnePlayerName :
+        gameTwoPlayerOneAffected ? droppedGame.playerOnePlayerName : droppedGame.playerTwoPlayerName,
+      playerOneFaction: gameOnePlayerTwoAffected ? this.draggedGame.playerOneFaction :
+        gameTwoPlayerOneAffected ? droppedGame.playerOneFaction : droppedGame.playerTwoFaction,
+      playerOneElo: gameOnePlayerTwoAffected ? this.draggedGame.playerOneElo :
+        gameTwoPlayerOneAffected ? droppedGame.playerOneElo : droppedGame.playerTwoElo,
       playerOneScore: 0,
       playerOneControlPoints: 0,
       playerOneVictoryPoints: 0,
       playerOneArmyList: '',
       playerOneEloChanging: 0,
 
-      playerTwoPlayerId: gameOnePlayerTwoPlayerId ? gameOnePlayerTwoPlayerId : this.draggedGame.playerTwoPlayerId,
-      playerTwoTournamentPlayerId: gameOnePlayerTwoTournamentPlayerId ?
-        gameOnePlayerTwoTournamentPlayerId : this.draggedGame.playerTwoTournamentPlayerId,
-      playerTwoPlayerName: gameOnePlayerTwoPlayerName ?
-        gameOnePlayerTwoPlayerName : this.draggedGame.playerTwoPlayerName,
-      playerTwoFaction: gameOnePlayerTwoFaction ? gameOnePlayerTwoFaction : this.draggedGame.playerTwoFaction,
-      playerTwoElo: gameOnePlayerTwoElo ? gameOnePlayerTwoElo : this.draggedGame.playerTwoElo,
+      playerTwoPlayerId: gameOnePlayerOneAffected ? this.draggedGame.playerTwoPlayerId :
+        gameTwoPlayerTwoAffected ? droppedGame.playerTwoPlayerId : droppedGame.playerOnePlayerId,
+      playerTwoTournamentPlayerId: gameOnePlayerOneAffected ? this.draggedGame.playerTwoTournamentPlayerId :
+        gameTwoPlayerTwoAffected ? droppedGame.playerTwoTournamentPlayerId : droppedGame.playerOneTournamentPlayerId,
+      playerTwoPlayerName: gameOnePlayerOneAffected ? this.draggedGame.playerTwoPlayerName :
+        gameTwoPlayerTwoAffected ? droppedGame.playerTwoPlayerName : droppedGame.playerOnePlayerName,
+      playerTwoFaction: gameOnePlayerOneAffected ? this.draggedGame.playerTwoFaction :
+        gameTwoPlayerTwoAffected ? droppedGame.playerTwoFaction : droppedGame.playerOneFaction,
+      playerTwoElo: gameOnePlayerOneAffected ? this.draggedGame.playerTwoElo :
+        gameTwoPlayerTwoAffected ? droppedGame.playerTwoElo : droppedGame.playerOneElo,
       playerTwoScore: 0,
       playerTwoControlPoints: 0,
       playerTwoVictoryPoints: 0,
@@ -354,46 +344,31 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     };
   }
 
-  private createGameTwo(droppedGame: TournamentGame, droppedTournamentPlayerId: string) {
-    let gameTwoPlayerOnePlayerId: string;
-    let gameTwoPlayerOneTournamentPlayerId: string;
-    let gameTwoPlayerOnePlayerName: string;
-    let gameTwoPlayerOneFaction: string;
-    let gameTwoPlayerOneElo: number;
-
-    let gameTwoPlayerTwoPlayerId: string;
-    let gameTwoPlayerTwoTournamentPlayerId: string;
-    let gameTwoPlayerTwoPlayerName: string;
-    let gameTwoPlayerTwoFaction: string;
-    let gameTwoPlayerTwoElo: number;
+  private createGameTwo(droppedGame: TournamentGame, droppedTournamentPlayerId: string): TournamentGame {
+    let gameOnePlayerOneAffected = false;
+    let gameOnePlayerTwoAffected = false;
+    let gameTwoPlayerOneAffected = false;
+    let gameTwoPlayerTwoAffected = false;
 
     if (this.draggedGame.playerOneTournamentPlayerId === this.draggedTournamentPlayerId) {
+      // Drag:  X-1 /Drop: X-1
       if (droppedGame.playerOneTournamentPlayerId === droppedTournamentPlayerId) {
-        gameTwoPlayerOnePlayerId = this.draggedGame.playerOnePlayerId;
-        gameTwoPlayerOneTournamentPlayerId = this.draggedGame.playerOneTournamentPlayerId;
-        gameTwoPlayerOnePlayerName = this.draggedGame.playerOnePlayerName;
-        gameTwoPlayerOneFaction = this.draggedGame.playerOneFaction;
-        gameTwoPlayerOneElo = this.draggedGame.playerOneElo;
+        gameOnePlayerOneAffected = true;
+        gameTwoPlayerOneAffected = true;
       } else {
-        gameTwoPlayerTwoPlayerId = this.draggedGame.playerOnePlayerId;
-        gameTwoPlayerTwoTournamentPlayerId = this.draggedGame.playerOneTournamentPlayerId;
-        gameTwoPlayerTwoPlayerName = this.draggedGame.playerOnePlayerName;
-        gameTwoPlayerTwoFaction = this.draggedGame.playerOneFaction;
-        gameTwoPlayerTwoElo = this.draggedGame.playerOneElo;
+        // Drag: X-1 / Drop: 1-X
+        gameOnePlayerOneAffected = true;
+        gameTwoPlayerTwoAffected = true;
       }
     } else {
+      // Drag: 1-X /Drop: X-1
       if (droppedGame.playerOneTournamentPlayerId === droppedTournamentPlayerId) {
-        gameTwoPlayerOnePlayerId = this.draggedGame.playerTwoPlayerId;
-        gameTwoPlayerOneTournamentPlayerId = this.draggedGame.playerTwoTournamentPlayerId;
-        gameTwoPlayerOnePlayerName = this.draggedGame.playerTwoPlayerName;
-        gameTwoPlayerOneFaction = this.draggedGame.playerTwoFaction;
-        gameTwoPlayerOneElo = this.draggedGame.playerTwoElo;
+        gameOnePlayerTwoAffected = true;
+        gameTwoPlayerOneAffected = true;
       } else {
-        gameTwoPlayerTwoPlayerId = this.draggedGame.playerTwoPlayerId;
-        gameTwoPlayerTwoTournamentPlayerId = this.draggedGame.playerTwoTournamentPlayerId;
-        gameTwoPlayerTwoPlayerName = this.draggedGame.playerTwoPlayerName;
-        gameTwoPlayerTwoFaction = this.draggedGame.playerTwoFaction;
-        gameTwoPlayerTwoElo = this.draggedGame.playerTwoElo;
+        // Drag: 1-X /Drop: 1-X
+        gameOnePlayerTwoAffected = true;
+        gameTwoPlayerTwoAffected = true;
       }
     }
 
@@ -402,26 +377,32 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       id: droppedGame.id,
       tournamentId: droppedGame.tournamentId,
 
-      playerOnePlayerId: gameTwoPlayerOnePlayerId ? gameTwoPlayerOnePlayerId : droppedGame.playerOnePlayerId,
-      playerOneTournamentPlayerId: gameTwoPlayerOneTournamentPlayerId ?
-        gameTwoPlayerOneTournamentPlayerId : droppedGame.playerOneTournamentPlayerId,
-      playerOnePlayerName: gameTwoPlayerOnePlayerName ?
-        gameTwoPlayerOnePlayerName : droppedGame.playerOnePlayerName,
-      playerOneFaction: gameTwoPlayerOneFaction ? gameTwoPlayerOneFaction : droppedGame.playerOneFaction,
-      playerOneElo: gameTwoPlayerOneElo ? gameTwoPlayerOneElo : droppedGame.playerOneElo,
+      playerOnePlayerId: gameTwoPlayerTwoAffected ? droppedGame.playerOnePlayerId :
+        gameOnePlayerOneAffected ? this.draggedGame.playerOnePlayerId : this.draggedGame.playerTwoPlayerId,
+      playerOneTournamentPlayerId: gameTwoPlayerTwoAffected ? droppedGame.playerOneTournamentPlayerId :
+        gameOnePlayerOneAffected ? this.draggedGame.playerOneTournamentPlayerId : this.draggedGame.playerTwoTournamentPlayerId,
+      playerOnePlayerName: gameTwoPlayerTwoAffected ? droppedGame.playerOnePlayerName :
+        gameOnePlayerOneAffected ? this.draggedGame.playerOnePlayerName : this.draggedGame.playerTwoPlayerName,
+      playerOneFaction: gameTwoPlayerTwoAffected ? droppedGame.playerOneFaction :
+        gameOnePlayerOneAffected ? this.draggedGame.playerOneFaction : this.draggedGame.playerTwoFaction,
+      playerOneElo: gameTwoPlayerTwoAffected ? droppedGame.playerOneElo :
+        gameOnePlayerOneAffected ? this.draggedGame.playerOneElo : this.draggedGame.playerTwoElo,
       playerOneScore: 0,
       playerOneControlPoints: 0,
       playerOneVictoryPoints: 0,
       playerOneArmyList: '',
       playerOneEloChanging: 0,
 
-      playerTwoPlayerId: gameTwoPlayerTwoPlayerId ? gameTwoPlayerTwoPlayerId : droppedGame.playerTwoPlayerId,
-      playerTwoTournamentPlayerId: gameTwoPlayerTwoTournamentPlayerId ?
-        gameTwoPlayerTwoTournamentPlayerId : droppedGame.playerTwoTournamentPlayerId,
-      playerTwoPlayerName: gameTwoPlayerTwoPlayerName ?
-        gameTwoPlayerTwoPlayerName : droppedGame.playerTwoPlayerName,
-      playerTwoFaction: gameTwoPlayerTwoFaction ? gameTwoPlayerTwoFaction : droppedGame.playerTwoFaction,
-      playerTwoElo: gameTwoPlayerTwoElo ? gameTwoPlayerTwoElo : droppedGame.playerTwoElo,
+      playerTwoPlayerId: gameTwoPlayerOneAffected ? droppedGame.playerTwoPlayerId :
+        gameOnePlayerTwoAffected ? this.draggedGame.playerTwoPlayerId : this.draggedGame.playerOnePlayerId,
+      playerTwoTournamentPlayerId: gameTwoPlayerOneAffected ? droppedGame.playerTwoTournamentPlayerId :
+        gameOnePlayerTwoAffected ? this.draggedGame.playerTwoTournamentPlayerId : this.draggedGame.playerOneTournamentPlayerId,
+      playerTwoPlayerName: gameTwoPlayerOneAffected ? droppedGame.playerTwoPlayerName :
+        gameOnePlayerTwoAffected ? this.draggedGame.playerTwoPlayerName : this.draggedGame.playerOnePlayerName,
+      playerTwoFaction: gameTwoPlayerOneAffected ? droppedGame.playerTwoFaction :
+        gameOnePlayerTwoAffected ? this.draggedGame.playerTwoFaction : this.draggedGame.playerOneFaction,
+      playerTwoElo: gameTwoPlayerOneAffected ? droppedGame.playerTwoElo :
+        gameOnePlayerTwoAffected ? this.draggedGame.playerTwoElo : this.draggedGame.playerOneElo,
       playerTwoScore: 0,
       playerTwoControlPoints: 0,
       playerTwoVictoryPoints: 0,
@@ -434,7 +415,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       scenario: droppedGame.scenario
     };
   }
-
 
 
   playedAgainstOthers(tournamentPlayerOneId: string, tournamentPlayerTwoId: string, game: TournamentGame): boolean {
@@ -500,9 +480,11 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   }
 
   myGameOrAdmin(selectedGame: TournamentGame) {
-    return (selectedGame.playerOnePlayerId === this.currentUserId && !selectedGame.finished) ||
-      (selectedGame.playerTwoPlayerId === this.currentUserId && !selectedGame.finished) ||
-      this.currentUserId === this.actualTournament.creatorUid;
+    if (this.userPlayerData) {
+      return (selectedGame.playerOnePlayerId === this.userPlayerData.id && !selectedGame.finished) ||
+        (selectedGame.playerTwoPlayerId === this.userPlayerData.id && !selectedGame.finished) ||
+        this.currentUserId === this.actualTournament.creatorUid;
+    }
   }
 
   isItMyGame(droppedGame: TournamentGame) {

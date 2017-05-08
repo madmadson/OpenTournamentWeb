@@ -38,6 +38,7 @@ export class NewTournamentPlayerDialogComponent {
 
     this.tournamentPlayerModel = {
       tournamentId: this.tournament.id,
+      playerId: '',
       playerName: '',
       teamName: data.team ? data.team.teamName : '',
       origin: '',

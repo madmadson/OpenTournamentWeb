@@ -7,7 +7,7 @@ export class TournamentPlayer {
   tournamentId: string;
   registrationId?: string;
   email?: string;
-  playerId?: string;
+  playerId: string;
   playerName: string;
   elo?: number;
   meta?: string;

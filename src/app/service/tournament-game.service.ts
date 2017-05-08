@@ -144,22 +144,30 @@ export class TournamentGameService implements OnDestroy {
 
         let inSameTeam = false;
         if (config.teamRestriction) {
+          if (ranking1.teamName && ranking2.teamName) {
            inSameTeam = ranking1.teamName === ranking2.teamName;
+          }
         }
 
         let sameMeta = false;
         if (config.metaRestriction) {
-          sameMeta = ranking1.meta === ranking2.meta;
+          if (ranking1.meta && ranking2.meta) {
+            sameMeta = ranking1.meta === ranking2.meta;
+          }
         }
 
         let sameOrigin = false;
         if (config.originRestriction) {
-          sameOrigin = ranking1.origin === ranking2.origin;
+          if (ranking1.origin && ranking2.origin) {
+            sameOrigin = ranking1.origin === ranking2.origin;
+          }
         }
 
         let sameCountry = false;
         if (config.countryRestriction) {
-          sameCountry = ranking1.country === ranking2.country;
+          if (ranking1.country && ranking2.country) {
+            sameCountry = ranking1.country === ranking2.country;
+          }
         }
 
         if (alreadyPlayingAgainstEachOther || inSameTeam || sameMeta || sameOrigin || sameCountry) {
