@@ -112,7 +112,14 @@ export class TournamentGameService implements OnDestroy {
     const tournamentGamesRef = this.fireDB
       .list('tournament-games/' + config.tournamentId);
 
+    const listOfTables = _.range(1, (this.newGames.length + 1));
+
     _.forEach(this.newGames, function (newGame: TournamentGame) {
+
+      const randomIndex = Math.floor(Math.random() * listOfTables.length);
+      const tableNumber: number = listOfTables[randomIndex];
+      listOfTables.splice(randomIndex, 1);
+      newGame.playingField = tableNumber;
       tournamentGamesRef.push(newGame);
     });
 

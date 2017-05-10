@@ -20,8 +20,7 @@ export class PrintArmyListsDialogComponent {
 
   constructor(public dialogRef: MdDialogRef<PrintArmyListsDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
-              private winRef: WindowRefService,
-              private renderer: Renderer2) {
+              private winRef: WindowRefService) {
 
     this.tournament = data.tournament;
     this.armyLists$ = data.armyLists$;
