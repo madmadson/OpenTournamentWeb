@@ -8,7 +8,9 @@
     "start": "ng serve",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "precache": "sw-precache --root=dist --verbose --static-file-globs='dist/**.html'",
+    "deploy": "./deploy.sh"
   },
   "private": true,
   "dependencies": {
@@ -72,6 +74,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "^5.1.1",
+    "sw-precache": "^5.1.1",
     "ts-node": "^2.0.0",
     "tslint": "^4.4.2",
     "typescript": "~2.2.0"

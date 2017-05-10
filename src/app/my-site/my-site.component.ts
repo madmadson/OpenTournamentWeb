@@ -15,6 +15,7 @@ import {Component} from '@angular/core';
 import {MySiteSubscribeAction} from '../store/actions/my-site-actions';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
+import {WindowRefService} from "../service/window-ref-service";
 
 @Component({
   selector: 'my-tournaments',
@@ -30,8 +31,13 @@ export class MySiteComponent {
   myRegistrations$: Observable<Registration[]>;
   myGames$: Observable<TournamentGame[]>;
 
+  smallScreen: boolean;
+
   constructor(private store: Store<ApplicationState>,
-              public dialog: MdDialog) {
+              public dialog: MdDialog,
+              private winRef: WindowRefService) {
+
+    this.smallScreen = this.winRef.nativeWindow.screen.width < 400;
 
     this.store.select(state => state.authenticationStoreState).subscribe(
       authenticationStoreState => {
@@ -68,6 +74,30 @@ export class MySiteComponent {
     this.myGames$ = this.store.select(state => state.mySiteSoreData.myGames);
 
 
+  }
+
+  getMyTournamentsTitle(): string {
+    if (this.smallScreen) {
+      return 'Orga..';
+    } else {
+      return 'Organised Tournaments';
+    }
+  }
+
+  getMyGamesTitle(): string {
+    if (this.smallScreen) {
+      return 'Games';
+    } else {
+      return 'Games';
+    }
+  }
+
+  getMyRegistrationTitle(): string {
+    if (this.smallScreen) {
+      return 'Regist..';
+    } else {
+      return 'Registrations';
+    }
   }
 
   openCreateTournamentDialog(): void {

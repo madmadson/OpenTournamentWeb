@@ -5,20 +5,22 @@ export class ArmyList {
   tournamentId: string;
   regId: string;
   playerId: string;
+  playerName: string;
   name: string;
   list: string;
 
-  static fromJson({tournamentId, regId, playerId, name, list}): ArmyList {
+  static fromJson({tournamentId, regId, playerId, playerName, name, list}): ArmyList {
     return new ArmyList(
-      tournamentId, regId, playerId, name, list);
+      tournamentId, regId, playerId, playerName, name, list);
   }
 
-  constructor(tournamentId: string, regId: string, playerId: string, name: string,
+  constructor(tournamentId: string, regId: string, playerId: string, playerName: string, name: string,
               list: string) {
 
     this.tournamentId = tournamentId;
     this.regId = regId;
     this.playerId = playerId;
+    this.playerName = playerName;
     this.name = name;
     this.list = list;
   }

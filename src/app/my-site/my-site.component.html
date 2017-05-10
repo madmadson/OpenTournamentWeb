@@ -1,39 +1,33 @@
-<h2 class="heading">MySite</h2>
+<h4 class="heading">MySite</h4>
 
-<md-card class="single-list-card">
-  <mdl-tabs mdl-ripple >
-    <mdl-tab-panel mdl-tab-panel-title="My Tournaments">
-        <h4 class="heading" *ngIf="(groupedTournaments$ | async).length == 0">It's time to organize a Tournament!</h4>
-        <h4 class="heading" *ngIf="(groupedTournaments$ | async).length > 0">My organized Tournaments ({{(allTournaments$| async) ?.length}})</h4>
-        <button md-fab class="create-action" (click)="openCreateTournamentDialog()">
-          <md-icon>add</md-icon>
-        </button>
-        <mdl-list *ngFor="let groupedTournaments of groupedTournaments$ | async">
-          <h4 md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h4>
-          <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
-          <md-divider></md-divider>
-        </mdl-list>
+<mdl-tabs mdl-ripple >
+  <mdl-tab-panel mdl-tab-panel-title="{{getMyTournamentsTitle()}}">
+    <md-card class="tournament-list-card">
+      <h4 class="heading" *ngIf="(groupedTournaments$ | async).length == 0">It's time to organize a Tournament!</h4>
+      <h4 class="heading" *ngIf="(groupedTournaments$ | async).length > 0">My organized Tournaments ({{(allTournaments$| async) ?.length}})</h4>
+      <button md-fab class="create-action" (click)="openCreateTournamentDialog()">
+        <md-icon>add</md-icon>
+      </button>
+      <mdl-list *ngFor="let groupedTournaments of groupedTournaments$ | async">
+        <h4 md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h4>
+        <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
+        <md-divider></md-divider>
+      </mdl-list>
+    </md-card>
+  </mdl-tab-panel>
+  <mdl-tab-panel mdl-tab-panel-title="{{getMyRegistrationTitle()}}">
+    <h4 class="heading" *ngIf="(myRegistrations$ | async).length == 0">No Registrations found</h4>
+    <player-registrations-table *ngIf="(myRegistrations$ | async).length > 0"
+        [myRegistrations$]="myRegistrations$">
+    </player-registrations-table>
+  </mdl-tab-panel>
+  <mdl-tab-panel mdl-tab-panel-title="{{getMyGamesTitle()}}">
+    <h4 class="heading" *ngIf="(myGames$ | async).length == 0">No Played Games found</h4>
+    <player-games-table *ngIf="(myGames$ | async).length > 0"
+      [myGames$]="myGames$">
+    </player-games-table>
+  </mdl-tab-panel>
+</mdl-tabs>
 
-    </mdl-tab-panel>
-    <mdl-tab-panel mdl-tab-panel-title="My Registrations">
-      <h4 class="heading" *ngIf="(myRegistrations$ | async).length == 0">No Registrations found</h4>
-      <player-registrations-table *ngIf="(myRegistrations$ | async).length > 0"
-          [myRegistrations$]="myRegistrations$">
-      </player-registrations-table>
-
-    </mdl-tab-panel>
-    <mdl-tab-panel mdl-tab-panel-title="Played Tournaments">
-
-          Will soon be added !
-
-    </mdl-tab-panel>
-    <mdl-tab-panel mdl-tab-panel-title="Played Games">
-      <h4 class="heading" *ngIf="(myGames$ | async).length == 0">No Played Games found</h4>
-      <player-games-table *ngIf="(myGames$ | async).length > 0"
-        [myGames$]="myGames$">
-      </player-games-table>
-    </mdl-tab-panel>
-  </mdl-tabs>
-</md-card>
 
 

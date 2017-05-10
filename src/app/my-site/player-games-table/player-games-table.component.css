@@ -6,9 +6,9 @@
 
 
 .game-table-won {
-  background-color: #a4ff9c;
+  color: #1fad49;
 }
 
 .game-table-lost {
-  background-color: #ff7e72;
+  color: #ff7e72;
 }

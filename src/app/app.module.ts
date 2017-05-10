@@ -109,6 +109,8 @@ import {MdlExpansionPanelModule} from '@angular-mdl/expansion-panel';
 import {ShowTeamRegistrationDialogComponent} from './dialogs/show-team-registration-dialog';
 import {ShowTeamDialogComponent} from './dialogs/show-team-dialog';
 import {NewTournamentPlayerDialogComponent} from './dialogs/add-tournament-player-dialog';
+import { GamesListComponent } from './games/games-list/games-list.component';
+import {PrintArmyListsDialogComponent} from "./dialogs/print-army-lists-dialog";
 
 
 const reducers = {
@@ -235,6 +237,8 @@ export const firebaseConfDev = {
     TournamentTeamRegistrationListComponent,
     ShowTeamRegistrationDialogComponent,
     ShowTeamDialogComponent,
+    GamesListComponent,
+    PrintArmyListsDialogComponent
   ],
   providers: [
     LoginService,
@@ -265,7 +269,8 @@ export const firebaseConfDev = {
     CreateTeamDialogComponent,
     RegisterTeamDialogComponent,
     ShowTeamRegistrationDialogComponent,
-    ShowTeamDialogComponent
+    ShowTeamDialogComponent,
+    PrintArmyListsDialogComponent
   ],
   bootstrap: [AppComponent]
 })

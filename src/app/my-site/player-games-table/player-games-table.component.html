@@ -17,8 +17,7 @@
     <th class="small-three-space-table-cell">Link</th>
   </tr>
   </thead>
-  <tbody *ngFor="let game of myGames$ | async; let i = index; let even = even"
-         [ngClass]="{'even': even} ">
+  <tbody *ngFor="let game of myGames$ | async; let i = index; let even = even">
   <tr class="table-row">
     <td class="small-three-space-table-cell reg-table-cell">{{i +1}}</td>
     <td [ngClass]="{'game-table-won': (playerOneWon(game)),

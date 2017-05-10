@@ -23,6 +23,8 @@ import {ShowTeamRegistrationDialogComponent} from '../../dialogs/show-team-regis
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-player-dialog';
+import {PrintArmyListsDialogComponent} from '../../dialogs/print-army-lists-dialog';
+import {WindowRefService} from "../../service/window-ref-service";
 
 
 @Component({
@@ -228,6 +230,16 @@ export class TournamentPreparationComponent implements OnInit {
 
       saveEventSubscribe.unsubscribe();
     });
+  }
+
+  openPrintArmyListDialog() {
+     this.dialog.open(PrintArmyListsDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        armyLists$: this.armyLists$
+      }
+    });
+
   }
 
   openRegistrationDialog() {
@@ -626,7 +638,8 @@ export class AddArmyListsDialogComponent {
     const that = this;
     this.registration = data.registration;
 
-    this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.id, this.registration.playerId, '', '');
+    this.armyListModel = new ArmyList(this.registration.tournamentId,
+      this.registration.id, this.registration.playerId, this.registration.playerName, '', '');
     data.armyListForRegistration.subscribe(armyLists => {
       this.armyListForRegistration = _.filter(armyLists, function (armyList: ArmyList) {
         if (that.registration !== undefined) {
@@ -639,7 +652,8 @@ export class AddArmyListsDialogComponent {
   addArmyList() {
     this.selectedTab = (this.armyListForRegistration.length + 1);
     this.onSaveArmyList.emit(this.armyListModel);
-    this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.id, this.registration.playerId, '', '');
+    this.armyListModel = new ArmyList(this.registration.tournamentId,
+      this.registration.id, this.registration.playerId, this.registration.playerName, '', '');
   };
 
   deleteArmyList(armyList: ArmyList) {
