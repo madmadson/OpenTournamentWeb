@@ -689,14 +689,14 @@ export class StartTournamentDialogComponent {
     data.allActualTournamentPlayers$.subscribe(players => {
       this.allActualTournamentPlayers = players;
       if (data.actualTournament.teamSize === 0) {
-        this.suggestedRoundsToPlay = Math.round(Math.log2(players.length));
+        this.suggestedRoundsToPlay = Math.ceil(Math.log2(players.length));
       }
     });
 
     data.allActualTournamentTeams$.subscribe(teams => {
       this.allActualTournamentTeams = teams;
       if (data.actualTournament.teamSize > 0) {
-        this.suggestedRoundsToPlay = Math.round(Math.log2(teams.length));
+        this.suggestedRoundsToPlay = Math.ceil(Math.log2(teams.length));
       }
     });
   }

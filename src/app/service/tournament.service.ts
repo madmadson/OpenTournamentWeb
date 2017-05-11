@@ -385,7 +385,7 @@ export class TournamentService implements OnDestroy {
 
   gameResultEntered(gameResult: GameResult) {
 
-    this.rankingService.updateRanking(gameResult);
+    this.rankingService.updateRankingAfterGameResultEntered(gameResult);
 
     const gameRef = this.afService.database.object('tournament-games/' + gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
     gameRef.update(gameResult.gameAfter);

@@ -200,6 +200,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       .subscribe((config: TournamentManagementConfiguration) => {
 
         if (config !== undefined) {
+          console.log('pair again');
           config.tournamentId = this.actualTournament.id;
           config.round = this.round;
           this.onPairAgain.emit(config);

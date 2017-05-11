@@ -252,9 +252,9 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handlePairAgain(config: TournamentManagementConfiguration ) {
-    if (this.actualTournament.actualRound === 0) {
+    if (this.actualTournament.teamSize === 0) {
       this.store.dispatch(new TournamentPairAgainAction(config));
-    } else if (this.actualTournament.actualRound > 0) {
+    } else if (this.actualTournament.teamSize > 0) {
       this.store.dispatch(new TournamentPairAgainTeamAction(config));
     }
   }

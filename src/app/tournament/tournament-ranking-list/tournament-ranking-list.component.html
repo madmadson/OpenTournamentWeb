@@ -23,8 +23,8 @@
     <td class="mdl-data-table__cell--non-numeric">
       <div class="player-name-table-cell">{{rank.playerName | truncate:truncateMax}}</div>
       <div class="other-player-data-table-cell">{{rank.faction}}</div>
-      <div *ngIf="smallScreen" class="other-player-data-table-cell">{{rank.teamName}}</div>
-      <div *ngIf="!smallScreen" class="other-player-data-table-cell">{{rank.teamName}} - {{rank.meta}} - {{rank.origin}}</div>
+      <div mdTooltip="TEAM" *ngIf="smallScreen" class="other-player-data-table-cell">{{rank.teamName}}</div>
+      <div mdTooltip="TEAM - META - ORIGIN - COUNTRY" *ngIf="!smallScreen" class="other-player-data-table-cell">{{rank.teamName}} - {{rank.meta}} - {{rank.origin}} - {{rank.country}}</div>
       <div>{{rank.country}}</div>
       <div *ngIf="rank.elo != 0" class=" align-fix other-player-data-table-cell">{{rank.elo}}<img class="align-fix md-secondary" src="../../../assets/my_crown_small.png"></div>
     </td>

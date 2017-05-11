@@ -472,10 +472,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     if (this.myGameOrAdmin(selectedGame)) {
 
-      if (!this.dialogOpened) {
-
-        this.dialogOpened = true;
-
         const dialogRef = this.dialog.open(GameResultDialogComponent, {
           data: {
             selectedGame: selectedGame,
@@ -492,14 +488,14 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
               }
 
               this.onGameResult.emit(gameResult);
+              this.dialog.closeAll();
             }
           });
         dialogRef.afterClosed().subscribe(() => {
 
           eventSubscribe.unsubscribe();
-          this.dialogOpened = false;
+          this.dialog.closeAll();
         });
-      }
 
     }
   }
@@ -693,6 +689,5 @@ export class GameResultDialogComponent {
 
     this.onGameResult.emit({gameBefore: this.givenGame, gameAfter: this.gameModel});
 
-    this.dialogRef.close();
   }
 }

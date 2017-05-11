@@ -17,7 +17,7 @@ import * as _ from 'lodash';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {GameResult} from '../../../shared/dto/game-result';
-import {TournamentTeam} from "../../../shared/model/tournament-team";
+import {TournamentTeam} from '../../../shared/model/tournament-team';
 
 
 @Injectable()
@@ -58,7 +58,7 @@ export class TournamentRankingService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearRankingAction());
-     if (this.tournamentRankingsRef) {
+    if (this.tournamentRankingsRef) {
       this.tournamentRankingsRef.off();
     }
 
@@ -213,7 +213,7 @@ export class TournamentRankingService implements OnDestroy {
     });
   }
 
-  updateRanking(gameResult: GameResult) {
+  updateRankingAfterGameResultEntered(gameResult: GameResult) {
 
     const that = this;
     const roundOfGameResult = gameResult.gameAfter.tournamentRound;
@@ -244,6 +244,18 @@ export class TournamentRankingService implements OnDestroy {
         ranking.tournamentPlayerId === gameResult.gameAfter.playerTwoTournamentPlayerId);
       })[0];
 
+      const actualRoundGamePlayerOne: TournamentGame = _.filter(this.allGames, function (game: TournamentGame) {
+        return (game.tournamentRound === (i) &&
+        (game.playerOneTournamentPlayerId === gameResult.gameAfter.playerOneTournamentPlayerId ||
+        game.playerTwoTournamentPlayerId === gameResult.gameAfter.playerOneTournamentPlayerId));
+      })[0];
+
+      const actualRoundGamePlayerTwo: TournamentGame = _.filter(this.allGames, function (game: TournamentGame) {
+        return (game.tournamentRound === (i) &&
+        (game.playerOneTournamentPlayerId === gameResult.gameAfter.playerTwoTournamentPlayerId ||
+        game.playerTwoTournamentPlayerId === gameResult.gameAfter.playerTwoTournamentPlayerId));
+      })[0];
+
       let newScorePlayerOne = 0;
       let newCPPlayerOne = 0;
       let newVPPlayerOne = 0;
@@ -258,6 +270,7 @@ export class TournamentRankingService implements OnDestroy {
         newListOfOpponentsIdsPlayerOne.push(gameResult.gameAfter.playerTwoTournamentPlayerId);
       }
 
+      // if there is a round before add them
       if (lastRoundRankingPlayerOne) {
         newScorePlayerOne = newScorePlayerOne + lastRoundRankingPlayerOne.score;
         newCPPlayerOne = newCPPlayerOne + lastRoundRankingPlayerOne.controlPoints;
@@ -267,32 +280,56 @@ export class TournamentRankingService implements OnDestroy {
           _.union(newListOfOpponentsIdsPlayerOne, lastRoundRankingPlayerOne.opponentTournamentPlayerIds);
       }
 
-      const playerOneRankingRef = this.fireDB
+      // there is a round after
+      if (i > gameResult.gameAfter.tournamentRound && actualRoundGamePlayerOne) {
+        if (gameResult.gameAfter.playerOneTournamentPlayerId === actualRoundGamePlayerOne.playerOneTournamentPlayerId) {
+          newScorePlayerOne = lastRoundRankingPlayerOne.score + actualRoundGamePlayerOne.playerOneScore;
+          newCPPlayerOne = lastRoundRankingPlayerOne.controlPoints + actualRoundGamePlayerOne.playerOneControlPoints;
+          newVPPlayerOne = lastRoundRankingPlayerOne.victoryPoints + actualRoundGamePlayerOne.playerOneVictoryPoints;
+        } else {
+          newScorePlayerOne = lastRoundRankingPlayerOne.score + actualRoundGamePlayerOne.playerTwoScore;
+          newCPPlayerOne = lastRoundRankingPlayerOne.controlPoints + actualRoundGamePlayerOne.playerTwoControlPoints;
+          newVPPlayerOne = lastRoundRankingPlayerOne.victoryPoints + actualRoundGamePlayerOne.playerTwoVictoryPoints;
+        }
+
+        const playerOneRankingRef = this.fireDB
           .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
-      playerOneRankingRef.update(
-        {
-          score: newScorePlayerOne,
-          controlPoints: newCPPlayerOne,
-          victoryPoints: newVPPlayerOne,
-          opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
-        });
+        playerOneRankingRef.update(
+          {
+            score: newScorePlayerOne,
+            controlPoints: newCPPlayerOne,
+            victoryPoints: newVPPlayerOne,
+          });
+
+      } else {
+
+        const playerOneRankingRef = this.fireDB
+          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+        playerOneRankingRef.update(
+          {
+            score: newScorePlayerOne,
+            controlPoints: newCPPlayerOne,
+            victoryPoints: newVPPlayerOne,
+            opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
+          });
 
 
-      _.each(newListOfOpponentsIdsPlayerOne, function (opponentTournamentPlayerId: string) {
-        _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
-          if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
-            const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
+        _.each(newListOfOpponentsIdsPlayerOne, function (opponentTournamentPlayerId: string) {
+          _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
+            if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
+              const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
 
-            if (!gameResult.gameBefore.finished) {
-              opponentRankRef.update({'sos': (rank.sos + gameResult.gameAfter.playerOneScore)});
-            } else if (gameResult.gameBefore.playerOneScore < gameResult.gameAfter.playerOneScore) {
-              opponentRankRef.update({'sos': (rank.sos + 1)});
-            } else if (gameResult.gameBefore.playerOneScore > gameResult.gameAfter.playerOneScore) {
-              opponentRankRef.update({'sos': (rank.sos - 1)});
+              if (!gameResult.gameBefore.finished) {
+                opponentRankRef.update({'sos': (rank.sos + gameResult.gameAfter.playerOneScore)});
+              } else if (gameResult.gameBefore.playerOneScore < gameResult.gameAfter.playerOneScore) {
+                opponentRankRef.update({'sos': (rank.sos + 1)});
+              } else if (gameResult.gameBefore.playerOneScore > gameResult.gameAfter.playerOneScore) {
+                opponentRankRef.update({'sos': (rank.sos - 1)});
+              }
             }
-          }
+          });
         });
-      });
+      }
 
       let newScorePlayerTwo = 0;
       let newCPPlayerTwo = 0;
@@ -317,32 +354,54 @@ export class TournamentRankingService implements OnDestroy {
           _.union(newListOfOpponentsIdsPlayerTwo, lastRoundRankingPlayerTwo.opponentTournamentPlayerIds);
       }
 
-      const playerTwoRankingRef = this.fireDB
-        .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
-      playerTwoRankingRef.update(
-        {
-          score: newScorePlayerTwo,
-          controlPoints: newCPPlayerTwo,
-          victoryPoints: newVPPlayerTwo,
-          opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerTwo
-        });
+      if (i > gameResult.gameAfter.tournamentRound && actualRoundGamePlayerTwo) {
+        if (gameResult.gameAfter.playerTwoTournamentPlayerId === actualRoundGamePlayerTwo.playerOneTournamentPlayerId) {
+          newScorePlayerTwo = lastRoundRankingPlayerTwo.score + actualRoundGamePlayerTwo.playerOneScore;
+          newCPPlayerTwo = lastRoundRankingPlayerTwo.controlPoints + actualRoundGamePlayerTwo.playerOneControlPoints;
+          newVPPlayerTwo = lastRoundRankingPlayerTwo.victoryPoints + actualRoundGamePlayerTwo.playerOneVictoryPoints;
+        } else {
+          newScorePlayerTwo = lastRoundRankingPlayerTwo.score + actualRoundGamePlayerTwo.playerTwoScore;
+          newCPPlayerTwo = lastRoundRankingPlayerTwo.controlPoints + actualRoundGamePlayerTwo.playerTwoControlPoints;
+          newVPPlayerTwo = lastRoundRankingPlayerTwo.victoryPoints + actualRoundGamePlayerTwo.playerTwoVictoryPoints;
+        }
+
+        const playerTwoRankingRef = this.fireDB
+          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
+        playerTwoRankingRef.update(
+          {
+            score: newScorePlayerTwo,
+            controlPoints: newCPPlayerTwo,
+            victoryPoints: newVPPlayerTwo,
+          });
+      } else {
+
+        const playerTwoRankingRef = this.fireDB
+          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
+        playerTwoRankingRef.update(
+          {
+            score: newScorePlayerTwo,
+            controlPoints: newCPPlayerTwo,
+            victoryPoints: newVPPlayerTwo,
+            opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerTwo
+          });
 
 
-      _.each(newListOfOpponentsIdsPlayerTwo, function (opponentTournamentPlayerId: string) {
-        _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
-          if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
-            const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
+        _.each(newListOfOpponentsIdsPlayerTwo, function (opponentTournamentPlayerId: string) {
+          _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
+            if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
+              const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
 
-            if (!gameResult.gameBefore.finished) {
-              opponentRankRef.update({'sos': (rank.sos + gameResult.gameAfter.playerTwoScore)});
-            } else if (gameResult.gameBefore.playerTwoScore < gameResult.gameAfter.playerTwoScore) {
-              opponentRankRef.update({'sos': (rank.sos + 1)});
-            } else if (gameResult.gameBefore.playerTwoScore > gameResult.gameAfter.playerTwoScore) {
-              opponentRankRef.update({'sos': (rank.sos - 1)});
+              if (!gameResult.gameBefore.finished) {
+                opponentRankRef.update({'sos': (rank.sos + gameResult.gameAfter.playerTwoScore)});
+              } else if (gameResult.gameBefore.playerTwoScore < gameResult.gameAfter.playerTwoScore) {
+                opponentRankRef.update({'sos': (rank.sos + 1)});
+              } else if (gameResult.gameBefore.playerTwoScore > gameResult.gameAfter.playerTwoScore) {
+                opponentRankRef.update({'sos': (rank.sos - 1)});
+              }
             }
-          }
+          });
         });
-      });
+      }
     }
   }
 
