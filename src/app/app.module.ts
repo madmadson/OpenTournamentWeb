@@ -76,9 +76,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
 
 import {
-  PairAgainDialogComponent,
+
   TournamentRoundOverviewComponent,
-  KillRoundDialogComponent, NewRoundDialogComponent, FinishTournamentDialogComponent,
+  NewRoundDialogComponent, FinishTournamentDialogComponent,
 } from './tournament/tournament-round-overview/tournament-round-overview.component';
 import { TournamentGameListComponent, GameResultDialogComponent } from './tournament/tournament-game-list/tournament-game-list.component';
 import { TournamentRankingListComponent,
@@ -110,7 +110,12 @@ import {ShowTeamRegistrationDialogComponent} from './dialogs/show-team-registrat
 import {ShowTeamDialogComponent} from './dialogs/show-team-dialog';
 import {NewTournamentPlayerDialogComponent} from './dialogs/add-tournament-player-dialog';
 import { GamesListComponent } from './games/games-list/games-list.component';
-import {PrintArmyListsDialogComponent} from "./dialogs/print-army-lists-dialog";
+import {PrintArmyListsDialogComponent} from './dialogs/print-army-lists-dialog';
+import { TournamentTeamRoundOverviewComponent } from './team-tournament/tournament-team-round-overview/tournament-team-round-overview.component';
+import {TournamentTeamGameReducer} from './store/reducers/tournamentTeamGameReducer';
+import {KillRoundDialogComponent} from './dialogs/round-overview/kill-round-dialog';
+import {PairAgainDialogComponent} from './dialogs/round-overview/pair-again-dialog';
+import {TournamentTeamRankingReducer} from './store/reducers/tournamentTeamRankingReducer';
 
 
 const reducers = {
@@ -123,7 +128,9 @@ const reducers = {
   actualTournament: TournamentReducer,
   actualTournamentRegistrations: TournamentRegistrationReducer,
   actualTournamentRankings: TournamentRankingReducer,
+  actualTournamentTeamRankings: TournamentTeamRankingReducer,
   actualTournamentGames: TournamentGameReducer,
+  actualTournamentTeamGames: TournamentTeamGameReducer,
   actualTournamentPlayers: TournamentPlayerReducer,
   actualTournamentArmyLists: TournamentArmyListReducer,
   actualTournamentTeams: TournamentTeamReducer,
@@ -238,7 +245,8 @@ export const firebaseConfDev = {
     ShowTeamRegistrationDialogComponent,
     ShowTeamDialogComponent,
     GamesListComponent,
-    PrintArmyListsDialogComponent
+    PrintArmyListsDialogComponent,
+    TournamentTeamRoundOverviewComponent
   ],
   providers: [
     LoginService,

@@ -16,6 +16,16 @@ import {Registration} from '../../../shared/model/registration';
 import * as _ from 'lodash';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {TournamentTeamEraseModel} from '../../../shared/dto/tournament-team-erase';
+import {
+  AddTournamentTeamGameAction, ChangeTournamentTeamGameAction,
+  ClearTournamentTeamGamesAction, DeleteTournamentTeamGameAction
+} from '../store/actions/tournament-team-games-actions';
+import {TournamentGame} from '../../../shared/model/tournament-game';
+import {TournamentRanking} from "../../../shared/model/tournament-ranking";
+import {
+  AddTournamentTeamRankingAction, ChangeTournamentTeamRankingAction,
+  ClearTeamRankingsAction, DeleteTournamentTeamRankingAction
+} from "../store/actions/tournament-team-rankings-actions";
 
 
 @Injectable()
@@ -23,6 +33,8 @@ export class TournamentTeamService implements OnDestroy {
 
   tournamentTeamsRef: firebase.database.Reference;
   tournamentTeamsRegistrationRef: firebase.database.Reference;
+  tournamentTeamGamesRef: firebase.database.Reference;
+  tournamentTeamRankingsRef: firebase.database.Reference;
 
   constructor(protected afService: AngularFire,
               protected store: Store<ApplicationState>,
@@ -37,6 +49,12 @@ export class TournamentTeamService implements OnDestroy {
     }
     if (this.tournamentTeamsRegistrationRef) {
       this.tournamentTeamsRegistrationRef.off();
+    }
+    if (this.tournamentTeamGamesRef) {
+      this.tournamentTeamGamesRef.off();
+    }
+    if (this.tournamentTeamRankingsRef) {
+      this.tournamentTeamRankingsRef.off();
     }
   }
 
@@ -78,40 +96,116 @@ export class TournamentTeamService implements OnDestroy {
     });
   }
 
+  public subscribeOnTournamentTeamRankings(tournamentId: string) {
+
+    const that = this;
+
+    this.store.dispatch(new ClearTeamRankingsAction());
+    if (this.tournamentTeamRankingsRef) {
+      this.tournamentTeamRankingsRef.off();
+    }
+
+    console.log('subscribeOnTournamentTeamRankings');
+
+    this.tournamentTeamRankingsRef = this.fb.database().ref('tournament-team-rankings/' + tournamentId);
+
+    this.tournamentTeamRankingsRef.on('child_added', function (snapshot) {
+
+      const tournamentTeamRanking: TournamentRanking = TournamentRanking.fromJson(snapshot.val());
+      tournamentTeamRanking.id = snapshot.key;
+
+      that.store.dispatch(new AddTournamentTeamRankingAction(tournamentTeamRanking));
+
+    });
+
+    this.tournamentTeamRankingsRef.on('child_changed', function (snapshot) {
+
+      const tournamentTeam: TournamentRanking = TournamentRanking.fromJson(snapshot.val());
+      tournamentTeam.id = snapshot.key;
+
+      that.store.dispatch(new ChangeTournamentTeamRankingAction(tournamentTeam));
+
+    });
+
+    this.tournamentTeamRankingsRef.on('child_removed', function (snapshot) {
+
+      that.store.dispatch(new DeleteTournamentTeamRankingAction(snapshot.key));
+
+    });
+  }
+
+  public subscribeOnTournamentTeamGames(tournamentId: string) {
+
+    const that = this;
+
+    this.store.dispatch(new ClearTournamentTeamGamesAction());
+    if (this.tournamentTeamGamesRef) {
+      this.tournamentTeamGamesRef.off();
+    }
+
+    console.log('subscribeOnTournamentTeamGames');
+
+    this.tournamentTeamGamesRef = this.fb.database().ref('tournament-team-games/' + tournamentId);
+
+    this.tournamentTeamGamesRef.on('child_added', function (snapshot) {
+
+      const tournamentGame: TournamentGame = TournamentGame.fromJson(snapshot.val());
+      tournamentGame.id = snapshot.key;
+
+      that.store.dispatch(new AddTournamentTeamGameAction(tournamentGame));
+
+    });
+
+    this.tournamentTeamGamesRef.on('child_changed', function (snapshot) {
+
+      const tournamentGame: TournamentGame = TournamentGame.fromJson(snapshot.val());
+      tournamentGame.id = snapshot.key;
+
+      that.store.dispatch(new ChangeTournamentTeamGameAction(tournamentGame));
+
+    });
+
+    this.tournamentTeamGamesRef.on('child_removed', function (snapshot) {
+
+      that.store.dispatch(new DeleteTournamentTeamGameAction(snapshot.key));
+
+    });
+  }
+
   public subscribeOnTournamentTeamRegistrations(tournamentId: string) {
 
     const that = this;
 
     this.store.dispatch(new ClearTournamentTeamRegistrationsAction());
-    if (this.tournamentTeamsRegistrationRef) {
-      this.tournamentTeamsRegistrationRef.off();
+    if (this.tournamentTeamGamesRef) {
+      this.tournamentTeamGamesRef.off();
     }
 
-    console.log('subscribeOnTournamentTeamRegistrations');
+    console.log('subscribeOnTournamentTeamGames');
 
-    this.tournamentTeamsRegistrationRef = this.fb.database().ref('tournament-team-registrations/' + tournamentId);
+    this.tournamentTeamGamesRef = this.fb.database().ref('tournament-team-games/' + tournamentId);
 
-    this.tournamentTeamsRegistrationRef.on('child_added', function (snapshot) {
+    this.tournamentTeamGamesRef.on('child_added', function (snapshot) {
 
-      const tournamentTeam: TournamentTeam = TournamentTeam.fromJson(snapshot.val());
-      tournamentTeam.id = snapshot.key;
+      const tournamentGame: TournamentGame = TournamentGame.fromJson(snapshot.val());
+      tournamentGame.id = snapshot.key;
 
-      that.store.dispatch(new AddTournamentTeamRegistrationAction(tournamentTeam));
-
-    });
-
-    this.tournamentTeamsRegistrationRef.on('child_changed', function (snapshot) {
-
-      const tournamentTeam: TournamentTeam = TournamentTeam.fromJson(snapshot.val());
-      tournamentTeam.id = snapshot.key;
-
-      that.store.dispatch(new ChangeTournamentTeamRegistrationAction(tournamentTeam));
+      that.store.dispatch(new AddTournamentTeamGameAction(tournamentGame));
 
     });
 
-    this.tournamentTeamsRegistrationRef.on('child_removed', function (snapshot) {
+    this.tournamentTeamGamesRef.on('child_changed', function (snapshot) {
 
-      that.store.dispatch(new DeleteTournamentTeamRegistrationAction(snapshot.key));
+      const tournamentGame: TournamentGame = TournamentGame.fromJson(snapshot.val());
+      tournamentGame.id = snapshot.key;
+
+      that.store.dispatch(new ChangeTournamentTeamGameAction(tournamentGame));
+
+    });
+
+    this.tournamentTeamGamesRef.on('child_removed', function (snapshot) {
+
+      that.store.dispatch(new DeleteTournamentTeamGameAction(snapshot.key));
 
     });
   }

@@ -17,6 +17,13 @@
         }
       }
     },
+    "tournament-team-games": {
+      "$tournament-id": {
+        "$game-id": {
+          ".indexOn": "tournamentRound"
+        }
+      }
+    },
     ".read": true,
     ".write": "auth != null"
   }

@@ -1,12 +1,20 @@
 
+<md-input-container *ngIf="currentUserId !== actualTournament.creatorUid"
+                    class="full-width">
+  <input mdInput type="text" disabled placeholder="Scenario" value="{{selectedScenario}}">
+</md-input-container>
+
 <md-select
+  *ngIf="currentUserId === actualTournament.creatorUid"
   class="full-width-select-box"
   placeholder="Scenario"
   #scenario
+  (change)="changeScenario($event)"
   [(ngModel)]="selectedScenario"
   name="scenario">
   <md-option *ngFor="let scenario of scenarios" [value]="scenario">{{ scenario }}</md-option>
 </md-select>
+
 <div *ngFor="let game of gamesForRound; let i = index; let even = even"
      [ngClass]="{'even': even,
                  'my-item':isItMyGame(game),
@@ -38,7 +46,7 @@
         VP: {{game.playerOneVictoryPoints}}
       </div>
       <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished"
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid"
                 (click)="startSwapPlayer($event,game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>
@@ -71,7 +79,7 @@
         VP: {{game.playerTwoVictoryPoints}}
       </div>
       <div *ngIf="game.playerTwoArmyList " class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished"
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid"
                 (click)="startSwapPlayer($event,game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>

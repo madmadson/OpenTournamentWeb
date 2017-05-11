@@ -6,7 +6,7 @@ import {Player} from '../../../../shared/model/player';
 import {Observable} from 'rxjs/Observable';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
-import {PairAgainDialogComponent} from '../tournament-round-overview/tournament-round-overview.component';
+
 import {ArmyList} from '../../../../shared/model/armyList';
 import {GameConfig, getWarmachineConfig} from '../../../../shared/dto/game-config';
 import {GameResult} from '../../../../shared/dto/game-result';
@@ -19,6 +19,7 @@ import {SwapPlayer} from '../../../../shared/dto/swap-player';
 import {WindowRefService} from '../../service/window-ref-service';
 import {GlobalEventService} from 'app/service/global-event-service';
 import {getAllScenarios} from '../../../../shared/model/szenarios';
+import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   @Output() onGameResult = new EventEmitter<GameResult>();
   @Output() onSwapPlayer = new EventEmitter<SwapPlayer>();
+  @Output() onScenarioSelected = new EventEmitter<ScenarioSelectedModel>();
 
   userPlayerData: Player;
   currentUserId: string;
@@ -56,6 +58,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   selectedScenario: string;
 
+  dialogOpened: boolean;
 
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar,
@@ -84,8 +87,19 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   ngAfterContentChecked(): void {
 
-    if (this.gamesForRound[0] && !this.selectedScenario) {
+    if (this.gamesForRound[0]) {
       this.selectedScenario = this.gamesForRound[0].scenario;
+    }
+  }
+
+  changeScenario(selectBox: any): void {
+
+    if (this.gamesForRound[0]) {
+      this.onScenarioSelected.emit({
+        tournamentId: this.actualTournament.id,
+        round: this.gamesForRound[0].tournamentRound,
+        scenario: selectBox.value
+      });
     }
   }
 
@@ -133,6 +147,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       if (!droppedGame.finished && this.draggedGame) {
         this.swapPlayerMode = false;
         this.dragStarted = false;
+        this.messageService.broadcast('swapPlayerMode', false);
 
         // Don't do anything if dropping the same column we're dragging.
         if (droppedTournamentPlayerId !== this.draggedTournamentPlayerId &&
@@ -320,6 +335,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       playerOneVictoryPoints: 0,
       playerOneArmyList: '',
       playerOneEloChanging: 0,
+      playerOneIntermediateResult: 0,
 
       playerTwoPlayerId: gameOnePlayerOneAffected ? this.draggedGame.playerTwoPlayerId :
         gameTwoPlayerTwoAffected ? droppedGame.playerTwoPlayerId : droppedGame.playerOnePlayerId,
@@ -336,6 +352,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       playerTwoVictoryPoints: 0,
       playerTwoArmyList: '',
       playerTwoEloChanging: 0,
+      playerTwoIntermediateResult: 0,
 
       playingField: this.draggedGame.playingField,
       tournamentRound: this.draggedGame.tournamentRound,
@@ -392,6 +409,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       playerOneVictoryPoints: 0,
       playerOneArmyList: '',
       playerOneEloChanging: 0,
+      playerOneIntermediateResult: 0,
 
       playerTwoPlayerId: gameTwoPlayerOneAffected ? droppedGame.playerTwoPlayerId :
         gameOnePlayerTwoAffected ? this.draggedGame.playerTwoPlayerId : this.draggedGame.playerOnePlayerId,
@@ -408,6 +426,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       playerTwoVictoryPoints: 0,
       playerTwoArmyList: '',
       playerTwoEloChanging: 0,
+      playerTwoIntermediateResult: 0,
 
       playingField: droppedGame.playingField,
       tournamentRound: droppedGame.tournamentRound,
@@ -453,28 +472,34 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     if (this.myGameOrAdmin(selectedGame)) {
 
-      const dialogRef = this.dialog.open(GameResultDialogComponent, {
-        data: {
-          selectedGame: selectedGame,
-          armyLists$: this.armyLists$
-        },
-      });
-      const eventSubscribe = dialogRef.componentInstance.onGameResult
-        .subscribe((gameResult: GameResult) => {
+      if (!this.dialogOpened) {
 
-          if (gameResult !== undefined) {
+        this.dialogOpened = true;
 
-            if (this.selectedScenario) {
-              gameResult.gameAfter.scenario = this.selectedScenario;
-            }
-
-            this.onGameResult.emit(gameResult);
-          }
+        const dialogRef = this.dialog.open(GameResultDialogComponent, {
+          data: {
+            selectedGame: selectedGame,
+            armyLists$: this.armyLists$
+          },
         });
-      dialogRef.afterClosed().subscribe(() => {
+        const eventSubscribe = dialogRef.componentInstance.onGameResult
+          .subscribe((gameResult: GameResult) => {
 
-        eventSubscribe.unsubscribe();
-      });
+            if (gameResult !== undefined) {
+
+              if (this.selectedScenario) {
+                gameResult.gameAfter.scenario = this.selectedScenario;
+              }
+
+              this.onGameResult.emit(gameResult);
+            }
+          });
+        dialogRef.afterClosed().subscribe(() => {
+
+          eventSubscribe.unsubscribe();
+          this.dialogOpened = false;
+        });
+      }
 
     }
   }
@@ -515,7 +540,7 @@ export class GameResultDialogComponent {
 
   sureButton: boolean;
 
-  constructor(public dialogRef: MdDialogRef<PairAgainDialogComponent>,
+  constructor(public dialogRef: MdDialogRef<GameResultDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
 
     // TODO make this generic
@@ -667,6 +692,7 @@ export class GameResultDialogComponent {
     this.gameModel.finished = true;
 
     this.onGameResult.emit({gameBefore: this.givenGame, gameAfter: this.gameModel});
+
     this.dialogRef.close();
   }
 }

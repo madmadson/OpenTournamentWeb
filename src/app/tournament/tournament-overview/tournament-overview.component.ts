@@ -18,7 +18,7 @@ import {
   ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
   RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction,
-  TeamTournamentNewRoundAction
+  TeamTournamentNewRoundAction, TournamentKillTeamRoundAction, TournamentPairAgainTeamAction, ScenarioSelectedAction
 } from '../../store/actions/tournament-actions';
 
 
@@ -42,6 +42,7 @@ import {
 } from '../../store/actions/tournament-teams-actions';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
+import {ScenarioSelectedModel} from "../../../../shared/dto/scenario-selected-model";
 
 @Component({
   selector: 'tournament-overview',
@@ -62,7 +63,9 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   actualTournamentTeamRegistrations$: Observable<TournamentTeam[]>;
 
   actualTournamentRankings$:  Observable<TournamentRanking[]>;
+  actualTournamentTeamRankings$:  Observable<TournamentRanking[]>;
   actualTournamentGames$:  Observable<TournamentGame[]>;
+  actualTournamentTeamGames$:  Observable<TournamentGame[]>;
 
   authenticationStoreState$: Observable<AuthenticationStoreState>;
 
@@ -103,8 +106,14 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.actualTournamentRankings$ =  this.store.select(
       state => state.actualTournamentRankings.actualTournamentRankings);
 
+    this.actualTournamentTeamRankings$ =  this.store.select(
+      state => state.actualTournamentTeamRankings.actualTournamentTeamRankings);
+
     this.actualTournamentGames$ =  this.store.select(
       state => state.actualTournamentGames.actualTournamentGames);
+
+    this.actualTournamentTeamGames$ =  this.store.select(
+      state => state.actualTournamentTeamGames.actualTournamentTeamGames);
 
     this.actualTournamentTeams$ =  this.store.select(
       state => state.actualTournamentTeams.teams);
@@ -163,6 +172,13 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
        return (rank.tournamentRound === round);
      }));
   }
+
+  getTeamRankingsForRound(round: number): Observable<TournamentRanking[]> {
+    return this.actualTournamentTeamRankings$.map(rankings => rankings.filter(rank => {
+      return (rank.tournamentRound === round);
+    }));
+  }
+
   getFinalRanking(): Observable<TournamentRanking[]> {
     return this.actualTournamentRankings$.map(rankings => rankings.filter(rank => {
       return (rank.tournamentRound === (this.actualTournament.actualRound + 1 ));
@@ -175,9 +191,16 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     }));
   }
 
+  getTeamGamesForRound(round: number): Observable<TournamentGame[]> {
+    return this.actualTournamentTeamGames$.map(games => games.filter(game => {
+      return (game.tournamentRound === round);
+    }));
+  }
+
   handleStartTournament(config: TournamentManagementConfiguration ) {
     this.store.dispatch(new TournamentNewRoundAction(config));
   }
+
   handleStartTeamTournament(config: TournamentManagementConfiguration ) {
     this.store.dispatch(new TeamTournamentNewRoundAction(config));
   }
@@ -223,12 +246,17 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new RegistrationEraseAction(
       {tournament: this.actualTournament, registration: registration}));
   }
+
   handleEndTournament(config: TournamentManagementConfiguration) {
     this.store.dispatch(new EndTournamentAction(config));
   }
 
   handlePairAgain(config: TournamentManagementConfiguration ) {
-    this.store.dispatch(new TournamentPairAgainAction(config));
+    if (this.actualTournament.actualRound === 0) {
+      this.store.dispatch(new TournamentPairAgainAction(config));
+    } else if (this.actualTournament.actualRound > 0) {
+      this.store.dispatch(new TournamentPairAgainTeamAction(config));
+    }
   }
 
   handleNewRound(config: TournamentManagementConfiguration ) {
@@ -239,6 +267,10 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
      this.store.dispatch(new GameResultEnteredAction(gameResult));
   }
 
+  handleScenarioSelected(scenarioSelected: ScenarioSelectedModel) {
+    this.store.dispatch(new ScenarioSelectedAction(scenarioSelected));
+  }
+
   handleSwapPlayer(swapPlayer: SwapPlayer) {
     this.store.dispatch(new SwapPlayerAction(swapPlayer));
   }
@@ -246,8 +278,14 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   handlePublishRound(round: PublishRound) {
     this.store.dispatch(new PublishRoundAction(round));
   }
+
   handleKillRound(config: TournamentManagementConfiguration) {
-    this.store.dispatch(new TournamentKillRoundAction(config));
+    if (this.actualTournament.actualRound === 0) {
+      this.store.dispatch(new TournamentKillRoundAction(config));
+    } else if (this.actualTournament.actualRound > 0) {
+      this.store.dispatch(new TournamentKillTeamRoundAction(config));
+    }
+
   }
 
   handleUndoTournamentEnd(config: TournamentManagementConfiguration) {

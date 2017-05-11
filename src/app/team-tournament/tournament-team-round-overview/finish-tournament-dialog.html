@@ -1,0 +1,20 @@
+<h3 class="heading">Finish Tournament</h3>
+
+<button (click)="endTournament()"
+        class="full-width big-button"
+        type="button"
+        color="accent"
+        md-raised-button>
+  <md-icon>flag</md-icon>
+  End Tournament
+</button>
+<h4 class="info-text" >
+  You can undo Tournament Finishing.
+</h4>
+
+<h4 class="warning-text" *ngIf="(round ) < suggestedRoundToPlay">
+  You are going to end Tournament with less Rounds then suggested.
+</h4>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

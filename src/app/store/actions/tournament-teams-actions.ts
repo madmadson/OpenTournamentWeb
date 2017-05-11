@@ -1,7 +1,7 @@
 import {Action} from '@ngrx/store';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
-import {TeamRegistrationPush} from "../../../../shared/dto/team-registration-push";
-import {TournamentTeamEraseModel} from "../../../../shared/dto/tournament-team-erase";
+import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
+import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 
 
 export const TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION = 'TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION';

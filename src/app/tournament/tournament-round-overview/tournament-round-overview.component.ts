@@ -17,6 +17,9 @@ import {SwapPlayer} from '../../../../shared/dto/swap-player';
 import {GlobalEventService} from 'app/service/global-event-service';
 import {WindowRefService} from '../../service/window-ref-service';
 import {Subscription} from 'rxjs/Subscription';
+import {KillRoundDialogComponent} from '../../dialogs/round-overview/kill-round-dialog';
+import {PairAgainDialogComponent} from "../../dialogs/round-overview/pair-again-dialog";
+import {ScenarioSelectedModel} from "../../../../shared/dto/scenario-selected-model";
 
 
 @Component({
@@ -41,6 +44,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   @Output() onKillRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onGameResult = new EventEmitter<GameResult>();
   @Output() onSwapPlayer = new EventEmitter<SwapPlayer>();
+  @Output() onScenarioSelected = new EventEmitter<ScenarioSelectedModel>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
   @Output() onEndTournament = new EventEmitter<TournamentManagementConfiguration>();
 
@@ -129,6 +133,12 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   handleGameResult(gameResult: GameResult) {
 
     this.onGameResult.emit(gameResult);
+
+  }
+
+  handleScenarioSelected(scenarioSelectedModel: ScenarioSelectedModel) {
+
+    this.onScenarioSelected.emit(scenarioSelectedModel);
 
   }
 
@@ -249,37 +259,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 }
 
 @Component({
-  selector: 'pair-again-dialog',
-  templateUrl: './pair-again-dialog.html'
-})
-export class PairAgainDialogComponent {
-
-  @Output() onPairAgain = new EventEmitter<TournamentManagementConfiguration>();
-
-  teamRestriction: boolean;
-  metaRestriction: boolean;
-  originRestriction: boolean;
-  countryRestriction: boolean;
-
-  constructor(public dialogRef: MdDialogRef<PairAgainDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-  }
-
-  pairRoundAgain() {
-
-    this.onPairAgain.emit({
-      tournamentId: '',
-      round: this.data.round,
-      teamRestriction: this.teamRestriction,
-      metaRestriction: this.metaRestriction,
-      originRestriction: this.originRestriction,
-      countryRestriction: this.countryRestriction,
-    });
-    this.dialogRef.close();
-  }
-}
-
-@Component({
   selector: 'new-round-dialog',
   templateUrl: './new-round-dialog.html'
 })
@@ -318,33 +297,6 @@ export class NewRoundDialogComponent {
   }
 }
 
-@Component({
-  selector: 'kill-round-dialog',
-  templateUrl: './kill-round-dialog.html'
-})
-export class KillRoundDialogComponent {
-
-  @Output() onKillRound = new EventEmitter<TournamentManagementConfiguration>();
-
-  enableKill: boolean;
-
-  constructor(public dialogRef: MdDialogRef<KillRoundDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-  }
-
-  killIt() {
-
-    this.onKillRound.emit({
-      tournamentId: '',
-      round: this.data.round,
-      teamRestriction: false,
-      metaRestriction: false,
-      originRestriction: false,
-      countryRestriction: false,
-    });
-    this.dialogRef.close();
-  }
-}
 
 @Component({
   selector: 'finish-tournament-dialog',

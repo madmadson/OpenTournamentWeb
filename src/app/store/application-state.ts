@@ -14,6 +14,8 @@ import {ActualTournamentGamesStoreData} from './reducers/tournamentGameReducer';
 import {AuthenticationStoreState} from './authentication-state';
 import {MySiteStoreData} from './reducers/mySiteReducer';
 import {ActualTournamentTeamsStoreData} from './reducers/tournamentTeamReducer';
+import {ActualTournamentTeamGamesStoreData} from './reducers/tournamentTeamGameReducer';
+import {ActualTournamentTeamRankingsStoreData} from "./reducers/tournamentTeamRankingReducer";
 
 
 export interface ApplicationState {
@@ -27,7 +29,9 @@ export interface ApplicationState {
   actualTournament: ActualTournamentStoreData;
   actualTournamentRegistrations: ActualTournamentRegistrationsStoreData;
   actualTournamentRankings: ActualTournamentRankingsStoreData;
+  actualTournamentTeamRankings: ActualTournamentTeamRankingsStoreData;
   actualTournamentGames: ActualTournamentGamesStoreData;
+  actualTournamentTeamGames: ActualTournamentTeamGamesStoreData;
   actualTournamentPlayers: ActualTournamentPlayersStoreData;
   actualTournamentArmyLists: ActualTournamentArmyListsStoreData;
   actualTournamentTeams: ActualTournamentTeamsStoreData;

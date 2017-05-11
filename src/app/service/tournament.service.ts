@@ -30,6 +30,10 @@ import {
   SubscribeTournamentTeamRegistrationsAction,
   SubscribeTournamentTeamsAction
 } from '../store/actions/tournament-teams-actions';
+import {TournamentTeamGamesConfiguration} from '../../../shared/dto/tournament-team-games-config';
+import {SubscribeTournamentTeamGamesAction} from '../store/actions/tournament-team-games-actions';
+import {SubscribeTournamentTeamRankingsAction} from '../store/actions/tournament-team-rankings-actions';
+import {ScenarioSelectedModel} from "../../../shared/dto/scenario-selected-model";
 
 
 @Injectable()
@@ -90,7 +94,9 @@ export class TournamentService implements OnDestroy {
     this.store.dispatch(new SubscribeTournamentTeamsAction(tournamentId));
     this.store.dispatch(new SubscribeTournamentTeamRegistrationsAction(tournamentId));
     this.store.dispatch(new SubscribeTournamentRankingsAction(tournamentId));
+    this.store.dispatch(new SubscribeTournamentTeamRankingsAction(tournamentId));
     this.store.dispatch(new SubscribeTournamentGamesAction(tournamentId));
+    this.store.dispatch(new SubscribeTournamentTeamGamesAction(tournamentId));
   }
 
   private subscribeOnTournamentRegistrations(tournamentId: string) {
@@ -198,8 +204,7 @@ export class TournamentService implements OnDestroy {
     const tournamentRegRef = this.afService.database.list('tournament-registrations/' + registrationPush.tournament.id);
     const newRegistrationRef: firebase.database.Reference = tournamentRegRef.push(registrationPush.registration);
 
-    const playerRegRef = this.afService.database.
-      object('players-registrations/' + registrationPush.registration.playerId + '/' + newRegistrationRef.key);
+    const playerRegRef = this.afService.database.object('players-registrations/' + registrationPush.registration.playerId + '/' + newRegistrationRef.key);
     playerRegRef.set(registrationPush.registration);
 
     const tournamentRef = this.afService.database.object('tournaments/' + registrationPush.tournament.id);
@@ -313,6 +318,26 @@ export class TournamentService implements OnDestroy {
     }
   }
 
+  pairAgainTeamTournament(config: TournamentManagementConfiguration) {
+
+    // first delete all pairings.
+    this.rankingService.eraseRankingsForRound(config);
+    this.tournamentGameService.eraseGamesForRound(config);
+
+    const newRankings: TournamentRanking[] = this.rankingService.pushTeamRankingForRound(config);
+    const successFullyPaired: boolean = this.tournamentGameService.createTeamGamesForRound(config, newRankings);
+    if (successFullyPaired) {
+      this.snackBar.open('Round ' + config.round + ' paired again successfully ', '', {
+        duration: 5000
+      });
+
+    } else {
+      this.snackBar.open('Failed to pair Round ' + config.round + ' again. Check Pairing Options.', '', {
+        duration: 5000
+      });
+    }
+  }
+
   pairNewRound(config: TournamentManagementConfiguration) {
 
     const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
@@ -333,9 +358,28 @@ export class TournamentService implements OnDestroy {
   }
 
   pairNewTeamTournamentRound(config: TournamentManagementConfiguration) {
-    this.snackBar.open('new Round Paired', '', {
-      duration: 5000
-    });
+
+    const newTeamRankings: TournamentRanking[] = this.rankingService.pushTeamRankingForRound(config);
+    const successFullyPaired: boolean = this.tournamentGameService.createTeamGamesForRound(config, newTeamRankings);
+
+    if (successFullyPaired) {
+      const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+      registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
+      this.snackBar.open('new Round Paired', '', {
+        duration: 5000
+      });
+
+    } else {
+      this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
+        duration: 5000
+      });
+    }
+  }
+
+
+  pairMatchesforTeamMatch(config: TournamentTeamGamesConfiguration) {
+    this.tournamentGameService.createMatchesForTeam(config);
+
   }
 
 
@@ -365,6 +409,21 @@ export class TournamentService implements OnDestroy {
   killRound(config: TournamentManagementConfiguration) {
     this.rankingService.eraseRankingsForRound(config);
     this.tournamentGameService.eraseGamesForRound(config);
+
+    const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+    registrationRef.update(
+      {actualRound: (config.round - 1), visibleRound: (config.round - 1)});
+
+    this.snackBar.open('Round ' + config.round + ' successfully killed with fire!', '', {
+      duration: 5000
+    });
+  }
+
+  killTeamRound(config: TournamentManagementConfiguration) {
+    this.rankingService.eraseRankingsForRound(config);
+    this.rankingService.eraseTeamRankingsForRound(config);
+    this.tournamentGameService.eraseGamesForRound(config);
+    this.tournamentGameService.eraseTeamGamesForRound(config);
 
     const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
     registrationRef.update(
@@ -432,4 +491,15 @@ export class TournamentService implements OnDestroy {
   }
 
 
+  scenarioSelectedAction(scenarioSelected: ScenarioSelectedModel) {
+    const query = this.fb.database().ref('tournament-games/' + scenarioSelected.tournamentId).orderByChild('tournamentRound')
+      .equalTo(scenarioSelected.round);
+
+    query.once('value', function (snapshot) {
+
+      snapshot.forEach(function (child) {
+        child.ref.update({scenario: scenarioSelected.scenario});
+      });
+    });
+  }
 }

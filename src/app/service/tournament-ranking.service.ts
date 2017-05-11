@@ -17,6 +17,7 @@ import * as _ from 'lodash';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {GameResult} from '../../../shared/dto/game-result';
+import {TournamentTeam} from "../../../shared/model/tournament-team";
 
 
 @Injectable()
@@ -25,6 +26,7 @@ export class TournamentRankingService implements OnDestroy {
   tournamentRankingsRef: firebase.database.Reference;
 
   allPlayers: TournamentPlayer[];
+  allTeams: TournamentTeam[];
   allRankings: TournamentRanking[];
   allGames: TournamentGame[];
   actualTournament: Tournament;
@@ -35,6 +37,7 @@ export class TournamentRankingService implements OnDestroy {
 
     this.store.select(state => state).subscribe(state => {
       this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
+      this.allTeams = state.actualTournamentTeams.teams;
       this.allRankings = state.actualTournamentRankings.actualTournamentRankings;
       this.allGames = state.actualTournamentGames.actualTournamentGames;
       this.actualTournament = state.actualTournament.actualTournament;
@@ -137,9 +140,69 @@ export class TournamentRankingService implements OnDestroy {
     return newRankings;
   }
 
+  pushTeamRankingForRound(config: TournamentManagementConfiguration): TournamentRanking[] {
+
+    const that = this;
+    const newRankings: TournamentRanking[] = [];
+
+    this.eraseRankingsForRound(config);
+
+    const lastRoundRankings: TournamentRanking[] = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+      return (ranking.tournamentRound === (config.round - 1));
+    });
+
+    _.forEach(this.allTeams, function (team: TournamentTeam) {
+      const newTournamentRanking = new TournamentRanking(
+        team.tournamentId,
+        team.id,
+        '',
+        team.teamName,
+        '',
+        '',
+        '',
+        team.meta ? team.meta : '',
+        team.country ? team.country : '',
+        0,
+        0, 0, 0, 0, 1, []);
+
+      _.each(lastRoundRankings, function (lastRoundRanking: TournamentRanking) {
+
+        if (lastRoundRanking.tournamentPlayerId === team.id) {
+
+          newTournamentRanking.score = lastRoundRanking.score;
+          newTournamentRanking.sos = lastRoundRanking.sos;
+          newTournamentRanking.controlPoints = lastRoundRanking.controlPoints;
+          newTournamentRanking.victoryPoints = lastRoundRanking.victoryPoints;
+          newTournamentRanking.tournamentRound = config.round;
+          newTournamentRanking.opponentTournamentPlayerIds = lastRoundRanking.opponentTournamentPlayerIds;
+        }
+      });
+      const tournamentRankingsRef = that.fireDB
+        .list('tournament-team-rankings/' + newTournamentRanking.tournamentId);
+      tournamentRankingsRef.push(newTournamentRanking);
+
+      newRankings.push(newTournamentRanking);
+    });
+
+    return newRankings;
+  }
+
   eraseRankingsForRound(config: TournamentManagementConfiguration) {
 
     const query = this.fb.database().ref('tournament-rankings/' + config.tournamentId).orderByChild('tournamentRound')
+      .equalTo(config.round);
+
+    query.once('value', function (snapshot) {
+
+      snapshot.forEach(function (child) {
+        child.ref.remove();
+      });
+    });
+  }
+
+  eraseTeamRankingsForRound(config: TournamentManagementConfiguration) {
+
+    const query = this.fb.database().ref('tournament-team-rankings/' + config.tournamentId).orderByChild('tournamentRound')
       .equalTo(config.round);
 
     query.once('value', function (snapshot) {
@@ -214,16 +277,6 @@ export class TournamentRankingService implements OnDestroy {
           opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
         });
 
-      if (gameResult.gameBefore.finished) {
-        let newSosPlayerOne = rankingPlayerTwo.score + gameResult.gameAfter.playerTwoScore;
-        if (lastRoundRankingPlayerOne) {
-          newSosPlayerOne = newSosPlayerOne + lastRoundRankingPlayerOne.sos;
-        }
-        playerOneRankingRef.update(
-          {
-            sos: newSosPlayerOne,
-          });
-      }
 
       _.each(newListOfOpponentsIdsPlayerOne, function (opponentTournamentPlayerId: string) {
         _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
@@ -273,18 +326,6 @@ export class TournamentRankingService implements OnDestroy {
           victoryPoints: newVPPlayerTwo,
           opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerTwo
         });
-
-
-      if (gameResult.gameBefore.finished) {
-        let newSosPlayerTwo = rankingPlayerOne.score + gameResult.gameAfter.playerOneScore;
-        if (lastRoundRankingPlayerTwo) {
-          newSosPlayerTwo = newSosPlayerTwo + lastRoundRankingPlayerTwo.sos;
-        }
-        playerTwoRankingRef.update(
-          {
-            sos: newSosPlayerTwo,
-          });
-      }
 
 
       _.each(newListOfOpponentsIdsPlayerTwo, function (opponentTournamentPlayerId: string) {

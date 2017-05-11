@@ -1,0 +1,62 @@
+<md-dialog-content>
+<h3 class="heading">Pair New Round</h3>
+<div class="content-cards-container">
+  <mdl-card class="pairing-options-card-wide" mdl-shadow="4">
+    <mdl-card-title>
+      <h4 mdl-card-title-text>Pairing Options</h4>
+    </mdl-card-title>
+    <mdl-card-supporting-text>
+      <div class="full-width">
+        <mdl-switch [(ngModel)]="teamRestriction" mdl-ripple>
+          <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
+            info
+          </md-icon>
+          Team Restriction
+        </mdl-switch>
+      </div>
+      <div class="full-width">
+        <mdl-switch [(ngModel)]="metaRestriction" mdl-ripple>
+          <md-icon class="align-fix" mdTooltip="Player in same Meta don't play against each other">
+            info
+          </md-icon>
+          Meta Restriction
+        </mdl-switch>
+      </div>
+      <div class="full-width">
+        <mdl-switch [(ngModel)]="originRestriction" mdl-ripple>
+          <md-icon class="align-fix" mdTooltip="Player in same Origin don't play against each other">
+            info
+          </md-icon>
+          Origin Restriction
+        </mdl-switch>
+      </div>
+      <div class="full-width">
+        <mdl-switch [(ngModel)]="countryRestriction" mdl-ripple>
+          <md-icon class="align-fix" mdTooltip="Player in same Country don't play against each other">
+            info
+          </md-icon>
+          Country Restriction
+        </mdl-switch>
+      </div>
+    </mdl-card-supporting-text>
+    <mdl-card-actions mdl-card-border>
+      <button
+        class="full-width-button"
+        (click)="pairNewRound()"
+        mdl-button
+        mdl-colored="accent"
+        mdl-button-type="raised"
+        mdl-ripple>
+        Pair new Round
+      </button>
+    </mdl-card-actions>
+  </mdl-card>
+  <h4 class="warning-text" *ngIf="(round + 1) > suggestedRoundToPlay">
+    You are going to pair more Rounds than suggested!
+    There is no guarantee for successful pairing.
+  </h4>
+</div>
+</md-dialog-content>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

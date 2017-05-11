@@ -172,6 +172,10 @@ md-card {
   height: 54px;
 }
 
+.right-align-button{
+  float: right;
+}
+
 .max-height {
   height: 350px;
   max-height: 370px;

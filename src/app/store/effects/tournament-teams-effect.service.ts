@@ -10,6 +10,8 @@ import {
   TOURNAMENT_TEAMS_SUBSCRIBE_ACTION
 } from '../actions/tournament-teams-actions';
 import {TournamentTeamService} from '../../service/tournament-team.service';
+import {TOURNAMENT_TEAM_GAMES_SUBSCRIBE_ACTION} from '../actions/tournament-team-games-actions';
+import {TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION} from "../actions/tournament-team-rankings-actions";
 
 
 
@@ -45,6 +47,16 @@ export class TournamentTeamEffectService {
     .ofType(TOURNAMENT_TEAMS_SUBSCRIBE_ACTION)
     .debug('TOURNAMENT_TEAMS_SUBSCRIBE_ACTION')
     .map(action => this.tournamentTeamService.subscribeOnTournamentTeams(action.payload));
+
+  @Effect({dispatch: false}) subscribeTeamGames = this.actions$
+    .ofType(TOURNAMENT_TEAM_GAMES_SUBSCRIBE_ACTION)
+    .debug('TOURNAMENT_TEAM_GAMES_SUBSCRIBE_ACTION')
+    .map(action => this.tournamentTeamService.subscribeOnTournamentTeamGames(action.payload));
+
+  @Effect({dispatch: false}) subscribeTeamRankings = this.actions$
+    .ofType(TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION)
+    .debug('TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION')
+    .map(action => this.tournamentTeamService.subscribeOnTournamentTeamRankings(action.payload));
 
   @Effect({dispatch: false}) push = this.actions$
     .ofType(TOURNAMENT_TEAM_PUSH_ACTION)

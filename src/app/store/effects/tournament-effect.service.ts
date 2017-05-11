@@ -10,7 +10,8 @@ import {
   TOURNAMENT_PAIR_AGAIN_ACTION,
   GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION, ADD_DUMMY_PLAYER_ACTION, PUBLISH_ROUND_ACTION,
   TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION, UNDO_TOURNAMENT_END_ACTION, SWAP_PLAYER_ACTION,
-  UPLOAD_TOURNAMENT_ACTION, TEAM_TOURNAMENT_NEW_ROUND_ACTION
+  UPLOAD_TOURNAMENT_ACTION, TEAM_TOURNAMENT_NEW_ROUND_ACTION, TOURNAMENT_KILL_TEAM_ROUND_ACTION,
+  SCENARIO_SELECTED_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
 
@@ -38,6 +39,11 @@ export class TournamentEffectService {
     .debug('TOURNAMENT_KILL_ROUND_ACTION')
     .map(action => this.tournamentService.killRound(action.payload));
 
+  @Effect({dispatch: false}) killTeamRound = this.actions$
+    .ofType(TOURNAMENT_KILL_TEAM_ROUND_ACTION)
+    .debug('TOURNAMENT_KILL_TEAM_ROUND_ACTION')
+    .map(action => this.tournamentService.killTeamRound(action.payload));
+
   @Effect({dispatch: false}) undoTournamentEnd = this.actions$
     .ofType(UNDO_TOURNAMENT_END_ACTION)
     .debug('UNDO_TOURNAMENT_END_ACTION')
@@ -59,6 +65,11 @@ export class TournamentEffectService {
     .debug('GAME_RESULT_ENTERED_ACTION')
     .map(action => this.tournamentService.gameResultEntered(action.payload));
 
+  @Effect({dispatch: false}) scenarioSelectedAction = this.actions$
+    .ofType(SCENARIO_SELECTED_ACTION)
+    .debug('SCENARIO_SELECTED_ACTION')
+    .map(action => this.tournamentService.scenarioSelectedAction(action.payload));
+
   @Effect({dispatch: false}) swapPlayer = this.actions$
     .ofType(SWAP_PLAYER_ACTION)
     .debug('SWAP_PLAYER_ACTION')
@@ -73,6 +84,11 @@ export class TournamentEffectService {
     .ofType(TOURNAMENT_PAIR_AGAIN_ACTION)
     .debug('TOURNAMENT_PAIR_AGAIN_ACTION')
     .map(action => this.tournamentService.pairAgainTournament(action.payload));
+
+  @Effect({dispatch: false}) pairAgainTeamTournament = this.actions$
+    .ofType(TOURNAMENT_PAIR_AGAIN_ACTION)
+    .debug('TOURNAMENT_PAIR_AGAIN_ACTION')
+    .map(action => this.tournamentService.pairAgainTeamTournament(action.payload));
 
 
   @Effect({dispatch: false}) subscribe = this.actions$

@@ -20,6 +20,8 @@ import {
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {Tournament} from '../../../shared/model/tournament';
 import {Registration} from '../../../shared/model/registration';
+import {TournamentTeam} from '../../../shared/model/tournament-team';
+import {TournamentTeamGamesConfiguration} from '../../../shared/dto/tournament-team-games-config';
 
 
 @Injectable()
@@ -28,11 +30,13 @@ export class TournamentGameService implements OnDestroy {
   tournamentGamesRef: firebase.database.Reference;
   allRankings: TournamentRanking[];
   allPlayers: TournamentPlayer[];
+  allTeams: TournamentTeam[];
   allGames: TournamentGame[];
   actualTournament: Tournament;
   allRegistrations: Registration[];
 
   private newGames: TournamentGame[];
+  private newTeamGames: TournamentGame[];
 
   constructor(protected fireDB: AngularFireDatabase,
               protected store: Store<ApplicationState>,
@@ -43,6 +47,7 @@ export class TournamentGameService implements OnDestroy {
       this.actualTournament = state.actualTournament.actualTournament;
       this.allRankings = state.actualTournamentRankings.actualTournamentRankings;
       this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
+      this.allTeams = state.actualTournamentTeams.teams;
       this.allGames = state.actualTournamentGames.actualTournamentGames;
       this.allRegistrations = state.actualTournamentRegistrations.actualTournamentRegisteredPlayers;
 
@@ -127,6 +132,83 @@ export class TournamentGameService implements OnDestroy {
 
   }
 
+  createMatchesForTeam(config: TournamentTeamGamesConfiguration) {
+
+    const that = this;
+    const allPlayerTeamOne: TournamentPlayer[] = [];
+    const allPlayerTeamTwo: TournamentPlayer[] = [];
+
+    this.newGames = [];
+
+    _.each(this.allPlayers, function (player: TournamentPlayer) {
+      if (player.teamName === config.teamOneName) {
+        allPlayerTeamOne.push(player);
+      } else if (player.teamName === config.teamTwoName) {
+        allPlayerTeamTwo.push(player);
+      }
+    });
+
+    _.each(allPlayerTeamOne, function (player: TournamentPlayer, index: number) {
+      const newPlayerGame = new TournamentGame(
+        config.tournamentId,
+        player.playerId ? player.playerId : '', player.id,
+        player.playerName, player.elo ? player.elo : 0, player.faction,
+        0, 0, 0, '', 0, 0,
+        allPlayerTeamTwo[index].playerId ? allPlayerTeamTwo[index].playerId : '',
+        allPlayerTeamTwo[index].id,
+        allPlayerTeamTwo[index].playerName,
+        allPlayerTeamTwo[index].elo ? allPlayerTeamTwo[index].elo : 0,
+        allPlayerTeamTwo[index].faction,
+        0, 0, 0, '', 0, 0,
+        config.round, index, false, '');
+
+      that.newGames.push(newPlayerGame);
+    });
+
+    const tournamentGamesRef = this.fireDB
+      .list('tournament-games/' + config.tournamentId);
+
+    _.forEach(this.newGames, function (newGame: TournamentGame) {
+
+      tournamentGamesRef.push(newGame);
+    });
+
+  }
+
+  createTeamGamesForRound(config: TournamentManagementConfiguration, newRankings: TournamentRanking[]): boolean {
+
+    this.eraseGamesForRound(config);
+    this.eraseTeamGamesForRound(config);
+
+    const shuffledRankings = _.shuffle(newRankings);
+    const sortedRankings = _.sortBy(shuffledRankings, ['score']);
+
+    this.newTeamGames = [];
+
+    const megaSuccess = this.matchTeamGames(config, sortedRankings);
+
+    if (!megaSuccess) {
+      return false;
+    }
+
+    const tournamentTeamGamesRef = this.fireDB
+      .list('tournament-team-games/' + config.tournamentId);
+
+    const listOfTables = _.range(1, (this.newTeamGames.length + 1));
+
+    _.forEach(this.newTeamGames, function (newGame: TournamentGame) {
+
+      const randomIndex = Math.floor(Math.random() * listOfTables.length);
+      const tableNumber: number = listOfTables[randomIndex];
+      listOfTables.splice(randomIndex, 1);
+      newGame.playingField = tableNumber;
+      tournamentTeamGamesRef.push(newGame);
+    });
+
+    return true;
+
+  }
+
   private matchGame(config: TournamentManagementConfiguration, copiedRankings: TournamentRanking[]): boolean {
 
     const gamesToCalculate = copiedRankings.length;
@@ -152,21 +234,21 @@ export class TournamentGameService implements OnDestroy {
         let inSameTeam = false;
         if (config.teamRestriction) {
           if (ranking1.teamName && ranking2.teamName) {
-           inSameTeam = ranking1.teamName === ranking2.teamName;
+            inSameTeam = ranking1.teamName.trim().toLowerCase() === ranking2.teamName.trim().toLowerCase();
           }
         }
 
         let sameMeta = false;
         if (config.metaRestriction) {
           if (ranking1.meta && ranking2.meta) {
-            sameMeta = ranking1.meta === ranking2.meta;
+            sameMeta = ranking1.meta.trim().toLowerCase() === ranking2.meta.trim().toLowerCase();
           }
         }
 
         let sameOrigin = false;
         if (config.originRestriction) {
           if (ranking1.origin && ranking2.origin) {
-            sameOrigin = ranking1.origin === ranking2.origin;
+            sameOrigin = ranking1.origin.trim().toLowerCase() === ranking2.origin.trim().toLowerCase();
           }
         }
 
@@ -198,13 +280,89 @@ export class TournamentGameService implements OnDestroy {
             config.tournamentId,
             ranking1.playerId, ranking1.tournamentPlayerId,
             ranking1.playerName, ranking1.elo, ranking1.faction,
-            0, 0, 0, '', 0,
+            0, 0, 0, '', 0, 0,
             ranking2.playerId, ranking2.tournamentPlayerId,
             ranking2.playerName, ranking2.elo, ranking2.faction,
-            0, 0, 0, '', 0,
-            config.round, (gamesToCalculate / 2),  false, '');
+            0, 0, 0, '', 0, 0,
+            config.round, (gamesToCalculate / 2), false, '');
 
           this.newGames.push(newGame);
+
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private matchTeamGames(config: TournamentManagementConfiguration, copiedRankings: TournamentRanking[]): boolean {
+
+
+
+    const gamesToCalculate = copiedRankings.length;
+    if (gamesToCalculate === 0) {
+      return true;
+    }
+
+    let i: number;
+    let j: number;
+    for (i = 0; i < (gamesToCalculate - 1); i++) {
+
+      const ranking1: TournamentRanking = copiedRankings[i];
+
+      for (j = i + 1; j < (gamesToCalculate); j++) {
+
+        const ranking2: TournamentRanking = copiedRankings[j];
+
+        const alreadyPlayingAgainstEachOther = _.find(ranking1.opponentTournamentPlayerIds,
+          function (player1OpponentTournamentPlayerId: string) {
+            return player1OpponentTournamentPlayerId === ranking2.tournamentPlayerId;
+          });
+
+
+        let sameMeta = false;
+        if (config.metaRestriction) {
+          if (ranking1.meta && ranking2.meta) {
+            sameMeta = ranking1.meta.trim().toLowerCase() === ranking2.meta.trim().toLowerCase();
+          }
+        }
+
+        let sameCountry = false;
+        if (config.countryRestriction) {
+          if (ranking1.country && ranking2.country) {
+            sameCountry = ranking1.country === ranking2.country;
+          }
+        }
+
+        if (alreadyPlayingAgainstEachOther || sameMeta || sameCountry) {
+          continue;
+        }
+
+        if (ranking1.score - 1 > ranking2.score) {
+          continue;
+        }
+        const newCopiedRankings: TournamentRanking[] = copiedRankings;
+
+        _.remove(newCopiedRankings, function (player: TournamentRanking) {
+          return player.tournamentPlayerId === ranking1.tournamentPlayerId ||
+            player.tournamentPlayerId === ranking2.tournamentPlayerId;
+        });
+
+        const success = this.matchTeamGames(config, newCopiedRankings);
+
+        if (success) {
+          const newTeamGame = new TournamentGame(
+            config.tournamentId,
+            ranking1.playerId, ranking1.tournamentPlayerId,
+            ranking1.playerName, ranking1.elo, ranking1.faction,
+            0, 0, 0, '', 0, 0,
+            ranking2.playerId, ranking2.tournamentPlayerId,
+            ranking2.playerName, ranking2.elo, ranking2.faction,
+            0, 0, 0, '', 0, 0,
+            config.round, (gamesToCalculate / 2), false, '');
+
+          this.newTeamGames.push(newTeamGame);
 
           return true;
         }
@@ -227,10 +385,22 @@ export class TournamentGameService implements OnDestroy {
     });
   }
 
+  eraseTeamGamesForRound(config: TournamentManagementConfiguration) {
+
+    const teamQueryRef = this.fb.database().ref('tournament-team-games/' + config.tournamentId)
+      .orderByChild('tournamentRound').equalTo(config.round);
+
+    teamQueryRef.once('value', function (snapshot) {
+
+      snapshot.forEach(function (child) {
+        child.ref.remove();
+      });
+    });
+  }
+
   calculateEloForTournament() {
 
     const that = this;
-
 
 
     _.each(this.allRegistrations, function (reg: Registration) {
@@ -285,9 +455,9 @@ export class TournamentGameService implements OnDestroy {
         }
         const playerOneGameTournamentRef = that.fireDB.object('players-games/' + game.playerOnePlayerId + '/' + game.id);
         playerOneGameTournamentRef.update({
-            'playerOneEloChanging': (newEloPlayerOne - game.playerOneElo),
-            'playerTwoEloChanging': (newEloPlayerTwo - game.playerTwoElo)
-          });
+          'playerOneEloChanging': (newEloPlayerOne - game.playerOneElo),
+          'playerTwoEloChanging': (newEloPlayerTwo - game.playerTwoElo)
+        });
 
         const playerTwoGameTournamentRef = that.fireDB.object('players-games/' + game.playerTwoPlayerId + '/' + game.id);
         playerTwoGameTournamentRef.update({

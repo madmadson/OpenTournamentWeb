@@ -9,6 +9,7 @@ import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
 import {SwapPlayer} from "../../../../shared/dto/swap-player";
+import {ScenarioSelectedModel} from "../../../../shared/dto/scenario-selected-model";
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -232,6 +233,16 @@ export class TournamentPairAgainAction implements Action {
   }
 }
 
+export const TOURNAMENT_PAIR_AGAIN_TEAM_ACTION = 'TOURNAMENT_PAIR_AGAIN_TEAM_ACTION';
+
+export class TournamentPairAgainTeamAction implements Action {
+
+  readonly type = 'TOURNAMENT_PAIR_AGAIN_TEAM_ACTION';
+
+  constructor(public payload: TournamentManagementConfiguration) {
+  }
+}
+
 export const TOURNAMENT_NEW_ROUND_ACTION = 'TOURNAMENT_NEW_ROUND_ACTION';
 
 export class TournamentNewRoundAction implements Action {
@@ -257,6 +268,16 @@ export const TOURNAMENT_KILL_ROUND_ACTION = 'TOURNAMENT_KILL_ROUND_ACTION';
 export class TournamentKillRoundAction implements Action {
 
   readonly type = 'TOURNAMENT_KILL_ROUND_ACTION';
+
+  constructor(public payload: TournamentManagementConfiguration) {
+  }
+}
+
+export const TOURNAMENT_KILL_TEAM_ROUND_ACTION = 'TOURNAMENT_KILL_TEAM_ROUND_ACTION';
+
+export class TournamentKillTeamRoundAction implements Action {
+
+  readonly type = 'TOURNAMENT_KILL_TEAM_ROUND_ACTION';
 
   constructor(public payload: TournamentManagementConfiguration) {
   }
@@ -302,6 +323,18 @@ export class GameResultEnteredAction implements Action {
   constructor(public payload: GameResult) {
   }
 }
+
+export const SCENARIO_SELECTED_ACTION = 'SCENARIO_SELECTED_ACTION';
+
+export class ScenarioSelectedAction implements Action {
+
+  readonly type = 'SCENARIO_SELECTED_ACTION';
+
+  constructor(public payload: ScenarioSelectedModel) {
+  }
+}
+
+
 
 export const SWAP_PLAYER_ACTION = 'SWAP_PLAYER_ACTION';
 

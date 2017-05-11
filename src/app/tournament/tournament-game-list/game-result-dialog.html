@@ -139,10 +139,14 @@
         <ng-template #noArmyList>No ArmyList for Player found</ng-template>
       </md-card>
     </div>
-
+  </form>
+</md-dialog-content>
+<md-dialog-actions>
+  <div class="full-width">
+    <button class="big-button" type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
     <button *ngIf="sureButton"
             (click)="pushGameResult()"
-            class="full-width big-button positive-background"
+            class="right-align-button big-button positive-background"
             type="button"
             md-raised-button>
       <md-icon>check</md-icon>
@@ -150,15 +154,12 @@
     </button>
     <button *ngIf="!sureButton"
             (click)="enterGameResultSubmitted()"
-            class="full-width big-button"
+            class="right-align-button big-button"
             type="button"
             color="accent"
             md-raised-button>
       <md-icon>check</md-icon>
       Enter Game Result
     </button>
-  </form>
-</md-dialog-content>
-<md-dialog-actions>
-  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  </div>
 </md-dialog-actions>
