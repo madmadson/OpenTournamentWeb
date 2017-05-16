@@ -385,10 +385,10 @@ export class TournamentService implements OnDestroy {
 
   gameResultEntered(gameResult: GameResult) {
 
-    this.rankingService.updateRankingAfterGameResultEntered(gameResult);
-
     const gameRef = this.afService.database.object('tournament-games/' + gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
     gameRef.update(gameResult.gameAfter);
+
+    this.rankingService.updateRankingAfterGameResultEntered(gameResult);
 
     this.snackBar.open('Game Result Entered Successfully', '', {
       duration: 5000

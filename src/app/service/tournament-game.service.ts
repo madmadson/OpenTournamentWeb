@@ -103,11 +103,10 @@ export class TournamentGameService implements OnDestroy {
 
     const shuffledRankings = _.shuffle(newRankings);
     const sortedRankings = _.sortBy(shuffledRankings, ['score']);
-    const reversedSortedRankings = _.reverse(sortedRankings);
 
     this.newGames = [];
 
-    const megaSuccess = this.matchGame(config, reversedSortedRankings);
+    const megaSuccess = this.matchGame(config, sortedRankings);
 
     if (!megaSuccess) {
       return false;
@@ -119,9 +118,7 @@ export class TournamentGameService implements OnDestroy {
 
     const listOfTables = _.range(1, (this.newGames.length + 1));
 
-    const gamesToAdd = _.reverse(this.newGames);
-
-    _.forEach(gamesToAdd, function (newGame: TournamentGame) {
+    _.forEach(this.newGames, function (newGame: TournamentGame) {
 
       const randomIndex = Math.floor(Math.random() * listOfTables.length);
       const tableNumber: number = listOfTables[randomIndex];
@@ -287,7 +284,6 @@ export class TournamentGameService implements OnDestroy {
             ranking2.playerName, ranking2.elo, ranking2.faction,
             0, 0, 0, '', 0, 0,
             config.round, (gamesToCalculate / 2), false, '');
-
           this.newGames.push(newGame);
 
           return true;
@@ -360,7 +356,6 @@ export class TournamentGameService implements OnDestroy {
             ranking2.playerName, ranking2.elo, ranking2.faction,
             0, 0, 0, '', 0, 0,
             config.round, (gamesToCalculate / 2), false, '');
-
           this.newGames.push(newGame);
 
           return true;
@@ -372,8 +367,6 @@ export class TournamentGameService implements OnDestroy {
   }
 
   private matchTeamGames(config: TournamentManagementConfiguration, copiedRankings: TournamentRanking[]): boolean {
-
-
 
     const gamesToCalculate = copiedRankings.length;
     if (gamesToCalculate === 0) {

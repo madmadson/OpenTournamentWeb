@@ -1,3 +1,6 @@
+<ng-container *ngIf="gamesForRound.length === 0" >
+  <div class="heading">Load Games... <mdl-spinner  single-color active></mdl-spinner></div>
+</ng-container>
 
 <md-input-container *ngIf="currentUserId !== actualTournament.creatorUid"
                     class="full-width">

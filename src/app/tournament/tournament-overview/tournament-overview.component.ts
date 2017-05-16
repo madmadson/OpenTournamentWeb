@@ -149,14 +149,14 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   getRoundPageTitle(index: number): string {
     if (this.smallScreen) {
-      return 'R ' + index;
+      return 'R' + index;
     } else {
       return 'Round ' + index;
     }
   }
   getPrepPageTitle(): string {
     if (this.smallScreen) {
-      return 'R 0';
+      return 'R0';
     } else {
       return 'Tournament Preparation';
     }

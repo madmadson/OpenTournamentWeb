@@ -5,8 +5,7 @@
     class="action-card">
     <div class="action-button-wrapper">
 
-      <button *ngIf="currentUserId === 'bYASZJbGXoQeUbGhS89x1iB9Ozk1'"
-              (click)="openPrintArmyListDialog()"
+      <button (click)="openPrintArmyListDialog()"
               type="button"
               class="positive-background action-button"
               md-raised-button>
@@ -133,6 +132,9 @@
   </md-card>
 
   <div class="content-cards-container">
+    <ng-container *ngIf="allRegistrations.length === 0" >
+      <div class="heading">Load Registrations... <mdl-spinner  single-color active></mdl-spinner></div>
+    </ng-container>
     <md-card class="registration-list-card" *ngIf="actualTournament?.teamSize === 0">
       <h4 *ngIf="allRegistrations.length == 0" class="heading">
         No Registrations found
@@ -173,6 +175,9 @@
         </tournament-team-registration-list>
       </mdl-list>
     </md-card>
+    <ng-container *ngIf="allActualTournamentPlayers.length === 0" >
+      <div class="heading">Load TournamentPlayer... <mdl-spinner  single-color active></mdl-spinner></div>
+    </ng-container>
     <md-card *ngIf="currentUserId === actualTournament?.creatorUid && actualTournament?.teamSize === 0"
              class="tournament-list-card">
 

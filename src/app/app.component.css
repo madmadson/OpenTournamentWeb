@@ -162,15 +162,24 @@
   color: deepskyblue;
 }
 
-.container-loading{
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
+
+
+.container-loading-xxx{
   display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-  height: 100%;
-  flex-direction: column;
+  height: 50px;
+  background-color: #333333;
+  align-items: center;
 }
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #673AB7;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  max-width: 50%;
+}
+

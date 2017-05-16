@@ -1,9 +1,8 @@
 <h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
 
-<div *ngIf="!actualTournament" class="container-loading">
-  <h1 class="heading">Load Tournament...</h1>
-  <div class="loader"></div>
-</div>
+<ng-container *ngIf="!actualTournament" >
+  <div class="heading">Load Tournament... <mdl-spinner  single-color active></mdl-spinner></div>
+</ng-container>
 
 <mdl-tabs *ngIf="actualTournament" mdl-ripple [mdl-tab-active-index]="selectedIndex">
   <mdl-tab-panel mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">

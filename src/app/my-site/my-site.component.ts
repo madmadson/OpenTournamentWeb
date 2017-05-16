@@ -32,6 +32,7 @@ export class MySiteComponent {
   myGames$: Observable<TournamentGame[]>;
 
   smallScreen: boolean;
+  loggedIn: boolean;
 
   constructor(private store: Store<ApplicationState>,
               public dialog: MdDialog,
@@ -45,6 +46,7 @@ export class MySiteComponent {
         if (authenticationStoreState.userPlayerData) {
           this.store.dispatch(new MySiteSubscribeAction(authenticationStoreState.userPlayerData.id));
         }
+        this.loggedIn = authenticationStoreState.loggedIn;
       });
 
     this.allTournaments$ = store.select(state => {

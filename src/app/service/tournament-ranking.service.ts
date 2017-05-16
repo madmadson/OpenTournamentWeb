@@ -224,6 +224,13 @@ export class TournamentRankingService implements OnDestroy {
         return (ranking.tournamentRound === i);
       });
 
+      const scoreTournamentPlayerMap = {};
+      const opponentIdsTournamentPlayerMap = {};
+      _.each(allRankingsFromSameRound, function (ranking: TournamentRanking) {
+        scoreTournamentPlayerMap[ranking.tournamentPlayerId] = ranking.score;
+        opponentIdsTournamentPlayerMap[ranking.tournamentPlayerId] = ranking.opponentTournamentPlayerIds;
+      });
+
       const lastRoundRankingPlayerOne: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
         return (ranking.tournamentRound === (i - 1) &&
         ranking.tournamentPlayerId === gameResult.gameAfter.playerOneTournamentPlayerId);
@@ -261,15 +268,6 @@ export class TournamentRankingService implements OnDestroy {
       let newVPPlayerOne = 0;
       let newListOfOpponentsIdsPlayerOne = [];
 
-      if (i === gameResult.gameAfter.tournamentRound) {
-
-        newScorePlayerOne = newScorePlayerOne + gameResult.gameAfter.playerOneScore;
-        newCPPlayerOne = newCPPlayerOne + gameResult.gameAfter.playerOneControlPoints;
-        newVPPlayerOne = newVPPlayerOne + gameResult.gameAfter.playerOneVictoryPoints;
-
-        newListOfOpponentsIdsPlayerOne.push(gameResult.gameAfter.playerTwoTournamentPlayerId);
-      }
-
       // if there is a round before add them
       if (lastRoundRankingPlayerOne) {
         newScorePlayerOne = newScorePlayerOne + lastRoundRankingPlayerOne.score;
@@ -278,6 +276,37 @@ export class TournamentRankingService implements OnDestroy {
 
         newListOfOpponentsIdsPlayerOne =
           _.union(newListOfOpponentsIdsPlayerOne, lastRoundRankingPlayerOne.opponentTournamentPlayerIds);
+      }
+
+      if (i === gameResult.gameAfter.tournamentRound) {
+
+        newScorePlayerOne = newScorePlayerOne + gameResult.gameAfter.playerOneScore;
+        newCPPlayerOne = newCPPlayerOne + gameResult.gameAfter.playerOneControlPoints;
+        newVPPlayerOne = newVPPlayerOne + gameResult.gameAfter.playerOneVictoryPoints;
+
+        newListOfOpponentsIdsPlayerOne.push(gameResult.gameAfter.playerTwoTournamentPlayerId);
+        opponentIdsTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newListOfOpponentsIdsPlayerOne;
+
+        const playerOneRankingRef = this.fireDB
+          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+        playerOneRankingRef.update(
+          {
+            score: newScorePlayerOne,
+            controlPoints: newCPPlayerOne,
+            victoryPoints: newVPPlayerOne,
+            opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
+          });
+
+        if (!gameResult.gameBefore.finished) {
+          scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newScorePlayerOne;
+
+        } else if (gameResult.gameBefore.playerOneScore < gameResult.gameAfter.playerOneScore) {
+          scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] =
+            scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] + 1;
+        } else if (gameResult.gameBefore.playerOneScore > gameResult.gameAfter.playerOneScore) {
+          scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] =
+            scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] - 1;
+        }
       }
 
       // there is a round after
@@ -300,51 +329,15 @@ export class TournamentRankingService implements OnDestroy {
             controlPoints: newCPPlayerOne,
             victoryPoints: newVPPlayerOne,
           });
-
-      } else {
-
-        const playerOneRankingRef = this.fireDB
-          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
-        playerOneRankingRef.update(
-          {
-            score: newScorePlayerOne,
-            controlPoints: newCPPlayerOne,
-            victoryPoints: newVPPlayerOne,
-            opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
-          });
-
-
-        _.each(newListOfOpponentsIdsPlayerOne, function (opponentTournamentPlayerId: string) {
-          _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
-            if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
-              const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
-
-              if (!gameResult.gameBefore.finished) {
-                opponentRankRef.update({'sos': (rank.sos + gameResult.gameAfter.playerOneScore)});
-              } else if (gameResult.gameBefore.playerOneScore < gameResult.gameAfter.playerOneScore) {
-                opponentRankRef.update({'sos': (rank.sos + 1)});
-              } else if (gameResult.gameBefore.playerOneScore > gameResult.gameAfter.playerOneScore) {
-                opponentRankRef.update({'sos': (rank.sos - 1)});
-              }
-            }
-          });
-        });
       }
+
 
       let newScorePlayerTwo = 0;
       let newCPPlayerTwo = 0;
       let newVPPlayerTwo = 0;
       let newListOfOpponentsIdsPlayerTwo = [];
 
-      if (i === gameResult.gameAfter.tournamentRound) {
-
-        newScorePlayerTwo = newScorePlayerTwo + gameResult.gameAfter.playerTwoScore;
-        newCPPlayerTwo = newCPPlayerTwo + gameResult.gameAfter.playerTwoControlPoints;
-        newVPPlayerTwo = newVPPlayerTwo + gameResult.gameAfter.playerTwoVictoryPoints;
-
-        newListOfOpponentsIdsPlayerTwo.push(gameResult.gameAfter.playerOneTournamentPlayerId);
-      }
-
+      // if there is a round before add it
       if (lastRoundRankingPlayerTwo) {
         newScorePlayerTwo = newScorePlayerTwo + lastRoundRankingPlayerTwo.score;
         newCPPlayerTwo = newCPPlayerTwo + lastRoundRankingPlayerTwo.controlPoints;
@@ -353,6 +346,38 @@ export class TournamentRankingService implements OnDestroy {
         newListOfOpponentsIdsPlayerTwo =
           _.union(newListOfOpponentsIdsPlayerTwo, lastRoundRankingPlayerTwo.opponentTournamentPlayerIds);
       }
+
+      // the actual round where the result is entered
+      if (i === gameResult.gameAfter.tournamentRound) {
+
+        newScorePlayerTwo = newScorePlayerTwo + gameResult.gameAfter.playerTwoScore;
+        newCPPlayerTwo = newCPPlayerTwo + gameResult.gameAfter.playerTwoControlPoints;
+        newVPPlayerTwo = newVPPlayerTwo + gameResult.gameAfter.playerTwoVictoryPoints;
+
+        newListOfOpponentsIdsPlayerTwo.push(gameResult.gameAfter.playerOneTournamentPlayerId);
+        opponentIdsTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newListOfOpponentsIdsPlayerTwo;
+
+        const playerTwoRankingRef = this.fireDB
+          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
+        playerTwoRankingRef.update(
+          {
+            score: newScorePlayerTwo,
+            controlPoints: newCPPlayerTwo,
+            victoryPoints: newVPPlayerTwo,
+            opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerTwo
+          });
+
+        if (!gameResult.gameBefore.finished) {
+          scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newScorePlayerTwo;
+        } else if (gameResult.gameBefore.playerTwoScore < gameResult.gameAfter.playerTwoScore) {
+          scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] =
+            scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] + 1;
+        } else if (gameResult.gameBefore.playerTwoScore > gameResult.gameAfter.playerTwoScore) {
+          scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] =
+            scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] - 1;
+        }
+      }
+
 
       if (i > gameResult.gameAfter.tournamentRound && actualRoundGamePlayerTwo) {
         if (gameResult.gameAfter.playerTwoTournamentPlayerId === actualRoundGamePlayerTwo.playerOneTournamentPlayerId) {
@@ -373,36 +398,26 @@ export class TournamentRankingService implements OnDestroy {
             controlPoints: newCPPlayerTwo,
             victoryPoints: newVPPlayerTwo,
           });
-      } else {
-
-        const playerTwoRankingRef = this.fireDB
-          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
-        playerTwoRankingRef.update(
-          {
-            score: newScorePlayerTwo,
-            controlPoints: newCPPlayerTwo,
-            victoryPoints: newVPPlayerTwo,
-            opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerTwo
-          });
-
-
-        _.each(newListOfOpponentsIdsPlayerTwo, function (opponentTournamentPlayerId: string) {
-          _.each(allRankingsFromSameRound, function (rank: TournamentRanking) {
-            if (opponentTournamentPlayerId === rank.tournamentPlayerId) {
-              const opponentRankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rank.id);
-
-              if (!gameResult.gameBefore.finished) {
-                opponentRankRef.update({'sos': (rank.sos + gameResult.gameAfter.playerTwoScore)});
-              } else if (gameResult.gameBefore.playerTwoScore < gameResult.gameAfter.playerTwoScore) {
-                opponentRankRef.update({'sos': (rank.sos + 1)});
-              } else if (gameResult.gameBefore.playerTwoScore > gameResult.gameAfter.playerTwoScore) {
-                opponentRankRef.update({'sos': (rank.sos - 1)});
-              }
-            }
-          });
-        });
       }
-    }
+
+      // SOS calculation for round
+      _.each(allRankingsFromSameRound, function (rankToUpdate: TournamentRanking) {
+
+        let newSos = 0;
+        _.each(opponentIdsTournamentPlayerMap[rankToUpdate.tournamentPlayerId], function (opponentTournamentPlayerId: string) {
+          const opponentScore: number = scoreTournamentPlayerMap[opponentTournamentPlayerId];
+          newSos = newSos + opponentScore;
+
+        });
+
+        const rankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankToUpdate.id);
+        rankRef.update({'sos': newSos});
+
+      });
+    } // loop over game result round till actual rounds
+
+
   }
 
 }
+

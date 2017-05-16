@@ -687,6 +687,19 @@ export class GameResultDialogComponent {
     this.gameModel.id = this.givenGame.id;
     this.gameModel.finished = true;
 
+    if (!this.gameModel.playerOneVictoryPoints) {
+      this.gameModel.playerOneVictoryPoints = 0;
+    }
+    if (!this.gameModel.playerOneControlPoints) {
+      this.gameModel.playerOneControlPoints = 0;
+    }
+    if (!this.gameModel.playerTwoVictoryPoints) {
+      this.gameModel.playerTwoVictoryPoints = 0;
+    }
+    if (!this.gameModel.playerTwoVictoryPoints) {
+      this.gameModel.playerTwoVictoryPoints = 0;
+    }
+
     this.onGameResult.emit({gameBefore: this.givenGame, gameAfter: this.gameModel});
 
   }
