@@ -16,6 +16,7 @@ import {MySiteSubscribeAction} from '../store/actions/my-site-actions';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {WindowRefService} from "../service/window-ref-service";
+import {Player} from "../../../shared/model/player";
 
 @Component({
   selector: 'my-tournaments',
@@ -34,6 +35,8 @@ export class MySiteComponent {
   smallScreen: boolean;
   loggedIn: boolean;
 
+  userPlayerData: Player;
+
   constructor(private store: Store<ApplicationState>,
               public dialog: MdDialog,
               private winRef: WindowRefService) {
@@ -47,6 +50,7 @@ export class MySiteComponent {
           this.store.dispatch(new MySiteSubscribeAction(authenticationStoreState.userPlayerData.id));
         }
         this.loggedIn = authenticationStoreState.loggedIn;
+        this.userPlayerData = authenticationStoreState.userPlayerData;
       });
 
     this.allTournaments$ = store.select(state => {
