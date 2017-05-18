@@ -14,14 +14,17 @@ export class TournamentListComponent  {
   @Input() tournaments: Tournament[];
 
   verySmallDevice: boolean;
+  truncateMax: number;
 
   constructor(private router: Router,
               private winRef: WindowRefService) {
 
-    if (winRef.nativeWindow.screen.width < 800) {
+    if (this.winRef.nativeWindow.screen.width < 500) {
       this.verySmallDevice = true;
-    } else {
+      this.truncateMax = 20;
+    }  else {
       this.verySmallDevice = false;
+      this.truncateMax = 40;
     }
 
   }

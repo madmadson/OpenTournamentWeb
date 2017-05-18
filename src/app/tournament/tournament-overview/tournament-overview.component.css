@@ -1,2 +1,22 @@
 
 
+.tab-container{
+  display: inline-block;
+}
+
+@media only screen and (min-width: 500px) {
+  .tab-container{
+    display: flex;
+    align-items: center;
+  }
+}
+
+:host /deep/ .mdl-tabs__tab {
+  padding: 0 12px !important;
+}
+
+@media only screen and (min-width: 700px) {
+  :host /deep/ .mdl-tabs__tab {
+    padding: 0 24px !important;
+  }
+}

@@ -26,13 +26,24 @@
   </script>
   <style>
 
+    .loading-heading{
+      text-align: center;
+      font-size: 1.8em;
+      margin-right: 12px;
+      margin-left: 12px;
+      margin-bottom: 12px;
+      color: #FFC107;
+    }
+    @media only screen and (min-width: 500px) {
+      .loading-heading {
+        font-size: 3em;
+      }
+    }
+
     .container{
       display: flex;
-      align-items: center;
       justify-content: center;
       width: 98vw;
-      min-height: calc(100vh - 10px);
-      flex-direction: column;
     }
 
     .loader {
@@ -59,8 +70,8 @@
 </head>
 <body>
 <app-root>
+  <h1 class="loading-heading">Load OpenTournament</h1>
   <div class="container">
-    <h1>Loading...</h1>
     <div class="loader"></div>
   </div>
 </app-root>

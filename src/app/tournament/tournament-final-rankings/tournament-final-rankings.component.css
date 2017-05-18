@@ -1,0 +1,18 @@
+
+
+.tournament-ranking-table-card{
+  width: 300px;
+}
+
+@media only screen and (min-width: 500px) {
+  .tournament-ranking-table-card{
+    width: 400px;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .tournament-ranking-table-card{
+    width: 700px;
+    align-items: center;
+  }
+}

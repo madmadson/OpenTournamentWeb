@@ -17,3 +17,16 @@
   font-family: "Courier New", monospace;
   font-weight: bold;
 }
+
+.player-list-item{
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+@media only screen and (min-width: 500px) {
+
+  .player-list-item{
+    font-size: 1.2em;
+  }
+
+}

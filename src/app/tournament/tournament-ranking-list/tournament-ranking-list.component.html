@@ -1,7 +1,7 @@
 <ng-container *ngIf="(orderedRankings$ | async).length === 0" >
   <div class="heading">Load Rankings... <mdl-spinner  single-color active></mdl-spinner></div>
 </ng-container>
-<table class="full-width mdl-data-table mdl-js-data-table mdl-shadow--3dp">
+<table class="ranking-table full-width mdl-data-table mdl-js-data-table mdl-shadow--3dp">
   <thead>
   <tr>
     <th class="small-three-space-table-cell rank-number">#</th>

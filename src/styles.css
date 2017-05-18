@@ -1,16 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-@media print
-{
-
-}
-
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   background-color: grey;
-  overflow-x: hidden;
 }
 
 .prevent-scrolling {
@@ -46,7 +40,7 @@ a:hover {
   margin-right: 12px;
   margin-left: 12px;
   margin-bottom: 12px;
-  width: 90%;
+  width: 100%;
 }
 @media only screen and (min-width: 500px) {
   .heading {
@@ -55,7 +49,7 @@ a:hover {
     margin-right: 12px;
     margin-left: 12px;
     margin-bottom: 12px;
-    width: 90%;
+    width: 100%;
   }
 }
 
@@ -75,6 +69,13 @@ button:hover{
 .list-item:hover{
   cursor: pointer;
   background-color: deepskyblue;
+}
+
+@media only screen and (max-width: 500px) {
+  .list-item {
+    padding: 6px !important;
+    font-size: 1em;
+  }
 }
 
 
@@ -265,9 +266,27 @@ md-card {
   justify-content: center;
 }
 
+@media only screen and (min-width: 1200px) {
+  .content-cards-container{
+    display: flex;
+    flex-flow:row wrap;
+    align-items: flex-start;
+  }
+}
+
+.single-list-card {
+  width:300px;
+}
+
 @media only screen and (min-width: 500px) {
   .single-list-card {
     width:400px;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .single-list-card {
+    width:500px;
   }
 }
 
@@ -360,4 +379,13 @@ md-card {
   font-size: 1.4em;
   margin-top: 12px;
   margin-right: 50px;
+}
+
+.loading-spinner{
+  margin: 10px;
+}
+
+.flex-container{
+  display: flex;
+  justify-content: center;
 }

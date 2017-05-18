@@ -132,7 +132,7 @@
   </md-card>
 
   <div class="content-cards-container">
-    <ng-container *ngIf="allRegistrations.length === 0" >
+    <ng-container *ngIf="!allRegistrations" >
       <div class="heading">Load Registrations... <mdl-spinner  single-color active></mdl-spinner></div>
     </ng-container>
     <md-card class="registration-list-card" *ngIf="actualTournament?.teamSize === 0">

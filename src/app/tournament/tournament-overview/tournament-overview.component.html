@@ -1,39 +1,44 @@
 <h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
 
-<ng-container *ngIf="!actualTournament" >
-  <div class="heading">Load Tournament... <mdl-spinner  single-color active></mdl-spinner></div>
+<ng-container *ngIf="!actualTournament">
+  <div class="heading">Load Tournament...
+    <mdl-spinner class="loading-spinner" single-color active></mdl-spinner>
+  </div>
 </ng-container>
 
-<mdl-tabs *ngIf="actualTournament" mdl-ripple [mdl-tab-active-index]="selectedIndex">
-  <mdl-tab-panel mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">
-    <tournament-preparation
-      [authenticationStoreState$]="authenticationStoreState$"
-      [actualTournament]="actualTournament"
-      [actualTournamentArmyList$]="actualTournamentArmyList$"
-      [allActualTournamentPlayers$]="allActualTournamentPlayers$"
-      [actualTournamentRegisteredPlayers$]="actualTournamentRegisteredPlayers$"
-      [actualTournamentTeams$]="actualTournamentTeams$"
-      [actualTournamentTeamRegistrations$]="actualTournamentTeamRegistrations$"
-      (onStartTournament)="handleStartTournament($event)"
-      (onStartTeamTournament)="handleStartTeamTournament($event)"
-      (onSaveTournament)="handleEditTournament($event)"
-      (onAddDummyPlayer)="handleAddDummyPlayer()"
-      (onAddDummyTeam)="handleAddDummyTeam()"
-      (onAddTournamentPlayer)="handleAddTournamentPlayer($event)"
-      (onAcceptRegistration)="handleAcceptRegistration($event)"
-      (onAddTournamentRegistration)="handleAddTournamentRegistration($event)"
-      (onAddArmyList)="handleAddArmyList($event)"
-      (onDeleteArmyList)="handleDeleteArmyList($event)"
-      (onDeleteTournamentPlayer)="handleDeleteTournamentPlayer($event)"
-      (onDeleteRegistration)="handleDeleteRegistration($event)"
-      (onEraseTournamentTeam)="handleEraseTeam($event)"
-      (onCreateTeamForTeamTournament)="handleCreateTeamForTeamTournament($event)"
-      (onRegisterTeamForTeamTournament)="handleRegisterTeamForTeamTournament($event)"
-      (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)"
-      (onEraseTeamRegistration)="handleEraseTeamRegistration($event)"
-    ></tournament-preparation>
 
-  </mdl-tab-panel>
+<div class="tab-container">
+  <mdl-tabs *ngIf="actualTournament" mdl-ripple [mdl-tab-active-index]="selectedIndex">
+    <mdl-tab-panel mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">
+      <div class="content-cards-container">
+        <tournament-preparation
+          [authenticationStoreState$]="authenticationStoreState$"
+          [actualTournament]="actualTournament"
+          [actualTournamentArmyList$]="actualTournamentArmyList$"
+          [allActualTournamentPlayers$]="allActualTournamentPlayers$"
+          [actualTournamentRegisteredPlayers$]="actualTournamentRegisteredPlayers$"
+          [actualTournamentTeams$]="actualTournamentTeams$"
+          [actualTournamentTeamRegistrations$]="actualTournamentTeamRegistrations$"
+          (onStartTournament)="handleStartTournament($event)"
+          (onStartTeamTournament)="handleStartTeamTournament($event)"
+          (onSaveTournament)="handleEditTournament($event)"
+          (onAddDummyPlayer)="handleAddDummyPlayer()"
+          (onAddDummyTeam)="handleAddDummyTeam()"
+          (onAddTournamentPlayer)="handleAddTournamentPlayer($event)"
+          (onAcceptRegistration)="handleAcceptRegistration($event)"
+          (onAddTournamentRegistration)="handleAddTournamentRegistration($event)"
+          (onAddArmyList)="handleAddArmyList($event)"
+          (onDeleteArmyList)="handleDeleteArmyList($event)"
+          (onDeleteTournamentPlayer)="handleDeleteTournamentPlayer($event)"
+          (onDeleteRegistration)="handleDeleteRegistration($event)"
+          (onEraseTournamentTeam)="handleEraseTeam($event)"
+          (onCreateTeamForTeamTournament)="handleCreateTeamForTeamTournament($event)"
+          (onRegisterTeamForTeamTournament)="handleRegisterTeamForTeamTournament($event)"
+          (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)"
+          (onEraseTeamRegistration)="handleEraseTeamRegistration($event)"
+        ></tournament-preparation>
+      </div>
+    </mdl-tab-panel>
 
     <mdl-tab-panel *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
                    mdl-tab-panel-title="{{getRoundPageTitle(index +1)}}"
@@ -68,19 +73,19 @@
                                       (onPublishRound)="handlePublishRound($event)"
       ></tournament-team-round-overview>
     </mdl-tab-panel>
-
-
-
-  <mdl-tab-panel [disabled]="fullscreenMode || swapPlayerMode"
-                 *ngIf="actualTournament?.finished" mdl-tab-panel-title="Results">
-    <tournament-final-rankings *ngIf="actualTournament.teamSize === 0"
-                               [actualTournament]="actualTournament"
-                               [authenticationStoreState$]="authenticationStoreState$"
-                               [actualTournamentArmyList$]="actualTournamentArmyList$"
-                               [finalRankings$]="getFinalRanking()"
-                               (onUndoTournamentEnd)="handleUndoTournamentEnd($event)"
-                               (onUploadTournament)="handleUploadTournament()"
-    ></tournament-final-rankings>
-  </mdl-tab-panel>
-</mdl-tabs>
+    <mdl-tab-panel [disabled]="fullscreenMode || swapPlayerMode"
+                   *ngIf="actualTournament?.finished" mdl-tab-panel-title="Final">
+      <div class="content-cards-container">
+        <tournament-final-rankings *ngIf="actualTournament.teamSize === 0"
+                                   [actualTournament]="actualTournament"
+                                   [authenticationStoreState$]="authenticationStoreState$"
+                                   [actualTournamentArmyList$]="actualTournamentArmyList$"
+                                   [finalRankings$]="getFinalRanking()"
+                                   (onUndoTournamentEnd)="handleUndoTournamentEnd($event)"
+                                   (onUploadTournament)="handleUploadTournament()"
+        ></tournament-final-rankings>
+      </div>
+    </mdl-tab-panel>
+  </mdl-tabs>
+</div>
 

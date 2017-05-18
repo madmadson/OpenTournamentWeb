@@ -75,6 +75,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   swapPlayerMode: boolean;
 
   smallScreen: boolean;
+  onlyHamburgerMenu: boolean;
 
   constructor(private store: Store<ApplicationState>,
               private activeRouter: ActivatedRoute,
@@ -138,7 +139,16 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.smallScreen = this.winRef.nativeWindow.screen.width < 800;
+    if (this.winRef.nativeWindow.screen.width < 500) {
+      this.smallScreen = true;
+      this.onlyHamburgerMenu = true;
+    } else if (this.winRef.nativeWindow.screen.width < 800) {
+      this.smallScreen = true;
+      this.onlyHamburgerMenu = false;
+    } else {
+      this.smallScreen = false;
+      this.onlyHamburgerMenu = false;
+    }
   }
 
   ngOnDestroy() {
@@ -151,14 +161,14 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     if (this.smallScreen) {
       return 'R' + index;
     } else {
-      return 'Round ' + index;
+      return 'Round' + index;
     }
   }
   getPrepPageTitle(): string {
     if (this.smallScreen) {
       return 'R0';
     } else {
-      return 'Tournament Preparation';
+      return 'Setup';
     }
   }
 

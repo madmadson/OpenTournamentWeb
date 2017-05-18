@@ -1,14 +1,16 @@
 <h2 class="heading">Online Players ({{filteredPlayers.length}}/{{orderedPlayers?.length}})</h2>
 
-<md-card class="single-list-card">
-  <mdl-textfield type="text"
-                 maxlength="50"
-                 placeholder="Filter Player"
-                 #seachInput
-                 (keyup)="search(seachInput.value)" >
-  </mdl-textfield>
-  <h4 *ngIf="filteredPlayers?.length == 0">No Players found</h4>
-  <mdl-list>
-    <player-list [players]="filteredPlayers"></player-list>
-  </mdl-list>
-</md-card>
+<div class="flex-container">
+  <md-card class="single-list-card">
+    <mdl-textfield type="text"
+                   maxlength="50"
+                   placeholder="Filter Player"
+                   #seachInput
+                   (keyup)="search(seachInput.value)">
+    </mdl-textfield>
+    <h4 *ngIf="filteredPlayers?.length == 0">No Players found</h4>
+    <mdl-list>
+      <player-list [players]="filteredPlayers"></player-list>
+    </mdl-list>
+  </md-card>
+</div>

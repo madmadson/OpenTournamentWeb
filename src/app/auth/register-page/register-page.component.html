@@ -1,39 +1,42 @@
-<md-card>
-  <h1 class="heading">Registration</h1>
+<h1 class="heading">Registration</h1>
 
-  <form [formGroup]="registerForm" novalidate autocomplete="off">
+<div class="flex-container">
+  <md-card class="register-card">
+    <form [formGroup]="registerForm" novalidate autocomplete="off">
 
-    <div class="form-group">
-      <md-input-container
-        dividerColor="{{ (registerForm.get('email').invalid && registerForm.get('email').dirty) ? 'warn' : 'primary' }}"
-        class="full-width">
-        <input mdInput type="email" placeholder="Email" formControlName="email" required>
-        <md-hint *ngIf="registerForm.get('email').invalid && registerForm.get('email').dirty" style="color: red">
-          <span >{{registerForm.get('email').getError('message')}}</span>
-        </md-hint>
-      </md-input-container>
-      <md-input-container
-        dividerColor="{{ (registerForm.get('password').invalid && registerForm.get('password').dirty) ? 'warn' : 'primary' }}"
-        class="full-width">
-            <input mdInput type="password" placeholder="Password" formControlName="password" required>
-        <md-hint *ngIf="registerForm.get('password').invalid && registerForm.get('password').dirty" style="color: red">
-          <span>Password must have at least 6 characters</span>
-        </md-hint>
+      <div class="form-group">
+        <md-input-container
+          dividerColor="{{ (registerForm.get('email').invalid && registerForm.get('email').dirty) ? 'warn' : 'primary' }}"
+          class="full-width">
+          <input mdInput type="email" placeholder="Email" formControlName="email" required>
+          <md-hint *ngIf="registerForm.get('email').invalid && registerForm.get('email').dirty" style="color: red">
+            <span>{{registerForm.get('email').getError('message')}}</span>
+          </md-hint>
+        </md-input-container>
+        <md-input-container
+          dividerColor="{{ (registerForm.get('password').invalid && registerForm.get('password').dirty) ? 'warn' : 'primary' }}"
+          class="full-width">
+          <input mdInput type="password" placeholder="Password" formControlName="password" required>
+          <md-hint *ngIf="registerForm.get('password').invalid && registerForm.get('password').dirty"
+                   style="color: red">
+            <span>Password must have at least 6 characters</span>
+          </md-hint>
 
-      </md-input-container>
-      <md-input-container
-        dividerColor="{{ (registerForm.get('certainPassword').invalid && registerForm.get('certainPassword').dirty) ? 'warn' : 'primary' }}"
-        class="full-width">
-        <input mdInput type="password" placeholder="Repeat Password" formControlName="certainPassword" required>
-        <md-hint *ngIf="registerForm.get('certainPassword').invalid && registerForm.get('certainPassword').dirty" style="color: red">
-          <span>'Repeat Password' Must be the same as 'Password'</span>
-        </md-hint>
-      </md-input-container>
-    </div>
+        </md-input-container>
+        <md-input-container
+          dividerColor="{{ (registerForm.get('certainPassword').invalid && registerForm.get('certainPassword').dirty) ? 'warn' : 'primary' }}"
+          class="full-width">
+          <input mdInput type="password" placeholder="Repeat Password" formControlName="certainPassword" required>
+          <md-hint *ngIf="registerForm.get('certainPassword').invalid && registerForm.get('certainPassword').dirty"
+                   style="color: red">
+            <span>'Repeat Password' Must be the same as 'Password'</span>
+          </md-hint>
+        </md-input-container>
+      </div>
 
-    <button md-raised-button type="button" class="full-width-button" color="primary"
-            [disabled]="registerForm.invalid" (click)="register()">Register Me
-    </button>
-  </form>
-</md-card>
-
+      <button md-raised-button type="button" class="full-width-button" color="primary"
+              [disabled]="registerForm.invalid" (click)="register()">Register Me
+      </button>
+    </form>
+  </md-card>
+</div>

@@ -105,7 +105,7 @@
 
 .app-name-label{
   margin-left: 1em;
-  font-size: 0.8em;
+  font-size: 0.6em;
 }
 
 @media only screen and (min-width: 500px) {
@@ -115,8 +115,13 @@
 }
 
 .app-content {
-  display: flex;
-  justify-content: center;
+  margin: 0 6px;
+}
+
+@media only screen and (min-width: 500px) {
+  .app-content {
+    margin: 0 12px;
+  }
 }
 
 .user-welcome-panel{
