@@ -11,6 +11,19 @@
   cursor: pointer;
 }
 
+.print-rankings-icon{
+  position: absolute;
+  display: inline-block;
+  top: 10px;
+  right: 50px;
+}
+
+.print-rankings-icon:hover{
+  color: blue;
+  cursor: pointer;
+}
+
+
 .table-mode{
   position: absolute;
   display: inline-block;

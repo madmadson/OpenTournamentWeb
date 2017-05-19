@@ -1,0 +1,42 @@
+<h3 md-dialog-title class="heading">Rankings for Round</h3>
+
+<md-dialog-content>
+
+  <button type="button" class="full-width-button save-button" color="accent" md-raised-button (click)="printLists()">
+    Print
+  </button>
+  <div #printarea class="print-area">
+
+    <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
+      <thead>
+      <tr>
+        <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">#</th>
+        <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">Player</th>
+        <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">Score</th>
+        <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">SOS</th>
+        <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">CP</th>
+        <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">VP</th>
+      </tr>
+      </thead>
+      <tbody *ngFor="let rank of rankings$ | async; let i = index;">
+      <tr>
+        <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{i +1}}</td>
+        <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">
+          <div>{{rank.playerName}}</div>
+          <div>{{rank.faction}}</div>
+          <div >{{rank.teamName}} - {{rank.meta}} - {{rank.origin}} - {{rank.country}}</div>
+          <div>{{rank.country}}</div>
+          <div *ngIf="rank.elo != 0">{{rank.elo}}<img src="../../assets/my_crown_small.png"></div>
+        </td>
+        <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.score}}</td>
+        <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.sos}}</td>
+        <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.controlPoints}}</td>
+        <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.victoryPoints}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</md-dialog-content>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

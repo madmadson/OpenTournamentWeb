@@ -11,6 +11,19 @@
   cursor: pointer;
 }
 
+.print-rankings-icon{
+  position: absolute;
+  display: inline-block;
+  top: 10px;
+  right: 50px;
+}
+
+.print-rankings-icon:hover{
+  color: blue;
+  cursor: pointer;
+}
+
+
 .table-mode{
   position: absolute;
   display: inline-block;
@@ -22,6 +35,19 @@
   color: blue;
   cursor: pointer;
 }
+
+.print-games-icon{
+  position: absolute;
+  display: inline-block;
+  top: 10px;
+  right: 90px;
+}
+
+.print-games-icon:hover{
+  color: blue;
+  cursor: pointer;
+}
+
 
 .games-for-round-card{
   width: 300px;

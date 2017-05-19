@@ -18,8 +18,10 @@ import {GlobalEventService} from 'app/service/global-event-service';
 import {WindowRefService} from '../../service/window-ref-service';
 import {Subscription} from 'rxjs/Subscription';
 import {KillRoundDialogComponent} from '../../dialogs/round-overview/kill-round-dialog';
-import {PairAgainDialogComponent} from "../../dialogs/round-overview/pair-again-dialog";
-import {ScenarioSelectedModel} from "../../../../shared/dto/scenario-selected-model";
+import {PairAgainDialogComponent} from '../../dialogs/round-overview/pair-again-dialog';
+import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
+import {PrintRankingsDialogComponent} from '../../dialogs/print-rankings-dialog';
+import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
 
 
 @Component({
@@ -115,6 +117,24 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
     this.snackBar.open('Note: TableMode is only for presentation.', '', {
       duration: 5000
+    });
+  }
+
+  printRankings() {
+    this.dialog.open(PrintRankingsDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        rankings$: this.rankingsForRound$
+      }
+    });
+  }
+
+  printGames() {
+    this.dialog.open(PrintGamesDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        games$: this.gamesForRound$,
+      }
     });
   }
 
