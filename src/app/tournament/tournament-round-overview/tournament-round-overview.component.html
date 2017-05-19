@@ -1,5 +1,6 @@
 <h3 class="heading" *ngIf="(currentUserId != actualTournament?.creatorUid) &&
-            (actualTournament.actualRound > actualTournament.visibleRound)">
+            (actualTournament.actualRound > actualTournament.visibleRound) &&
+            (round === actualTournament.actualRound)">
   Tournament Organizer is pairing.
   Page will reload when he publish the new round.
 </h3>
@@ -56,7 +57,8 @@
   </md-card>
 </div>
 <div class="content-cards-container" *ngIf="(currentUserId == actualTournament?.creatorUid) ||
-            ((currentUserId != actualTournament?.creatorUid) &&   (actualTournament.actualRound == actualTournament.visibleRound))">
+            ((currentUserId != actualTournament?.creatorUid) &&
+            (round <= actualTournament.visibleRound))">
   <md-card *ngIf="!rankingsFullscreenMode" class="games-for-round-card">
     <h3 class="heading">Games Round {{round}}</h3>
     <mdl-icon *ngIf="!gamesFullscreenMode" (click)="openGamesFullScreenMode(true)" mdTooltip="Fullscreen Mode"

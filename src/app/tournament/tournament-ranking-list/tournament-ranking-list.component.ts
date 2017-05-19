@@ -73,8 +73,12 @@ export class TournamentRankingListComponent implements OnInit {
 
   openArmyListDialog(ranking: TournamentRanking){
 
-    const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (armyList: ArmyList) {
-      return (armyList.playerId === ranking.playerId);
+    const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
+      if (list.tournamentPlayerId) {
+        return (list.tournamentPlayerId === ranking.tournamentPlayerId);
+      } else {
+        return (list.playerId === ranking.playerId);
+      }
     });
 
     this.dialog.open(ShowArmyListInTournamentRankingDialogComponent, {

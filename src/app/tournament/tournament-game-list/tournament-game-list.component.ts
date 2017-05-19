@@ -547,11 +547,19 @@ export class GameResultDialogComponent {
 
 
     this.playerOneArmyLists$ = data.armyLists$.map(armyLists => armyLists.filter((list: ArmyList) => {
-      return (list.playerId === data.selectedGame.playerOnePlayerId);
+      if (list.tournamentPlayerId) {
+        return (list.tournamentPlayerId === data.selectedGame.playerOneTournamentPlayerId);
+      } else {
+        return (list.playerId === data.selectedGame.playerOnePlayerId);
+      }
     }));
 
     this.playerTwoArmyLists$ = data.armyLists$.map(armyLists => armyLists.filter((list: ArmyList) => {
-      return (list.playerId === data.selectedGame.playerTwoPlayerId);
+      if (list.tournamentPlayerId) {
+        return (list.tournamentPlayerId === data.selectedGame.playerTwoTournamentPlayerId);
+      } else {
+        return (list.playerId === data.selectedGame.playerTwoPlayerId);
+      }
     }));
   }
 

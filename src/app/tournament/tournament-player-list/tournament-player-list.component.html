@@ -25,7 +25,6 @@
     <span>{{tournamentPlayer.elo}}</span></mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content>
     <md-icon class="positive  list-action" (click)="addArmyLists(tournamentPlayer)">playlist_add</md-icon>
-    <!--<md-icon class="positive  list-action" (click)="openArmyListDialog(tournamentPlayer)">list</md-icon>-->
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="isAdmin  && actualTournament.actualRound === 0">
     <md-icon class="negative  list-action" (click)="deleteTournamentPlayer(tournamentPlayer)">delete</md-icon>

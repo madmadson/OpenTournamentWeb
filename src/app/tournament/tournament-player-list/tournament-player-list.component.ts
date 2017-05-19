@@ -63,20 +63,6 @@ export class TournamentPlayerListComponent implements OnInit {
     this.onDeleteTournamentPlayer.emit(tournamentPlayer);
   }
 
-  openArmyListDialog(tournamentPlayer: TournamentPlayer) {
-
-    const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (armyList: ArmyList) {
-      return (armyList.playerId === tournamentPlayer.playerId);
-    });
-
-    this.dialog.open(ShowArmyListInTournamentPlayerDialogComponent, {
-      data: {
-        tournamentPlayer: tournamentPlayer,
-        armyLists: myArmyLists
-      }
-    });
-  }
-
   addArmyLists(tournamentPlayer: TournamentPlayer) {
     console.log('add armyList');
     this.onAddArmyLists.emit(tournamentPlayer);
