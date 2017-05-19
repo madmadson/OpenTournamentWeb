@@ -24,7 +24,8 @@ import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-pus
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-player-dialog';
 import {PrintArmyListsDialogComponent} from '../../dialogs/print-army-lists-dialog';
-import {WindowRefService} from "../../service/window-ref-service";
+import {AddArmyListsDialogComponent} from '../../dialogs/add-army-lists-dialog';
+
 
 
 @Component({
@@ -345,16 +346,45 @@ export class TournamentPreparationComponent implements OnInit {
     }
   }
 
+  addArmyListForTournamentPlayer(tournamentPlayer: TournamentPlayer) {
+
+    if (tournamentPlayer !== undefined) {
+
+      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
+        data: {
+          tournamentPlayer: tournamentPlayer,
+          armyLists: this.actualTournamentArmyList$
+        }
+      });
+      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyList.subscribe(armyList => {
+
+        if (armyList !== undefined) {
+          this.onAddArmyList.emit(armyList);
+        }
+      });
+      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
+
+        if (armyList !== undefined) {
+          this.onDeleteArmyList.emit(armyList);
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+
+        saveEventSubscribe.unsubscribe();
+        deleteEventSubscribe.unsubscribe();
+      });
+    }
+  }
+
   addArmyList(registration: Registration) {
     if (registration !== undefined) {
 
       const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
         data: {
           registration: registration,
-          armyListForRegistration: this.actualTournamentArmyList$
-        },
-        width: '800px',
-        height: '800px'
+          armyLists: this.actualTournamentArmyList$
+        }
       });
       const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyList.subscribe(armyList => {
 
@@ -614,51 +644,6 @@ export class RegisterTeamDialogComponent implements OnInit {
     });
 
   }
-}
-
-
-@Component({
-  selector: 'add-army-lists-dialog',
-  templateUrl: './add-army-lists-dialog.html'
-})
-export class AddArmyListsDialogComponent {
-
-  registration: Registration;
-  armyListForRegistration: ArmyList[];
-
-  armyListModel: ArmyList;
-  selectedTab = 0;
-
-  @Output() onSaveArmyList = new EventEmitter<ArmyList>();
-  @Output() onDeleteArmyList = new EventEmitter<ArmyList>();
-
-  constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-
-    const that = this;
-    this.registration = data.registration;
-
-    this.armyListModel = new ArmyList(this.registration.tournamentId,
-      this.registration.id, this.registration.playerId, this.registration.playerName, '', '');
-    data.armyListForRegistration.subscribe(armyLists => {
-      this.armyListForRegistration = _.filter(armyLists, function (armyList: ArmyList) {
-        if (that.registration !== undefined) {
-          return armyList.playerId === that.registration.playerId;
-        }
-      });
-    });
-  }
-
-  addArmyList() {
-    this.selectedTab = (this.armyListForRegistration.length + 1);
-    this.onSaveArmyList.emit(this.armyListModel);
-    this.armyListModel = new ArmyList(this.registration.tournamentId,
-      this.registration.id, this.registration.playerId, this.registration.playerName, '', '');
-  };
-
-  deleteArmyList(armyList: ArmyList) {
-    this.onDeleteArmyList.emit(armyList);
-  };
 }
 
 @Component({

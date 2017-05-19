@@ -25,6 +25,7 @@ export class TournamentPlayerListComponent implements OnInit {
   @Input() isAdmin: boolean;
 
   @Output() onDeleteTournamentPlayer = new EventEmitter<TournamentPlayer>();
+  @Output() onAddArmyLists = new EventEmitter<TournamentPlayer>();
 
   armyLists: ArmyList[];
   smallScreen: boolean;
@@ -74,6 +75,11 @@ export class TournamentPlayerListComponent implements OnInit {
         armyLists: myArmyLists
       }
     });
+  }
+
+  addArmyLists(tournamentPlayer: TournamentPlayer) {
+    console.log('add armyList');
+    this.onAddArmyLists.emit(tournamentPlayer);
   }
 
 }

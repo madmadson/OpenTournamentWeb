@@ -169,6 +169,7 @@ md-card {
 .save-button {
   margin-bottom: 6px !important;
   margin-left: 6px !important;
+  margin-top: 6px !important;
 }
 
 .big-button{
@@ -180,12 +181,35 @@ md-card {
 }
 
 .max-height {
-  height: 350px;
-  max-height: 370px;
+  height: 100px;
+  max-height: 120px;
 }
 
 .fix-height{
-  height: 370px;
+  height: 120px;
+}
+
+@media only screen and (min-height: 500px) {
+
+  .max-height {
+    height: 230px;
+    max-height: 220px;
+  }
+
+  .fix-height{
+    height: 230px;
+  }
+}
+
+@media only screen and (min-height: 700px) {
+  .max-height {
+    height: 350px;
+    max-height: 370px;
+  }
+
+  .fix-height{
+    height: 370px;
+  }
 }
 
 .even{
@@ -354,8 +378,9 @@ md-card {
 }
 
 .player-name{
+  letter-spacing: 0;
   font-weight: bold;
-  font-size: 0.8em;
+  font-size: 12px;
 }
 
 @media only screen and (min-width: 500px) {
@@ -388,4 +413,19 @@ md-card {
 .flex-container{
   display: flex;
   justify-content: center;
+}
+
+:host /deep/ .mdl-tabs__tab {
+  padding: 0 12px !important;
+}
+
+@media only screen and (min-width: 700px) {
+  :host /deep/ .mdl-tabs__tab {
+    padding: 0 24px !important;
+  }
+}
+
+
+.print-area {
+  max-height: 300px;
 }

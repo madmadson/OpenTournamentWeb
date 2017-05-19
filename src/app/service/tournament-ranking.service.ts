@@ -218,6 +218,8 @@ export class TournamentRankingService implements OnDestroy {
     const that = this;
     const roundOfGameResult = gameResult.gameAfter.tournamentRound;
 
+    const gameResultChangedForPlayerMap = {};
+
     for (let i = roundOfGameResult; i <= this.actualTournament.actualRound; i++) {
 
       const allRankingsFromSameRound: TournamentRanking[] = _.filter(this.allRankings, function (ranking: TournamentRanking) {
@@ -303,9 +305,15 @@ export class TournamentRankingService implements OnDestroy {
         } else if (gameResult.gameBefore.playerOneScore < gameResult.gameAfter.playerOneScore) {
           scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] =
             scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] + 1;
+
+          // for later rounds SOS
+          gameResultChangedForPlayerMap[rankingPlayerOne.tournamentPlayerId] = 1;
         } else if (gameResult.gameBefore.playerOneScore > gameResult.gameAfter.playerOneScore) {
           scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] =
             scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] - 1;
+
+          // for later rounds SOS
+          gameResultChangedForPlayerMap[rankingPlayerOne.tournamentPlayerId] = -1;
         }
       }
 
@@ -372,9 +380,15 @@ export class TournamentRankingService implements OnDestroy {
         } else if (gameResult.gameBefore.playerTwoScore < gameResult.gameAfter.playerTwoScore) {
           scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] =
             scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] + 1;
+
+          // for later rounds SOS
+          gameResultChangedForPlayerMap[rankingPlayerTwo.tournamentPlayerId] = 1;
         } else if (gameResult.gameBefore.playerTwoScore > gameResult.gameAfter.playerTwoScore) {
           scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] =
             scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] - 1;
+
+          // for later rounds SOS
+          gameResultChangedForPlayerMap[rankingPlayerTwo.tournamentPlayerId] = -1;
         }
       }
 
@@ -408,6 +422,10 @@ export class TournamentRankingService implements OnDestroy {
           const opponentScore: number = scoreTournamentPlayerMap[opponentTournamentPlayerId];
           newSos = newSos + opponentScore;
 
+          // game result changed so later rounds sos are affected
+          if (gameResultChangedForPlayerMap[opponentTournamentPlayerId] && i > gameResult.gameAfter.tournamentRound ) {
+             newSos = newSos + gameResultChangedForPlayerMap[opponentTournamentPlayerId];
+          }
         });
 
         const rankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankToUpdate.id);

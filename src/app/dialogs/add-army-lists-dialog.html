@@ -1,8 +1,9 @@
-<h3>ArmyLists for {{registration.playerName}}</h3>
+<div *ngIf="registration" class="heading">ArmyLists for {{registration.playerName}}</div>
+<div *ngIf="tournamentPlayer" class="heading">ArmyLists for {{tournamentPlayer.playerName}}</div>
 <md-card>
-  <p *ngIf="armyListForRegistration.length > 6" style="color: red">Maximum reached for ArmyLists</p>
+  <p *ngIf="armyLists.length > 6" style="color: red">Maximum reached for ArmyLists</p>
   <md-tab-group [selectedIndex]="selectedTab">
-    <md-tab *ngIf="armyListForRegistration.length <= 6" label="AddArmyList">
+    <md-tab *ngIf="armyLists.length <= 6" label="AddArmyList">
       <form #armyListForm="ngForm">
         <md-input-container
           class="full-width">
@@ -20,14 +21,14 @@
         <md-input-container
           class="full-width max-height">
         <textarea
-          mdTextareaAutosize
           mdInput
           placeholder="Army List - (paste ArmyList here (Warroom/Troopcreator or something)"
           class="max-height"
           maxlength="1000"
           required
           #armyList
-          [(ngModel)]="armyListModel.list" name="list"></textarea>
+          [(ngModel)]="armyListModel.list"
+          name="list"></textarea>
           <md-hint align="end">{{armyList.value.length}} / 1000</md-hint>
         </md-input-container>
         <button class="save-button"
@@ -41,7 +42,7 @@
         </button>
       </form>
     </md-tab>
-    <md-tab *ngFor="let armyList of armyListForRegistration" label="{{armyList.name}}">
+    <md-tab *ngFor="let armyList of armyLists" label="{{armyList.name}}">
       <md-input-container
         class="full-width">
       <textarea

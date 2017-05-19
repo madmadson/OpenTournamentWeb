@@ -175,7 +175,7 @@
         </tournament-team-registration-list>
       </mdl-list>
     </md-card>
-    <ng-container *ngIf="allActualTournamentPlayers.length === 0" >
+    <ng-container *ngIf="!allActualTournamentPlayers" >
       <div class="heading">Load TournamentPlayer... <mdl-spinner  single-color active></mdl-spinner></div>
     </ng-container>
     <md-card *ngIf="currentUserId === actualTournament?.creatorUid && actualTournament?.teamSize === 0"
@@ -206,6 +206,7 @@
           [isAdmin]="currentUserId === actualTournament?.creatorUid"
           [userPlayerData]="userPlayerData"
           [tournamentPlayers]="filteredActualTournamentPlayers"
+          (onAddArmyLists)="addArmyListForTournamentPlayer($event)"
           (onDeleteTournamentPlayer)="deleteTournamentPlayer($event)">
         </tournament-player-list>
 

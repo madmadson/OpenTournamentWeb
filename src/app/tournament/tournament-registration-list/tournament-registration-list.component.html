@@ -7,20 +7,27 @@
     <span class="player-name">{{registration.playerName | truncate:truncateMax}}</span>
 
     <mdl-list-item-text-body>
-      <div>{{registration.faction}}</div>
-      <div *ngIf="smallScreen">{{registration.teamName}}</div>
-      <div *ngIf="!smallScreen">{{registration.teamName }} - {{registration.meta}} - {{registration.origin}}</div>
+      <div class="registration-list-item">{{registration.faction}}</div>
+      <div mdTooltip="TEAMNAME" class="registration-list-item" *ngIf="smallScreen">{{registration.teamName | truncate:truncateMax}}</div>
+      <div mdTooltip="TEAMNAME - META - ORIGIN" class="registration-list-item" *ngIf="!smallScreen">
+        {{registration.teamName | truncate:truncateMax }} -
+        {{registration.meta | truncate:truncateMax}} -
+        {{registration.origin | truncate:truncateMax}}
+      </div>
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>
 
   <span *ngIf="!smallScreen" class="list-secondary-spacer"></span>
 
   <mdl-list-item-secondary-content *ngIf="!smallScreen">
-    <mdl-list-item-secondary-info class="align-fix elo-info">ELO<img class="padding-fix-icon" src="../../../assets/my_crown_small.png"></mdl-list-item-secondary-info>
-    <span >{{registration.elo}}</span>
+    <mdl-list-item-secondary-info class="align-fix elo-info">ELO<img class="padding-fix-icon"
+                                                                     src="../../../assets/my_crown_small.png">
+    </mdl-list-item-secondary-info>
+    <span>{{registration.elo}}</span>
   </mdl-list-item-secondary-content>
 
-  <mdl-list-item-secondary-content *ngIf="isAdmin || isItMe(registration.playerId) && actualTournament?.actualRound === 0">
+  <mdl-list-item-secondary-content
+    *ngIf="isAdmin || isItMe(registration.playerId) && actualTournament?.actualRound === 0">
     <md-icon class="positive  list-action" (click)="addArmyLists(registration)">playlist_add</md-icon>
   </mdl-list-item-secondary-content>
   <ng-container *ngIf="isAdmin && !registration.isTournamentPlayer  && actualTournament.actualRound === 0 ">
@@ -28,7 +35,9 @@
       <md-icon class="negative  list-action" (click)="deleteRegistration(registration)">delete</md-icon>
     </mdl-list-item-secondary-content>
     <mdl-list-item-secondary-content *ngIf="!smallScreen">
-      <a href='mailto:{{registration.email}}'><md-icon class="info list-action">email</md-icon></a>
+      <a href='mailto:{{registration.email}}'>
+        <md-icon class="info list-action">email</md-icon>
+      </a>
     </mdl-list-item-secondary-content>
     <mdl-list-item-secondary-content>
       <md-icon class="positive  list-action" (click)="acceptRegistration(registration)">check_circle</md-icon>

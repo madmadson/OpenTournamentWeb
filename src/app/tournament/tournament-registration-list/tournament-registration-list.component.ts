@@ -29,7 +29,6 @@ export class TournamentRegistrationListComponent implements OnInit {
 
     if (this.winRef.nativeWindow.screen.width < 500) {
       this.smallScreen = true;
-      this.truncateMax = 10;
     } else if (this.winRef.nativeWindow.screen.width < 800) {
       this.smallScreen = true;
       this.truncateMax = 20;

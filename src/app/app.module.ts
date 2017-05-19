@@ -35,7 +35,7 @@ import {TournamentFormComponent} from './tournament/tournament-form/tournament-f
 import {CustomFormsModule} from 'ng2-validation';
 import {AuthGuard} from './service/auth-guard.service';
 import {
-  AddArmyListsDialogComponent, CreateTeamDialogComponent,
+   CreateTeamDialogComponent,
   RegisterDialogComponent, RegisterTeamDialogComponent, StartTournamentDialogComponent,
   TournamentPreparationComponent,
 
@@ -116,6 +116,7 @@ import {TournamentTeamGameReducer} from './store/reducers/tournamentTeamGameRedu
 import {KillRoundDialogComponent} from './dialogs/round-overview/kill-round-dialog';
 import {PairAgainDialogComponent} from './dialogs/round-overview/pair-again-dialog';
 import {TournamentTeamRankingReducer} from './store/reducers/tournamentTeamRankingReducer';
+import {AddArmyListsDialogComponent} from './dialogs/add-army-lists-dialog';
 
 
 const reducers = {

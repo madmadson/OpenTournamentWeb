@@ -1,12 +1,15 @@
-<h3 class="heading">All Army Lists</h3>
-<button type="button" class="full-width-button" color="accent" md-raised-button (click)="printLists()">Print</button>
-<div #printarea>
-  <div  *ngFor="let armyList of armyLists$ | async">
-    <h3>{{armyList.playerName}} - {{armyList.name}}</h3>
-    <div style=" white-space: pre-wrap;">{{armyList.list}}</div>
-  </div>
-</div>
+<h3 md-dialog-title class="heading">All Army Lists</h3>
 
+<md-dialog-content>
+
+  <button type="button" class="full-width-button save-button" color="accent" md-raised-button (click)="printLists()">Print</button>
+  <div #printarea class="print-area">
+    <div *ngFor="let armyList of armyLists$ | async">
+      <h3>{{armyList.playerName}} - {{armyList.name}}</h3>
+      <div style=" white-space: pre-wrap;">{{armyList.list}}</div>
+    </div>
+  </div>
+</md-dialog-content>
 <div md-dialog-actions>
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
 </div>
