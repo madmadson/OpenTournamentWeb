@@ -37,7 +37,7 @@ export class AddArmyListsDialogComponent {
       data.armyLists.subscribe(armyLists => {
         this.armyLists = _.filter(armyLists, function (armyList: ArmyList) {
           if (that.registration !== undefined) {
-            return armyList.regId === that.registration.id;
+            return armyList.playerId === that.registration.playerId;
           }
         });
       });
@@ -65,8 +65,8 @@ export class AddArmyListsDialogComponent {
     this.selectedTab = (this.armyLists.length + 1);
     this.onSaveArmyList.emit(this.armyListModel);
     if (this.registration) {
-      this.armyListModel = new ArmyList(this.registration.tournamentId, '',
-        this.registration.id, this.registration.playerId, this.registration.playerName, 'New List', 'PAST HERE');
+      this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.id,
+        '', this.registration.playerId, this.registration.playerName, 'New List', 'PAST HERE');
     } else {
       this.armyListModel = new ArmyList(this.tournamentPlayer.tournamentId,
         '', this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
