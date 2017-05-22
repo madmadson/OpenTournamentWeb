@@ -41,8 +41,6 @@ export class PlayerListOverviewComponent implements OnInit, OnDestroy {
 
   search(searchString: string) {
 
-    console.log('searchString: ' + searchString);
-
     if (searchString === '') {
       this.filteredPlayers = this.orderedPlayers;
     }

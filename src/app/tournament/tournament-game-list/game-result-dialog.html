@@ -4,7 +4,7 @@
       <md-card class="game-result-card"
                [ngClass]="{'card-won': gameModel.playerOneScore == 1,
                            'card-not-won': gameModel.playerOneScore == 0} ">
-        <h4 class="heading game-result-playerName">{{gameModel.playerOnePlayerName | truncate:35}}</h4>
+        <h4 class="game-result-playerName">{{gameModel.playerOnePlayerName | truncate:35}}</h4>
 
         <button *ngIf="gameModel.playerOneScore == 0"
                 class="big-button won-button"
@@ -73,7 +73,7 @@
       <md-card class="game-result-card"
                [ngClass]="{'card-won': gameModel.playerTwoScore == 1,
                            'card-not-won': gameModel.playerTwoScore == 0} ">
-        <h4 class="heading game-result-playerName">{{gameModel.playerTwoPlayerName | truncate:35}}</h4>
+        <h4 class="game-result-playerName">{{gameModel.playerTwoPlayerName | truncate:35}}</h4>
         <button *ngIf="gameModel.playerTwoScore == 0"
                 class="big-button won-button"
                 (click)="playerTwoWin()"

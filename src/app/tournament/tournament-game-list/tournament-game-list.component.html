@@ -12,7 +12,7 @@
   class="full-width-select-box"
   placeholder="Scenario"
   #scenario
-  (change)="changeScenario($event)"
+  (change)="filter()"
   [(ngModel)]="selectedScenario"
   name="scenario">
   <md-option *ngFor="let scenario of scenarios" [value]="scenario">{{ scenario }}</md-option>
@@ -50,7 +50,7 @@
       </div>
       <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
       <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid"
-                (click)="startSwapPlayer($event,game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)" mdTooltip="Swap Player Mode"
+                (click)="clickSwapPlayer($event,game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>
       <mdl-icon *ngIf="swapPlayerMode && !game.finished" (click)="endSwapPlayer($event)" mdTooltip="Exit Swap Player Mode"
@@ -83,7 +83,7 @@
       </div>
       <div *ngIf="game.playerTwoArmyList " class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
       <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid"
-                (click)="startSwapPlayer($event,game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)" mdTooltip="Swap Player Mode"
+                (click)="clickSwapPlayer($event,game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>
       <mdl-icon *ngIf="swapPlayerMode && !game.finished" (click)="endSwapPlayer($event)" mdTooltip="Exit Swap Player Mode"

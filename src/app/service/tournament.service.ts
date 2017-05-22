@@ -33,7 +33,7 @@ import {
 import {TournamentTeamGamesConfiguration} from '../../../shared/dto/tournament-team-games-config';
 import {SubscribeTournamentTeamGamesAction} from '../store/actions/tournament-team-games-actions';
 import {SubscribeTournamentTeamRankingsAction} from '../store/actions/tournament-team-rankings-actions';
-import {ScenarioSelectedModel} from "../../../shared/dto/scenario-selected-model";
+import {ScenarioSelectedModel} from '../../../shared/dto/scenario-selected-model';
 
 
 @Injectable()

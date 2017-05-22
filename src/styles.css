@@ -37,18 +37,14 @@ a:hover {
 .heading{
   text-align: center;
   font-size: 1.2em;
-  margin-right: 12px;
-  margin-left: 12px;
-  margin-bottom: 12px;
+  margin: 12px !important;;
   width: 100%;
 }
 @media only screen and (min-width: 500px) {
   .heading {
     text-align: center;
     font-size: 2.4em;
-    margin-right: 12px;
-    margin-left: 12px;
-    margin-bottom: 12px;
+    margin: 12px !important;
     width: 100%;
   }
 }
@@ -174,6 +170,13 @@ md-card {
 
 .big-button{
   height: 54px;
+  padding: 3px !important;
+}
+
+@media only screen and (min-width: 700px) {
+  .big-button {
+    padding: 12px;
+  }
 }
 
 .right-align-button{

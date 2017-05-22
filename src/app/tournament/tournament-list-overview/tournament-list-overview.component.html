@@ -2,9 +2,24 @@
 
 <div class="flex-container">
   <md-card class="single-list-card">
-    <h4 *ngIf="(groupedTournaments$ | async).length == 0">No Tournaments found</h4>
-    <mdl-list  *ngFor="let groupedTournaments of groupedTournaments$ | async">
-      <h4 md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h4>
+    <mdl-textfield type="text"
+                   maxlength="50"
+                   placeholder="Search for name/location"
+                   #seachInput
+                   (keyup)="search(seachInput.value)">
+    </mdl-textfield>
+    <md-select
+      placeholder="Filter"
+      #filter
+      (change)="changeFilter($event)"
+      [(ngModel)]="selectedFilterState"
+      name="filter">
+      <md-option value="Upcoming">Upcoming</md-option>
+      <md-option value="Past">Past</md-option>
+    </md-select>
+    <h4 *ngIf="filteredOrderedGroupedTournaments?.length == 0">No Tournaments found</h4>
+    <mdl-list  *ngFor="let groupedTournaments of filteredOrderedGroupedTournaments">
+      <h4 *ngIf="groupedTournaments?.tournaments?.length !== 0" md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h4>
       <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
       <md-divider></md-divider>
     </mdl-list>

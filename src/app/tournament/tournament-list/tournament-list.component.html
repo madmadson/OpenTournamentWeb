@@ -26,14 +26,14 @@
     <mdl-list-item-text-body>
       <div mdTooltip="Tournament Date"
            *ngIf="(tournament.beginDate | date:'MM/d/yy') === (tournament.endDate | date:'MM/d/yy')">
-        {{tournament.beginDate | date:'MM/d'}}
+        {{tournament.beginDate | date:'EEE, d'}}
         <ng-container *ngIf="!verySmallDevice">
           / {{tournament.beginDate | date:'HH:mm'}}-{{tournament.endDate | date:'HH:mm'}}
         </ng-container>
       </div>
       <div mdTooltip="Tournament Date"
            *ngIf="(tournament.beginDate | date:'MM/d/yy') !== (tournament.endDate | date:'MM/d/yy')">
-        {{tournament.beginDate | date:'MM/d'}}-{{tournament.endDate | date:'d'}}
+        {{tournament.beginDate | date:'EEE, d'}} - {{tournament.endDate | date:'EEE, d'}}
         <ng-container *ngIf="!verySmallDevice">
           / {{tournament.beginDate | date:'HH:mm'}}-{{tournament.endDate | date:'HH:mm'}}
         </ng-container>

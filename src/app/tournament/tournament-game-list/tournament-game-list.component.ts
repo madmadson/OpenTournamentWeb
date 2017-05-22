@@ -58,8 +58,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   selectedScenario: string;
 
-  dialogOpened: boolean;
-
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar,
               private renderer: Renderer2,
@@ -103,13 +101,14 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     }
   }
 
-  startSwapPlayer(event: any, game: TournamentGame, dragTournamentPlayerId: string,
+  clickSwapPlayer(event: any, game: TournamentGame, dragTournamentPlayerId: string,
                   dragTournamentPlayerOpponentId: string) {
 
-    const that = this;
+   console.log('click swap player');
 
-    event.preventDefault();
-    event.stopPropagation();
+   event.stopPropagation();
+
+    const that = this;
 
     this.swapPlayerMode = true;
     this.draggedTournamentPlayerId = dragTournamentPlayerId;
@@ -165,27 +164,31 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   startDrag(event: any, game: TournamentGame, dragTournamentPlayerId: string,
             dragTournamentPlayerOpponentId: string) {
 
-    if (!game.finished && this.actualTournament.creatorUid === this.userPlayerData.userUid) {
-      const that = this;
+    event.preventDefault();
+    event.stopPropagation();
 
-      console.log('drag started');
-      if (this.smallScreen) {
-        this.renderer.addClass(document.body, 'prevent-scrolling');
+    if (!this.smallScreen) {
+
+      if (!game.finished && this.actualTournament.creatorUid === this.userPlayerData.userUid) {
+        const that = this;
+
+        console.log('drag started');
+
+        // firefox foo
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', null);
+
+        this.draggedTournamentPlayerId = dragTournamentPlayerId;
+        this.draggedTournamentPlayerCurrentOpponentId = dragTournamentPlayerOpponentId;
+        this.draggedGame = game;
+        this.dragStarted = true;
+
+        _.each(this.rankingsForRound, function (ranking: TournamentRanking) {
+          if (ranking.tournamentPlayerId === dragTournamentPlayerId) {
+            that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
+          }
+        });
       }
-      // firefox foo
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', null);
-
-      this.draggedTournamentPlayerId = dragTournamentPlayerId;
-      this.draggedTournamentPlayerCurrentOpponentId = dragTournamentPlayerOpponentId;
-      this.draggedGame = game;
-      this.dragStarted = true;
-
-      _.each(this.rankingsForRound, function (ranking: TournamentRanking) {
-        if (ranking.tournamentPlayerId === dragTournamentPlayerId) {
-          that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
-        }
-      });
     }
     return true;
   }
@@ -609,17 +612,17 @@ export class GameResultDialogComponent {
     }
   }
 
+  increasePlayerOneVP() {
+    const actualVP = this.gameModel.playerOneVictoryPoints;
+    if (actualVP < this.gameConfig.points[2].max) {
+      this.gameModel.playerOneVictoryPoints = (this.gameModel.playerOneVictoryPoints + 1);
+    }
+  }
+
   decreasePlayerOneVP() {
     const actualVP = this.gameModel.playerOneVictoryPoints;
     if (actualVP > this.gameConfig.points[2].min) {
       this.gameModel.playerOneVictoryPoints = (this.gameModel.playerOneVictoryPoints - 1);
-    }
-  }
-
-  increasePlayerOneVP() {
-    const actualVP = this.gameModel.playerOneVictoryPoints;
-    if (actualVP < this.gameConfig.points[1].max) {
-      this.gameModel.playerOneVictoryPoints = (this.gameModel.playerOneVictoryPoints + 1);
     }
   }
 
@@ -633,17 +636,17 @@ export class GameResultDialogComponent {
     }
   }
 
-  decreasePlayerTwoCP() {
-    const actualCP = this.gameModel.playerTwoControlPoints;
-    if (actualCP > this.gameConfig.points[1].min) {
-      this.gameModel.playerTwoControlPoints = (this.gameModel.playerTwoControlPoints - 1);
-    }
-  }
-
   increasePlayerTwoCP() {
     const actualCP = this.gameModel.playerTwoControlPoints;
     if (actualCP < this.gameConfig.points[1].max) {
       this.gameModel.playerTwoControlPoints = (this.gameModel.playerTwoControlPoints + 1);
+    }
+  }
+
+  decreasePlayerTwoCP() {
+    const actualCP = this.gameModel.playerTwoControlPoints;
+    if (actualCP > this.gameConfig.points[1].min) {
+      this.gameModel.playerTwoControlPoints = (this.gameModel.playerTwoControlPoints - 1);
     }
   }
 
@@ -666,7 +669,7 @@ export class GameResultDialogComponent {
 
   increasePlayerTwoVP() {
     const actualVP = this.gameModel.playerTwoVictoryPoints;
-    if (actualVP < this.gameConfig.points[1].max) {
+    if (actualVP < this.gameConfig.points[2].max) {
       this.gameModel.playerTwoVictoryPoints = (this.gameModel.playerTwoVictoryPoints + 1);
     }
   }
