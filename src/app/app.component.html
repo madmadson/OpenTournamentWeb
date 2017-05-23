@@ -40,7 +40,7 @@
     <span class="spacer"></span>
     <span *ngIf="(currentUserName)" class="user-welcome-panel">{{currentUserName}}</span>
     <img *ngIf="(currentUserImage)" class="avatar" src="{{currentUserImage}}">
-    <img *ngIf="(!currentUserImage)" class="avatar" src="../assets/icon_final_small.png">
+    <img *ngIf="(!currentUserImage)" class="avatar" src="../assets/icon_final_48.png">
     <a *ngIf="(loggedIn)" class="auth-anchor" (click)="logout()">Logout</a>
     <a *ngIf="(!loggedIn)" class="auth-anchor" (click)="login()">Login</a>
   </md-toolbar>
