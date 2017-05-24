@@ -359,6 +359,8 @@ export class TournamentService implements OnDestroy {
 
   pairNewTeamTournamentRound(config: TournamentManagementConfiguration) {
 
+    this.rankingService.pushRankingForRound(config);
+
     const newTeamRankings: TournamentRanking[] = this.rankingService.pushTeamRankingForRound(config);
     const successFullyPaired: boolean = this.tournamentGameService.createTeamGamesForRound(config, newTeamRankings);
 

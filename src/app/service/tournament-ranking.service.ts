@@ -27,7 +27,8 @@ export class TournamentRankingService implements OnDestroy {
 
   allPlayers: TournamentPlayer[];
   allTeams: TournamentTeam[];
-  allRankings: TournamentRanking[];
+  allPlayerRankings: TournamentRanking[];
+  allTeamRankings: TournamentRanking[];
   allGames: TournamentGame[];
   actualTournament: Tournament;
 
@@ -38,7 +39,8 @@ export class TournamentRankingService implements OnDestroy {
     this.store.select(state => state).subscribe(state => {
       this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
       this.allTeams = state.actualTournamentTeams.teams;
-      this.allRankings = state.actualTournamentRankings.actualTournamentRankings;
+      this.allPlayerRankings = state.actualTournamentRankings.actualTournamentRankings;
+      this.allTeamRankings = state.actualTournamentTeamRankings.actualTournamentTeamRankings;
       this.allGames = state.actualTournamentGames.actualTournamentGames;
       this.actualTournament = state.actualTournament.actualTournament;
     });
@@ -98,7 +100,7 @@ export class TournamentRankingService implements OnDestroy {
 
     this.eraseRankingsForRound(config);
 
-    const lastRoundRankings: TournamentRanking[] = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+    const lastRoundRankings: TournamentRanking[] = _.filter(this.allPlayerRankings, function (ranking: TournamentRanking) {
       return (ranking.tournamentRound === (config.round - 1));
     });
 
@@ -145,9 +147,9 @@ export class TournamentRankingService implements OnDestroy {
     const that = this;
     const newRankings: TournamentRanking[] = [];
 
-    this.eraseRankingsForRound(config);
+    this.eraseTeamRankingsForRound(config);
 
-    const lastRoundRankings: TournamentRanking[] = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+    const lastRoundTeamRankings: TournamentRanking[] = _.filter(this.allTeamRankings, function (ranking: TournamentRanking) {
       return (ranking.tournamentRound === (config.round - 1));
     });
 
@@ -165,7 +167,7 @@ export class TournamentRankingService implements OnDestroy {
         0,
         0, 0, 0, 0, 1, []);
 
-      _.each(lastRoundRankings, function (lastRoundRanking: TournamentRanking) {
+      _.each(lastRoundTeamRankings, function (lastRoundRanking: TournamentRanking) {
 
         if (lastRoundRanking.tournamentPlayerId === team.id) {
 
@@ -222,7 +224,7 @@ export class TournamentRankingService implements OnDestroy {
 
     for (let i = roundOfGameResult; i <= this.actualTournament.actualRound; i++) {
 
-      const allRankingsFromSameRound: TournamentRanking[] = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+      const allRankingsFromSameRound: TournamentRanking[] = _.filter(this.allPlayerRankings, function (ranking: TournamentRanking) {
         return (ranking.tournamentRound === i);
       });
 
@@ -233,22 +235,22 @@ export class TournamentRankingService implements OnDestroy {
         opponentIdsTournamentPlayerMap[ranking.tournamentPlayerId] = ranking.opponentTournamentPlayerIds;
       });
 
-      const lastRoundRankingPlayerOne: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+      const lastRoundRankingPlayerOne: TournamentRanking = _.filter(this.allPlayerRankings, function (ranking: TournamentRanking) {
         return (ranking.tournamentRound === (i - 1) &&
         ranking.tournamentPlayerId === gameResult.gameAfter.playerOneTournamentPlayerId);
       })[0];
 
-      const lastRoundRankingPlayerTwo: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+      const lastRoundRankingPlayerTwo: TournamentRanking = _.filter(this.allPlayerRankings, function (ranking: TournamentRanking) {
         return (ranking.tournamentRound === (i - 1) &&
         ranking.tournamentPlayerId === gameResult.gameAfter.playerTwoTournamentPlayerId);
       })[0];
 
-      const rankingPlayerOne: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+      const rankingPlayerOne: TournamentRanking = _.filter(this.allPlayerRankings, function (ranking: TournamentRanking) {
         return (ranking.tournamentRound === (i) &&
         ranking.tournamentPlayerId === gameResult.gameAfter.playerOneTournamentPlayerId);
       })[0];
 
-      const rankingPlayerTwo: TournamentRanking = _.filter(this.allRankings, function (ranking: TournamentRanking) {
+      const rankingPlayerTwo: TournamentRanking = _.filter(this.allPlayerRankings, function (ranking: TournamentRanking) {
         return (ranking.tournamentRound === (i) &&
         ranking.tournamentPlayerId === gameResult.gameAfter.playerTwoTournamentPlayerId);
       })[0];

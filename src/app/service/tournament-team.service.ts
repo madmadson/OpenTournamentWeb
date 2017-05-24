@@ -177,35 +177,35 @@ export class TournamentTeamService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearTournamentTeamRegistrationsAction());
-    if (this.tournamentTeamGamesRef) {
-      this.tournamentTeamGamesRef.off();
+    if (this.tournamentTeamsRegistrationRef) {
+      this.tournamentTeamsRegistrationRef.off();
     }
 
-    console.log('subscribeOnTournamentTeamGames');
+    console.log('tournamentTeamsRegistrationRef');
 
-    this.tournamentTeamGamesRef = this.fb.database().ref('tournament-team-games/' + tournamentId);
+    this.tournamentTeamsRegistrationRef = this.fb.database().ref('tournament-team-registrations/' + tournamentId);
 
-    this.tournamentTeamGamesRef.on('child_added', function (snapshot) {
+    this.tournamentTeamsRegistrationRef.on('child_added', function (snapshot) {
 
-      const tournamentGame: TournamentGame = TournamentGame.fromJson(snapshot.val());
-      tournamentGame.id = snapshot.key;
+      const team: TournamentTeam = TournamentTeam.fromJson(snapshot.val());
+      team.id = snapshot.key;
 
-      that.store.dispatch(new AddTournamentTeamGameAction(tournamentGame));
-
-    });
-
-    this.tournamentTeamGamesRef.on('child_changed', function (snapshot) {
-
-      const tournamentGame: TournamentGame = TournamentGame.fromJson(snapshot.val());
-      tournamentGame.id = snapshot.key;
-
-      that.store.dispatch(new ChangeTournamentTeamGameAction(tournamentGame));
+      that.store.dispatch(new AddTournamentTeamRegistrationAction(team));
 
     });
 
-    this.tournamentTeamGamesRef.on('child_removed', function (snapshot) {
+    this.tournamentTeamsRegistrationRef.on('child_changed', function (snapshot) {
 
-      that.store.dispatch(new DeleteTournamentTeamGameAction(snapshot.key));
+      const tournamentTeam: TournamentTeam = TournamentTeam.fromJson(snapshot.val());
+      tournamentTeam.id = snapshot.key;
+
+      that.store.dispatch(new ChangeTournamentTeamRegistrationAction(tournamentTeam));
+
+    });
+
+    this.tournamentTeamsRegistrationRef.on('child_removed', function (snapshot) {
+
+      that.store.dispatch(new DeleteTournamentTeamRegistrationAction(snapshot.key));
 
     });
   }

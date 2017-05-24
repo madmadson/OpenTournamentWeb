@@ -33,8 +33,12 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
 
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
-  @Input() rankingsForRound$: Observable<TournamentRanking[]>;
-  @Input() gamesForRound$: Observable<TournamentGame[]>;
+
+  @Input() playerRankingsForRound$: Observable<TournamentRanking[]>;
+  @Input() teamRankingsForRound$: Observable<TournamentRanking[]>;
+
+  @Input() playerGamesForRound$: Observable<TournamentGame[]>;
+  @Input() teamGamesForRound$: Observable<TournamentGame[]>;
 
   @Output() onPairAgain = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
@@ -83,7 +87,7 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
       this.currentUserId = auth.currentUserId;
     });
 
-    this.gamesForRound$.subscribe((games: TournamentGame[]) => {
+    this.teamGamesForRound$.subscribe((games: TournamentGame[]) => {
 
       this.allGames = games;
       this.allGamesFiltered = games;
@@ -142,8 +146,6 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   }
 
   search(searchString: string) {
-
-    console.log('searchString: ' + searchString);
 
     if (searchString === '') {
       this.allGamesFiltered = this.allGames;

@@ -24,6 +24,8 @@ export class TournamentListOverviewComponent {
 
   constructor(private store: Store<ApplicationState>) {
 
+    this.selectedFilterState = 'Upcoming';
+
     this.allTournaments$ = store.select(state => state.tournaments.tournaments);
 
     store.select(
@@ -41,9 +43,10 @@ export class TournamentListOverviewComponent {
       }).subscribe((tournaments: TournamentListVM[]) => {
       this.orderedGroupedTournaments = tournaments;
       this.filteredOrderedGroupedTournaments = tournaments;
+
+      this.changeFilter();
     });
 
-    this.selectedFilterState = 'Upcoming';
   }
 
   search(searchString: string) {

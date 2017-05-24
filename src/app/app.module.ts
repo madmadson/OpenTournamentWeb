@@ -119,6 +119,8 @@ import {TournamentTeamRankingReducer} from './store/reducers/tournamentTeamRanki
 import {AddArmyListsDialogComponent} from './dialogs/add-army-lists-dialog';
 import {PrintRankingsDialogComponent} from './dialogs/print-rankings-dialog';
 import {PrintGamesDialogComponent} from './dialogs/print-games-dialog';
+import { TournamentTeamRankingListComponent } from './team-tournament/tournament-team-ranking-list/tournament-team-ranking-list.component';
+import {ShowTeamRankingDialogComponent} from './dialogs/show-team-ranking-dialog';
 
 
 const reducers = {
@@ -251,7 +253,9 @@ export const firebaseConfDev = {
     PrintArmyListsDialogComponent,
     TournamentTeamRoundOverviewComponent,
     PrintRankingsDialogComponent,
-    PrintGamesDialogComponent
+    PrintGamesDialogComponent,
+    TournamentTeamRankingListComponent,
+    ShowTeamRankingDialogComponent
   ],
   providers: [
     LoginService,
@@ -285,7 +289,8 @@ export const firebaseConfDev = {
     ShowTeamDialogComponent,
     PrintArmyListsDialogComponent,
     PrintRankingsDialogComponent,
-    PrintGamesDialogComponent
+    PrintGamesDialogComponent,
+    ShowTeamRankingDialogComponent
   ],
   bootstrap: [AppComponent]
 })

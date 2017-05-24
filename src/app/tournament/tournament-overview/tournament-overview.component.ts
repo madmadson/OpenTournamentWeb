@@ -42,7 +42,7 @@ import {
 } from '../../store/actions/tournament-teams-actions';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
-import {ScenarioSelectedModel} from "../../../../shared/dto/scenario-selected-model";
+import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 
 @Component({
   selector: 'tournament-overview',
@@ -290,9 +290,9 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleKillRound(config: TournamentManagementConfiguration) {
-    if (this.actualTournament.actualRound === 0) {
+    if (this.actualTournament.teamSize === 0) {
       this.store.dispatch(new TournamentKillRoundAction(config));
-    } else if (this.actualTournament.actualRound > 0) {
+    } else if (this.actualTournament.teamSize > 0) {
       this.store.dispatch(new TournamentKillTeamRoundAction(config));
     }
 

@@ -1,0 +1,31 @@
+<ng-container *ngIf="orderedTeamRankings.length === 0" >
+  <div class="heading">Load Rankings... <mdl-spinner  single-color active></mdl-spinner></div>
+</ng-container>
+<table class="full-width mdl-data-table mdl-js-data-table mdl-shadow--3dp">
+  <thead>
+  <tr>
+    <th class="small-three-space-table-cell rank-number">#</th>
+    <th class="mdl-data-table__cell--non-numeric">Team</th>
+    <th class="small-three-space-table-cell">Score</th>
+    <th class="small-three-space-table-cell">SOS</th>
+    <th class="small-three-space-table-cell">CP</th>
+    <th class="small-three-space-table-cell">VP</th>
+  </tr>
+  </thead>
+  <tbody *ngFor="let rank of orderedTeamRankings; let i = index; let even = even"
+         [ngClass]="{'even': even} ">
+  <tr (click)="showTeam(rank)" class="team-table-row">
+    <td class="small-three-space-table-cell rank-table-cell rank-number">{{i +1}}</td>
+    <td class="mdl-data-table__cell--non-numeric">
+      <div class="player-name-table-cell">{{rank.playerName | truncate:truncateMax}}</div>
+      <div mdTooltip="META - COUNTRY" class="other-player-data-table-cell">{{rank.meta}} - {{rank.country}}</div>
+      <div>{{rank.country}}</div>
+      </td>
+    <td class="small-three-space-table-cell">{{rank.score}}</td>
+    <td class="small-three-space-table-cell">{{rank.sos}}</td>
+    <td class="small-three-space-table-cell">{{rank.controlPoints}}</td>
+    <td class="small-three-space-table-cell">{{rank.victoryPoints}}</td>
+  </tr>
+  </tbody>
+</table>
+
