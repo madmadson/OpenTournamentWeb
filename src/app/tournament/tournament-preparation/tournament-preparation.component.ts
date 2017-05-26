@@ -25,14 +25,14 @@ import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-e
 import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-player-dialog';
 import {PrintArmyListsDialogComponent} from '../../dialogs/print-army-lists-dialog';
 import {AddArmyListsDialogComponent} from '../../dialogs/add-army-lists-dialog';
-import {RegistrationPush} from "../../../../shared/dto/registration-push";
+import {RegistrationPush} from '../../../../shared/dto/registration-push';
 
 
 
 @Component({
   selector: 'tournament-preparation',
   templateUrl: './tournament-preparation.component.html',
-  styleUrls: ['./tournament-preparation.component.css']
+  styleUrls: ['./tournament-preparation.component.scss']
 })
 export class TournamentPreparationComponent implements OnInit {
 
@@ -60,13 +60,14 @@ export class TournamentPreparationComponent implements OnInit {
   @Output() onEraseTeamRegistration = new EventEmitter<TeamRegistrationPush>();
 
   @Output() onDeleteTournamentPlayer = new EventEmitter<TournamentPlayer>();
-  @Output() onDeleteRegistration = new EventEmitter<Registration>();
+  @Output() onDeleteRegistration = new EventEmitter<RegistrationPush>();
   @Output() onDeleteArmyList = new EventEmitter<ArmyList>();
   @Output() onEraseTournamentTeam = new EventEmitter<TournamentTeamEraseModel>();
 
   allRegistrations: Registration[];
   userPlayerData: Player;
   myRegistration: Registration;
+  teamCreator: TournamentTeam;
   myTeam: TournamentTeam;
 
   allActualTournamentPlayers: TournamentPlayer[];
@@ -106,9 +107,16 @@ export class TournamentPreparationComponent implements OnInit {
           });
       });
       this.actualTournamentTeamRegistrations$.subscribe(teams => {
-        this.myTeam = _.find(teams, function (team) {
+        this.teamCreator = _.find(teams, function (team) {
           if (that.userPlayerData !== undefined) {
             return team.creatorUid === that.userPlayerData.userUid;
+          }
+        });
+        this.myTeam = _.find(teams, function (team) {
+          if (that.userPlayerData && team.registeredPlayerIds) {
+            if (team.registeredPlayerIds.indexOf(that.userPlayerData.id) !== -1) {
+              return team;
+            }
           }
         });
         this.tournamentTeamRegistrations = teams.length;
@@ -316,21 +324,34 @@ export class TournamentPreparationComponent implements OnInit {
     const dialogRef = this.dialog.open(ShowTeamRegistrationDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
-        team: this.myTeam,
+        team: this.teamCreator,
         allRegistrations: this.allRegistrations,
-        userPlayerData: this.userPlayerData
+        userPlayerData: this.userPlayerData,
+        myTeam: this.myTeam
       }
     });
 
-    const saveEventSubscribe = dialogRef.componentInstance.onKickPlayer.subscribe(registration => {
+    const kickEventSubscribe = dialogRef.componentInstance.onKickPlayer.subscribe(registration => {
 
       if (registration !== undefined) {
-        this.onDeleteRegistration.emit(registration);
+        this.onDeleteRegistration.emit({
+           registration: registration,
+           tournament: this.actualTournament,
+           tournamentTeam: this.myTeam
+          });
         dialogRef.close();
+      }
+    });
+
+    const saveEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(registration => {
+
+      if (registration !== undefined) {
+        this.openAddArmyListDialog(registration);
       }
     });
     dialogRef.afterClosed().subscribe(() => {
 
+      kickEventSubscribe.unsubscribe();
       saveEventSubscribe.unsubscribe();
     });
 
@@ -346,7 +367,11 @@ export class TournamentPreparationComponent implements OnInit {
   deleteMyRegistration(registration: Registration) {
     if (registration !== undefined) {
 
-      this.onDeleteRegistration.emit(registration);
+      this.onDeleteRegistration.emit({
+        registration: registration,
+        tournamentTeam: this.myTeam,
+        tournament: this.actualTournament
+      });
     }
   }
 
@@ -381,7 +406,7 @@ export class TournamentPreparationComponent implements OnInit {
     }
   }
 
-  addArmyList(registration: Registration) {
+  openAddArmyListDialog(registration: Registration) {
     if (registration !== undefined) {
 
       const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
@@ -426,9 +451,9 @@ export class TournamentPreparationComponent implements OnInit {
     this.onAddTournamentRegistration.emit(registrationPush);
   }
 
-  handleKickPlayer(registration: Registration) {
+  handleKickTournamentPlayer(tournamentPlayer: TournamentPlayer) {
 
-    this.onDeleteRegistration.emit(registration);
+    this.onDeleteTournamentPlayer.emit(tournamentPlayer);
   }
 
   handleAcceptTeamRegistration(teamRegPush: TeamRegistrationPush) {

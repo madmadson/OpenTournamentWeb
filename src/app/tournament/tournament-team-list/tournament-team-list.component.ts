@@ -13,23 +13,25 @@ import * as _ from 'lodash';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 import {ShowTeamDialogComponent} from '../../dialogs/show-team-dialog';
 import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-player-dialog';
+import {Registration} from "../../../../shared/model/registration";
 
 
 @Component({
   selector: 'tournament-team-list',
   templateUrl: './tournament-team-list.component.html',
-  styleUrls: ['./tournament-team-list.component.css']
+  styleUrls: ['./tournament-team-list.component.scss']
 })
 export class TournamentTeamListComponent implements OnInit {
 
   @Input() actualTournamentTeams$: Observable<TournamentTeam[]>;
-  @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() actualTournament: Tournament;
   @Input() userPlayerData: Player;
   @Input() allActualTournamentPlayers: TournamentPlayer[];
 
   @Output() onEraseTournamentTeam = new EventEmitter<TournamentTeamEraseModel>();
   @Output() onAddTournamentPlayer = new EventEmitter<TournamentPlayer>();
+  @Output() onKickTournamentPlayer = new EventEmitter<TournamentPlayer>();
+  @Output() onAddArmyLists = new EventEmitter<TournamentPlayer>();
 
   truncateMax: number;
   smallScreen: boolean;
@@ -70,15 +72,24 @@ export class TournamentTeamListComponent implements OnInit {
       }
     });
 
-    const saveEventSubscribe = dialogRef.componentInstance.onKickPlayer.subscribe(registration => {
+    const saveEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(tournamentPlayer => {
 
-      if (registration !== undefined) {
-
+      if (tournamentPlayer !== undefined) {
+        this.onAddArmyLists.emit(tournamentPlayer);
       }
+    });
+
+    const kickEventSubscribe = dialogRef.componentInstance.onKickTournamentPlayer.subscribe(tournamentPlayer => {
+
+      if (tournamentPlayer !== undefined) {
+        this.onKickTournamentPlayer.emit(tournamentPlayer);
+      }
+      dialogRef.close();
     });
     dialogRef.afterClosed().subscribe(() => {
 
       saveEventSubscribe.unsubscribe();
+      kickEventSubscribe.unsubscribe();
     });
   }
 

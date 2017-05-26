@@ -15,12 +15,14 @@ import {Player} from '../../../shared/model/player';
 export class ShowTeamRegistrationDialogComponent {
 
   @Output() onKickPlayer = new EventEmitter<Registration>();
+  @Output() onAddArmyLists = new EventEmitter<Registration>();
 
   tournament: Tournament;
   team: TournamentTeam;
   allRegistrations: Registration[];
   allRegistrationsForTeam: Registration[];
   userPlayerData: Player;
+  myTeam: TournamentTeam;
 
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
@@ -30,6 +32,7 @@ export class ShowTeamRegistrationDialogComponent {
     this.team = data.team;
     this.allRegistrations = data.allRegistrations;
     this.userPlayerData = data.userPlayerData;
+    this.myTeam = data.myTeam;
 
     this.allRegistrationsForTeam = _.filter(data.allRegistrations, function (reg: Registration) {
       return reg.teamName === data.team.teamName;
@@ -41,6 +44,14 @@ export class ShowTeamRegistrationDialogComponent {
       return playerId === this.userPlayerData.id;
     }
   }
+
+  isItMyTeamOrAdmin(team: TournamentTeam): boolean {
+    if (!this.myTeam) {
+      return false;
+    }
+    return (this.team.creatorUid === this.userPlayerData.userUid || team === this.myTeam);
+  }
+
 
   kickPlayer(reg: Registration) {
 
@@ -58,4 +69,10 @@ export class ShowTeamRegistrationDialogComponent {
 
   }
 
+  addArmyLists(event: any, registration: Registration) {
+
+    event.stopPropagation();
+
+    this.onAddArmyLists.emit(registration);
+  }
 }

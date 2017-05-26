@@ -252,9 +252,8 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TournamentPlayerEraseAction(tournamentPlayer));
   }
 
-  handleDeleteRegistration(registration: Registration) {
-    this.store.dispatch(new RegistrationEraseAction(
-      {tournament: this.actualTournament, registration: registration}));
+  handleDeleteRegistration(registrationPush: RegistrationPush) {
+    this.store.dispatch(new RegistrationEraseAction(registrationPush));
   }
 
   handleEndTournament(config: TournamentManagementConfiguration) {

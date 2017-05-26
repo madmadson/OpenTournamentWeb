@@ -1,9 +1,11 @@
-import {Component, ElementRef, Inject, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {Tournament} from '../../../shared/model/tournament';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {ArmyList} from '../../../shared/model/armyList';
 import {WindowRefService} from '../service/window-ref-service';
+
+import * as _ from 'lodash';
 
 @Component({
   selector: 'print-army-lists-dialog',
@@ -23,7 +25,7 @@ export class PrintArmyListsDialogComponent {
               private winRef: WindowRefService) {
 
     this.tournament = data.tournament;
-    this.armyLists$ = data.armyLists$;
+    this.armyLists$ = data.armyLists$.map(armyLists => _.sortBy(armyLists, ['teamName', 'playerName']));
 
     this.window = this.winRef.nativeWindow;
   }

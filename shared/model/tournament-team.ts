@@ -9,8 +9,8 @@ export class TournamentTeam {
   meta: string;
   isAcceptedTournamentTeam: boolean;
 
-  tournamentPlayerIds: string[];
-  registeredPlayerIds: string[];
+  tournamentPlayerIds?: string[];
+  registeredPlayerIds?: string[];
 
   static fromJson({isRegisteredTeam, tournamentId, creatorUid, teamName, country,
                     meta, isAcceptedTournamentTeam, tournamentPlayerIds, registeredPlayerIds}): TournamentTeam {
@@ -30,7 +30,7 @@ export class TournamentTeam {
     this.country = country;
     this.meta = meta;
     this.isAcceptedTournamentTeam = isAcceptedTournamentTeam;
-    this.tournamentPlayerIds = tournamentPlayerIds;
-    this.registeredPlayerIds = registeredPlayerIds;
+    this.tournamentPlayerIds = tournamentPlayerIds ? tournamentPlayerIds : [];
+    this.registeredPlayerIds = registeredPlayerIds ? registeredPlayerIds : [];
   }
 }

@@ -52,8 +52,6 @@ export class NewTournamentPlayerDialogComponent {
 
     const that = this;
     that.playerNameAlreadyInUse = false;
-
-
     that.dummyNotAllowed = that.tournamentPlayerModel.playerName.toLowerCase() === 'dummy';
 
     _.each(this.allActualTournamentPlayers, function (player: TournamentPlayer) {

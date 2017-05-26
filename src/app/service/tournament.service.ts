@@ -267,6 +267,20 @@ export class TournamentService implements OnDestroy {
     const tournamentRef = this.afService.database.object('tournaments/' + regPush.tournament.id);
     tournamentRef.update({actualParticipants: (regPush.tournament.actualParticipants - 1 )});
 
+    if ( regPush.tournament.teamSize > 0) {
+
+      const newListOfRegisteredTeamMembers = _.cloneDeep(regPush.tournamentTeam.registeredPlayerIds);
+
+      const index = newListOfRegisteredTeamMembers.indexOf(regPush.registration.playerId);
+      newListOfRegisteredTeamMembers.splice(index, 1);
+
+      const tournamentTeamRef = this.afService.database.object(
+        'tournament-team-registrations/' +
+        regPush.tournament.id + '/' +
+        regPush.tournamentTeam.id);
+      tournamentTeamRef.update({registeredPlayerIds: newListOfRegisteredTeamMembers});
+    }
+
     this.snackBar.open('Registration deleted successfully', '', {
       duration: 5000
     });

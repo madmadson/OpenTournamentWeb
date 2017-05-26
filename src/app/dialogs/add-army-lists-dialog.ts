@@ -32,7 +32,8 @@ export class AddArmyListsDialogComponent {
 
     if (this.registration) {
       this.armyListModel = new ArmyList(this.registration.tournamentId, '',
-        this.registration.id, this.registration.playerId, this.registration.playerName, 'New List', 'PAST HERE');
+        this.registration.id, this.registration.playerId, this.registration.playerName,
+        this.registration.teamName, 'New List', 'PAST HERE');
 
       data.armyLists.subscribe(armyLists => {
         this.armyLists = _.filter(armyLists, function (armyList: ArmyList) {
@@ -44,7 +45,7 @@ export class AddArmyListsDialogComponent {
     } else {
       this.armyListModel = new ArmyList(this.tournamentPlayer.tournamentId,
         '', this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
-        this.tournamentPlayer.playerName, 'New List', 'PAST HERE');
+        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName, 'New List', 'PAST HERE');
 
       data.armyLists.subscribe(armyLists => {
         this.armyLists = _.filter(armyLists, function (armyList: ArmyList) {
@@ -66,11 +67,12 @@ export class AddArmyListsDialogComponent {
     this.onSaveArmyList.emit(this.armyListModel);
     if (this.registration) {
       this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.id,
-        '', this.registration.playerId, this.registration.playerName, 'New List', 'PAST HERE');
+        '', this.registration.playerId, this.registration.playerName,
+        this.registration.teamName, 'New List', 'PAST HERE');
     } else {
       this.armyListModel = new ArmyList(this.tournamentPlayer.tournamentId,
         '', this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
-        this.tournamentPlayer.playerName, 'New List', 'PAST HERE');
+        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName, 'New List', 'PAST HERE');
 
     }
   };

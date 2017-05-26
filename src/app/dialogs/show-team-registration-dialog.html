@@ -21,7 +21,11 @@
       <mdl-list-item-secondary-info class="align-fix elo-info">ELO<img class="padding-fix-icon"
                                                                        src="../../assets/my_crown_small.png">
       </mdl-list-item-secondary-info>
-      <span>{{registration.elo}}</span>
+      <span *ngIf="registration.elo">{{registration.elo}}</span>
+    </mdl-list-item-secondary-content>
+    <mdl-list-item-secondary-content
+      *ngIf="isItMyTeamOrAdmin(team)">
+      <md-icon class="positive  list-action" (click)="addArmyLists($event, registration)">playlist_add</md-icon>
     </mdl-list-item-secondary-content>
     <mdl-list-item-secondary-content *ngIf="isAdminOrTeamLeader() ">
       <md-icon md-tooltip="Kick Player" class="negative  list-action" (click)="kickPlayer(registration)">delete</md-icon>

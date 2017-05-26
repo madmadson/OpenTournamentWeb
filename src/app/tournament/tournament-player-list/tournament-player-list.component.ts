@@ -2,19 +2,16 @@ import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/c
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {Player} from '../../../../shared/model/player';
 import {Tournament} from '../../../../shared/model/tournament';
-import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {ArmyList} from '../../../../shared/model/armyList';
-import {ShowArmyListInTournamentRankingDialogComponent} from '../tournament-ranking-list/tournament-ranking-list.component';
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 
-import * as _ from 'lodash';
-import {WindowRefService} from "../../service/window-ref-service";
+import {WindowRefService} from '../../service/window-ref-service';
 
 @Component({
   selector: 'tournament-player-list',
   templateUrl: './tournament-player-list.component.html',
-  styleUrls: ['./tournament-player-list.component.css']
+  styleUrls: ['./tournament-player-list.component.scss']
 })
 export class TournamentPlayerListComponent implements OnInit {
 
@@ -64,7 +61,6 @@ export class TournamentPlayerListComponent implements OnInit {
   }
 
   addArmyLists(tournamentPlayer: TournamentPlayer) {
-    console.log('add armyList');
     this.onAddArmyLists.emit(tournamentPlayer);
   }
 

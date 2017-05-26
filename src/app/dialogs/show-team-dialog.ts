@@ -15,13 +15,15 @@ import {TournamentPlayer} from "../../../shared/model/tournament-player";
 })
 export class ShowTeamDialogComponent {
 
-  @Output() onKickPlayer = new EventEmitter<TournamentPlayer>();
+  @Output() onKickTournamentPlayer = new EventEmitter<TournamentPlayer>();
+  @Output() onAddArmyLists = new EventEmitter<TournamentPlayer>();
 
   tournament: Tournament;
   team: TournamentTeam;
   allActualTournamentPlayers: TournamentPlayer[];
   allTournamentPlayerForTeam: TournamentPlayer[];
   userPlayerData: Player;
+  myTeam: TournamentTeam;
 
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
@@ -30,6 +32,7 @@ export class ShowTeamDialogComponent {
     this.team = data.team;
     this.allActualTournamentPlayers = data.allActualTournamentPlayers;
     this.userPlayerData = data.userPlayerData;
+    this.myTeam = data.myTeam;
 
     this.allTournamentPlayerForTeam = _.filter(data.allActualTournamentPlayers, function (player: TournamentPlayer) {
       return player.teamName === data.team.teamName;
@@ -44,7 +47,7 @@ export class ShowTeamDialogComponent {
 
   kickPlayer(reg: TournamentPlayer) {
 
-    this.onKickPlayer.emit(reg);
+    this.onKickTournamentPlayer.emit(reg);
   }
 
   isAdmin(): boolean {
@@ -52,4 +55,10 @@ export class ShowTeamDialogComponent {
     return (this.tournament.creatorUid === this.userPlayerData.userUid);
   }
 
+  addArmyLists(event: any, tournamentPlayer: TournamentPlayer) {
+
+    event.stopPropagation();
+
+    this.onAddArmyLists.emit(tournamentPlayer);
+  }
 }

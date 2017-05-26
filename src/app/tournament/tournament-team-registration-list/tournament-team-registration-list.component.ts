@@ -14,12 +14,13 @@ import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-pus
 import {NewTournamentPlayerDialogComponent} from "../../dialogs/add-tournament-player-dialog";
 import {TournamentPlayer} from "../../../../shared/model/tournament-player";
 import {RegistrationPush} from "../../../../shared/dto/registration-push";
+import {dummyGames} from "../../game-edit/game";
 
 
 @Component({
   selector: 'tournament-team-registration-list',
   templateUrl: './tournament-team-registration-list.component.html',
-  styleUrls: ['./tournament-team-registration-list.component.css']
+  styleUrls: ['./tournament-team-registration-list.component.scss']
 })
 export class TournamentTeamRegistrationListComponent {
 
@@ -28,11 +29,13 @@ export class TournamentTeamRegistrationListComponent {
   @Input() myRegistration: Registration;
   @Input() actualTournament: Tournament;
   @Input() userPlayerData: Player;
+  @Input() myTeam: TournamentTeam;
 
   @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
   @Output() onKickPlayer = new EventEmitter<Registration>();
   @Output() onAcceptTeamRegistration = new EventEmitter<TeamRegistrationPush>();
   @Output() onEraseTeamRegistration = new EventEmitter<TeamRegistrationPush>();
+  @Output() onAddArmyLists = new EventEmitter<Registration>();
 
   truncateMax: number;
   smallScreen: boolean;
@@ -62,33 +65,33 @@ export class TournamentTeamRegistrationListComponent {
   isAdminOrCreator(team: TournamentTeam): boolean {
     if (this.actualTournament && this.userPlayerData) {
       return this.actualTournament.creatorUid === this.userPlayerData.userUid ||
-              team.creatorUid === this.userPlayerData.userUid;
+        team.creatorUid === this.userPlayerData.userUid;
     }
     return false;
   }
 
   joinTeam(event: any, team: TournamentTeam) {
 
-      event.stopPropagation();
+    event.stopPropagation();
 
-      const dialogRef = this.dialog.open(RegisterDialogComponent, {
-        data: {
-          actualTournament: this.actualTournament,
-          userPlayerData: this.userPlayerData,
-          team: team,
-        }
-      });
+    const dialogRef = this.dialog.open(RegisterDialogComponent, {
+      data: {
+        actualTournament: this.actualTournament,
+        userPlayerData: this.userPlayerData,
+        team: team,
+      }
+    });
 
-      const saveEventSubscribe = dialogRef.componentInstance.onAddTournamentRegistration.subscribe(registration => {
+    const saveEventSubscribe = dialogRef.componentInstance.onAddTournamentRegistration.subscribe(registration => {
 
-        if (registration !== undefined) {
-          this.onAddTournamentRegistration.emit(registration);
-        }
-      });
-      dialogRef.afterClosed().subscribe(() => {
+      if (registration !== undefined) {
+        this.onAddTournamentRegistration.emit(registration);
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
 
-        saveEventSubscribe.unsubscribe();
-      });
+      saveEventSubscribe.unsubscribe();
+    });
 
   }
 
@@ -129,19 +132,28 @@ export class TournamentTeamRegistrationListComponent {
         actualTournament: this.actualTournament,
         userPlayerData: this.userPlayerData,
         team: team,
-        allRegistrations: this.allRegistrations
+        allRegistrations: this.allRegistrations,
+        myTeam: this.myTeam
       }
     });
 
-    const saveEventSubscribe = dialogRef.componentInstance.onKickPlayer.subscribe(registration => {
+    const kickEventSubscribe = dialogRef.componentInstance.onKickPlayer.subscribe(registration => {
 
       if (registration !== undefined) {
         this.onKickPlayer.emit(registration);
         dialogRef.close();
       }
     });
+
+    const saveEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(registration => {
+
+      if (registration !== undefined) {
+        this.onAddArmyLists.emit(registration);
+      }
+    });
     dialogRef.afterClosed().subscribe(() => {
 
+      kickEventSubscribe.unsubscribe();
       saveEventSubscribe.unsubscribe();
     });
 
@@ -155,12 +167,26 @@ export class TournamentTeamRegistrationListComponent {
     return allPlayersForTeam.length;
   }
 
+  isItMyTeam(team: TournamentTeam): boolean {
+    if (!this.myTeam) {
+      return false;
+    }
+    return team === this.myTeam;
+  }
+
   checkTournamentFull(team: TournamentTeam) {
     const allPlayersForTeam = _.filter(this.allRegistrations, function (reg: Registration) {
       return reg.teamName === team.teamName;
     });
 
     return allPlayersForTeam.length >= this.actualTournament.teamSize;
+  }
+
+  addArmyLists(event: any, registration: Registration) {
+
+    event.stopPropagation();
+
+    this.onAddArmyLists.emit(registration);
   }
 
 }

@@ -44,9 +44,9 @@
           <md-icon>delete</md-icon>
           I'm out
         </button>
-      </ng-container>
+       </ng-container>
       <ng-container *ngIf="actualTournament?.actualRound === 0 && actualTournament?.teamSize > 0">
-        <button *ngIf="userPlayerData && !myTeam "
+        <button *ngIf="userPlayerData && !teamCreator "
                 type="button"
                 (click)="openRegisterTeamDialog()"
                 class="positive-background action-button"
@@ -54,7 +54,7 @@
           <md-icon>group_add</md-icon>
           Register Team
         </button>
-        <button *ngIf="userPlayerData && myTeam "
+        <button *ngIf="userPlayerData && teamCreator "
                 type="button"
                 class="positive-background action-button"
                 (click)="openShowTeamDialog()"
@@ -84,7 +84,7 @@
           <md-icon>add</md-icon>
           Register
         </button>
-        <button *ngIf="userPlayerData && myTeam "
+        <button *ngIf="userPlayerData && teamCreator "
                 type="button"
                 class="positive-background action-button"
                 (click)="openShowTeamDialog()"
@@ -92,7 +92,7 @@
           <md-icon>edit</md-icon>
           Manage Team
         </button>
-        <button *ngIf="!myTeam && actualTournament?.teamSize > 0"
+        <button *ngIf="!teamCreator && actualTournament?.teamSize > 0"
                 type="button"
                 (click)="openRegisterTeamDialog()"
                 class="positive-background action-button"
@@ -100,7 +100,7 @@
           <md-icon>group_add</md-icon>
           Register Team
         </button>
-        <h4 *ngIf="!myRegistration && actualTournament?.teamSize > 0 && myTeam">
+        <h4 *ngIf="!myRegistration && actualTournament?.teamSize > 0 && teamCreator">
           Join a Team!
         </h4>
         <button *ngIf="myRegistration && !alreadyInTournament()"
@@ -150,7 +150,7 @@
           [registrations]="allRegistrations"
           (onAcceptRegistration)="acceptRegistration($event)"
           (onDeleteRegistration)="deleteMyRegistration($event)"
-          (onAddArmyLists)="addArmyList($event)">
+          (onAddArmyLists)="openAddArmyListDialog($event)">
         </tournament-registration-list>
       </mdl-list>
     </md-card>
@@ -166,12 +166,14 @@
           [actualTournament]="actualTournament"
           [userPlayerData]="userPlayerData"
           [myRegistration]="myRegistration"
+          [myTeam]="myTeam"
           [allRegistrations]="allRegistrations"
           [actualTournamentTeamRegistrations$]="actualTournamentTeamRegistrations$"
           (onAddTournamentRegistration)="handleAddTournamentRegistration($event)"
-          (onKickPlayer)="handleKickPlayer($event)"
           (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)"
-          (onEraseTeamRegistration)="handleEraseTeamRegistration($event)">
+          (onEraseTeamRegistration)="handleEraseTeamRegistration($event)"
+          (onKickPlayer)="handleKickTournamentPlayer($event)"
+          (onAddArmyLists)="openAddArmyListDialog($event)">
         </tournament-team-registration-list>
       </mdl-list>
     </md-card>
@@ -232,13 +234,14 @@
       </div>
       <mdl-list>
         <tournament-team-list
-          [actualTournamentArmyList$]="armyLists$"
           [actualTournament]="actualTournament"
           [userPlayerData]="userPlayerData"
           [allActualTournamentPlayers]="allActualTournamentPlayers"
           [actualTournamentTeams$]="actualTournamentTeams$"
           (onEraseTournamentTeam)="handleEraseTournamentTeam($event)"
-          (onAddTournamentPlayer)="handleAddTournamentPlayer($event)">
+          (onAddTournamentPlayer)="handleAddTournamentPlayer($event)"
+          (onKickTournamentPlayer)="handleKickTournamentPlayer($event)"
+          (onAddArmyLists)="addArmyListForTournamentPlayer($event)">
         </tournament-team-list>
       </mdl-list>
     </md-card>

@@ -9,7 +9,7 @@ import {TournamentPlayer} from "../../../../shared/model/tournament-player";
 @Component({
   selector: 'tournament-registration-list',
   templateUrl: './tournament-registration-list.component.html',
-  styleUrls: ['./tournament-registration-list.component.css']
+  styleUrls: ['./tournament-registration-list.component.scss']
 })
 export class TournamentRegistrationListComponent implements OnInit {
 
