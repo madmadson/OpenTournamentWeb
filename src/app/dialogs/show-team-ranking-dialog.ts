@@ -2,15 +2,14 @@ import {Component, Inject} from '@angular/core';
 
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
 import {StartTournamentDialogComponent} from '../tournament/tournament-preparation/tournament-preparation.component';
-import {TournamentTeam} from '../../../shared/model/tournament-team';
 
 import * as _ from 'lodash';
 import {Player} from '../../../shared/model/player';
 
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
-import {Observable} from "rxjs/Observable";
-import {ArmyList} from "../../../shared/model/armyList";
-import {ShowArmyListInTournamentRankingDialogComponent} from "../tournament/tournament-ranking-list/tournament-ranking-list.component";
+import {Observable} from 'rxjs/Observable';
+import {ArmyList} from '../../../shared/model/armyList';
+import {ShowArmyListInTournamentRankingDialogComponent} from '../tournament/tournament-ranking-list/tournament-ranking-list.component';
 
 @Component({
   selector: 'show-team-ranking-dialog',
