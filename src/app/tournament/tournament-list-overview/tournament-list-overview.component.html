@@ -2,12 +2,13 @@
 
 <div class="flex-container">
   <md-card class="single-list-card">
-    <mdl-textfield type="text"
-                   maxlength="50"
-                   placeholder="Search for name/location"
-                   #seachInput
-                   (keyup)="search(seachInput.value)">
-    </mdl-textfield>
+    <md-input-container>
+      <input mdInput
+             placeholder="Search for name/location"
+             maxlength="50"
+             #searchInput
+             (keyup)="search(searchInput.value)">
+    </md-input-container>
     <md-select
       placeholder="Filter"
       #filter

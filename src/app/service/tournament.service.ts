@@ -35,6 +35,8 @@ import {SubscribeTournamentTeamGamesAction} from '../store/actions/tournament-te
 import {SubscribeTournamentTeamRankingsAction} from '../store/actions/tournament-team-rankings-actions';
 import {ScenarioSelectedModel} from '../../../shared/dto/scenario-selected-model';
 
+import * as _ from 'lodash';
+
 
 @Injectable()
 export class TournamentService implements OnDestroy {
@@ -210,9 +212,31 @@ export class TournamentService implements OnDestroy {
     const tournamentRef = this.afService.database.object('tournaments/' + registrationPush.tournament.id);
     tournamentRef.update({actualParticipants: (registrationPush.tournament.actualParticipants + 1 )});
 
-    this.snackBar.open('Registration saved successfully', '', {
-      duration: 5000
-    });
+    if ( registrationPush.tournament.teamSize > 0) {
+
+      let newListOfRegisteredTeamMembers = [];
+
+      if (registrationPush.tournamentTeam.registeredPlayerIds) {
+        newListOfRegisteredTeamMembers = _.cloneDeep(registrationPush.tournamentTeam.registeredPlayerIds);
+      }
+
+      newListOfRegisteredTeamMembers.push(registrationPush.registration.playerId);
+
+      const tournamentTeamRef = this.afService.database.object(
+        'tournament-team-registrations/' +
+        registrationPush.tournament.id + '/' +
+        registrationPush.tournamentTeam.id);
+      tournamentTeamRef.update({registeredPlayerIds: newListOfRegisteredTeamMembers});
+
+      this.snackBar.open('Registered for Team: ' + registrationPush.registration.teamName, '', {
+        duration: 5000
+      });
+    } else {
+
+      this.snackBar.open('Registration saved successfully', '', {
+        duration: 5000
+      });
+    }
   }
 
   pushTournamentPlayer(registration: Registration) {

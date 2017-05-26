@@ -13,6 +13,7 @@ import {ShowTeamRegistrationDialogComponent} from '../../dialogs/show-team-regis
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {NewTournamentPlayerDialogComponent} from "../../dialogs/add-tournament-player-dialog";
 import {TournamentPlayer} from "../../../../shared/model/tournament-player";
+import {RegistrationPush} from "../../../../shared/dto/registration-push";
 
 
 @Component({
@@ -28,7 +29,7 @@ export class TournamentTeamRegistrationListComponent {
   @Input() actualTournament: Tournament;
   @Input() userPlayerData: Player;
 
-  @Output() onAddTournamentRegistration = new EventEmitter<Registration>();
+  @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
   @Output() onKickPlayer = new EventEmitter<Registration>();
   @Output() onAcceptTeamRegistration = new EventEmitter<TeamRegistrationPush>();
   @Output() onEraseTeamRegistration = new EventEmitter<TeamRegistrationPush>();

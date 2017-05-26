@@ -49,8 +49,13 @@ export class ShowTeamRegistrationDialogComponent {
 
   isAdminOrTeamLeader(): boolean {
 
+    if (!this.userPlayerData) {
+      return false;
+
+    }
     return (this.team.creatorUid === this.userPlayerData.userUid ||
-            this.tournament.creatorUid === this.userPlayerData.userUid);
+    this.tournament.creatorUid === this.userPlayerData.userUid);
+
   }
 
 }

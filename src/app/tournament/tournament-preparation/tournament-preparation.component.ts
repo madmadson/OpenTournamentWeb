@@ -25,6 +25,7 @@ import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-e
 import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-player-dialog';
 import {PrintArmyListsDialogComponent} from '../../dialogs/print-army-lists-dialog';
 import {AddArmyListsDialogComponent} from '../../dialogs/add-army-lists-dialog';
+import {RegistrationPush} from "../../../../shared/dto/registration-push";
 
 
 
@@ -51,7 +52,7 @@ export class TournamentPreparationComponent implements OnInit {
 
   @Output() onAddTournamentPlayer = new EventEmitter<TournamentPlayer>();
   @Output() onAcceptRegistration = new EventEmitter<Registration>();
-  @Output() onAddTournamentRegistration = new EventEmitter<Registration>();
+  @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
   @Output() onAddArmyList = new EventEmitter<ArmyList>();
   @Output() onCreateTeamForTeamTournament = new EventEmitter<TournamentTeam>();
   @Output() onRegisterTeamForTeamTournament = new EventEmitter<TournamentTeam>();
@@ -254,7 +255,10 @@ export class TournamentPreparationComponent implements OnInit {
     const saveEventSubscribe = dialogRef.componentInstance.onAddTournamentRegistration.subscribe(registration => {
 
       if (registration !== undefined) {
-        this.onAddTournamentRegistration.emit(registration);
+        this.onAddTournamentRegistration.emit({
+            registration: registration,
+            tournament: this.actualTournament
+        });
       }
     });
     dialogRef.afterClosed().subscribe(() => {
@@ -417,9 +421,9 @@ export class TournamentPreparationComponent implements OnInit {
 
   }
 
-  handleAddTournamentRegistration(registration: Registration) {
+  handleAddTournamentRegistration(registrationPush: RegistrationPush) {
 
-    this.onAddTournamentRegistration.emit(registration);
+    this.onAddTournamentRegistration.emit(registrationPush);
   }
 
   handleKickPlayer(registration: Registration) {
@@ -455,7 +459,7 @@ export class RegisterDialogComponent {
   actualTournament: Tournament;
   team: TournamentTeam;
 
-  @Output() onAddTournamentRegistration = new EventEmitter<Registration>();
+  @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
 
   constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
@@ -465,9 +469,13 @@ export class RegisterDialogComponent {
     this.team = data.team;
   }
 
-  onSaveRegistration(registration: Registration) {
+  onSaveRegistrationForTeamTournament(registration: Registration) {
 
-    this.onAddTournamentRegistration.emit(registration);
+    this.onAddTournamentRegistration.emit({
+      registration: registration,
+      tournament: this.actualTournament,
+      tournamentTeam: this.team,
+    });
     this.dialogRef.close();
   }
 }
@@ -534,7 +542,9 @@ export class CreateTeamDialogComponent implements OnInit {
       teamName: formModel.teamName,
       country: formModel.country,
       meta: formModel.meta,
-      isAcceptedTournamentTeam: false
+      isAcceptedTournamentTeam: false,
+      tournamentPlayerIds: [],
+      registeredPlayerIds: []
     };
   }
 
@@ -620,7 +630,9 @@ export class RegisterTeamDialogComponent implements OnInit {
       teamName: formModel.teamName,
       country: formModel.country,
       meta: formModel.meta,
-      isAcceptedTournamentTeam: false
+      isAcceptedTournamentTeam: false,
+      tournamentPlayerIds: [],
+      registeredPlayerIds: []
     };
   }
 

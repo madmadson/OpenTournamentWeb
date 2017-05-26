@@ -121,6 +121,7 @@ import {PrintRankingsDialogComponent} from './dialogs/print-rankings-dialog';
 import {PrintGamesDialogComponent} from './dialogs/print-games-dialog';
 import { TournamentTeamRankingListComponent } from './team-tournament/tournament-team-ranking-list/tournament-team-ranking-list.component';
 import {ShowTeamRankingDialogComponent} from './dialogs/show-team-ranking-dialog';
+import {MdlSelectModule} from "@angular-mdl/select";
 
 
 const reducers = {
@@ -200,7 +201,8 @@ export const firebaseConfDev = {
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule, MdTooltipModule,
     DateTimePickerModule,
-    MdlExpansionPanelModule
+    MdlExpansionPanelModule,
+    MdlSelectModule,
   ],
   declarations: [
     AppComponent,

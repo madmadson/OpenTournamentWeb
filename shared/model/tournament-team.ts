@@ -1,5 +1,3 @@
-
-
 export class TournamentTeam {
 
   id?: string;
@@ -11,11 +9,18 @@ export class TournamentTeam {
   meta: string;
   isAcceptedTournamentTeam: boolean;
 
-  static fromJson({isRegisteredTeam, tournamentId, creatorUid,  teamName, country, meta, isAcceptedTournamentTeam}): TournamentTeam {
-    return new TournamentTeam(isRegisteredTeam, tournamentId, creatorUid,  teamName, country, meta, isAcceptedTournamentTeam);
+  tournamentPlayerIds: string[];
+  registeredPlayerIds: string[];
+
+  static fromJson({isRegisteredTeam, tournamentId, creatorUid, teamName, country,
+                    meta, isAcceptedTournamentTeam, tournamentPlayerIds, registeredPlayerIds}): TournamentTeam {
+    return new TournamentTeam(isRegisteredTeam, tournamentId, creatorUid, teamName, country,
+      meta, isAcceptedTournamentTeam, tournamentPlayerIds, registeredPlayerIds);
   }
+
   constructor(isRegisteredTeam: boolean, tournamentId: string, creatorUid: string,
-              teamName: string, country: string, meta: string, isAcceptedTournamentTeam: boolean) {
+              teamName: string, country: string, meta: string, isAcceptedTournamentTeam: boolean,
+              tournamentPlayerIds: string[], registeredPlayerIds: string[]) {
 
     this.isRegisteredTeam = isRegisteredTeam;
     this.tournamentId = tournamentId;
@@ -25,5 +30,7 @@ export class TournamentTeam {
     this.country = country;
     this.meta = meta;
     this.isAcceptedTournamentTeam = isAcceptedTournamentTeam;
+    this.tournamentPlayerIds = tournamentPlayerIds;
+    this.registeredPlayerIds = registeredPlayerIds;
   }
 }

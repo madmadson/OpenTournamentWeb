@@ -43,6 +43,7 @@ import {
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
+import {RegistrationPush} from "../../../../shared/dto/registration-push";
 
 @Component({
   selector: 'tournament-overview',
@@ -231,9 +232,8 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TournamentPlayerPushAction(tournamentPlayer));
   }
 
-  handleAddTournamentRegistration(registration: Registration) {
-    this.store.dispatch(new RegistrationPushAction(
-      {tournament: this.actualTournament, registration: registration}));
+  handleAddTournamentRegistration(registrationPush: RegistrationPush) {
+    this.store.dispatch(new RegistrationPushAction(registrationPush));
   }
 
   handleAddArmyList(armyList: ArmyList) {

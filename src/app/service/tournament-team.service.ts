@@ -300,7 +300,7 @@ export class TournamentTeamService implements OnDestroy {
   }
 
   addDummyTeam(tournamentId: string) {
-    const dummy = new TournamentTeam(false, tournamentId, '', 'DUMMY', '', '', true);
+    const dummy = new TournamentTeam(false, tournamentId, '', 'DUMMY', '', '', true, [], []);
 
     const tournamentPlayers = this.afService.database.list('tournament-teams/' + tournamentId);
     tournamentPlayers.push(dummy);
