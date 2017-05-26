@@ -12,7 +12,7 @@
   class="full-width-select-box"
   placeholder="Scenario"
   #scenario
-  (change)="filter()"
+  (change)="changeScenario()"
   [(ngModel)]="selectedScenario"
   name="scenario">
   <md-option *ngFor="let scenario of scenarios" [value]="scenario">{{ scenario }}</md-option>

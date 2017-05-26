@@ -90,13 +90,13 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     }
   }
 
-  changeScenario(selectBox: any): void {
+  changeScenario(): void {
 
     if (this.gamesForRound[0]) {
       this.onScenarioSelected.emit({
         tournamentId: this.actualTournament.id,
         round: this.gamesForRound[0].tournamentRound,
-        scenario: selectBox.value
+        scenario: this.selectedScenario
       });
     }
   }
