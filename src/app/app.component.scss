@@ -1,9 +1,21 @@
+@import '../styles';
+
 .god-container{
   min-height: calc(100vh - 2px);
 }
 
 .side-nav{
   border-right: 1px solid  black;
+}
+
+.online_icon{
+  color: $success_color;
+  margin-right: $main_tick;
+}
+
+.offline_icon{
+  color: $fail_color;
+  margin-right: $main_tick;
 }
 
 .app-icon-button {

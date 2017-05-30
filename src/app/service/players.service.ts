@@ -1,5 +1,5 @@
 import {Inject, Injectable, OnDestroy} from '@angular/core';
-import {AngularFire, FirebaseRef} from 'angularfire2';
+import {FirebaseRef} from 'angularfire2';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 import {
@@ -11,6 +11,7 @@ import {
 import {Player} from '../../../shared/model/player';
 import {MdSnackBar} from '@angular/material';
 import {Router} from '@angular/router';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class PlayersService implements OnDestroy {
 
   private playersRef: firebase.database.Reference;
 
-  constructor(protected afService: AngularFire,
+  constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<ApplicationState>,
               @Inject(FirebaseRef) private fb,
               private  router: Router,
@@ -70,19 +71,15 @@ export class PlayersService implements OnDestroy {
 
   }
 
-  unsubscribeOnPlayers() {
-
-    this.playersRef.off();
-  }
 
   pushPlayer(player: Player) {
 
     const that = this;
 
     if (player.id) {
-      this.afService.database.object('players/' + player.id).$ref.set(player);
+      this.afoDatabase.object('players/' + player.id).set(player);
     } else {
-      const players = this.afService.database.list('players');
+      const players = this.afoDatabase.list('players');
 
       this.fb.database().ref('players').orderByChild('nickName')
         .equalTo(player.nickName).once('value', function (snapshot) {

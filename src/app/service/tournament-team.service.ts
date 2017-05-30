@@ -1,7 +1,7 @@
 import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
-import {AngularFire, FirebaseRef} from 'angularfire2';
+import {FirebaseRef} from 'angularfire2';
 
 import {
   AddTournamentTeamAction, AddTournamentTeamRegistrationAction, ChangeTournamentTeamAction,
@@ -21,11 +21,12 @@ import {
   ClearTournamentTeamGamesAction, DeleteTournamentTeamGameAction
 } from '../store/actions/tournament-team-games-actions';
 import {TournamentGame} from '../../../shared/model/tournament-game';
-import {TournamentRanking} from "../../../shared/model/tournament-ranking";
+import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {
   AddTournamentTeamRankingAction, ChangeTournamentTeamRankingAction,
   ClearTeamRankingsAction, DeleteTournamentTeamRankingAction
-} from "../store/actions/tournament-team-rankings-actions";
+} from '../store/actions/tournament-team-rankings-actions';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 
 @Injectable()
@@ -36,7 +37,7 @@ export class TournamentTeamService implements OnDestroy {
   tournamentTeamGamesRef: firebase.database.Reference;
   tournamentTeamRankingsRef: firebase.database.Reference;
 
-  constructor(protected afService: AngularFire,
+  constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<ApplicationState>,
               @Inject(FirebaseRef) private fb,
               private snackBar: MdSnackBar) {
@@ -211,7 +212,7 @@ export class TournamentTeamService implements OnDestroy {
   }
 
   pushTournamentTeamRegistration(team: TournamentTeam) {
-    const tournamentTeamsRef = this.afService.database.list('tournament-team-registrations/' + team.tournamentId);
+    const tournamentTeamsRef = this.afoDatabase.list('tournament-team-registrations/' + team.tournamentId);
     tournamentTeamsRef.push(team);
 
     this.snackBar.open('Team registered successfully', '', {
@@ -223,21 +224,21 @@ export class TournamentTeamService implements OnDestroy {
 
     const that = this;
 
-    const tournamentTeamsRegRef = this.afService.database.
+    const tournamentTeamsRegRef = this.afoDatabase.
         object('tournament-teams/' + teamRegistrationPush.tournament.id + '/' + teamRegistrationPush.team.id);
     tournamentTeamsRegRef.set(teamRegistrationPush.team);
 
-    const teamRegistrationRef = that.afService.database.
+    const teamRegistrationRef = that.afoDatabase.
         object('tournament-team-registrations/' + teamRegistrationPush.tournament.id + '/' + teamRegistrationPush.team.id);
     teamRegistrationRef.update({isAcceptedTournamentTeam: true});
 
     _.each(teamRegistrationPush.registrations, function (registration: Registration) {
       const tournamentPlayer = TournamentPlayer.fromRegistration(registration);
 
-      const tournamentPlayers = that.afService.database.list('tournament-players/' + registration.tournamentId);
+      const tournamentPlayers = that.afoDatabase.list('tournament-players/' + registration.tournamentId);
       tournamentPlayers.push(tournamentPlayer);
 
-      const registrationRef = that.afService.database.
+      const registrationRef = that.afoDatabase.
         object('tournament-registrations/' + registration.tournamentId + '/' + registration.id);
       registrationRef.update({isTournamentPlayer: true});
     });
@@ -248,7 +249,7 @@ export class TournamentTeamService implements OnDestroy {
   }
 
   pushTournamentTeam(team: TournamentTeam) {
-    const tournamentTeamsRef = this.afService.database.list('tournament-teams/' + team.tournamentId);
+    const tournamentTeamsRef = this.afoDatabase.list('tournament-teams/' + team.tournamentId);
     tournamentTeamsRef.push(team);
 
     this.snackBar.open('Team saved successfully', '', {
@@ -260,18 +261,18 @@ export class TournamentTeamService implements OnDestroy {
 
     const that = this;
 
-    const tournamentTeamsRef = this.afService.database.
+    const tournamentTeamsRef = this.afoDatabase.
         object('tournament-teams/' + tournamentTeamErase.tournament.id + '/' + tournamentTeamErase.team.id);
     tournamentTeamsRef.remove();
 
     if (tournamentTeamErase.team.isRegisteredTeam) {
-      const tournamentTeamsRegRef = that.afService.database.
+      const tournamentTeamsRegRef = that.afoDatabase.
         object('tournament-team-registrations/' + tournamentTeamErase.tournament.id + '/' + tournamentTeamErase.team.id);
       tournamentTeamsRegRef.update({isAcceptedTournamentTeam: false});
     }
 
     _.each(tournamentTeamErase.players, function (player: TournamentPlayer) {
-        const playerRef = that.afService.database.list('tournament-players/' + player.tournamentId + '/' + player.id);
+        const playerRef = that.afoDatabase.list('tournament-players/' + player.tournamentId + '/' + player.id);
         playerRef.remove();
     });
 
@@ -284,12 +285,12 @@ export class TournamentTeamService implements OnDestroy {
 
     const that = this;
 
-    const teamRegistrationRef = this.afService.database.
+    const teamRegistrationRef = this.afoDatabase.
     object('tournament-team-registrations/' + teamRegistrationErase.tournament.id + '/' + teamRegistrationErase.team.id);
       teamRegistrationRef.remove();
 
     _.each(teamRegistrationErase.registrations, function (reg: Registration) {
-      const regRef = that.afService.database.list('tournament-registrations/' + reg.tournamentId + '/' + reg.id);
+      const regRef = that.afoDatabase.list('tournament-registrations/' + reg.tournamentId + '/' + reg.id);
       regRef.remove();
     });
 
@@ -302,7 +303,7 @@ export class TournamentTeamService implements OnDestroy {
   addDummyTeam(tournamentId: string) {
     const dummy = new TournamentTeam(false, tournamentId, '', 'DUMMY', '', '', true, [], []);
 
-    const tournamentPlayers = this.afService.database.list('tournament-teams/' + tournamentId);
+    const tournamentPlayers = this.afoDatabase.list('tournament-teams/' + tournamentId);
     tournamentPlayers.push(dummy);
 
     this.snackBar.open('Dummy Team successfully inserted', '', {

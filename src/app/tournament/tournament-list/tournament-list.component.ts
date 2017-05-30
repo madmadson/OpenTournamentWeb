@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 
 import {Router} from '@angular/router';
 import {Tournament} from '../../../../shared/model/tournament';
-import {WindowRefService} from "../../service/window-ref-service";
+import {WindowRefService} from '../../service/window-ref-service';
 
 @Component({
   selector: 'tournament-list',

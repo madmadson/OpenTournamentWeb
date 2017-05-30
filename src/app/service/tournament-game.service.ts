@@ -22,6 +22,7 @@ import {Tournament} from '../../../shared/model/tournament';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {TournamentTeamGamesConfiguration} from '../../../shared/dto/tournament-team-games-config';
+import {AfoListObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 
 @Injectable()
@@ -38,7 +39,8 @@ export class TournamentGameService implements OnDestroy {
   private newGames: TournamentGame[];
   private newTeamGames: TournamentGame[];
 
-  constructor(protected fireDB: AngularFireDatabase,
+  constructor(private afoDatabase: AngularFireOfflineDatabase,
+              protected fireDB: AngularFireDatabase,
               protected store: Store<ApplicationState>,
               @Inject(FirebaseRef) private fb) {
 
@@ -101,6 +103,8 @@ export class TournamentGameService implements OnDestroy {
 
   createGamesForRound(config: TournamentManagementConfiguration, newRankings: TournamentRanking[]): boolean {
 
+    this.eraseGamesForRound(config);
+
     const shuffledRankings = _.shuffle(newRankings);
     const sortedRankings = _.sortBy(shuffledRankings, ['score']);
 
@@ -111,9 +115,9 @@ export class TournamentGameService implements OnDestroy {
     if (!megaSuccess) {
       return false;
     }
-    this.eraseGamesForRound(config);
 
-    const tournamentGamesRef = this.fireDB
+
+    const tournamentGamesRef = this.afoDatabase
       .list('tournament-games/' + config.tournamentId);
 
     const listOfTables = _.range(1, (this.newGames.length + 1));
@@ -164,7 +168,7 @@ export class TournamentGameService implements OnDestroy {
       that.newGames.push(newPlayerGame);
     });
 
-    const tournamentGamesRef = this.fireDB
+    const tournamentGamesRef = this.afoDatabase
       .list('tournament-games/' + config.tournamentId);
 
     _.forEach(this.newGames, function (newGame: TournamentGame) {
@@ -190,7 +194,7 @@ export class TournamentGameService implements OnDestroy {
       return false;
     }
 
-    const tournamentTeamGamesRef = this.fireDB
+    const tournamentTeamGamesRef = this.afoDatabase
       .list('tournament-team-games/' + config.tournamentId);
 
     const listOfTables = _.range(1, (this.newTeamGames.length + 1));
@@ -446,26 +450,24 @@ export class TournamentGameService implements OnDestroy {
 
   eraseGamesForRound(config: TournamentManagementConfiguration) {
 
-    const query = this.fb.database().ref('tournament-games/' + config.tournamentId).orderByChild('tournamentRound')
-      .equalTo(config.round);
-
-    query.once('value', function (snapshot) {
-
-      snapshot.forEach(function (child) {
-        child.ref.remove();
+    const query = this.afoDatabase.list('tournament-games/' + config.tournamentId).take(1);
+    query.subscribe((gamesRef: any) => {
+      gamesRef.forEach((game) => {
+        if (game.tournamentRound === config.round) {
+          this.afoDatabase.object('tournament-games/' + config.tournamentId + '/' + game.$key).remove();
+        }
       });
     });
   }
 
   eraseTeamGamesForRound(config: TournamentManagementConfiguration) {
 
-    const teamQueryRef = this.fb.database().ref('tournament-team-games/' + config.tournamentId)
-      .orderByChild('tournamentRound').equalTo(config.round);
-
-    teamQueryRef.once('value', function (snapshot) {
-
-      snapshot.forEach(function (child) {
-        child.ref.remove();
+    const teamQueryRef = this.afoDatabase.list('tournament-team-games/' + config.tournamentId).take(1);
+    teamQueryRef.subscribe((gamesRef: any) => {
+      gamesRef.forEach((game) => {
+        if (game.tournamentRound === config.round) {
+          this.afoDatabase.object('tournament-games/' + config.tournamentId + '/' + game.$key).remove();
+        }
       });
     });
   }
@@ -477,24 +479,24 @@ export class TournamentGameService implements OnDestroy {
 
     _.each(this.allRegistrations, function (reg: Registration) {
 
-      const playersRegRef = that.fireDB.object('players-registrations/' + reg.playerId + '/' + reg.id);
+      const playersRegRef = that.afoDatabase.object('players-registrations/' + reg.playerId + '/' + reg.id);
       playersRegRef.remove();
     });
 
-    const tournamentRegRef = that.fireDB.list('tournament-registrations/' + that.actualTournament.id);
+    const tournamentRegRef = that.afoDatabase.list('tournament-registrations/' + that.actualTournament.id);
     tournamentRegRef.remove();
 
     const playersEloChanges: EloChange[] = [];
-    const gamesRef = this.fireDB.list('games');
+    const gamesRef = this.afoDatabase.list('games');
 
     _.each(this.allGames, function (game: TournamentGame) {
       gamesRef.push(game);
       if (game.playerOnePlayerId) {
-        const playersGamesTournamentRef = that.fireDB.object('players-games/' + game.playerOnePlayerId + '/' + game.id);
+        const playersGamesTournamentRef = that.afoDatabase.object('players-games/' + game.playerOnePlayerId + '/' + game.id);
         playersGamesTournamentRef.set(game);
       }
       if (game.playerTwoPlayerId) {
-        const playersGamesTournamentRef = that.fireDB.object('players-games/' + game.playerTwoPlayerId + '/' + game.id);
+        const playersGamesTournamentRef = that.afoDatabase.object('players-games/' + game.playerTwoPlayerId + '/' + game.id);
         playersGamesTournamentRef.set(game);
       }
 
@@ -525,13 +527,13 @@ export class TournamentGameService implements OnDestroy {
         } else {
           newEloPlayerTwo = Math.round(game.playerTwoElo + 40 * (0 - expectancyValuePlayerTwo));
         }
-        const playerOneGameTournamentRef = that.fireDB.object('players-games/' + game.playerOnePlayerId + '/' + game.id);
+        const playerOneGameTournamentRef = that.afoDatabase.object('players-games/' + game.playerOnePlayerId + '/' + game.id);
         playerOneGameTournamentRef.update({
           'playerOneEloChanging': (newEloPlayerOne - game.playerOneElo),
           'playerTwoEloChanging': (newEloPlayerTwo - game.playerTwoElo)
         });
 
-        const playerTwoGameTournamentRef = that.fireDB.object('players-games/' + game.playerTwoPlayerId + '/' + game.id);
+        const playerTwoGameTournamentRef = that.afoDatabase.object('players-games/' + game.playerTwoPlayerId + '/' + game.id);
         playerTwoGameTournamentRef.update({
           'playerOneEloChanging': (newEloPlayerOne - game.playerOneElo),
           'playerTwoEloChanging': (newEloPlayerTwo - game.playerTwoElo)
@@ -544,7 +546,7 @@ export class TournamentGameService implements OnDestroy {
     _.each(this.allPlayers, function (tournamentPlayer: TournamentPlayer) {
 
       if (tournamentPlayer.playerId) {
-        const playersTournamentRef = that.fireDB.list('players-tournaments/' + tournamentPlayer.playerId);
+        const playersTournamentRef = that.afoDatabase.list('players-tournaments/' + tournamentPlayer.playerId);
         playersTournamentRef.push(that.actualTournament);
 
         let eloChangeForPlayer = 0;
@@ -556,7 +558,7 @@ export class TournamentGameService implements OnDestroy {
         });
         const finalNewElo = tournamentPlayer.elo + eloChangeForPlayer;
 
-        const playerOneRef = that.fireDB.object('players/' + tournamentPlayer.playerId);
+        const playerOneRef = that.afoDatabase.object('players/' + tournamentPlayer.playerId);
         playerOneRef.update({'elo': finalNewElo});
       }
     });

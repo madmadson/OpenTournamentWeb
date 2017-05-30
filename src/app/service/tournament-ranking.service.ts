@@ -18,6 +18,7 @@ import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {GameResult} from '../../../shared/dto/game-result';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 
 @Injectable()
@@ -32,7 +33,8 @@ export class TournamentRankingService implements OnDestroy {
   allGames: TournamentGame[];
   actualTournament: Tournament;
 
-  constructor(protected fireDB: AngularFireDatabase,
+  constructor(private afoDatabase: AngularFireOfflineDatabase,
+              protected fireDB: AngularFireDatabase,
               protected store: Store<ApplicationState>,
               @Inject(FirebaseRef) private fb) {
 
@@ -132,7 +134,7 @@ export class TournamentRankingService implements OnDestroy {
         }
       });
 
-      const tournamentRankingsRef = that.fireDB
+      const tournamentRankingsRef = that.afoDatabase
         .list('tournament-rankings/' + newTournamentRanking.tournamentId);
       tournamentRankingsRef.push(newTournamentRanking);
 
@@ -291,8 +293,10 @@ export class TournamentRankingService implements OnDestroy {
         newListOfOpponentsIdsPlayerOne.push(gameResult.gameAfter.playerTwoTournamentPlayerId);
         opponentIdsTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newListOfOpponentsIdsPlayerOne;
 
-        const playerOneRankingRef = this.fireDB
-          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+        // const playerOneRankingRef = this.fireDB
+        //   .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+
+        const playerOneRankingRef = this.afoDatabase.object('/tournament-rankings/' +  gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
         playerOneRankingRef.update(
           {
             score: newScorePlayerOne,
@@ -331,8 +335,9 @@ export class TournamentRankingService implements OnDestroy {
           newVPPlayerOne = lastRoundRankingPlayerOne.victoryPoints + actualRoundGamePlayerOne.playerTwoVictoryPoints;
         }
 
-        const playerOneRankingRef = this.fireDB
+        const playerOneRankingRef = this.afoDatabase
           .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+
         playerOneRankingRef.update(
           {
             score: newScorePlayerOne,
@@ -367,7 +372,7 @@ export class TournamentRankingService implements OnDestroy {
         newListOfOpponentsIdsPlayerTwo.push(gameResult.gameAfter.playerOneTournamentPlayerId);
         opponentIdsTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newListOfOpponentsIdsPlayerTwo;
 
-        const playerTwoRankingRef = this.fireDB
+        const playerTwoRankingRef = this.afoDatabase
           .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
         playerTwoRankingRef.update(
           {
@@ -406,7 +411,7 @@ export class TournamentRankingService implements OnDestroy {
           newVPPlayerTwo = lastRoundRankingPlayerTwo.victoryPoints + actualRoundGamePlayerTwo.playerTwoVictoryPoints;
         }
 
-        const playerTwoRankingRef = this.fireDB
+        const playerTwoRankingRef = this.afoDatabase
           .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
         playerTwoRankingRef.update(
           {
@@ -430,7 +435,7 @@ export class TournamentRankingService implements OnDestroy {
           }
         });
 
-        const rankRef = that.fireDB.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankToUpdate.id);
+        const rankRef = that.afoDatabase.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankToUpdate.id);
         rankRef.update({'sos': newSos});
 
       });

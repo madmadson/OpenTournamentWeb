@@ -36,6 +36,8 @@ import {SubscribeTournamentTeamRankingsAction} from '../store/actions/tournament
 import {ScenarioSelectedModel} from '../../../shared/dto/scenario-selected-model';
 
 import * as _ from 'lodash';
+import {AfoListObservable, AfoObjectObservable, AngularFireOfflineDatabase} from "angularfire2-offline";
+import {Tournament} from "../../../shared/model/tournament";
 
 
 @Injectable()
@@ -47,14 +49,12 @@ export class TournamentService implements OnDestroy {
   private tournamentTeamsRef: firebase.database.Reference;
   private tournamentTeamRegistrationsRef: firebase.database.Reference;
 
-  constructor(protected rankingService: TournamentRankingService,
+  constructor(private afoDatabase: AngularFireOfflineDatabase,
+              protected rankingService: TournamentRankingService,
               protected tournamentGameService: TournamentGameService,
-              protected afService: AngularFire,
               protected store: Store<ApplicationState>,
               @Inject(FirebaseRef) protected fb,
-              private snackBar: MdSnackBar) {
-
-  }
+              private snackBar: MdSnackBar) {}
 
   ngOnDestroy(): void {
 
@@ -82,7 +82,7 @@ export class TournamentService implements OnDestroy {
 
     console.log('subscribeOnTournament');
 
-    this.afService.database.object('tournaments/' + tournamentId).subscribe(
+    this.afoDatabase.object('tournaments/' + tournamentId).subscribe(
       tournament => {
         tournament.id = tournamentId;
         this.store.dispatch(new SetActualTournamentAction(tournament));
@@ -203,13 +203,13 @@ export class TournamentService implements OnDestroy {
 
   pushRegistration(registrationPush: RegistrationPush) {
 
-    const tournamentRegRef = this.afService.database.list('tournament-registrations/' + registrationPush.tournament.id);
+    const tournamentRegRef = this.afoDatabase.list('tournament-registrations/' + registrationPush.tournament.id);
     const newRegistrationRef: firebase.database.Reference = tournamentRegRef.push(registrationPush.registration);
 
-    const playerRegRef = this.afService.database.object('players-registrations/' + registrationPush.registration.playerId + '/' + newRegistrationRef.key);
+    const playerRegRef = this.afoDatabase.object('players-registrations/' + registrationPush.registration.playerId + '/' + newRegistrationRef.key);
     playerRegRef.set(registrationPush.registration);
 
-    const tournamentRef = this.afService.database.object('tournaments/' + registrationPush.tournament.id);
+    const tournamentRef = this.afoDatabase.object('tournaments/' + registrationPush.tournament.id);
     tournamentRef.update({actualParticipants: (registrationPush.tournament.actualParticipants + 1 )});
 
     if ( registrationPush.tournament.teamSize > 0) {
@@ -222,7 +222,7 @@ export class TournamentService implements OnDestroy {
 
       newListOfRegisteredTeamMembers.push(registrationPush.registration.playerId);
 
-      const tournamentTeamRef = this.afService.database.object(
+      const tournamentTeamRef = this.afoDatabase.object(
         'tournament-team-registrations/' +
         registrationPush.tournament.id + '/' +
         registrationPush.tournamentTeam.id);
@@ -243,11 +243,11 @@ export class TournamentService implements OnDestroy {
 
     const tournamentPlayer = TournamentPlayer.fromRegistration(registration);
 
-    const tournamentPlayers = this.afService.database.list('tournament-players/' + registration.tournamentId);
+    const tournamentPlayers = this.afoDatabase.list('tournament-players/' + registration.tournamentId);
     tournamentPlayers.push(tournamentPlayer);
 
 
-    const registrationRef = this.afService.database.object('tournament-registrations/' + registration.tournamentId + '/' + registration.id);
+    const registrationRef = this.afoDatabase.object('tournament-registrations/' + registration.tournamentId + '/' + registration.id);
     registrationRef.update({isTournamentPlayer: true});
 
     this.snackBar.open('Tournament Player saved successfully', '', {
@@ -257,14 +257,14 @@ export class TournamentService implements OnDestroy {
 
   eraseRegistration(regPush: RegistrationPush) {
 
-    const regRef = this.afService.database.list('tournament-registrations/' + regPush.tournament.id + '/' + regPush.registration.id);
+    const regRef = this.afoDatabase.list('tournament-registrations/' + regPush.tournament.id + '/' + regPush.registration.id);
     regRef.remove();
 
-    const playerRegRef = this.afService.database
+    const playerRegRef = this.afoDatabase
       .list('players-registrations/' + regPush.registration.playerId + '/' + regPush.registration.id);
     playerRegRef.remove();
 
-    const tournamentRef = this.afService.database.object('tournaments/' + regPush.tournament.id);
+    const tournamentRef = this.afoDatabase.object('tournaments/' + regPush.tournament.id);
     tournamentRef.update({actualParticipants: (regPush.tournament.actualParticipants - 1 )});
 
     if ( regPush.tournament.teamSize > 0) {
@@ -274,7 +274,7 @@ export class TournamentService implements OnDestroy {
       const index = newListOfRegisteredTeamMembers.indexOf(regPush.registration.playerId);
       newListOfRegisteredTeamMembers.splice(index, 1);
 
-      const tournamentTeamRef = this.afService.database.object(
+      const tournamentTeamRef = this.afoDatabase.object(
         'tournament-team-registrations/' +
         regPush.tournament.id + '/' +
         regPush.tournamentTeam.id);
@@ -287,11 +287,11 @@ export class TournamentService implements OnDestroy {
   }
 
   eraseTournamentPlayer(player: TournamentPlayer) {
-    const playerRef = this.afService.database.list('tournament-players/' + player.tournamentId + '/' + player.id);
+    const playerRef = this.afoDatabase.list('tournament-players/' + player.tournamentId + '/' + player.id);
     playerRef.remove();
 
     if (player.registrationId) {
-      const registrationRef = this.afService.database
+      const registrationRef = this.afoDatabase
         .object('tournament-registrations/' + player.tournamentId + '/' + player.registrationId);
       registrationRef.update({isTournamentPlayer: false});
     }
@@ -302,7 +302,7 @@ export class TournamentService implements OnDestroy {
 
   pushArmyList(armyList: ArmyList) {
 
-    const tournamentArmyListRef = this.afService.database.list('tournament-armyLists/' + armyList.tournamentId);
+    const tournamentArmyListRef = this.afoDatabase.list('tournament-armyLists/' + armyList.tournamentId);
     tournamentArmyListRef.push(armyList);
 
     this.snackBar.open('Army List saved successfully', '', {
@@ -311,7 +311,7 @@ export class TournamentService implements OnDestroy {
   }
 
   eraseArmyList(armyList: ArmyList) {
-    const armyListRef = this.afService.database
+    const armyListRef = this.afoDatabase
       .list('tournament-armyLists/' + armyList.tournamentId + '/' + armyList.id);
     armyListRef.remove();
 
@@ -323,7 +323,7 @@ export class TournamentService implements OnDestroy {
   addDummyPlayer(tournamentId: string) {
     const dummy = new TournamentPlayer(tournamentId, '', '', '', 'DUMMY', '', '', '', '', 0, '');
 
-    const tournamentPlayers = this.afService.database.list('tournament-players/' + tournamentId);
+    const tournamentPlayers = this.afoDatabase.list('tournament-players/' + tournamentId);
     tournamentPlayers.push(dummy);
 
     this.snackBar.open('Dummy Player successfully inserted', '', {
@@ -333,7 +333,7 @@ export class TournamentService implements OnDestroy {
 
   pushNewTournamentPlayer(player: TournamentPlayer) {
 
-    const tournamentPlayers = this.afService.database.list('tournament-players/' + player.tournamentId);
+    const tournamentPlayers = this.afoDatabase.list('tournament-players/' + player.tournamentId);
     tournamentPlayers.push(player);
 
     this.snackBar.open('Tournament Player saved successfully', '', {
@@ -379,10 +379,13 @@ export class TournamentService implements OnDestroy {
   pairNewRound(config: TournamentManagementConfiguration) {
 
     const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
+
+    this.tournamentGameService.eraseGamesForRound(config);
+
     const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
 
     if (successFullyPaired) {
-      const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+      const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
       registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
       this.snackBar.open('new Round Paired', '', {
         duration: 5000
@@ -403,7 +406,7 @@ export class TournamentService implements OnDestroy {
     const successFullyPaired: boolean = this.tournamentGameService.createTeamGamesForRound(config, newTeamRankings);
 
     if (successFullyPaired) {
-      const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+      const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
       registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
       this.snackBar.open('new Round Paired', '', {
         duration: 5000
@@ -425,8 +428,8 @@ export class TournamentService implements OnDestroy {
 
   gameResultEntered(gameResult: GameResult) {
 
-    const gameRef = this.afService.database.object('tournament-games/' + gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
-    gameRef.update(gameResult.gameAfter);
+    const afoGames = this.afoDatabase.object('/tournament-games/' +  gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
+    afoGames.update(gameResult.gameAfter);
 
     this.rankingService.updateRankingAfterGameResultEntered(gameResult);
 
@@ -437,7 +440,7 @@ export class TournamentService implements OnDestroy {
 
   publishRound(publish: PublishRound) {
 
-    const gameRef = this.afService.database.object('tournaments/' + publish.tournamentId);
+    const gameRef = this.afoDatabase.object('tournaments/' + publish.tournamentId);
     gameRef.update({visibleRound: publish.roundToPublish});
 
     this.snackBar.open('Round ' + publish.roundToPublish + ' successfully published', '', {
@@ -450,9 +453,8 @@ export class TournamentService implements OnDestroy {
     this.rankingService.eraseRankingsForRound(config);
     this.tournamentGameService.eraseGamesForRound(config);
 
-    const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
-    registrationRef.update(
-      {actualRound: (config.round - 1), visibleRound: (config.round - 1)});
+    const tournament: AfoObjectObservable<Tournament> = this.afoDatabase.object('tournaments/' + config.tournamentId);
+    tournament.update({actualRound: (config.round - 1), visibleRound: (config.round - 1)});
 
     this.snackBar.open('Round ' + config.round + ' successfully killed with fire!', '', {
       duration: 5000
@@ -465,8 +467,8 @@ export class TournamentService implements OnDestroy {
     this.tournamentGameService.eraseGamesForRound(config);
     this.tournamentGameService.eraseTeamGamesForRound(config);
 
-    const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
-    registrationRef.update(
+    const tournament = this.afoDatabase.object('tournaments/' + config.tournamentId);
+    tournament.update(
       {actualRound: (config.round - 1), visibleRound: (config.round - 1)});
 
     this.snackBar.open('Round ' + config.round + ' successfully killed with fire!', '', {
@@ -477,7 +479,7 @@ export class TournamentService implements OnDestroy {
   endTournament(config: TournamentManagementConfiguration) {
     this.rankingService.pushRankingForRound(config);
 
-    const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
     registrationRef.update(
       {finished: true, visibleRound: (config.round - 1)}
     );
@@ -490,7 +492,7 @@ export class TournamentService implements OnDestroy {
   undoTournamentEnd(config: TournamentManagementConfiguration) {
     this.rankingService.eraseRankingsForRound(config);
 
-    const registrationRef = this.afService.database.object('tournaments/' + config.tournamentId);
+    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
     registrationRef.update(
       {finished: false}
     );
@@ -503,12 +505,12 @@ export class TournamentService implements OnDestroy {
 
     const game1: TournamentGame = swapPlayer.gameOne;
 
-    const gameOneRef = this.fb.database().ref('tournament-games/' + game1.tournamentId + '/' + game1.id);
+    const gameOneRef = this.afoDatabase.object('tournament-games/' + game1.tournamentId + '/' + game1.id);
     gameOneRef.update(game1);
 
     const game2: TournamentGame = swapPlayer.gameTwo;
 
-    const gameTwoRef = this.fb.database().ref('tournament-games/' + game1.tournamentId + '/' + game2.id);
+    const gameTwoRef = this.afoDatabase.object('tournament-games/' + game1.tournamentId + '/' + game2.id);
     gameTwoRef.update(game2);
 
     this.snackBar.open('Successfully swap player', '', {
@@ -521,7 +523,7 @@ export class TournamentService implements OnDestroy {
 
     this.tournamentGameService.calculateEloForTournament();
 
-    const registrationRef = this.afService.database.object('tournaments/' + tournamentId);
+    const registrationRef = this.afoDatabase.object('tournaments/' + tournamentId);
     registrationRef.update(
       {uploaded: true}
     );
@@ -532,13 +534,15 @@ export class TournamentService implements OnDestroy {
 
 
   scenarioSelectedAction(scenarioSelected: ScenarioSelectedModel) {
-    const query = this.fb.database().ref('tournament-games/' + scenarioSelected.tournamentId).orderByChild('tournamentRound')
-      .equalTo(scenarioSelected.round);
 
-    query.once('value', function (snapshot) {
 
-      snapshot.forEach(function (child) {
-        child.ref.update({scenario: scenarioSelected.scenario});
+    const query = this.afoDatabase.list('tournament-games/' + scenarioSelected.tournamentId).take(1);
+    query.subscribe((gamesRef: any) => {
+      gamesRef.forEach((game) => {
+        if (game.tournamentRound === scenarioSelected.round) {
+          this.afoDatabase.object('tournament-games/' + scenarioSelected.tournamentId + '/' + game.$key).
+            update({'scenario': scenarioSelected.scenario});
+        }
       });
     });
   }

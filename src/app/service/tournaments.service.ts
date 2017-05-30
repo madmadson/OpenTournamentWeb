@@ -1,7 +1,7 @@
 import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
-import {AngularFire, FirebaseRef} from 'angularfire2';
+import {FirebaseRef} from 'angularfire2';
 import {
   TournamentAddedAction,
   TournamentChangedAction,
@@ -10,13 +10,14 @@ import {
 } from '../store/actions/tournaments-actions';
 import {Tournament} from '../../../shared/model/tournament';
 import {MdSnackBar} from '@angular/material';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 @Injectable()
 export class TournamentsService implements OnDestroy {
 
   private tournamentsReference: firebase.database.Reference;
 
-  constructor(protected afService: AngularFire,
+  constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<ApplicationState>,
               @Inject(FirebaseRef) private fb,
               private snackBar: MdSnackBar) {
@@ -75,7 +76,7 @@ export class TournamentsService implements OnDestroy {
 
   pushTournament(newTournament: Tournament) {
 
-    const tournaments = this.afService.database.list('tournaments');
+    const tournaments = this.afoDatabase.list('tournaments');
     tournaments.push(newTournament);
 
     this.snackBar.open('Tournament saved successfully', '', {
@@ -84,7 +85,7 @@ export class TournamentsService implements OnDestroy {
   }
 
   setTournament(tournament: Tournament) {
-    const tournamentRef = this.afService.database.object('tournaments/' + tournament.id);
+    const tournamentRef = this.afoDatabase.object('tournaments/' + tournament.id);
     tournamentRef.set(tournament);
 
     this.snackBar.open('Tournament edited successfully', '', {

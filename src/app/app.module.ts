@@ -122,6 +122,7 @@ import {PrintGamesDialogComponent} from './dialogs/print-games-dialog';
 import { TournamentTeamRankingListComponent } from './team-tournament/tournament-team-ranking-list/tournament-team-ranking-list.component';
 import {ShowTeamRankingDialogComponent} from './dialogs/show-team-ranking-dialog';
 import {MdlSelectModule} from "@angular-mdl/select";
+import {AngularFireOfflineModule} from "angularfire2-offline";
 
 
 const reducers = {
@@ -143,7 +144,8 @@ const reducers = {
 
 };
 
-const developmentReducer: ActionReducer<ApplicationState> = compose(storeFreeze, combineReducers)(reducers);
+// const developmentReducer: ActionReducer<ApplicationState> = compose(storeFreeze, combineReducers)(reducers);
+const developmentReducer: ActionReducer<ApplicationState> = combineReducers(reducers);
 const productionReducer: ActionReducer<ApplicationState> = combineReducers(reducers);
 
 export function storeReducer(state: any, action: any) {
@@ -203,6 +205,7 @@ export const firebaseConfDev = {
     DateTimePickerModule,
     MdlExpansionPanelModule,
     MdlSelectModule,
+    AngularFireOfflineModule,
   ],
   declarations: [
     AppComponent,

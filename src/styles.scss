@@ -1,6 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+$success_color: #388E3C;
+$fail_color: #FF1501;
+$main_tick: 12px;
+
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;

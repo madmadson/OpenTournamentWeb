@@ -29,12 +29,6 @@
     <md-card
       draggable="true"
       (click)="confirmSwapPlayer($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
-      (dragstart)="startDrag($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
-      (dragover)="dragOver($event, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
-      (dragleave)="dragLeave($event)"
-      (dragout)="dragLeave($event)"
-      (dragend)="endDrag($event)"
-      (drop)="dropped($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       class="game-card"
       [ngClass]="{  'move-able:': !game.finished,
                     'drop-enable': dragStarted && !game.finished && dragEnable(game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId),
@@ -63,11 +57,6 @@
     <md-card
       draggable="true"
       (click)="confirmSwapPlayer($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
-      (dragstart)="startDrag($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
-      (dragover)="dragOver($event, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
-      (dragleave)="dragLeave($event)"
-      (dragend)="endDrag($event)"
-      (drop)="dropped($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
       class="game-card"
       [ngClass]="{  'move-able:': !game.finished,
                     'drop-enable': dragStarted && !game.finished && dragEnable(game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId),

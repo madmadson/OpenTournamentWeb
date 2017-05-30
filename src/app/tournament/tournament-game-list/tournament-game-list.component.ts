@@ -534,13 +534,15 @@ export class GameResultDialogComponent {
 
   gameConfig: GameConfig;
 
-  playerOneArmyLists$: Observable<ArmyList[]>;
-  playerTwoArmyLists$: Observable<ArmyList[]>;
+  playerOneArmyLists: ArmyList[];
+  playerTwoArmyLists: ArmyList[];
 
   sureButton: boolean;
 
   constructor(public dialogRef: MdDialogRef<GameResultDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
+
+    const that = this;
 
     // TODO make this generic
     this.gameConfig = getWarmachineConfig();
@@ -548,22 +550,24 @@ export class GameResultDialogComponent {
     this.givenGame = this.data.selectedGame;
     this.gameModel = TournamentGame.fromJson(this.givenGame);
 
+    this.playerOneArmyLists = [];
+    this.playerTwoArmyLists = [];
 
-    this.playerOneArmyLists$ = data.armyLists$.map(armyLists => armyLists.filter((list: ArmyList) => {
-      if (list.tournamentPlayerId) {
-        return (list.tournamentPlayerId === data.selectedGame.playerOneTournamentPlayerId);
-      } else {
-        return (list.playerId === data.selectedGame.playerOnePlayerId);
-      }
-    }));
+    data.armyLists$.subscribe((armyLists: ArmyList[]) => {
+      console.log('allLists: ' + JSON.stringify(armyLists));
 
-    this.playerTwoArmyLists$ = data.armyLists$.map(armyLists => armyLists.filter((list: ArmyList) => {
-      if (list.tournamentPlayerId) {
-        return (list.tournamentPlayerId === data.selectedGame.playerTwoTournamentPlayerId);
-      } else {
-        return (list.playerId === data.selectedGame.playerTwoPlayerId);
-      }
-    }));
+      _.each(armyLists, function (list: ArmyList) {
+        if (list.tournamentPlayerId && list.tournamentPlayerId === data.selectedGame.playerOneTournamentPlayerId) {
+          that.playerOneArmyLists.push(list);
+        } else if (list.playerId && list.playerId === data.selectedGame.playerOnePlayerId) {
+          that.playerOneArmyLists.push(list);
+        } else if (list.tournamentPlayerId && list.tournamentPlayerId === data.selectedGame.playerTwoTournamentPlayerId) {
+          that.playerTwoArmyLists.push(list);
+        }  else if (list.playerId && list.playerId === data.selectedGame.playerTwoPlayerId) {
+          that.playerTwoArmyLists.push(list);
+        }
+      });
+    });
   }
 
   playerOneWin() {

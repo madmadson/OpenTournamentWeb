@@ -260,12 +260,12 @@ export class TournamentPreparationComponent implements OnInit {
       }
     });
 
-    const saveEventSubscribe = dialogRef.componentInstance.onAddTournamentRegistration.subscribe(registration => {
+    const saveEventSubscribe = dialogRef.componentInstance.onAddTournamentRegistration.subscribe(registrationPush => {
 
-      if (registration !== undefined) {
+      if (registrationPush !== undefined) {
         this.onAddTournamentRegistration.emit({
-            registration: registration,
-            tournament: this.actualTournament
+            registration: registrationPush.registration,
+            tournament: this.actualTournament,
         });
       }
     });

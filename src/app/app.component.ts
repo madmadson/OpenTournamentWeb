@@ -9,6 +9,7 @@ import {GlobalEventService} from './service/global-event-service';
 import { Subscription } from 'rxjs/Subscription';
 import {MdSidenav} from '@angular/material';
 import {WindowRefService} from './service/window-ref-service';
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,7 @@ export class AppComponent implements OnDestroy {
   fullscreenMode: boolean;
 
   sideNavOpen: boolean;
+  isConnected: Observable<boolean>;
 
   constructor(private router: Router,
               private store: Store<ApplicationState>,
@@ -51,12 +53,14 @@ export class AppComponent implements OnDestroy {
 
     this.store.dispatch(new AuthSubscribeAction());
     this.store.dispatch(new TournamentsSubscribeAction());
-    // console.log('window width: ' + winRef.nativeWindow.screen.width);
-    if (this.winRef.nativeWindow.screen.width < 800) {
-      this.sideNavOpen = false;
-    } else {
-      this.sideNavOpen = true;
-    }
+
+    this.sideNavOpen = this.winRef.nativeWindow.screen.width >= 800;
+
+
+    this.isConnected = Observable.merge(
+      Observable.of(this.winRef.nativeWindow.navigator.onLine),
+      Observable.fromEvent(window, 'online').map(() => true),
+      Observable.fromEvent(window, 'offline').map(() => false));
 
   }
 

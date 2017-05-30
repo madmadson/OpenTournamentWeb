@@ -58,13 +58,13 @@
             (click)="increasePlayerOneVP()">
             add_circle_outline</md-icon>
         </div>
-        <md-select *ngIf="(playerOneArmyLists$ | async).length > 0; else noArmyList"
+        <md-select *ngIf="playerOneArmyLists?.length > 0; else noArmyList"
           class="full-width"
           placeholder="PlayerOne ArmyList"
           #playerOneArmyList
           name="playerOneArmyList"
           [(ngModel)]="gameModel.playerOneArmyList">
-          <md-option *ngFor="let armyList of (playerOneArmyLists$ | async)" [value]="armyList.name">{{ armyList.name }}</md-option>
+          <md-option *ngFor="let armyList of playerOneArmyLists" [value]="armyList.name">{{ armyList.name }}</md-option>
         </md-select>
       </md-card>
       <div class="game-result-card-divider">
@@ -128,13 +128,13 @@
             (click)="increasePlayerTwoVP()">
             add_circle_outline</md-icon>
         </div>
-        <md-select *ngIf="(playerTwoArmyLists$ | async).length > 0; else noArmyList"
+        <md-select *ngIf="playerTwoArmyLists?.length > 0; else noArmyList"
           class="full-width"
           placeholder="PlayerTwo ArmyList"
           #playerTwoArmyList
           name="playerTwoArmyList"
           [(ngModel)]="gameModel.playerTwoArmyList">
-          <md-option *ngFor="let armyList of (playerTwoArmyLists$ | async)" [value]="armyList.name">{{ armyList.name }}</md-option>
+          <md-option *ngFor="let armyList of playerTwoArmyLists" [value]="armyList.name">{{ armyList.name }}</md-option>
         </md-select>
         <ng-template #noArmyList>No ArmyList for Player found</ng-template>
       </md-card>

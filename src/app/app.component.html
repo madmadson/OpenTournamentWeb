@@ -38,6 +38,18 @@
     </div>
     <span class="app-name-label">OpenTournament BETA</span>
     <span class="spacer"></span>
+    <span>
+      <md-icon class="online_icon"
+               mdTooltip="Connected"
+               *ngIf="(isConnected | async)">
+        network_wifi
+      </md-icon>
+      <md-icon class="offline_icon"
+               mdTooltip="No Connection"
+               *ngIf="!(isConnected | async)">
+        signal_wifi_off
+      </md-icon>
+    </span>
     <span *ngIf="(currentUserName)" class="user-welcome-panel">{{currentUserName}}</span>
     <img *ngIf="(currentUserImage)" class="avatar" src="{{currentUserImage}}">
     <img *ngIf="(!currentUserImage)" class="avatar" src="../assets/icon_final_48.png">
