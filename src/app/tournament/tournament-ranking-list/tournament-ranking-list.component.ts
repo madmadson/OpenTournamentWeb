@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {Player} from '../../../../shared/model/player';
@@ -6,8 +6,9 @@ import {Player} from '../../../../shared/model/player';
 import * as _ from 'lodash';
 
 import {ArmyList} from '../../../../shared/model/armyList';
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
+import {MdDialog} from '@angular/material';
 import {WindowRefService} from '../../service/window-ref-service';
+import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog';
 
 @Component({
   selector: 'tournament-ranking-table',
@@ -55,23 +56,7 @@ export class TournamentRankingListComponent implements OnInit {
     }
   }
 
-  hasArmyList(ranking: TournamentRanking): boolean {
-
-    let hasArmyList = false;
-
-    if (this.armyLists) {
-
-      _.each(this.armyLists, function (armyList: ArmyList) {
-        if (armyList.playerId === ranking.playerId) {
-          hasArmyList = true;
-        }
-      });
-    }
-
-    return hasArmyList;
-  }
-
-  openArmyListDialog(ranking: TournamentRanking){
+  showArmyList(ranking: TournamentRanking){
 
     const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
       if (list.tournamentPlayerId) {
@@ -81,31 +66,11 @@ export class TournamentRankingListComponent implements OnInit {
       }
     });
 
-    this.dialog.open(ShowArmyListInTournamentRankingDialogComponent, {
+    this.dialog.open(ShowArmyListDialogComponent, {
       data: {
         ranking: ranking,
         armyLists: myArmyLists
       }
     });
   }
-}
-
-
-@Component({
-  selector: 'show-army-list-dialog',
-  templateUrl: './show-army-list-dialog.html'
-})
-export class ShowArmyListInTournamentRankingDialogComponent {
-
-  ranking: TournamentRanking;
-  armyLists: ArmyList[];
-
-  constructor(public dialogRef: MdDialogRef<ShowArmyListInTournamentRankingDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-
-    this.ranking = data.ranking;
-    this.armyLists = data.armyLists;
-  }
-
-
 }

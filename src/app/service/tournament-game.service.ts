@@ -466,7 +466,7 @@ export class TournamentGameService implements OnDestroy {
     teamQueryRef.subscribe((gamesRef: any) => {
       gamesRef.forEach((game) => {
         if (game.tournamentRound === config.round) {
-          this.afoDatabase.object('tournament-games/' + config.tournamentId + '/' + game.$key).remove();
+          this.afoDatabase.object('tournament-team-games/' + config.tournamentId + '/' + game.$key).remove();
         }
       });
     });

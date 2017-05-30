@@ -3,11 +3,10 @@ import {Tournament} from '../../../shared/model/tournament';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 import {StartTournamentDialogComponent} from '../tournament/tournament-preparation/tournament-preparation.component';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
-import {Registration} from '../../../shared/model/registration';
 
 import * as _ from 'lodash';
 import {Player} from '../../../shared/model/player';
-import {TournamentPlayer} from "../../../shared/model/tournament-player";
+import {TournamentPlayer} from '../../../shared/model/tournament-player';
 
 @Component({
   selector: 'show-team-dialog',

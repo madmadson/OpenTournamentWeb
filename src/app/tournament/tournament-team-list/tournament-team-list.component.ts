@@ -13,7 +13,8 @@ import * as _ from 'lodash';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 import {ShowTeamDialogComponent} from '../../dialogs/show-team-dialog';
 import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-player-dialog';
-import {Registration} from "../../../../shared/model/registration";
+
+import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog';
 
 
 @Component({
@@ -23,6 +24,7 @@ import {Registration} from "../../../../shared/model/registration";
 })
 export class TournamentTeamListComponent implements OnInit {
 
+  @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() actualTournamentTeams$: Observable<TournamentTeam[]>;
   @Input() actualTournament: Tournament;
   @Input() userPlayerData: Player;
@@ -35,6 +37,8 @@ export class TournamentTeamListComponent implements OnInit {
 
   truncateMax: number;
   smallScreen: boolean;
+
+  armyLists: ArmyList[];
 
   constructor(public dialog: MdDialog,
               private winRef: WindowRefService) {
@@ -51,6 +55,10 @@ export class TournamentTeamListComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.actualTournamentArmyList$.subscribe(armyLists => {
+      this.armyLists = armyLists;
+    });
   }
 
   getPlayersForTeam(teamName: string): number {
@@ -124,10 +132,27 @@ export class TournamentTeamListComponent implements OnInit {
     return allPlayersForTeam.length >= this.actualTournament.teamSize;
   }
 
-  addPlayerToTeam(event: any, team: TournamentTeam) {
+  showArmyList(event: any, team: TournamentTeam) {
 
     event.stopPropagation();
 
+    const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
+      if (list.teamName) {
+        return (list.teamName === team.teamName);
+      }
+    });
+
+    this.dialog.open(ShowArmyListDialogComponent, {
+      data: {
+        tournamentTeam: team,
+        armyLists: myArmyLists
+      }
+    });
+  }
+
+  addPlayerToTeam(event: any, team: TournamentTeam) {
+
+    event.stopPropagation();
 
     const dialogRef = this.dialog.open(NewTournamentPlayerDialogComponent, {
       data: {

@@ -406,6 +406,37 @@ export class TournamentPreparationComponent implements OnInit {
     }
   }
 
+  addArmyListForTeam(team: TournamentTeam) {
+
+    if (team !== undefined) {
+
+      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
+        data: {
+          tournamentTeam: team,
+          armyLists: this.actualTournamentArmyList$
+        }
+      });
+      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyList.subscribe(armyList => {
+
+        if (armyList !== undefined) {
+          this.onAddArmyList.emit(armyList);
+        }
+      });
+      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
+
+        if (armyList !== undefined) {
+          this.onDeleteArmyList.emit(armyList);
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+
+        saveEventSubscribe.unsubscribe();
+        deleteEventSubscribe.unsubscribe();
+      });
+    }
+  }
+
   openAddArmyListDialog(registration: Registration) {
     if (registration !== undefined) {
 

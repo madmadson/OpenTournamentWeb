@@ -25,6 +25,10 @@
       Add Player
     </button>
   </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content
+    *ngIf="isAdmin()">
+    <md-icon class="list-action" (click)="showArmyList($event, team)">list</md-icon>
+  </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="isAdmin()">
     <md-icon md-tooltip="Delete Team" class="negative  list-action" (click)="eraseTeam($event, team)">delete</md-icon>
   </mdl-list-item-secondary-content>

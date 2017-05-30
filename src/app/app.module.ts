@@ -52,7 +52,6 @@ import { RegisterPageComponent } from './auth/register-page/register-page.compon
 import { PasswordForgetComponent } from './auth/password-forget/password-forget.component';
 import { TournamentRegistrationListComponent } from './tournament/tournament-registration-list/tournament-registration-list.component';
 import {
-  ShowArmyListInTournamentPlayerDialogComponent,
   TournamentPlayerListComponent
 } from './tournament/tournament-player-list/tournament-player-list.component';
 import {TournamentRankingService} from './service/tournament-ranking.service';
@@ -81,8 +80,7 @@ import {
   NewRoundDialogComponent, FinishTournamentDialogComponent,
 } from './tournament/tournament-round-overview/tournament-round-overview.component';
 import { TournamentGameListComponent, GameResultDialogComponent } from './tournament/tournament-game-list/tournament-game-list.component';
-import { TournamentRankingListComponent,
-          ShowArmyListInTournamentRankingDialogComponent
+import { TournamentRankingListComponent
 } from './tournament/tournament-ranking-list/tournament-ranking-list.component';
 import {MdlModule} from 'angular2-mdl';
 import {RankingEffectService} from './store/effects/ranking-effect.service';
@@ -123,6 +121,7 @@ import { TournamentTeamRankingListComponent } from './team-tournament/tournament
 import {ShowTeamRankingDialogComponent} from './dialogs/show-team-ranking-dialog';
 import {MdlSelectModule} from "@angular-mdl/select";
 import {AngularFireOfflineModule} from "angularfire2-offline";
+import {ShowArmyListDialogComponent} from "./dialogs/show-army-lists-dialog";
 
 
 const reducers = {
@@ -205,7 +204,7 @@ export const firebaseConfDev = {
     DateTimePickerModule,
     MdlExpansionPanelModule,
     MdlSelectModule,
-    AngularFireOfflineModule,
+    AngularFireOfflineModule
   ],
   declarations: [
     AppComponent,
@@ -243,8 +242,6 @@ export const firebaseConfDev = {
     FinishTournamentDialogComponent,
     TournamentFinalRankingsComponent,
     AboutComponent,
-    ShowArmyListInTournamentRankingDialogComponent,
-    ShowArmyListInTournamentPlayerDialogComponent,
     PlayerRegistrationsTableComponent,
     PlayerGamesTableComponent,
     TournamentGameTableComponent,
@@ -260,7 +257,8 @@ export const firebaseConfDev = {
     PrintRankingsDialogComponent,
     PrintGamesDialogComponent,
     TournamentTeamRankingListComponent,
-    ShowTeamRankingDialogComponent
+    ShowTeamRankingDialogComponent,
+    ShowArmyListDialogComponent
   ],
   providers: [
     LoginService,
@@ -286,8 +284,6 @@ export const firebaseConfDev = {
     NewRoundDialogComponent,
     TournamentFormDialogComponent,
     FinishTournamentDialogComponent,
-    ShowArmyListInTournamentRankingDialogComponent,
-    ShowArmyListInTournamentPlayerDialogComponent,
     CreateTeamDialogComponent,
     RegisterTeamDialogComponent,
     ShowTeamRegistrationDialogComponent,
@@ -295,7 +291,8 @@ export const firebaseConfDev = {
     PrintArmyListsDialogComponent,
     PrintRankingsDialogComponent,
     PrintGamesDialogComponent,
-    ShowTeamRankingDialogComponent
+    ShowTeamRankingDialogComponent,
+    ShowArmyListDialogComponent
   ],
   bootstrap: [AppComponent]
 })

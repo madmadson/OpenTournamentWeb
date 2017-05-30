@@ -161,6 +161,7 @@
       <h4 *ngIf="tournamentTeamRegistrations > 0" class="heading">
         Registered Teams {{tournamentTeamRegistrations}}
       </h4>
+
       <mdl-list>
         <tournament-team-registration-list
           [actualTournament]="actualTournament"
@@ -234,6 +235,7 @@
       </div>
       <mdl-list>
         <tournament-team-list
+          [actualTournamentArmyList$]="actualTournamentArmyList$"
           [actualTournament]="actualTournament"
           [userPlayerData]="userPlayerData"
           [allActualTournamentPlayers]="allActualTournamentPlayers"

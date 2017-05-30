@@ -171,7 +171,7 @@ export class TournamentTeamRegistrationListComponent {
     if (!this.myTeam) {
       return false;
     }
-    return team === this.myTeam;
+    return team.teamName === this.myTeam.teamName;
   }
 
   checkTournamentFull(team: TournamentTeam) {

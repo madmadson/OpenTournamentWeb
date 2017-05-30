@@ -6,6 +6,7 @@ import {RegisterDialogComponent} from '../tournament/tournament-preparation/tour
 
 import * as _ from 'lodash';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {TournamentTeam} from "../../../shared/model/tournament-team";
 
 @Component({
   selector: 'add-army-lists-dialog',
@@ -15,6 +16,7 @@ export class AddArmyListsDialogComponent {
 
   registration: Registration;
   tournamentPlayer: TournamentPlayer;
+  tournamentTeam: TournamentTeam;
   armyLists: ArmyList[];
 
   armyListModel: ArmyList;

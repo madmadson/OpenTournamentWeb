@@ -5,6 +5,7 @@
   <thead>
   <tr>
     <th class="small-three-space-table-cell rank-number">#</th>
+    <th *ngIf="!smallScreen" class="small-three-space-table-cell">Lists</th>
     <th class="mdl-data-table__cell--non-numeric">Team</th>
     <th class="small-three-space-table-cell">Score</th>
     <th class="small-three-space-table-cell">SOS</th>
@@ -16,6 +17,11 @@
          [ngClass]="{'even': even} ">
   <tr (click)="showTeam(rank)" class="team-table-row">
     <td class="small-three-space-table-cell rank-table-cell rank-number">{{i +1}}</td>
+    <td  *ngIf="!smallScreen" class="small-three-space-table-cell rank-table-cell">
+      <md-icon class="army-list-icon"
+               (click)="showArmyList(rank)">
+        list</md-icon>
+    </td>
     <td class="mdl-data-table__cell--non-numeric">
       <div class="player-name-table-cell">{{rank.playerName | truncate:truncateMax}}</div>
       <div mdTooltip="META - COUNTRY" class="other-player-data-table-cell">{{rank.meta}} - {{rank.country}}</div>

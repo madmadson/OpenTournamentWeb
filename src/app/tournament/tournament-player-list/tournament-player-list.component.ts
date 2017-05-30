@@ -65,22 +65,3 @@ export class TournamentPlayerListComponent implements OnInit {
   }
 
 }
-
-@Component({
-  selector: 'show-army-list-dialog',
-  templateUrl: './show-army-list-dialog.html'
-})
-export class ShowArmyListInTournamentPlayerDialogComponent {
-
-  tournamentPlayer: TournamentPlayer;
-  armyLists: ArmyList[];
-
-  constructor(public dialogRef: MdDialogRef<ShowArmyListInTournamentPlayerDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-
-    this.tournamentPlayer = data.tournamentPlayer;
-    this.armyLists = data.armyLists;
-  }
-
-
-}

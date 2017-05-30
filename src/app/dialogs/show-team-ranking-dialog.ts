@@ -9,7 +9,7 @@ import {Player} from '../../../shared/model/player';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {Observable} from 'rxjs/Observable';
 import {ArmyList} from '../../../shared/model/armyList';
-import {ShowArmyListInTournamentRankingDialogComponent} from '../tournament/tournament-ranking-list/tournament-ranking-list.component';
+import {ShowArmyListDialogComponent} from './show-army-lists-dialog';
 
 @Component({
   selector: 'show-team-ranking-dialog',
@@ -68,7 +68,7 @@ export class ShowTeamRankingDialogComponent {
     return hasArmyList;
   }
 
-  openArmyListDialog(ranking: TournamentRanking){
+  openArmyListDialog(ranking: TournamentRanking) {
 
     const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
       if (list.tournamentPlayerId) {
@@ -78,7 +78,7 @@ export class ShowTeamRankingDialogComponent {
       }
     });
 
-    this.dialog.open(ShowArmyListInTournamentRankingDialogComponent, {
+    this.dialog.open(ShowArmyListDialogComponent, {
       data: {
         ranking: ranking,
         armyLists: myArmyLists

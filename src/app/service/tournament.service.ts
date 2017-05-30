@@ -534,8 +534,6 @@ export class TournamentService implements OnDestroy {
 
 
   scenarioSelectedAction(scenarioSelected: ScenarioSelectedModel) {
-
-
     const query = this.afoDatabase.list('tournament-games/' + scenarioSelected.tournamentId).take(1);
     query.subscribe((gamesRef: any) => {
       gamesRef.forEach((game) => {
