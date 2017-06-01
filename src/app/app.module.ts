@@ -119,9 +119,13 @@ import {PrintRankingsDialogComponent} from './dialogs/print-rankings-dialog';
 import {PrintGamesDialogComponent} from './dialogs/print-games-dialog';
 import { TournamentTeamRankingListComponent } from './team-tournament/tournament-team-ranking-list/tournament-team-ranking-list.component';
 import {ShowTeamRankingDialogComponent} from './dialogs/show-team-ranking-dialog';
-import {MdlSelectModule} from "@angular-mdl/select";
-import {AngularFireOfflineModule} from "angularfire2-offline";
-import {ShowArmyListDialogComponent} from "./dialogs/show-army-lists-dialog";
+import {MdlSelectModule} from '@angular-mdl/select';
+import {AngularFireOfflineModule} from 'angularfire2-offline';
+import {ShowArmyListDialogComponent} from './dialogs/show-army-lists-dialog';
+import {
+  TeamMatchDialogComponent,
+  TournamentTeamGameListComponent
+} from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
 
 
 const reducers = {
@@ -258,7 +262,9 @@ export const firebaseConfDev = {
     PrintGamesDialogComponent,
     TournamentTeamRankingListComponent,
     ShowTeamRankingDialogComponent,
-    ShowArmyListDialogComponent
+    ShowArmyListDialogComponent,
+    TournamentTeamGameListComponent,
+    TeamMatchDialogComponent
   ],
   providers: [
     LoginService,
@@ -292,7 +298,8 @@ export const firebaseConfDev = {
     PrintRankingsDialogComponent,
     PrintGamesDialogComponent,
     ShowTeamRankingDialogComponent,
-    ShowArmyListDialogComponent
+    ShowArmyListDialogComponent,
+    TeamMatchDialogComponent
   ],
   bootstrap: [AppComponent]
 })

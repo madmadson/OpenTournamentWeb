@@ -13,7 +13,7 @@ import {TournamentManagementConfiguration} from '../../../../shared/dto/tourname
 import * as _ from 'lodash';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
-import {SwapPlayer} from '../../../../shared/dto/swap-player';
+import {SwapGames} from '../../../../shared/dto/swap-player';
 import {GlobalEventService} from 'app/service/global-event-service';
 import {WindowRefService} from '../../service/window-ref-service';
 import {Subscription} from 'rxjs/Subscription';
@@ -27,7 +27,7 @@ import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
 @Component({
   selector: 'tournament-round-overview',
   templateUrl: './tournament-round-overview.component.html',
-  styleUrls: ['./tournament-round-overview.component.css']
+  styleUrls: ['./tournament-round-overview.component.scss']
 })
 export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
@@ -45,7 +45,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onKillRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onGameResult = new EventEmitter<GameResult>();
-  @Output() onSwapPlayer = new EventEmitter<SwapPlayer>();
+  @Output() onSwapPlayer = new EventEmitter<SwapGames>();
   @Output() onScenarioSelected = new EventEmitter<ScenarioSelectedModel>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
   @Output() onEndTournament = new EventEmitter<TournamentManagementConfiguration>();
@@ -124,7 +124,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.dialog.open(PrintRankingsDialogComponent, {
       data: {
         tournament: this.actualTournament,
-        rankings$: this.rankingsForRound$
+        rankings$: this.rankingsForRound$,
+        round: this.round
       }
     });
   }
@@ -134,6 +135,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       data: {
         tournament: this.actualTournament,
         games$: this.gamesForRound$,
+        round: this.round
       }
     });
   }
@@ -162,7 +164,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   }
 
-  handleSwapPlayer(swapPlayer: SwapPlayer) {
+  handleSwapPlayer(swapPlayer: SwapGames) {
 
     this.onSwapPlayer.emit(swapPlayer);
   }

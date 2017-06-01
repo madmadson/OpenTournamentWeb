@@ -82,6 +82,7 @@
     </mdl-textfield>
     <h4 *ngIf="allGamesFiltered?.length == 0" class="warning-text">No Games found (Filter?)</h4>
     <tournament-game-list *ngIf="!gamesTableMode"
+                          [teamMatch]="false"
                           [actualTournament]="actualTournament"
                           [authenticationStoreState$]="authenticationStoreState$"
                           [actualTournamentArmyLists$]="actualTournamentArmyLists$"

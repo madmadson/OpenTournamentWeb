@@ -13,6 +13,11 @@ body {
   background-color: grey;
 }
 
+.offline_icon{
+  color: $fail_color;
+  margin-right: $main_tick;
+}
+
 .prevent-scrolling {
   overflow-y: hidden;
   overflow-x: hidden;

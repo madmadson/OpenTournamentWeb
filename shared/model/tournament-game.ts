@@ -8,6 +8,7 @@ export class TournamentGame {
   playerOnePlayerId: string;
   playerOneTournamentPlayerId: string;
   playerOnePlayerName: string;
+  playerOneTeamName: string;
   playerOneFaction: string;
   playerOneElo: number;
   playerOneScore: number;
@@ -20,6 +21,7 @@ export class TournamentGame {
   playerTwoPlayerId: string;
   playerTwoTournamentPlayerId: string;
   playerTwoPlayerName: string;
+  playerTwoTeamName: string;
   playerTwoFaction: string;
   playerTwoElo: number;
   playerTwoScore: number;
@@ -35,20 +37,20 @@ export class TournamentGame {
   scenario: string;
 
   static fromJson({tournamentId, playerOnePlayerId, playerOneTournamentPlayerId,
-                    playerOnePlayerName, playerOneFaction, playerOneElo, playerOneScore,
+                    playerOnePlayerName, playerOneTeamName, playerOneFaction, playerOneElo, playerOneScore,
                     playerOneControlPoints, playerOneVictoryPoints, playerOneArmyList,
                     playerOneEloChanging, playerOneIntermediateResult,
-                    playerTwoPlayerId, playerTwoTournamentPlayerId, playerTwoPlayerName,
+                    playerTwoPlayerId, playerTwoTournamentPlayerId, playerTwoPlayerName, playerTwoTeamName,
                     playerTwoFaction, playerTwoElo, playerTwoScore, playerTwoControlPoints,
                     playerTwoVictoryPoints, playerTwoArmyList, playerTwoEloChanging,
                     playerTwoIntermediateResult,
                     tournamentRound, playingField, finished, scenario
   }): TournamentGame {
     return new TournamentGame(tournamentId, playerOnePlayerId, playerOneTournamentPlayerId,
-      playerOnePlayerName, playerOneElo, playerOneFaction, playerOneScore,
+      playerOnePlayerName, playerOneTeamName, playerOneElo, playerOneFaction, playerOneScore,
       playerOneControlPoints, playerOneVictoryPoints, playerOneArmyList, playerOneEloChanging,
       playerOneIntermediateResult,
-      playerTwoPlayerId, playerTwoTournamentPlayerId, playerTwoPlayerName,
+      playerTwoPlayerId, playerTwoTournamentPlayerId, playerTwoPlayerName, playerTwoTeamName,
       playerTwoElo,  playerTwoFaction, playerTwoScore, playerTwoControlPoints,
       playerTwoVictoryPoints, playerTwoArmyList, playerTwoEloChanging,
       playerTwoIntermediateResult,
@@ -56,12 +58,12 @@ export class TournamentGame {
   }
 
   constructor(tournamentId: string, playerOnePlayerId: string, playerOneTournamentPlayerId: string,
-              playerOnePlayerName: string, playerOneElo: number,
+              playerOnePlayerName: string, playerOneTeamName: string,  playerOneElo: number,
               playerOneFaction: string, playerOneScore: number, playerOneControlPoints: number,
               playerOneVictoryPoints: number, playerOneArmyList: string, playerOneEloChanging: number,
               playerOneIntermediateResult: number,
               playerTwoPlayerId: string,
-              playerTwoTournamentPlayerId: string, playerTwoPlayerName: string,
+              playerTwoTournamentPlayerId: string, playerTwoPlayerName: string, playerTwoTeamName: string,
               playerTwoElo: number, playerTwoFaction: string,  playerTwoScore: number,
               playerTwoControlPoints: number, playerTwoVictoryPoints: number, playerTwoArmyList: string,
               playerTwoEloChanging: number,
@@ -73,6 +75,7 @@ export class TournamentGame {
     this.playerOnePlayerId = playerOnePlayerId;
     this.playerOneTournamentPlayerId = playerOneTournamentPlayerId;
     this.playerOnePlayerName = playerOnePlayerName;
+    this.playerOneTeamName = playerOneTeamName;
     this.playerOneElo = playerOneElo;
     this.playerOneFaction = playerOneFaction;
     this.playerOneScore = playerOneScore;
@@ -85,6 +88,7 @@ export class TournamentGame {
     this.playerTwoPlayerId = playerTwoPlayerId;
     this.playerTwoTournamentPlayerId = playerTwoTournamentPlayerId;
     this.playerTwoPlayerName = playerTwoPlayerName;
+    this.playerTwoTeamName = playerTwoTeamName;
     this.playerTwoElo = playerTwoElo;
     this.playerTwoFaction = playerTwoFaction;
     this.playerTwoScore = playerTwoScore;

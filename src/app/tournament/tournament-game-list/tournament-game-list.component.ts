@@ -15,7 +15,7 @@ import {Tournament} from '../../../../shared/model/tournament';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 
 import * as _ from 'lodash';
-import {SwapPlayer} from '../../../../shared/dto/swap-player';
+import {SwapGames} from '../../../../shared/dto/swap-player';
 import {WindowRefService} from '../../service/window-ref-service';
 import {GlobalEventService} from 'app/service/global-event-service';
 import {getAllScenarios} from '../../../../shared/model/szenarios';
@@ -25,7 +25,7 @@ import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-mo
 @Component({
   selector: 'tournament-game-list',
   templateUrl: './tournament-game-list.component.html',
-  styleUrls: ['./tournament-game-list.component.css']
+  styleUrls: ['./tournament-game-list.component.scss']
 })
 export class TournamentGameListComponent implements OnInit, AfterContentChecked {
 
@@ -34,9 +34,10 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
   @Input() gamesForRound: TournamentGame[];
   @Input() rankingsForRound$: Observable<TournamentRanking[]>;
+  @Input() teamMatch: boolean;
 
   @Output() onGameResult = new EventEmitter<GameResult>();
-  @Output() onSwapPlayer = new EventEmitter<SwapPlayer>();
+  @Output() onSwapPlayer = new EventEmitter<SwapGames>();
   @Output() onScenarioSelected = new EventEmitter<ScenarioSelectedModel>();
 
   userPlayerData: Player;
@@ -282,10 +283,13 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     const newGameOne = this.createGameOne(droppedGame, droppedTournamentPlayerId);
     const newGameTwo = this.createGameTwo(droppedGame, droppedTournamentPlayerId);
 
-    const swapPlayer: SwapPlayer = {
+    const swapPlayer: SwapGames = {
       gameOne: newGameOne,
       gameTwo: newGameTwo,
     };
+
+    console.log('gameOne: ' + JSON.stringify(newGameOne));
+    console.log('gameTwo: ' + JSON.stringify(newGameTwo));
 
     this.onSwapPlayer.emit(swapPlayer);
   }
@@ -329,6 +333,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
         gameTwoPlayerOneAffected ? droppedGame.playerOneTournamentPlayerId : droppedGame.playerTwoTournamentPlayerId,
       playerOnePlayerName: gameOnePlayerTwoAffected ? this.draggedGame.playerOnePlayerName :
         gameTwoPlayerOneAffected ? droppedGame.playerOnePlayerName : droppedGame.playerTwoPlayerName,
+      playerOneTeamName: gameOnePlayerTwoAffected ? this.draggedGame.playerOneTeamName :
+        gameTwoPlayerOneAffected ? droppedGame.playerOneTeamName : droppedGame.playerTwoTeamName,
       playerOneFaction: gameOnePlayerTwoAffected ? this.draggedGame.playerOneFaction :
         gameTwoPlayerOneAffected ? droppedGame.playerOneFaction : droppedGame.playerTwoFaction,
       playerOneElo: gameOnePlayerTwoAffected ? this.draggedGame.playerOneElo :
@@ -346,6 +352,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
         gameTwoPlayerTwoAffected ? droppedGame.playerTwoTournamentPlayerId : droppedGame.playerOneTournamentPlayerId,
       playerTwoPlayerName: gameOnePlayerOneAffected ? this.draggedGame.playerTwoPlayerName :
         gameTwoPlayerTwoAffected ? droppedGame.playerTwoPlayerName : droppedGame.playerOnePlayerName,
+      playerTwoTeamName: gameOnePlayerOneAffected ? this.draggedGame.playerTwoTeamName :
+        gameTwoPlayerTwoAffected ? droppedGame.playerTwoTeamName : droppedGame.playerOneTeamName,
       playerTwoFaction: gameOnePlayerOneAffected ? this.draggedGame.playerTwoFaction :
         gameTwoPlayerTwoAffected ? droppedGame.playerTwoFaction : droppedGame.playerOneFaction,
       playerTwoElo: gameOnePlayerOneAffected ? this.draggedGame.playerTwoElo :
@@ -403,6 +411,9 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
         gameOnePlayerOneAffected ? this.draggedGame.playerOneTournamentPlayerId : this.draggedGame.playerTwoTournamentPlayerId,
       playerOnePlayerName: gameTwoPlayerTwoAffected ? droppedGame.playerOnePlayerName :
         gameOnePlayerOneAffected ? this.draggedGame.playerOnePlayerName : this.draggedGame.playerTwoPlayerName,
+      playerOneTeamName: gameTwoPlayerTwoAffected ? droppedGame.playerOneTeamName :
+        gameOnePlayerOneAffected ? this.draggedGame.playerOneTeamName : this.draggedGame.playerTwoTeamName,
+
       playerOneFaction: gameTwoPlayerTwoAffected ? droppedGame.playerOneFaction :
         gameOnePlayerOneAffected ? this.draggedGame.playerOneFaction : this.draggedGame.playerTwoFaction,
       playerOneElo: gameTwoPlayerTwoAffected ? droppedGame.playerOneElo :
@@ -420,6 +431,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
         gameOnePlayerTwoAffected ? this.draggedGame.playerTwoTournamentPlayerId : this.draggedGame.playerOneTournamentPlayerId,
       playerTwoPlayerName: gameTwoPlayerOneAffected ? droppedGame.playerTwoPlayerName :
         gameOnePlayerTwoAffected ? this.draggedGame.playerTwoPlayerName : this.draggedGame.playerOnePlayerName,
+      playerTwoTeamName: gameTwoPlayerOneAffected ? droppedGame.playerTwoTeamName :
+        gameOnePlayerTwoAffected ? this.draggedGame.playerTwoTeamName : this.draggedGame.playerOneTeamName,
       playerTwoFaction: gameTwoPlayerOneAffected ? droppedGame.playerTwoFaction :
         gameOnePlayerTwoAffected ? this.draggedGame.playerTwoFaction : this.draggedGame.playerOneFaction,
       playerTwoElo: gameTwoPlayerOneAffected ? droppedGame.playerTwoElo :
@@ -475,10 +488,13 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     if (this.myGameOrAdmin(selectedGame)) {
 
+        const admin = this.isAdmin();
+
         const dialogRef = this.dialog.open(GameResultDialogComponent, {
           data: {
             selectedGame: selectedGame,
-            armyLists$: this.armyLists$
+            armyLists$: this.armyLists$,
+            admin: admin
           },
         });
         const eventSubscribe = dialogRef.componentInstance.onGameResult
@@ -491,13 +507,17 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
               }
 
               this.onGameResult.emit(gameResult);
-              this.dialog.closeAll();
+              if (!this.teamMatch) {
+                this.dialog.closeAll();
+              }
             }
           });
         dialogRef.afterClosed().subscribe(() => {
 
           eventSubscribe.unsubscribe();
-          this.dialog.closeAll();
+          if (!this.teamMatch) {
+            this.dialog.closeAll();
+          }
         });
 
     }
@@ -517,13 +537,19 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
         (droppedGame.playerTwoPlayerId === this.userPlayerData.id);
     }
   }
+
+  isAdmin(): boolean {
+    if (this.userPlayerData) {
+      return this.actualTournament.creatorUid === this.currentUserId;
+    }
+  }
 }
 
 
 @Component({
   selector: 'game-result-dialog',
   templateUrl: './game-result-dialog.html',
-  styleUrls: ['./tournament-game-list.component.css']
+  styleUrls: ['./tournament-game-list.component.scss']
 })
 export class GameResultDialogComponent {
 
@@ -538,23 +564,33 @@ export class GameResultDialogComponent {
   playerTwoArmyLists: ArmyList[];
 
   sureButton: boolean;
+  isConnected: Observable<boolean>;
+
+  admin: boolean;
 
   constructor(public dialogRef: MdDialogRef<GameResultDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
+              @Inject(MD_DIALOG_DATA) public data: any,
+              private winRef: WindowRefService) {
 
     const that = this;
 
     // TODO make this generic
     this.gameConfig = getWarmachineConfig();
 
-    this.givenGame = this.data.selectedGame;
+    this.givenGame = data.selectedGame;
+    this.admin = data.admin;
+
     this.gameModel = TournamentGame.fromJson(this.givenGame);
 
     this.playerOneArmyLists = [];
     this.playerTwoArmyLists = [];
 
+    this.isConnected = Observable.merge(
+      Observable.of(this.winRef.nativeWindow.navigator.onLine),
+      Observable.fromEvent(window, 'online').map(() => true),
+      Observable.fromEvent(window, 'offline').map(() => false));
+
     data.armyLists$.subscribe((armyLists: ArmyList[]) => {
-      console.log('allLists: ' + JSON.stringify(armyLists));
 
       _.each(armyLists, function (list: ArmyList) {
         if (list.tournamentPlayerId && list.tournamentPlayerId === data.selectedGame.playerOneTournamentPlayerId) {

@@ -18,7 +18,8 @@ import {
   ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
   RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction,
-  TeamTournamentNewRoundAction, TournamentKillTeamRoundAction, TournamentPairAgainTeamAction, ScenarioSelectedAction
+  TeamTournamentNewRoundAction, TournamentKillTeamRoundAction, TournamentPairAgainTeamAction, ScenarioSelectedAction,
+  SwapTeamAction, TeamGameResultEnteredAction,
 } from '../../store/actions/tournament-actions';
 
 
@@ -29,7 +30,7 @@ import {PublishRound} from '../../../../shared/dto/publish-round';
 import {
   TournamentSetAction
 } from '../../store/actions/tournaments-actions';
-import {SwapPlayer} from '../../../../shared/dto/swap-player';
+import {SwapGames} from '../../../../shared/dto/swap-player';
 import {GlobalEventService} from '../../service/global-event-service';
 import {Subscription} from 'rxjs/Subscription';
 import {WindowRefService} from '../../service/window-ref-service';
@@ -43,7 +44,7 @@ import {
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
-import {RegistrationPush} from "../../../../shared/dto/registration-push";
+import {RegistrationPush} from '../../../../shared/dto/registration-push';
 
 @Component({
   selector: 'tournament-overview',
@@ -280,8 +281,16 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ScenarioSelectedAction(scenarioSelected));
   }
 
-  handleSwapPlayer(swapPlayer: SwapPlayer) {
+  handleSwapPlayer(swapPlayer: SwapGames) {
     this.store.dispatch(new SwapPlayerAction(swapPlayer));
+  }
+
+  handleSwapTeam(swapTeam: SwapGames) {
+    this.store.dispatch(new SwapTeamAction(swapTeam));
+  }
+
+  handleTeamGameResult(gameResult: GameResult) {
+    this.store.dispatch(new TeamGameResultEnteredAction(gameResult));
   }
 
   handlePublishRound(round: PublishRound) {

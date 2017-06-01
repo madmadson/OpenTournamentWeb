@@ -5,24 +5,26 @@ import {Observable} from 'rxjs/Observable';
 import {AuthenticationStoreState} from '../../store/authentication-state';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {PublishRound} from '../../../../shared/dto/publish-round';
-import {SwapPlayer} from '../../../../shared/dto/swap-player';
+import {SwapGames} from '../../../../shared/dto/swap-player';
 import {Player} from '../../../../shared/model/player';
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+import {MdDialog, MdSnackBar} from '@angular/material';
 import {GlobalEventService} from '../../service/global-event-service';
 import {WindowRefService} from '../../service/window-ref-service';
 
 import * as _ from 'lodash';
 import {KillRoundDialogComponent} from '../../dialogs/round-overview/kill-round-dialog';
 import {PairAgainDialogComponent} from '../../dialogs/round-overview/pair-again-dialog';
+import {PrintRankingsDialogComponent} from '../../dialogs/print-rankings-dialog';
+import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
 
 @Component({
   selector: 'tournament-team-round-overview',
   templateUrl: './tournament-team-round-overview.component.html',
-  styleUrls: ['./tournament-team-round-overview.component.css']
+  styleUrls: ['./tournament-team-round-overview.component.scss']
 })
 export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
 
@@ -43,8 +45,9 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   @Output() onPairAgain = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onKillRound = new EventEmitter<TournamentManagementConfiguration>();
-  @Output() onGameResult = new EventEmitter<GameResult>();
-  @Output() onSwapPlayer = new EventEmitter<SwapPlayer>();
+  @Output() onTeamGameResult = new EventEmitter<GameResult>();
+  @Output() onSwapPlayer = new EventEmitter<SwapGames>();
+  @Output() onSwapTeam = new EventEmitter<SwapGames>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
   @Output() onEndTournament = new EventEmitter<TournamentManagementConfiguration>();
 
@@ -132,13 +135,18 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
 
   handleGameResult(gameResult: GameResult) {
 
-    this.onGameResult.emit(gameResult);
+    this.onTeamGameResult.emit(gameResult);
 
   }
 
-  handleSwapPlayer(swapPlayer: SwapPlayer) {
+  handleSwapPlayer(swapPlayer: SwapGames) {
 
     this.onSwapPlayer.emit(swapPlayer);
+  }
+
+  handleSwapTeam(swapTeam: SwapGames) {
+
+    this.onSwapTeam.emit(swapTeam);
   }
 
   publishRound() {
@@ -203,6 +211,24 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  printRankings() {
+    this.dialog.open(PrintRankingsDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        rankings$: this.teamRankingsForRound$,
+        round: this.round
+      }
+    });
+  }
 
+  printGames() {
+    this.dialog.open(PrintGamesDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        games$: this.teamGamesForRound$,
+        round: this.round
+      }
+    });
+  }
 }
 

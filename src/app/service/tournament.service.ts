@@ -24,7 +24,7 @@ import {SubscribeTournamentGamesAction} from '../store/actions/tournament-games-
 import {GameResult} from '../../../shared/dto/game-result';
 import {PublishRound} from '../../../shared/dto/publish-round';
 import {RegistrationPush} from '../../../shared/dto/registration-push';
-import {SwapPlayer} from '../../../shared/dto/swap-player';
+import {SwapGames} from '../../../shared/dto/swap-player';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {
   SubscribeTournamentTeamRegistrationsAction,
@@ -501,7 +501,7 @@ export class TournamentService implements OnDestroy {
     });
   }
 
-  swapPlayer(swapPlayer: SwapPlayer) {
+  swapPlayer(swapPlayer: SwapGames) {
 
     const game1: TournamentGame = swapPlayer.gameOne;
 
@@ -543,5 +543,28 @@ export class TournamentService implements OnDestroy {
         }
       });
     });
+  }
+
+  swapTeam(swapTeam: SwapGames) {
+
+    this.tournamentGameService.erasePlayerGamesForTeamMatch(swapTeam);
+
+    const game1: TournamentGame = swapTeam.gameOne;
+
+    const gameOneRef = this.afoDatabase.object('tournament-team-games/' + game1.tournamentId + '/' + game1.id);
+    gameOneRef.update(game1);
+
+    const game2: TournamentGame = swapTeam.gameTwo;
+
+    const gameTwoRef = this.afoDatabase.object('tournament-team-games/' + game1.tournamentId + '/' + game2.id);
+    gameTwoRef.update(game2);
+
+    this.snackBar.open('Successfully swap teams', '', {
+      duration: 5000
+    });
+  }
+
+  teamGameResultEntered(gameResult: GameResult) {
+
   }
 }

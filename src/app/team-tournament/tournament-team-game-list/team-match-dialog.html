@@ -1,0 +1,16 @@
+<h3 md-dialog-title class="heading">{{selectedGame.playerOnePlayerName}} VS {{selectedGame.playerTwoPlayerName}}</h3>
+
+<md-dialog-content>
+<tournament-game-list [actualTournament]="actualTournament"
+                      [authenticationStoreState$]="authenticationStoreState$"
+                      [actualTournamentArmyLists$]="actualTournamentArmyLists$"
+                      [gamesForRound]="playerGamesForTeam"
+                      [rankingsForRound$]="rankingsForRound$"
+                      [teamMatch]="true"
+                      (onGameResult)="handlePlayerGameResult($event)"
+                      (onSwapPlayer)="handlePlayerSwap($event)">
+</tournament-game-list>
+</md-dialog-content>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

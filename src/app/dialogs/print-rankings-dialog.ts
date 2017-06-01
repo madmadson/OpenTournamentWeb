@@ -16,6 +16,7 @@ export class PrintRankingsDialogComponent {
   tournament: Tournament;
   rankings$: Observable<TournamentRanking[]>;
 
+  round: number;
   window: any;
 
   @ViewChild('printarea') printarea: ElementRef;
@@ -25,6 +26,8 @@ export class PrintRankingsDialogComponent {
               private winRef: WindowRefService) {
 
     this.tournament = data.tournament;
+    this.round =  data.round;
+
     this.rankings$ = data.rankings$.map(rankings => {
       return _.orderBy(rankings, ['score', 'sos', 'controlPoints', 'victoryPoints'], ['desc', 'desc', 'desc', 'desc']);
     });

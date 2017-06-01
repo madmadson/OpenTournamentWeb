@@ -8,7 +8,7 @@ import {TournamentManagementConfiguration} from '../../../../shared/dto/tourname
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
-import {SwapPlayer} from "../../../../shared/dto/swap-player";
+import {SwapGames} from "../../../../shared/dto/swap-player";
 import {ScenarioSelectedModel} from "../../../../shared/dto/scenario-selected-model";
 
 
@@ -324,6 +324,16 @@ export class GameResultEnteredAction implements Action {
   }
 }
 
+export const TEAM_GAME_RESULT_ENTERED_ACTION = 'TEAM_GAME_RESULT_ENTERED_ACTION';
+
+export class TeamGameResultEnteredAction implements Action {
+
+  readonly type = 'TEAM_GAME_RESULT_ENTERED_ACTION';
+
+  constructor(public payload: GameResult) {
+  }
+}
+
 export const SCENARIO_SELECTED_ACTION = 'SCENARIO_SELECTED_ACTION';
 
 export class ScenarioSelectedAction implements Action {
@@ -342,7 +352,17 @@ export class SwapPlayerAction implements Action {
 
   readonly type = 'SWAP_PLAYER_ACTION';
 
-  constructor(public payload: SwapPlayer) {
+  constructor(public payload: SwapGames) {
+  }
+}
+
+export const SWAP_TEAM_ACTION = 'SWAP_TEAM_ACTION';
+
+export class SwapTeamAction implements Action {
+
+  readonly type = 'SWAP_TEAM_ACTION';
+
+  constructor(public payload: SwapGames) {
   }
 }
 

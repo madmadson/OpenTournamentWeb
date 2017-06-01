@@ -1,25 +1,27 @@
+@import "../../../styles";
+
 
 .fullscreen-mode{
   position: absolute;
   display: inline-block;
-  top: 10px;
-  right: 10px;
+  top: $main_tick;
+  right: $main_tick;
 }
 
 .fullscreen-mode:hover{
-  color: blue;
+  color: $hover_color;
   cursor: pointer;
 }
 
 .print-rankings-icon{
   position: absolute;
   display: inline-block;
-  top: 10px;
+  top: $main_tick;
   right: 50px;
 }
 
 .print-rankings-icon:hover{
-  color: blue;
+  color: $hover_color;
   cursor: pointer;
 }
 
@@ -27,14 +29,27 @@
 .table-mode{
   position: absolute;
   display: inline-block;
-  top: 10px;
+  top: $main_tick;
   right: 50px;
 }
 
 .table-mode:hover{
-  color: blue;
+  color: $hover_color;
   cursor: pointer;
 }
+
+.print-games-icon{
+  position: absolute;
+  display: inline-block;
+  top: $main_tick;
+  right: 90px;
+}
+
+.print-games-icon:hover{
+  color: $hover_color;
+  cursor: pointer;
+}
+
 
 .games-for-round-card{
   width: 300px;
@@ -52,7 +67,7 @@
 
 @media only screen and (min-width: 800px) {
   .games-for-round-card{
-    width: 700px;
+    width: 600px;
     align-items: center;
   }
 }
@@ -69,7 +84,7 @@
 
 @media only screen and (min-width: 800px) {
   .tournament-ranking-table-card{
-    width: 700px;
+    width: 600px;
     align-items: center;
   }
 }

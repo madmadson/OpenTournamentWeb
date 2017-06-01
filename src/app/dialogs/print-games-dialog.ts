@@ -15,6 +15,8 @@ export class PrintGamesDialogComponent {
   tournament: Tournament;
   games$: Observable<TournamentGame[]>;
   scenario: string;
+  round: number;
+
 
   window: any;
 
@@ -26,6 +28,7 @@ export class PrintGamesDialogComponent {
 
     this.tournament = data.tournament;
     this.games$ = data.games$;
+    this.round = data.round;
 
     data.games$.subscribe((games: TournamentGame[]) => {
        this.scenario = games[0].scenario;

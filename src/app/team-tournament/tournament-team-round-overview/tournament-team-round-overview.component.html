@@ -52,6 +52,7 @@
 <div class="content-cards-container">
   <md-card *ngIf="!rankingsFullscreenMode" class="games-for-round-card">
     <h3 class="heading">Games Round {{round}}</h3>
+    <mdl-icon (click)="printGames()" mdTooltip="Print Games" class="print-games-icon">print</mdl-icon>
     <mdl-icon *ngIf="!gamesFullscreenMode" (click)="openGamesFullScreenMode(true)" mdTooltip="Fullscreen Mode"
               class="fullscreen-mode">fullscreen
     </mdl-icon>
@@ -71,15 +72,17 @@
                    (keyup)="search(seachInput.value)">
     </mdl-textfield>
     <h4 *ngIf="allGamesFiltered?.length == 0" class="warning-text">No Games found (Filter?)</h4>
-    <tournament-game-list *ngIf="!gamesTableMode"
+    <tournament-team-game-list *ngIf="!gamesTableMode"
                           [actualTournament]="actualTournament"
                           [authenticationStoreState$]="authenticationStoreState$"
                           [actualTournamentArmyLists$]="actualTournamentArmyLists$"
-                          [gamesForRound]="allGamesFiltered"
+                          [teamGamesForRound]="allGamesFiltered"
+                          [playerGamesForRound$]="playerGamesForRound$"
                           [rankingsForRound$]="teamRankingsForRound$"
                           (onGameResult)="handleGameResult($event)"
                           (onSwapPlayer)="handleSwapPlayer($event)"
-    ></tournament-game-list>
+                          (onSwapTeam)="handleSwapTeam($event)"
+    ></tournament-team-game-list>
 
     <tournament-game-table *ngIf="gamesTableMode"
                            [games]="allGamesFiltered"
@@ -87,6 +90,7 @@
   </md-card>
   <md-card *ngIf="!gamesFullscreenMode" class="tournament-ranking-table-card">
     <h3 class="heading">Rankings Round {{round}}</h3>
+    <mdl-icon (click)="printRankings()" mdTooltip="Print Rankings" class="print-rankings-icon">print</mdl-icon>
     <mdl-icon *ngIf="!rankingsFullscreenMode" (click)="openRankingsFullScreenMode(true)" mdTooltip="Fullscreen Mode"
               class="fullscreen-mode">fullscreen
     </mdl-icon>

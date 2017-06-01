@@ -3,13 +3,8 @@ import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 import {AngularFireDatabase, FirebaseRef} from 'angularfire2';
 
-
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
-
-
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
-
-
 import * as _ from 'lodash';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {
@@ -22,7 +17,8 @@ import {Tournament} from '../../../shared/model/tournament';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {TournamentTeamGamesConfiguration} from '../../../shared/dto/tournament-team-games-config';
-import {AfoListObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {SwapGames} from '../../../shared/dto/swap-player';
 
 
 @Injectable()
@@ -40,7 +36,6 @@ export class TournamentGameService implements OnDestroy {
   private newTeamGames: TournamentGame[];
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected fireDB: AngularFireDatabase,
               protected store: Store<ApplicationState>,
               @Inject(FirebaseRef) private fb) {
 
@@ -155,11 +150,12 @@ export class TournamentGameService implements OnDestroy {
       const newPlayerGame = new TournamentGame(
         config.tournamentId,
         player.playerId ? player.playerId : '', player.id,
-        player.playerName, player.elo ? player.elo : 0, player.faction,
+        player.playerName, '', player.elo ? player.elo : 0, player.faction,
         0, 0, 0, '', 0, 0,
         allPlayerTeamTwo[index].playerId ? allPlayerTeamTwo[index].playerId : '',
         allPlayerTeamTwo[index].id,
         allPlayerTeamTwo[index].playerName,
+        '',
         allPlayerTeamTwo[index].elo ? allPlayerTeamTwo[index].elo : 0,
         allPlayerTeamTwo[index].faction,
         0, 0, 0, '', 0, 0,
@@ -180,6 +176,8 @@ export class TournamentGameService implements OnDestroy {
 
   createTeamGamesForRound(config: TournamentManagementConfiguration, newRankings: TournamentRanking[]): boolean {
 
+    const that = this;
+
     this.eraseGamesForRound(config);
     this.eraseTeamGamesForRound(config);
 
@@ -197,7 +195,13 @@ export class TournamentGameService implements OnDestroy {
     const tournamentTeamGamesRef = this.afoDatabase
       .list('tournament-team-games/' + config.tournamentId);
 
+    const tournamentPlayerGamesRef = this.afoDatabase
+      .list('tournament-games/' + config.tournamentId);
+
     const listOfTables = _.range(1, (this.newTeamGames.length + 1));
+
+    let teamOnePlayers = [];
+    let teamTwoPlayers = [];
 
     _.forEach(this.newTeamGames, function (newGame: TournamentGame) {
 
@@ -206,6 +210,36 @@ export class TournamentGameService implements OnDestroy {
       listOfTables.splice(randomIndex, 1);
       newGame.playingField = tableNumber;
       tournamentTeamGamesRef.push(newGame);
+
+      teamOnePlayers = _.filter(that.allPlayers, function (player: TournamentPlayer) {
+        return newGame.playerOnePlayerName === player.teamName;
+      });
+      teamTwoPlayers = _.filter(that.allPlayers, function (player: TournamentPlayer) {
+        return newGame.playerTwoPlayerName === player.teamName;
+      });
+
+      console.log('teamOnePlayers: ' + JSON.stringify(teamOnePlayers));
+      console.log('teamTwoPlayers: ' + JSON.stringify(teamTwoPlayers));
+
+      _.each(teamOnePlayers, function (playerOne: TournamentPlayer, index: number) {
+        const newTeamGame = new TournamentGame(
+          config.tournamentId,
+          playerOne.playerId ? playerOne.playerId : '', playerOne.id,
+          playerOne.playerName, playerOne.teamName,
+          playerOne.elo ? playerOne.elo : 0, playerOne.faction,
+          0, 0, 0, '', 0, 0,
+          teamTwoPlayers[index].playerId ? teamTwoPlayers[index].playerId : '',
+          teamTwoPlayers[index].id,
+          teamTwoPlayers[index].playerName,
+          teamTwoPlayers[index].teamName,
+          teamTwoPlayers[index].elo ? teamTwoPlayers[index].elo : 0,
+          teamTwoPlayers[index].faction,
+          0, 0, 0, '', 0, 0,
+          config.round, index + 1, false, '');
+
+         tournamentPlayerGamesRef.push(newTeamGame);
+      });
+
     });
 
     return true;
@@ -282,10 +316,10 @@ export class TournamentGameService implements OnDestroy {
           const newGame = new TournamentGame(
             config.tournamentId,
             ranking1.playerId, ranking1.tournamentPlayerId,
-            ranking1.playerName, ranking1.elo, ranking1.faction,
+            ranking1.playerName, ranking1.teamName, ranking1.elo, ranking1.faction,
             0, 0, 0, '', 0, 0,
             ranking2.playerId, ranking2.tournamentPlayerId,
-            ranking2.playerName, ranking2.elo, ranking2.faction,
+            ranking2.playerName, ranking2.teamName, ranking2.elo, ranking2.faction,
             0, 0, 0, '', 0, 0,
             config.round, (gamesToCalculate / 2), false, '');
           this.newGames.push(newGame);
@@ -354,10 +388,10 @@ export class TournamentGameService implements OnDestroy {
           const newGame = new TournamentGame(
             config.tournamentId,
             ranking1.playerId, ranking1.tournamentPlayerId,
-            ranking1.playerName, ranking1.elo, ranking1.faction,
+            ranking1.playerName, ranking1.teamName, ranking1.elo, ranking1.faction,
             0, 0, 0, '', 0, 0,
             ranking2.playerId, ranking2.tournamentPlayerId,
-            ranking2.playerName, ranking2.elo, ranking2.faction,
+            ranking2.playerName, ranking2.teamName, ranking2.elo, ranking2.faction,
             0, 0, 0, '', 0, 0,
             config.round, (gamesToCalculate / 2), false, '');
           this.newGames.push(newGame);
@@ -431,10 +465,10 @@ export class TournamentGameService implements OnDestroy {
           const newTeamGame = new TournamentGame(
             config.tournamentId,
             ranking1.playerId, ranking1.tournamentPlayerId,
-            ranking1.playerName, ranking1.elo, ranking1.faction,
+            ranking1.playerName, ranking1.teamName, ranking1.elo, ranking1.faction,
             0, 0, 0, '', 0, 0,
             ranking2.playerId, ranking2.tournamentPlayerId,
-            ranking2.playerName, ranking2.elo, ranking2.faction,
+            ranking2.playerName, ranking2.teamName, ranking2.elo, ranking2.faction,
             0, 0, 0, '', 0, 0,
             config.round, (gamesToCalculate / 2), false, '');
 
@@ -562,6 +596,11 @@ export class TournamentGameService implements OnDestroy {
         playerOneRef.update({'elo': finalNewElo});
       }
     });
+  }
+
+  erasePlayerGamesForTeamMatch(swapTeam: SwapGames) {
+
+    // TODO: erase team matches for both teams
   }
 }
 

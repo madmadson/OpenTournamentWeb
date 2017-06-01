@@ -1,5 +1,15 @@
 <md-dialog-content>
-  <form #gameForm="ngForm">
+  <ng-container *ngIf="!gameModel" >
+    <div class="heading">Load Game... <mdl-spinner  single-color active></mdl-spinner></div>
+  </ng-container>
+  <span *ngIf="!(isConnected | async) && !admin">
+      You cannot inserted your gameResult while offline!
+      <md-icon class="offline_icon"
+               mdTooltip="No Connection">
+        signal_wifi_off
+      </md-icon>
+    </span>
+  <form *ngIf="(isConnected | async) || admin" #gameForm="ngForm">
     <div class="game-result-container">
       <md-card class="game-result-card"
                [ngClass]="{'card-won': gameModel.playerOneScore == 1,
@@ -152,7 +162,7 @@
       <md-icon>check</md-icon>
       Really no winner?
     </button>
-    <button *ngIf="!sureButton"
+    <button *ngIf="!sureButton  && ((isConnected | async) || admin)"
             (click)="enterGameResultSubmitted()"
             class="right-align-button big-button"
             type="button"
