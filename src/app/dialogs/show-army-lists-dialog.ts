@@ -15,6 +15,7 @@ export class ShowArmyListDialogComponent {
   ranking: TournamentRanking;
   tournamentPlayer: TournamentPlayer;
   tournamentTeam: TournamentTeam;
+  tournamentRank: TournamentRanking;
 
   armyLists: ArmyList[];
 
@@ -24,6 +25,7 @@ export class ShowArmyListDialogComponent {
     this.ranking = data.ranking;
     this.tournamentPlayer = data.tournamentPlayer;
     this.tournamentTeam = data.tournamentTeam;
+    this.tournamentRank = data.tournamentRank;
 
 
     this.armyLists = data.armyLists;

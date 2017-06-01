@@ -14,7 +14,7 @@ import {ShowArmyListDialogComponent} from './show-army-lists-dialog';
 @Component({
   selector: 'show-team-ranking-dialog',
   templateUrl: './show-team-ranking-dialog.html',
-  styleUrls: ['./show-team-ranking-dialog.css']
+  styleUrls: ['./show-team-ranking-dialog.scss']
 })
 export class ShowTeamRankingDialogComponent {
 
@@ -52,23 +52,7 @@ export class ShowTeamRankingDialogComponent {
     }
   }
 
-  hasArmyList(ranking: TournamentRanking): boolean {
-
-    let hasArmyList = false;
-
-    if (this.armyLists) {
-
-      _.each(this.armyLists, function (armyList: ArmyList) {
-        if (armyList.playerId === ranking.playerId) {
-          hasArmyList = true;
-        }
-      });
-    }
-
-    return hasArmyList;
-  }
-
-  openArmyListDialog(ranking: TournamentRanking) {
+  showArmyList(ranking: TournamentRanking) {
 
     const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
       if (list.tournamentPlayerId) {

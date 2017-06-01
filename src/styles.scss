@@ -3,6 +3,8 @@
 
 $success_color: #388E3C;
 $fail_color: #FF1501;
+$hover_color: #1e05ff;
+
 $main_tick: 12px;
 
 body {
@@ -25,10 +27,12 @@ a:hover {
 }
 
 
+
 .dark-primary-color    {
   background: #512DA8;
   color: #FFFFFF;
 }
+
 .default-primary-color { background: #673AB7; color: #FFFFFF;}
 .light-primary-color   { background: #D1C4E9; }
 .my-item-color         { background: #FFC107; }
@@ -41,14 +45,14 @@ a:hover {
 .heading{
   text-align: center;
   font-size: 1.2em;
-  margin: 12px !important;;
+  margin: $main_tick !important;;
   width: 100%;
 }
 @media only screen and (min-width: 500px) {
   .heading {
     text-align: center;
     font-size: 2.4em;
-    margin: 12px !important;
+    margin: $main_tick !important;
     width: 100%;
   }
 }
@@ -83,7 +87,12 @@ button:hover{
   padding-left: 3px;
   padding-right: 3px;
   font-size:36px;
+}
+
+
+.list-action:hover {
   cursor: pointer;
+  color: $hover_color !important;
 }
 
 .mdl-list__item .mdl-list__item-secondary-content{

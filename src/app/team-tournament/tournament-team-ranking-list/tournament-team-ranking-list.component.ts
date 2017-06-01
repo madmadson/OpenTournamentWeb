@@ -9,6 +9,8 @@ import {ShowTeamDialogComponent} from '../../dialogs/show-team-dialog';
 
 import * as _ from 'lodash';
 import {ShowTeamRankingDialogComponent} from "../../dialogs/show-team-ranking-dialog";
+import {TournamentTeam} from "../../../../shared/model/tournament-team";
+import {ShowArmyListDialogComponent} from "../../dialogs/show-army-lists-dialog";
 
 @Component({
   selector: 'tournament-team-ranking-list',
@@ -60,6 +62,26 @@ export class TournamentTeamRankingListComponent implements OnInit {
         team: team,
         allPlayerRankingsForRound$: this.playerRankingsForRound$,
         actualTournamentArmyList$: this.actualTournamentArmyList$
+      }
+    });
+  }
+
+  showTeamArmyList(event: any, team: TournamentRanking) {
+
+    event.stopPropagation();
+
+    const teamArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
+      if (list.teamName) {
+        return (list.teamName === team.playerName);
+      }
+    });
+
+    console.log('show team teamArmyLists' + JSON.stringify(this.armyLists));
+
+    this.dialog.open(ShowArmyListDialogComponent, {
+      data: {
+        tournamentRank: team,
+        armyLists: teamArmyLists
       }
     });
   }

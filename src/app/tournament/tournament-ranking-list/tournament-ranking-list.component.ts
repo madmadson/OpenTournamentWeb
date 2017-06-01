@@ -13,7 +13,7 @@ import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog'
 @Component({
   selector: 'tournament-ranking-table',
   templateUrl: './tournament-ranking-list.component.html',
-  styleUrls: ['./tournament-ranking-list.component.css']
+  styleUrls: ['./tournament-ranking-list.component.scss']
 })
 export class TournamentRankingListComponent implements OnInit {
 
