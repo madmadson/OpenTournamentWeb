@@ -12,14 +12,14 @@
         <md-icon>undo</md-icon>
         Pair Again
       </button>
-      <!--<button *ngIf="allGamesFinished"-->
-              <!--(click)="openNewRoundDialog()"-->
-              <!--type="button"-->
-              <!--class="positive-background action-button"-->
-              <!--md-raised-button>-->
-        <!--<md-icon>play_arrow</md-icon>-->
-        <!--New Round-->
-      <!--</button>-->
+      <button *ngIf="allGamesFinished"
+              (click)="openNewTeamRoundDialog()"
+              type="button"
+              class="positive-background action-button"
+              md-raised-button>
+        <md-icon>play_arrow</md-icon>
+        New Round
+      </button>
 
       <!--<button *ngIf="allGamesFinished"-->
               <!--(click)="openFinishTournamentDialog()"-->
@@ -73,15 +73,16 @@
     </mdl-textfield>
     <h4 *ngIf="allGamesFiltered?.length == 0" class="warning-text">No Games found (Filter?)</h4>
     <tournament-team-game-list *ngIf="!gamesTableMode"
-                          [actualTournament]="actualTournament"
-                          [authenticationStoreState$]="authenticationStoreState$"
-                          [actualTournamentArmyLists$]="actualTournamentArmyLists$"
-                          [teamGamesForRound]="allGamesFiltered"
-                          [playerGamesForRound$]="playerGamesForRound$"
-                          [rankingsForRound$]="teamRankingsForRound$"
-                          (onGameResult)="handleGameResult($event)"
-                          (onSwapPlayer)="handleSwapPlayer($event)"
-                          (onSwapTeam)="handleSwapTeam($event)"
+                               [actualTournament]="actualTournament"
+                               [authenticationStoreState$]="authenticationStoreState$"
+                               [actualTournamentArmyLists$]="actualTournamentArmyLists$"
+                               [teamGamesForRound]="allGamesFiltered"
+                               [playerGamesForRound$]="playerGamesForRound$"
+                               [rankingsForRound$]="teamRankingsForRound$"
+                               (onTeamMatchGameResult)="handleTeamGameResult($event)"
+                               (onScenarioSelectedForTeamTournament)="handleScenarioSelectedForTeamTournament($event)"
+                               (onSwapPlayer)="handleSwapPlayer($event)"
+                               (onSwapTeam)="handleSwapTeam($event)"
     ></tournament-team-game-list>
 
     <tournament-game-table *ngIf="gamesTableMode"

@@ -19,6 +19,7 @@ import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {TournamentTeamGamesConfiguration} from '../../../shared/dto/tournament-team-games-config';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {SwapGames} from '../../../shared/dto/swap-player';
+import {GameResult} from '../../../shared/dto/game-result';
 
 
 @Injectable()
@@ -26,9 +27,11 @@ export class TournamentGameService implements OnDestroy {
 
   tournamentGamesRef: firebase.database.Reference;
   allRankings: TournamentRanking[];
+  allTeamRankings: TournamentRanking[];
   allPlayers: TournamentPlayer[];
   allTeams: TournamentTeam[];
   allGames: TournamentGame[];
+  allTeamGames: TournamentGame[];
   actualTournament: Tournament;
   allRegistrations: Registration[];
 
@@ -43,6 +46,8 @@ export class TournamentGameService implements OnDestroy {
 
       this.actualTournament = state.actualTournament.actualTournament;
       this.allRankings = state.actualTournamentRankings.actualTournamentRankings;
+      this.allTeamRankings = state.actualTournamentTeamRankings.actualTournamentTeamRankings;
+      this.allTeamGames = state.actualTournamentTeamGames.actualTournamentTeamGames;
       this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
       this.allTeams = state.actualTournamentTeams.teams;
       this.allGames = state.actualTournamentGames.actualTournamentGames;
@@ -195,13 +200,7 @@ export class TournamentGameService implements OnDestroy {
     const tournamentTeamGamesRef = this.afoDatabase
       .list('tournament-team-games/' + config.tournamentId);
 
-    const tournamentPlayerGamesRef = this.afoDatabase
-      .list('tournament-games/' + config.tournamentId);
-
     const listOfTables = _.range(1, (this.newTeamGames.length + 1));
-
-    let teamOnePlayers = [];
-    let teamTwoPlayers = [];
 
     _.forEach(this.newTeamGames, function (newGame: TournamentGame) {
 
@@ -211,34 +210,7 @@ export class TournamentGameService implements OnDestroy {
       newGame.playingField = tableNumber;
       tournamentTeamGamesRef.push(newGame);
 
-      teamOnePlayers = _.filter(that.allPlayers, function (player: TournamentPlayer) {
-        return newGame.playerOnePlayerName === player.teamName;
-      });
-      teamTwoPlayers = _.filter(that.allPlayers, function (player: TournamentPlayer) {
-        return newGame.playerTwoPlayerName === player.teamName;
-      });
-
-      console.log('teamOnePlayers: ' + JSON.stringify(teamOnePlayers));
-      console.log('teamTwoPlayers: ' + JSON.stringify(teamTwoPlayers));
-
-      _.each(teamOnePlayers, function (playerOne: TournamentPlayer, index: number) {
-        const newTeamGame = new TournamentGame(
-          config.tournamentId,
-          playerOne.playerId ? playerOne.playerId : '', playerOne.id,
-          playerOne.playerName, playerOne.teamName,
-          playerOne.elo ? playerOne.elo : 0, playerOne.faction,
-          0, 0, 0, '', 0, 0,
-          teamTwoPlayers[index].playerId ? teamTwoPlayers[index].playerId : '',
-          teamTwoPlayers[index].id,
-          teamTwoPlayers[index].playerName,
-          teamTwoPlayers[index].teamName,
-          teamTwoPlayers[index].elo ? teamTwoPlayers[index].elo : 0,
-          teamTwoPlayers[index].faction,
-          0, 0, 0, '', 0, 0,
-          config.round, index + 1, false, '');
-
-         tournamentPlayerGamesRef.push(newTeamGame);
-      });
+      that.createPlayerGamesForTeamMatch(newGame);
 
     });
 
@@ -598,9 +570,146 @@ export class TournamentGameService implements OnDestroy {
     });
   }
 
-  erasePlayerGamesForTeamMatch(swapTeam: SwapGames) {
+  newPlayerGamesForTeamMatch(swapTeam: SwapGames) {
 
-    // TODO: erase team matches for both teams
+    const that = this;
+
+    _.each(this.allGames, function (game: TournamentGame) {
+      if (game.tournamentRound === swapTeam.gameOne.tournamentRound) {
+        if (game.playerOneTeamName === swapTeam.gameOne.playerOnePlayerName ||
+          game.playerTwoTeamName === swapTeam.gameOne.playerOnePlayerName ||
+          game.playerOneTeamName === swapTeam.gameOne.playerTwoPlayerName ||
+          game.playerTwoTeamName === swapTeam.gameOne.playerTwoPlayerName ||
+          game.playerOneTeamName === swapTeam.gameTwo.playerOnePlayerName ||
+          game.playerTwoTeamName === swapTeam.gameTwo.playerOnePlayerName ||
+          game.playerOneTeamName === swapTeam.gameTwo.playerTwoPlayerName ||
+          game.playerTwoTeamName === swapTeam.gameTwo.playerTwoPlayerName) {
+
+          const playerGame = that.afoDatabase.object('tournament-games/' + swapTeam.gameOne.tournamentId + '/' + game.id);
+          playerGame.remove();
+        }
+      }
+    });
+
+    this.createPlayerGamesForTeamMatch(swapTeam.gameOne);
+    this.createPlayerGamesForTeamMatch(swapTeam.gameTwo);
+  }
+
+
+  createPlayerGamesForTeamMatch(teamMatch: TournamentGame) {
+
+    const tournamentPlayerGamesRef = this.afoDatabase.list('tournament-games/' + teamMatch.tournamentId);
+
+    const teamOnePlayers = _.filter(this.allPlayers, function (player: TournamentPlayer) {
+      return teamMatch.playerOnePlayerName === player.teamName;
+    });
+    const teamTwoPlayers = _.filter(this.allPlayers, function (player: TournamentPlayer) {
+      return teamMatch.playerTwoPlayerName === player.teamName;
+    });
+
+    _.each(teamOnePlayers, function (playerOne: TournamentPlayer, index: number) {
+      const newTeamGame = new TournamentGame(
+        teamMatch.tournamentId,
+        playerOne.playerId ? playerOne.playerId : '', playerOne.id,
+        playerOne.playerName, playerOne.teamName,
+        playerOne.elo ? playerOne.elo : 0, playerOne.faction,
+        0, 0, 0, '', 0, 0,
+        teamTwoPlayers[index].playerId ? teamTwoPlayers[index].playerId : '',
+        teamTwoPlayers[index].id,
+        teamTwoPlayers[index].playerName,
+        teamTwoPlayers[index].teamName,
+        teamTwoPlayers[index].elo ? teamTwoPlayers[index].elo : 0,
+        teamTwoPlayers[index].faction,
+        0, 0, 0, '', 0, 0,
+        teamMatch.tournamentRound, index + 1, false, '');
+
+      tournamentPlayerGamesRef.push(newTeamGame);
+    });
+  }
+
+  updateTeamMatchAfterGameResultEntered(gameResult: GameResult) {
+
+    const that = this;
+
+    let teamMatchFinished = true;
+
+    _.each(this.allGames, function (playerGame: TournamentGame) {
+
+      if (playerGame.tournamentRound === gameResult.gameAfter.tournamentRound &&
+        playerGame.playerOneTeamName === gameResult.gameAfter.playerOneTeamName) {
+
+        if (!playerGame.finished) {
+          teamMatchFinished = false;
+        }
+      }
+    });
+
+    let teamOneWon = 0;
+    let teamTwoWon = 0;
+
+    _.each(this.allTeamGames, function (teamMatch: TournamentGame) {
+
+      if (teamMatch.tournamentRound === gameResult.gameAfter.tournamentRound &&
+         (teamMatch.playerOnePlayerName === gameResult.gameAfter.playerOneTeamName ||
+          teamMatch.playerOnePlayerName === gameResult.gameAfter.playerTwoTeamName)) {
+
+        if (!gameResult.gameBefore.finished) {
+
+          if (teamMatchFinished && ((teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore) >
+            (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore))) {
+
+            teamOneWon = 1;
+          }
+          if (teamMatchFinished && ((teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore) <
+            (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore))) {
+
+            teamTwoWon = 1;
+          }
+
+          const teamMatchRef = that.afoDatabase.object('tournament-team-games/' + teamMatch.tournamentId + '/' + teamMatch.id);
+          teamMatchRef.update({
+            'playerOneIntermediateResult': teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore,
+            'playerOneControlPoints': teamMatch.playerOneControlPoints + gameResult.gameAfter.playerOneControlPoints,
+            'playerOneVictoryPoints': teamMatch.playerOneVictoryPoints + gameResult.gameAfter.playerOneVictoryPoints,
+            'playerOneScore': teamMatchFinished ? teamOneWon : '0',
+            'playerTwoIntermediateResult': teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore,
+            'playerTwoControlPoints': teamMatch.playerTwoControlPoints + gameResult.gameAfter.playerTwoControlPoints,
+            'playerTwoVictoryPoints': teamMatch.playerTwoVictoryPoints + gameResult.gameAfter.playerTwoVictoryPoints,
+            'playerTwoScore': teamMatchFinished ? teamTwoWon : '0',
+            'finished': teamMatchFinished
+          });
+        } else {
+
+          if (teamMatchFinished && ((teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore) >
+            (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore))) {
+
+            teamOneWon = 1;
+          }
+          if (teamMatchFinished && ((teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore) <
+            (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore))) {
+
+            teamTwoWon = 1;
+          }
+
+          const teamMatchRef = that.afoDatabase.object('tournament-team-games/' + teamMatch.tournamentId + '/' + teamMatch.id);
+          teamMatchRef.update({
+            'playerOneIntermediateResult': (teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore),
+            'playerOneControlPoints':
+              (teamMatch.playerOneControlPoints + gameResult.gameAfter.playerOneControlPoints - gameResult.gameBefore.playerOneControlPoints),
+            'playerOneVictoryPoints':
+              (teamMatch.playerOneVictoryPoints + gameResult.gameAfter.playerOneVictoryPoints - gameResult.gameBefore.playerOneVictoryPoints),
+            'playerOneScore': teamMatchFinished ? teamOneWon : '0',
+            'playerTwoIntermediateResult': (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore),
+            'playerTwoControlPoints':
+              (teamMatch.playerTwoControlPoints + gameResult.gameAfter.playerTwoControlPoints - gameResult.gameBefore.playerTwoControlPoints),
+            'playerTwoVictoryPoints':
+              (teamMatch.playerTwoVictoryPoints + gameResult.gameAfter.playerTwoVictoryPoints - gameResult.gameBefore.playerOneVictoryPoints),
+            'playerTwoScore': teamMatchFinished ? teamTwoWon : '0',
+            'finished': teamMatchFinished
+          });
+        }
+      }
+    });
   }
 }
 

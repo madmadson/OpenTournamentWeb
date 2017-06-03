@@ -11,7 +11,8 @@ import {
   GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION, ADD_DUMMY_PLAYER_ACTION, PUBLISH_ROUND_ACTION,
   TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION, UNDO_TOURNAMENT_END_ACTION, SWAP_PLAYER_ACTION,
   UPLOAD_TOURNAMENT_ACTION, TEAM_TOURNAMENT_NEW_ROUND_ACTION, TOURNAMENT_KILL_TEAM_ROUND_ACTION,
-  SCENARIO_SELECTED_ACTION, TOURNAMENT_PAIR_AGAIN_TEAM_ACTION, SWAP_TEAM_ACTION, TEAM_GAME_RESULT_ENTERED_ACTION
+  SCENARIO_SELECTED_ACTION, TOURNAMENT_PAIR_AGAIN_TEAM_ACTION, SWAP_TEAM_ACTION, TEAM_GAME_RESULT_ENTERED_ACTION,
+  SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
 
@@ -74,6 +75,11 @@ export class TournamentEffectService {
     .ofType(SCENARIO_SELECTED_ACTION)
     .debug('SCENARIO_SELECTED_ACTION')
     .map(action => this.tournamentService.scenarioSelectedAction(action.payload));
+
+  @Effect({dispatch: false}) scenarioSelectedTeamTournamentAction = this.actions$
+    .ofType(SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION)
+    .debug('SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION')
+    .map(action => this.tournamentService.scenarioSelectedTeamTournamentAction(action.payload));
 
   @Effect({dispatch: false}) swapPlayer = this.actions$
     .ofType(SWAP_PLAYER_ACTION)

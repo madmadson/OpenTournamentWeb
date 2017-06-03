@@ -244,7 +244,6 @@ export class TournamentPairAgainTeamAction implements Action {
 }
 
 export const TOURNAMENT_NEW_ROUND_ACTION = 'TOURNAMENT_NEW_ROUND_ACTION';
-
 export class TournamentNewRoundAction implements Action {
 
   readonly type = 'TOURNAMENT_NEW_ROUND_ACTION';
@@ -252,9 +251,8 @@ export class TournamentNewRoundAction implements Action {
   constructor(public payload: TournamentManagementConfiguration) {
   }
 }
+
 export const TEAM_TOURNAMENT_NEW_ROUND_ACTION = 'TEAM_TOURNAMENT_NEW_ROUND_ACTION';
-
-
 export class TeamTournamentNewRoundAction implements Action {
 
   readonly type = 'TEAM_TOURNAMENT_NEW_ROUND_ACTION';
@@ -325,7 +323,6 @@ export class GameResultEnteredAction implements Action {
 }
 
 export const TEAM_GAME_RESULT_ENTERED_ACTION = 'TEAM_GAME_RESULT_ENTERED_ACTION';
-
 export class TeamGameResultEnteredAction implements Action {
 
   readonly type = 'TEAM_GAME_RESULT_ENTERED_ACTION';
@@ -335,7 +332,6 @@ export class TeamGameResultEnteredAction implements Action {
 }
 
 export const SCENARIO_SELECTED_ACTION = 'SCENARIO_SELECTED_ACTION';
-
 export class ScenarioSelectedAction implements Action {
 
   readonly type = 'SCENARIO_SELECTED_ACTION';
@@ -344,7 +340,14 @@ export class ScenarioSelectedAction implements Action {
   }
 }
 
+export const SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION = 'SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION';
+export class ScenarioSelectedTeamTournamentAction implements Action {
 
+  readonly type = 'SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION';
+
+  constructor(public payload: ScenarioSelectedModel) {
+  }
+}
 
 export const SWAP_PLAYER_ACTION = 'SWAP_PLAYER_ACTION';
 
@@ -357,21 +360,17 @@ export class SwapPlayerAction implements Action {
 }
 
 export const SWAP_TEAM_ACTION = 'SWAP_TEAM_ACTION';
-
 export class SwapTeamAction implements Action {
 
   readonly type = 'SWAP_TEAM_ACTION';
-
   constructor(public payload: SwapGames) {
   }
 }
 
 export const PUBLISH_ROUND_ACTION = 'PUBLISH_ROUND_ACTION';
-
 export class PublishRoundAction implements Action {
 
   readonly type = 'PUBLISH_ROUND_ACTION';
-
   constructor(public payload: PublishRound) {
   }
 }

@@ -1,7 +1,7 @@
 import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
-import {AngularFire, FirebaseRef} from 'angularfire2';
+import {FirebaseRef} from 'angularfire2';
 
 import {
   AddArmyListAction, ArmyListDeletedAction, ClearArmyListsAction,
@@ -36,8 +36,8 @@ import {SubscribeTournamentTeamRankingsAction} from '../store/actions/tournament
 import {ScenarioSelectedModel} from '../../../shared/dto/scenario-selected-model';
 
 import * as _ from 'lodash';
-import {AfoListObservable, AfoObjectObservable, AngularFireOfflineDatabase} from "angularfire2-offline";
-import {Tournament} from "../../../shared/model/tournament";
+import {AfoObjectObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {Tournament} from '../../../shared/model/tournament';
 
 
 @Injectable()
@@ -419,12 +419,10 @@ export class TournamentService implements OnDestroy {
     }
   }
 
-
   pairMatchesforTeamMatch(config: TournamentTeamGamesConfiguration) {
     this.tournamentGameService.createMatchesForTeam(config);
 
   }
-
 
   gameResultEntered(gameResult: GameResult) {
 
@@ -547,7 +545,7 @@ export class TournamentService implements OnDestroy {
 
   swapTeam(swapTeam: SwapGames) {
 
-    this.tournamentGameService.erasePlayerGamesForTeamMatch(swapTeam);
+    this.tournamentGameService.newPlayerGamesForTeamMatch(swapTeam);
 
     const game1: TournamentGame = swapTeam.gameOne;
 
@@ -566,5 +564,39 @@ export class TournamentService implements OnDestroy {
 
   teamGameResultEntered(gameResult: GameResult) {
 
+    const afoGames = this.afoDatabase.object('/tournament-games/' +  gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
+    afoGames.update(gameResult.gameAfter);
+
+    this.tournamentGameService.updateTeamMatchAfterGameResultEntered(gameResult);
+
+    this.rankingService.updateRankingAfterGameResultEntered(gameResult);
+
+    this.rankingService.updateTeamRankingAfterGameResultEntered(gameResult);
+
+    this.snackBar.open('Game Result Entered Successfully', '', {
+      duration: 5000
+    });
+  }
+
+  scenarioSelectedTeamTournamentAction(scenarioSelected: ScenarioSelectedModel) {
+    const playerGamesRef = this.afoDatabase.list('tournament-games/' + scenarioSelected.tournamentId).take(1);
+    playerGamesRef.subscribe((gamesRef: any) => {
+      gamesRef.forEach((game) => {
+        if (game.tournamentRound === scenarioSelected.round) {
+          this.afoDatabase.object('tournament-games/' + scenarioSelected.tournamentId + '/' + game.$key).
+          update({'scenario': scenarioSelected.scenario});
+        }
+      });
+    });
+
+    const teamGamesRef = this.afoDatabase.list('tournament-team-games/' + scenarioSelected.tournamentId).take(1);
+    teamGamesRef.subscribe((gamesRef: any) => {
+      gamesRef.forEach((game) => {
+        if (game.tournamentRound === scenarioSelected.round) {
+          this.afoDatabase.object('tournament-team-games/' + scenarioSelected.tournamentId + '/' + game.$key).
+          update({'scenario': scenarioSelected.scenario});
+        }
+      });
+    });
   }
 }

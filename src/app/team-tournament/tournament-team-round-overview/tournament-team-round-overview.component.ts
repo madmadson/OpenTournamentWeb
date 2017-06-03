@@ -20,6 +20,8 @@ import {KillRoundDialogComponent} from '../../dialogs/round-overview/kill-round-
 import {PairAgainDialogComponent} from '../../dialogs/round-overview/pair-again-dialog';
 import {PrintRankingsDialogComponent} from '../../dialogs/print-rankings-dialog';
 import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
+import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
+import {NewRoundDialogComponent} from "../../dialogs/round-overview/new-round--dialog";
 
 @Component({
   selector: 'tournament-team-round-overview',
@@ -42,10 +44,11 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   @Input() playerGamesForRound$: Observable<TournamentGame[]>;
   @Input() teamGamesForRound$: Observable<TournamentGame[]>;
 
-  @Output() onPairAgain = new EventEmitter<TournamentManagementConfiguration>();
-  @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
-  @Output() onKillRound = new EventEmitter<TournamentManagementConfiguration>();
+  @Output() onPairTeamMatchAgain = new EventEmitter<TournamentManagementConfiguration>();
+  @Output() onNewRoundTeamMatch = new EventEmitter<TournamentManagementConfiguration>();
+  @Output() onKillTeamMatchRound = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onTeamGameResult = new EventEmitter<GameResult>();
+  @Output() onScenarioSelectedForTeamTournament = new EventEmitter<ScenarioSelectedModel>();
   @Output() onSwapPlayer = new EventEmitter<SwapGames>();
   @Output() onSwapTeam = new EventEmitter<SwapGames>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
@@ -133,9 +136,15 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
     this.messageService.broadcast('fullScreenMode', mode);
   }
 
-  handleGameResult(gameResult: GameResult) {
+  handleTeamGameResult(gameResult: GameResult) {
 
     this.onTeamGameResult.emit(gameResult);
+
+  }
+
+  handleScenarioSelectedForTeamTournament(scenarioSelect: ScenarioSelectedModel) {
+
+    this.onScenarioSelectedForTeamTournament.emit(scenarioSelect);
 
   }
 
@@ -167,6 +176,28 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
 
   }
 
+  openNewTeamRoundDialog() {
+    const dialogRef = this.dialog.open(NewRoundDialogComponent, {
+      data: {
+        round: this.round,
+        allPlayers$: this.teamRankingsForRound$,
+        teamMatch: true
+      },
+      width: '600px',
+    });
+    const eventSubscribe = dialogRef.componentInstance.onNewRound
+      .subscribe((config: TournamentManagementConfiguration) => {
+        if (config !== undefined) {
+          config.tournamentId = this.actualTournament.id;
+          this.onNewRoundTeamMatch.emit(config);
+        }
+      });
+    dialogRef.afterClosed().subscribe(() => {
+
+      eventSubscribe.unsubscribe();
+    });
+  }
+
   openKillRoundDialog() {
     const dialogRef = this.dialog.open(KillRoundDialogComponent, {
       data: {
@@ -180,7 +211,7 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
         if (config !== undefined) {
           config.tournamentId = this.actualTournament.id;
           config.round = this.round;
-          this.onKillRound.emit(config);
+          this.onKillTeamMatchRound.emit(config);
         }
       });
     dialogRef.afterClosed().subscribe(() => {
@@ -202,7 +233,7 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
         if (config !== undefined) {
           config.tournamentId = this.actualTournament.id;
           config.round = this.round;
-          this.onPairAgain.emit(config);
+          this.onPairTeamMatchAgain.emit(config);
         }
       });
     dialogRef.afterClosed().subscribe(() => {

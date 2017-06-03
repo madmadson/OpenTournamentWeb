@@ -22,6 +22,7 @@ import {PairAgainDialogComponent} from '../../dialogs/round-overview/pair-again-
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 import {PrintRankingsDialogComponent} from '../../dialogs/print-rankings-dialog';
 import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
+import {NewRoundDialogComponent} from "../../dialogs/round-overview/new-round--dialog";
 
 
 @Component({
@@ -238,7 +239,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(NewRoundDialogComponent, {
       data: {
         round: this.round,
-        allPlayers$: this.rankingsForRound$
+        allPlayers$: this.rankingsForRound$,
+        teamMatch: false
       },
       width: '600px',
     });
@@ -278,45 +280,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
       eventSubscribe.unsubscribe();
     });
-  }
-}
-
-@Component({
-  selector: 'new-round-dialog',
-  templateUrl: './new-round-dialog.html'
-})
-export class NewRoundDialogComponent {
-
-  suggestedRoundToPlay: number;
-  round: number;
-
-  teamRestriction: boolean;
-  metaRestriction: boolean;
-  originRestriction: boolean;
-  countryRestriction: boolean;
-
-  @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
-
-  constructor(public dialogRef: MdDialogRef<NewRoundDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-
-    this.round = data.round;
-    data.allPlayers$.subscribe(allPlayers => {
-      this.suggestedRoundToPlay = Math.round(Math.log2(allPlayers.length));
-    });
-  }
-
-  pairNewRound() {
-
-    this.onNewRound.emit({
-      tournamentId: '',
-      round: this.round + 1,
-      teamRestriction: this.teamRestriction,
-      metaRestriction: this.metaRestriction,
-      originRestriction: this.originRestriction,
-      countryRestriction: this.countryRestriction,
-    });
-    this.dialogRef.close();
   }
 }
 

@@ -31,8 +31,8 @@
       (click)="confirmSwapPlayer($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       class="game-card"
       [ngClass]="{  'move-able:': !game.finished,
-                    'drop-enable': dragStarted && !game.finished && dragEnable(game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId),
-                    'drop-disable': dragStarted && !game.finished && !dragEnable(game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId),
+                    'drop-enable': dragStarted && !game.finished && dragEnableForPlayerOne(game),
+                    'drop-disable': dragStarted && !game.finished && !dragEnableForPlayerOne(game),
                     'card-won': (game.playerOneScore == 1 && game.finished),
                     'card-not-won': (game.playerOneScore == 0 && game.finished)} ">
       <div class="game-card-line game-card-line-playerName">{{game.playerOnePlayerName | truncate:40}}</div>
@@ -44,7 +44,7 @@
       </div>
       <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
       <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid"
-                (click)="clickSwapPlayer($event,game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)" mdTooltip="Swap Player Mode"
+                (click)="clickSwapPlayerPlayerOne($event, game)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>
       <mdl-icon *ngIf="swapPlayerMode && !game.finished" (click)="endSwapPlayer($event)" mdTooltip="Exit Swap Player Mode"
@@ -59,8 +59,8 @@
       (click)="confirmSwapPlayer($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
       class="game-card"
       [ngClass]="{  'move-able:': !game.finished,
-                    'drop-enable': dragStarted && !game.finished && dragEnable(game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId),
-                    'drop-disable': dragStarted && !game.finished && !dragEnable(game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId),
+                    'drop-enable': dragStarted && !game.finished && dragEnableForPlayerTwo(game),
+                    'drop-disable': dragStarted && !game.finished && !dragEnableForPlayerTwo(game),
                     'card-won': (game.playerTwoScore == 1 && game.finished),
                     'card-not-won': (game.playerTwoScore == 0 && game.finished)} ">
       <div  class="game-card-line game-card-line-playerName">{{game.playerTwoPlayerName | truncate:40}}</div>
@@ -72,7 +72,7 @@
       </div>
       <div *ngIf="game.playerTwoArmyList " class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
       <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid"
-                (click)="clickSwapPlayer($event,game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)" mdTooltip="Swap Player Mode"
+                (click)="clickSwapPlayerPlayerTwo($event, game)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>
       <mdl-icon *ngIf="swapPlayerMode && !game.finished" (click)="endSwapPlayer($event)" mdTooltip="Exit Swap Player Mode"

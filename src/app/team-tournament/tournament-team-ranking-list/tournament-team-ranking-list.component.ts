@@ -15,7 +15,7 @@ import {ShowArmyListDialogComponent} from "../../dialogs/show-army-lists-dialog"
 @Component({
   selector: 'tournament-team-ranking-list',
   templateUrl: './tournament-team-ranking-list.component.html',
-  styleUrls: ['./tournament-team-ranking-list.component.css']
+  styleUrls: ['./tournament-team-ranking-list.component.scss']
 })
 export class TournamentTeamRankingListComponent implements OnInit {
 
@@ -49,7 +49,7 @@ export class TournamentTeamRankingListComponent implements OnInit {
     });
 
     this.teamRankingsForRound$.subscribe(rankings => {
-     this.orderedTeamRankings =  _.orderBy(rankings, ['score', 'sos', 'controlPoints', 'victoryPoints'], ['desc', 'desc', 'desc', 'desc']);
+     this.orderedTeamRankings =  _.orderBy(rankings, ['score', 'secondScore', 'controlPoints', 'victoryPoints'], ['desc', 'desc', 'desc', 'desc']);
     });
   }
 

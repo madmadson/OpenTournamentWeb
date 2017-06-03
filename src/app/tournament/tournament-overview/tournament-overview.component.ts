@@ -19,7 +19,7 @@ import {
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
   RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction,
   TeamTournamentNewRoundAction, TournamentKillTeamRoundAction, TournamentPairAgainTeamAction, ScenarioSelectedAction,
-  SwapTeamAction, TeamGameResultEnteredAction,
+  SwapTeamAction, TeamGameResultEnteredAction, ScenarioSelectedTeamTournamentAction,
 } from '../../store/actions/tournament-actions';
 
 
@@ -273,12 +273,20 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TournamentNewRoundAction(config));
   }
 
+  handleNewRoundTeamMatch(config: TournamentManagementConfiguration ) {
+    this.store.dispatch(new TeamTournamentNewRoundAction(config));
+  }
+
   handleGameResult(gameResult: GameResult) {
      this.store.dispatch(new GameResultEnteredAction(gameResult));
   }
 
   handleScenarioSelected(scenarioSelected: ScenarioSelectedModel) {
     this.store.dispatch(new ScenarioSelectedAction(scenarioSelected));
+  }
+
+  handleScenarioSelectedForTeamTournament(scenarioSelected: ScenarioSelectedModel) {
+    this.store.dispatch(new ScenarioSelectedTeamTournamentAction(scenarioSelected));
   }
 
   handleSwapPlayer(swapPlayer: SwapGames) {

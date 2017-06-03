@@ -77,7 +77,7 @@ import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/to
 import {
 
   TournamentRoundOverviewComponent,
-  NewRoundDialogComponent, FinishTournamentDialogComponent,
+  FinishTournamentDialogComponent,
 } from './tournament/tournament-round-overview/tournament-round-overview.component';
 import { TournamentGameListComponent, GameResultDialogComponent } from './tournament/tournament-game-list/tournament-game-list.component';
 import { TournamentRankingListComponent
@@ -126,6 +126,7 @@ import {
   TeamMatchDialogComponent,
   TournamentTeamGameListComponent
 } from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
+import {NewRoundDialogComponent} from './dialogs/round-overview/new-round--dialog';
 
 
 const reducers = {

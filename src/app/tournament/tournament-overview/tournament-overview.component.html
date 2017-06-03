@@ -68,13 +68,14 @@
                                       [teamGamesForRound$]="getTeamGamesForRound(round)"
                                       [playerRankingsForRound$]="getRankingsForRound(round)"
                                       [teamRankingsForRound$]="getTeamRankingsForRound(round)"
-                                      (onKillRound)="handleKillRound($event)"
-                                      (onPairAgain)="handlePairAgain($event)"
-                                      (onNewRound)="handleNewRound($event)"
+                                      (onKillTeamMatchRound)="handleKillRound($event)"
+                                      (onPairTeamMatchAgain)="handlePairAgain($event)"
+                                      (onNewRoundTeamMatch)="handleNewRoundTeamMatch($event)"
                                       (onSwapPlayer)="handleSwapPlayer($event)"
                                       (onSwapTeam)="handleSwapTeam($event)"
                                       (onTeamGameResult)="handleTeamGameResult($event)"
                                       (onPublishRound)="handlePublishRound($event)"
+                                      (onScenarioSelectedForTeamTournament)="handleScenarioSelectedForTeamTournament($event)"
       ></tournament-team-round-overview>
     </mdl-tab-panel>
     <mdl-tab-panel [disabled]="fullscreenMode || swapPlayerMode"

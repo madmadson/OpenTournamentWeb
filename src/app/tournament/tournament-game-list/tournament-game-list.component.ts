@@ -46,6 +46,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   dragStarted: boolean;
   draggedTournamentPlayerId: string;
+  draggedGameTeamName: string;
   draggedTournamentPlayerCurrentOpponentId: string;
   draggedTournamentPlayerOpponentIds: string[];
   draggedGame: TournamentGame;
@@ -102,23 +103,45 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     }
   }
 
-  clickSwapPlayer(event: any, game: TournamentGame, dragTournamentPlayerId: string,
-                  dragTournamentPlayerOpponentId: string) {
+  clickSwapPlayerPlayerOne(event: any, game: TournamentGame) {
 
-   console.log('click swap player');
-
-   event.stopPropagation();
+    event.stopPropagation();
 
     const that = this;
 
     this.swapPlayerMode = true;
-    this.draggedTournamentPlayerId = dragTournamentPlayerId;
-    this.draggedTournamentPlayerCurrentOpponentId = dragTournamentPlayerOpponentId;
+
+    this.draggedTournamentPlayerId = game.playerOneTournamentPlayerId;
+    this.draggedGameTeamName = game.playerOneTeamName;
+    this.draggedTournamentPlayerCurrentOpponentId = game.playerTwoTournamentPlayerId;
     this.draggedGame = game;
     this.dragStarted = true;
 
     _.each(this.rankingsForRound, function (ranking: TournamentRanking) {
-      if (ranking.tournamentPlayerId === dragTournamentPlayerId) {
+      if (ranking.tournamentPlayerId === game.playerOneTournamentPlayerId) {
+        that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
+      }
+    });
+
+    this.messageService.broadcast('swapPlayerMode', true);
+  }
+
+  clickSwapPlayerPlayerTwo(event: any, game: TournamentGame) {
+
+    event.stopPropagation();
+
+    const that = this;
+
+    this.swapPlayerMode = true;
+
+    this.draggedTournamentPlayerId = game.playerTwoTournamentPlayerId;
+    this.draggedGameTeamName = game.playerTwoTeamName;
+    this.draggedTournamentPlayerCurrentOpponentId = game.playerOneTournamentPlayerId;
+    this.draggedGame = game;
+    this.dragStarted = true;
+
+    _.each(this.rankingsForRound, function (ranking: TournamentRanking) {
+      if (ranking.tournamentPlayerId === game.playerTwoTournamentPlayerId) {
         that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
       }
     });
@@ -194,12 +217,30 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     return true;
   }
 
-  dragEnable(tournamentPlayerId: string, opponentTournamentPlayerId: string): boolean {
+  dragEnableForPlayerOne(potentialDroppedGame: TournamentGame): boolean {
 
-    return !(this.draggedTournamentPlayerId === tournamentPlayerId ||
-    this.draggedTournamentPlayerId === opponentTournamentPlayerId ||
-    _.includes(this.draggedTournamentPlayerOpponentIds, opponentTournamentPlayerId));
+    if (this.teamMatch) {
+      return !(this.draggedTournamentPlayerId === potentialDroppedGame.playerOneTournamentPlayerId ||
+              this.draggedTournamentPlayerId === potentialDroppedGame.playerTwoTournamentPlayerId ||
+              this.draggedGameTeamName === potentialDroppedGame.playerTwoTeamName);
+    } else {
+      return !(this.draggedTournamentPlayerId === potentialDroppedGame.playerOneTournamentPlayerId ||
+      this.draggedTournamentPlayerId === potentialDroppedGame.playerTwoTournamentPlayerId ||
+      _.includes(this.draggedTournamentPlayerOpponentIds, potentialDroppedGame.playerTwoTournamentPlayerId));
+    }
+  }
 
+  dragEnableForPlayerTwo(potentialDroppedGame: TournamentGame): boolean {
+
+    if (this.teamMatch) {
+      return !(this.draggedTournamentPlayerId === potentialDroppedGame.playerOneTournamentPlayerId ||
+      this.draggedTournamentPlayerId === potentialDroppedGame.playerTwoTournamentPlayerId ||
+      this.draggedGameTeamName === potentialDroppedGame.playerOneTeamName);
+    } else {
+      return !(this.draggedTournamentPlayerId === potentialDroppedGame.playerOneTournamentPlayerId ||
+      this.draggedTournamentPlayerId === potentialDroppedGame.playerTwoTournamentPlayerId ||
+      _.includes(this.draggedTournamentPlayerOpponentIds, potentialDroppedGame.playerOneTournamentPlayerId));
+    }
   }
 
 
@@ -488,37 +529,39 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     if (this.myGameOrAdmin(selectedGame)) {
 
-        const admin = this.isAdmin();
+      const admin = this.isAdmin();
 
-        const dialogRef = this.dialog.open(GameResultDialogComponent, {
-          data: {
-            selectedGame: selectedGame,
-            armyLists$: this.armyLists$,
-            admin: admin
-          },
-        });
-        const eventSubscribe = dialogRef.componentInstance.onGameResult
-          .subscribe((gameResult: GameResult) => {
+      const dialogRef = this.dialog.open(GameResultDialogComponent, {
+        data: {
+          selectedGame: selectedGame,
+          armyLists$: this.armyLists$,
+          admin: admin
+        },
+      });
+      const eventSubscribe = dialogRef.componentInstance.onGameResult
+        .subscribe((gameResult: GameResult) => {
 
-            if (gameResult !== undefined) {
+          if (gameResult !== undefined) {
 
-              if (this.selectedScenario) {
-                gameResult.gameAfter.scenario = this.selectedScenario;
-              }
-
-              this.onGameResult.emit(gameResult);
-              if (!this.teamMatch) {
-                this.dialog.closeAll();
-              }
+            if (this.selectedScenario) {
+              gameResult.gameAfter.scenario = this.selectedScenario;
             }
-          });
-        dialogRef.afterClosed().subscribe(() => {
 
-          eventSubscribe.unsubscribe();
-          if (!this.teamMatch) {
-            this.dialog.closeAll();
+            this.onGameResult.emit(gameResult);
+            if (!this.teamMatch) {
+              this.dialog.closeAll();
+            } else {
+              dialogRef.close();
+            }
           }
         });
+      dialogRef.afterClosed().subscribe(() => {
+
+        eventSubscribe.unsubscribe();
+        if (!this.teamMatch) {
+          this.dialog.closeAll();
+        }
+      });
 
     }
   }
@@ -599,7 +642,7 @@ export class GameResultDialogComponent {
           that.playerOneArmyLists.push(list);
         } else if (list.tournamentPlayerId && list.tournamentPlayerId === data.selectedGame.playerTwoTournamentPlayerId) {
           that.playerTwoArmyLists.push(list);
-        }  else if (list.playerId && list.playerId === data.selectedGame.playerTwoPlayerId) {
+        } else if (list.playerId && list.playerId === data.selectedGame.playerTwoPlayerId) {
           that.playerTwoArmyLists.push(list);
         }
       });
