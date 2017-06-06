@@ -21,14 +21,14 @@
         New Round
       </button>
 
-      <!--<button *ngIf="allGamesFinished"-->
-              <!--(click)="openFinishTournamentDialog()"-->
-              <!--type="button"-->
-              <!--class="positive-background action-button"-->
-              <!--md-raised-button>-->
-        <!--<md-icon>flag</md-icon>-->
-        <!--End Tournament-->
-      <!--</button>-->
+      <button *ngIf="allGamesFinished"
+              (click)="openFinishTournamentDialog()"
+              type="button"
+              class="positive-background action-button"
+              md-raised-button>
+        <md-icon>flag</md-icon>
+        End Tournament
+      </button>
 
       <button *ngIf="actualTournament.visibleRound < actualTournament.actualRound"
               (click)="publishRound()"

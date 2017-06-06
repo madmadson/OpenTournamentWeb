@@ -551,12 +551,16 @@ export class TournamentRankingService implements OnDestroy {
         if (actualRoundTeamMatchTeamOne.finished) {
           newScoreTeamOne = lastRoundRankingTeamOne.score + (teamOneScore > teamTwoScore ? 1 : 0);
         }
-        newSecondScoreTeamOne = lastRoundRankingTeamOne.secondScore + actualRoundTeamMatchTeamOne.playerOneScore +
-          gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore;
-        newCPTeamOne = lastRoundRankingTeamOne.controlPoints + actualRoundTeamMatchTeamOne.playerOneControlPoints +
-          gameResult.gameAfter.playerOneControlPoints - gameResult.gameBefore.playerOneControlPoints;
-        newVPTeamOne = lastRoundRankingTeamOne.victoryPoints + actualRoundTeamMatchTeamOne.playerOneVictoryPoints  +
-          gameResult.gameAfter.playerOneVictoryPoints - gameResult.gameBefore.playerOneVictoryPoints;
+
+        if (gameResult.gameAfter.playerOnePlayerName === actualRoundTeamMatchTeamOne.playerOnePlayerName) {
+          newSecondScoreTeamOne = lastRoundRankingTeamOne.secondScore + actualRoundTeamMatchTeamOne.playerOneIntermediateResult;
+          newCPTeamOne = lastRoundRankingTeamOne.controlPoints + actualRoundTeamMatchTeamOne.playerOneControlPoints;
+          newVPTeamOne = lastRoundRankingTeamOne.victoryPoints + actualRoundTeamMatchTeamOne.playerOneVictoryPoints;
+        } else {
+          newSecondScoreTeamOne = lastRoundRankingTeamOne.secondScore + actualRoundTeamMatchTeamOne.playerTwoIntermediateResult;
+          newCPTeamOne = lastRoundRankingTeamOne.controlPoints + actualRoundTeamMatchTeamOne.playerTwoControlPoints;
+          newVPTeamOne = lastRoundRankingTeamOne.victoryPoints + actualRoundTeamMatchTeamOne.playerTwoVictoryPoints;
+        }
 
         const playerOneRankingRef = this.afoDatabase
           .object('tournament-team-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingTeamOne.id);
@@ -624,12 +628,15 @@ export class TournamentRankingService implements OnDestroy {
         if (actualRoundTeamMatchTeamTwo.finished) {
           newScoreTeamTwo = lastRoundRankingTeamTwo.score + (teamOneScore < teamTwoScore ? 1 : 0);
         }
-        newSecondScoreTeamTwo = lastRoundRankingTeamTwo.secondScore + actualRoundTeamMatchTeamTwo.playerTwoScore +
-          gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore;
-        newCPTeamTwo = lastRoundRankingTeamTwo.controlPoints + actualRoundTeamMatchTeamTwo.playerTwoControlPoints +
-          gameResult.gameAfter.playerTwoControlPoints - gameResult.gameBefore.playerTwoControlPoints;
-        newVPTeamTwo = lastRoundRankingTeamTwo.victoryPoints + actualRoundTeamMatchTeamTwo.playerTwoVictoryPoints +
-          gameResult.gameAfter.playerTwoVictoryPoints - gameResult.gameBefore.playerTwoVictoryPoints;
+        if (gameResult.gameAfter.playerTwoPlayerName === actualRoundTeamMatchTeamTwo.playerOnePlayerName) {
+          newSecondScoreTeamTwo = lastRoundRankingTeamTwo.secondScore + actualRoundTeamMatchTeamOne.playerOneIntermediateResult;
+          newCPTeamTwo = lastRoundRankingTeamTwo.controlPoints + actualRoundTeamMatchTeamOne.playerOneControlPoints;
+          newVPTeamTwo = lastRoundRankingTeamTwo.victoryPoints + actualRoundTeamMatchTeamOne.playerOneVictoryPoints;
+        } else {
+          newSecondScoreTeamTwo = lastRoundRankingTeamTwo.secondScore + actualRoundTeamMatchTeamOne.playerTwoIntermediateResult;
+          newCPTeamTwo = lastRoundRankingTeamTwo.controlPoints + actualRoundTeamMatchTeamOne.playerTwoControlPoints;
+          newVPTeamTwo = lastRoundRankingTeamTwo.victoryPoints + actualRoundTeamMatchTeamOne.playerTwoVictoryPoints;
+        }
 
         const teamTwoRankingRef = this.afoDatabase
           .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingTeamTwo.id);

@@ -75,9 +75,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
 
 import {
-
   TournamentRoundOverviewComponent,
-  FinishTournamentDialogComponent,
 } from './tournament/tournament-round-overview/tournament-round-overview.component';
 import { TournamentGameListComponent, GameResultDialogComponent } from './tournament/tournament-game-list/tournament-game-list.component';
 import { TournamentRankingListComponent
@@ -126,7 +124,9 @@ import {
   TeamMatchDialogComponent,
   TournamentTeamGameListComponent
 } from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
-import {NewRoundDialogComponent} from './dialogs/round-overview/new-round--dialog';
+import {NewRoundDialogComponent} from './dialogs/round-overview/new-round-dialog';
+import {FinishTournamentDialogComponent} from "./dialogs/finish-tournament-dialog";
+import { TournamentTeamFinalRankingsComponent } from './team-tournament/tournament-team-final-rankings/tournament-team-final-rankings.component';
 
 
 const reducers = {
@@ -265,7 +265,8 @@ export const firebaseConfDev = {
     ShowTeamRankingDialogComponent,
     ShowArmyListDialogComponent,
     TournamentTeamGameListComponent,
-    TeamMatchDialogComponent
+    TeamMatchDialogComponent,
+    TournamentTeamFinalRankingsComponent
   ],
   providers: [
     LoginService,

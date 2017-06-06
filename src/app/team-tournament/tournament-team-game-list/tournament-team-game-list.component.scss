@@ -1,0 +1,180 @@
+@import "../../../styles";
+
+
+.game-cards-container {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+@media only screen and (min-width: 700px) {
+  .game-cards-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.game-card{
+  text-align: center;
+  width: 220px;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+.game-card-line{
+  margin: 6px;
+}
+
+.game-card-line-playerName{
+  font-size: 1em;
+  font-weight: bold;
+}
+@media only screen and (min-width: 1000px) {
+  .game-card-line-playerName{
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+}
+
+.table-info{
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.clickable-tournament-game:hover{
+  background-color: deepskyblue;
+  cursor: pointer;
+}
+
+.game-result-container{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+@media only screen and (min-width: 800px) {
+  .game-result-container{
+    flex-flow:row nowrap;
+  }
+}
+
+.game-result-card{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+}
+
+@media only screen and (min-width: 1200px) {
+  .game-result-card {
+    width: 400px;
+  }
+}
+
+
+.game-result-card-line{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-result-playerName{
+  width: 100%;
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+@media only screen and (min-width: 800px) {
+
+  .game-result-playerName {
+    width: 100%;
+    font-size: 1.2em;
+  }
+}
+
+.add-button{
+  color: #388E3C;
+  font-size:48px;
+  margin-bottom: 24px;
+  margin-right: 24px;
+}
+
+.remove-button{
+  color: #D32F2F;
+  font-size:48px;
+  margin-bottom: 24px;
+  margin-right: 24px;
+}
+
+.game-result-input{
+  margin-right: 24px;
+  margin-left: 30px;
+  width: 55px;
+  font-size:24px;
+}
+
+.won-button{
+  width: 80%;
+  background: #388E3C;
+  color: white;
+}
+
+.not-won-button{
+  width: 80%;
+  background: #D32F2F;
+  color: white;
+}
+
+.game-result-card-divider{
+  font-weight: bold;
+  text-align: center;
+  margin-right: 6px;
+  margin-left: 6px;
+}
+
+@media only screen and (max-width: 800px) {
+  .game-result-card-divider {
+    width: 100%;
+  }
+}
+
+.card-won {
+  background: #3bff5d;
+}
+
+.card-ahead {
+  background: #b7ffad;
+}
+
+.card-draw {
+  background: #fff99d;
+}
+
+.card-behind {
+  background: #fdc8ad;
+}
+
+.card-not-won {
+  background: #ff7b4a;
+}
+
+.swap-player-mode {
+  position: absolute;
+  display: inline-block;
+  top: 5px;
+  right: 5px;
+  font-size: 2em;
+}
+
+.swap-player-mode:hover{
+  color: blue;
+  cursor: pointer;
+}
+

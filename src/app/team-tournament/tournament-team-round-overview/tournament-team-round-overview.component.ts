@@ -21,7 +21,8 @@ import {PairAgainDialogComponent} from '../../dialogs/round-overview/pair-again-
 import {PrintRankingsDialogComponent} from '../../dialogs/print-rankings-dialog';
 import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
-import {NewRoundDialogComponent} from "../../dialogs/round-overview/new-round--dialog";
+import {NewRoundDialogComponent} from '../../dialogs/round-overview/new-round-dialog';
+import {FinishTournamentDialogComponent} from 'app/dialogs/finish-tournament-dialog';
 
 @Component({
   selector: 'tournament-team-round-overview',
@@ -52,7 +53,7 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   @Output() onSwapPlayer = new EventEmitter<SwapGames>();
   @Output() onSwapTeam = new EventEmitter<SwapGames>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
-  @Output() onEndTournament = new EventEmitter<TournamentManagementConfiguration>();
+  @Output() onEndTeamTournament = new EventEmitter<TournamentManagementConfiguration>();
 
   userPlayerData: Player;
   currentUserId: string;
@@ -259,6 +260,31 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
         games$: this.teamGamesForRound$,
         round: this.round
       }
+    });
+  }
+
+  openFinishTournamentDialog() {
+    const dialogRef = this.dialog.open(FinishTournamentDialogComponent, {
+      data: {
+        round: this.round,
+        allPlayers$: this.teamRankingsForRound$
+      },
+      width: '600px',
+    });
+    const eventSubscribe = dialogRef.componentInstance.onEndTournament
+      .subscribe(() => {
+        this.onEndTeamTournament.emit({
+          tournamentId: this.actualTournament.id,
+          round: (this.round + 1),
+          teamRestriction: false,
+          metaRestriction: false,
+          originRestriction: false,
+          countryRestriction: false,
+        });
+      });
+    dialogRef.afterClosed().subscribe(() => {
+
+      eventSubscribe.unsubscribe();
     });
   }
 }

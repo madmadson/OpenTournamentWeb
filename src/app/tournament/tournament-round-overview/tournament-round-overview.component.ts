@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {ArmyList} from '../../../../shared/model/armyList';
@@ -7,7 +7,7 @@ import {AuthenticationStoreState} from '../../store/authentication-state';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {Tournament} from '../../../../shared/model/tournament';
 
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+import {MdDialog, MdSnackBar} from '@angular/material';
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 
 import * as _ from 'lodash';
@@ -22,7 +22,8 @@ import {PairAgainDialogComponent} from '../../dialogs/round-overview/pair-again-
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 import {PrintRankingsDialogComponent} from '../../dialogs/print-rankings-dialog';
 import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
-import {NewRoundDialogComponent} from "../../dialogs/round-overview/new-round--dialog";
+import {NewRoundDialogComponent} from '../../dialogs/round-overview/new-round-dialog';
+import {FinishTournamentDialogComponent} from '../../dialogs/finish-tournament-dialog';
 
 
 @Component({
@@ -284,29 +285,4 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 }
 
 
-@Component({
-  selector: 'finish-tournament-dialog',
-  templateUrl: './finish-tournament-dialog.html'
-})
-export class FinishTournamentDialogComponent {
 
-  suggestedRoundToPlay: number;
-  round: number;
-
-  @Output() onEndTournament = new EventEmitter();
-
-  constructor(public dialogRef: MdDialogRef<FinishTournamentDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-
-    this.round = data.round;
-    data.allPlayers$.subscribe(allPlayers => {
-      this.suggestedRoundToPlay = Math.round(Math.log2(allPlayers.length));
-    });
-  }
-
-  endTournament() {
-
-    this.onEndTournament.emit();
-    this.dialogRef.close();
-  }
-}

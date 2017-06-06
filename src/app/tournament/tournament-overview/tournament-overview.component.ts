@@ -19,7 +19,8 @@ import {
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
   RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction,
   TeamTournamentNewRoundAction, TournamentKillTeamRoundAction, TournamentPairAgainTeamAction, ScenarioSelectedAction,
-  SwapTeamAction, TeamGameResultEnteredAction, ScenarioSelectedTeamTournamentAction,
+  SwapTeamAction, TeamGameResultEnteredAction, ScenarioSelectedTeamTournamentAction, EndTeamTournamentAction,
+  UndoTeamTournamentEndAction, UploadTeamTournamentAction,
 } from '../../store/actions/tournament-actions';
 
 
@@ -191,8 +192,14 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     }));
   }
 
-  getFinalRanking(): Observable<TournamentRanking[]> {
+  getFinalPlayerRankings(): Observable<TournamentRanking[]> {
     return this.actualTournamentRankings$.map(rankings => rankings.filter(rank => {
+      return (rank.tournamentRound === (this.actualTournament.actualRound + 1 ));
+    }));
+  }
+
+  getFinalTeamRankings(): Observable<TournamentRanking[]> {
+    return this.actualTournamentTeamRankings$.map(rankings => rankings.filter(rank => {
       return (rank.tournamentRound === (this.actualTournament.actualRound + 1 ));
     }));
   }
@@ -261,6 +268,10 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new EndTournamentAction(config));
   }
 
+  handleEndTeamTournament(config: TournamentManagementConfiguration) {
+    this.store.dispatch(new EndTeamTournamentAction(config));
+  }
+
   handlePairAgain(config: TournamentManagementConfiguration ) {
     if (this.actualTournament.teamSize === 0) {
       this.store.dispatch(new TournamentPairAgainAction(config));
@@ -318,8 +329,16 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new UndoTournamentEndAction(config));
   }
 
+  handleUndoTeamTournamentEnd(config: TournamentManagementConfiguration) {
+    this.store.dispatch(new UndoTeamTournamentEndAction(config));
+  }
+
   handleUploadTournament() {
     this.store.dispatch(new UploadTournamentAction(this.actualTournament.id));
+  }
+
+  handleUploadTeamTournament() {
+    this.store.dispatch(new UploadTeamTournamentAction(this.actualTournament.id));
   }
 
   handleRegisterTeamForTeamTournament(team: TournamentTeam) {

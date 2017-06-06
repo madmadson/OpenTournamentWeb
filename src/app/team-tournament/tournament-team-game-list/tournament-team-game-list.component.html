@@ -1,0 +1,94 @@
+<ng-container *ngIf="gamesForRound?.length === 0" >
+  <div class="heading">Load Games... <mdl-spinner  single-color active></mdl-spinner></div>
+</ng-container>
+
+<md-input-container *ngIf="currentUserId !== actualTournament.creatorUid"
+                    class="full-width">
+  <input mdInput type="text" disabled placeholder="Scenario" value="{{selectedScenario}}">
+</md-input-container>
+
+<md-select
+  *ngIf="currentUserId === actualTournament.creatorUid"
+  class="full-width-select-box"
+  placeholder="Scenario"
+  #scenario
+  (change)="changeScenario()"
+  [(ngModel)]="selectedScenario"
+  name="scenario">
+  <md-option *ngFor="let scenario of scenarios" [value]="scenario">{{ scenario }}</md-option>
+</md-select>
+
+<div *ngFor="let game of teamGamesForRound; let i = index; let even = even"
+     [ngClass]="{'even': even,
+                 'my-item':isItMyGame(game),
+                 'clickable-tournament-game': (myGameOrAdmin(game) && !dragStarted)
+                 }"
+     (click)="openTeamMatchDialog(game)">
+  <div class="table-info">Tables {{game.playingField}}</div>
+  <div class="game-cards-container">
+    <md-card
+      draggable="true"
+      (click)="confirmSwapTeam($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
+      class="game-card"
+      [ngClass]="{  'move-able:': !game.finished && game.playerTwoIntermediateResult == 0 &&  game.playerOneIntermediateResult == 0,
+                    'drop-enable': dragStarted && !game.finished && dragEnable(game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId),
+                    'drop-disable': dragStarted && !game.finished && !dragEnable(game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId),
+                    'card-won': (game.playerOneScore == 1 && game.finished),
+                    'card-ahead': (game.playerOneIntermediateResult > game.playerTwoIntermediateResult && !game.finished),
+                    'card-draw': (game.playerOneIntermediateResult == game.playerTwoIntermediateResult && !game.finished &&
+                                  game.playerTwoIntermediateResult != 0 && game.playerOneIntermediateResult != 0),
+                    'card-behind': (game.playerOneIntermediateResult < game.playerTwoIntermediateResult && !game.finished),
+                    'card-not-won': (game.playerOneScore == 0 && game.finished)} ">
+      <div class="game-card-line game-card-line-playerName">{{game.playerOnePlayerName | truncate:40}}</div>
+      <div class="game-card-line game-card-line-playerName"> SGW: {{game.playerOneIntermediateResult}}</div>
+      <div class="game-card-line">
+        Score: {{game.playerOneScore}}
+        CP: {{game.playerOneControlPoints}}
+        VP: {{game.playerOneVictoryPoints}}
+      </div>
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid &&
+                        game.playerTwoIntermediateResult === 0 && game.playerOneIntermediateResult === 0"
+                (click)="clickSwapTeam($event,game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)" mdTooltip="Swap Player Mode"
+                class="swap-player-mode">swap_horiz
+      </mdl-icon>
+      <mdl-icon *ngIf="swapPlayerMode && !game.finished && game.playerTwoIntermediateResult === 0 && game.playerOneIntermediateResult === 0"
+                (click)="endSwapPlayer($event)" mdTooltip="Exit Swap Player Mode"
+                class="swap-player-mode">cancel
+      </mdl-icon>
+    </md-card>
+    <div class="game-result-card-divider">
+      VS
+    </div>
+    <md-card
+      draggable="true"
+      (click)="confirmSwapTeam($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
+      class="game-card"
+      [ngClass]="{  'move-able:': !game.finished &&  game.playerTwoIntermediateResult == 0 &&  game.playerOneIntermediateResult == 0,
+                    'drop-enable': dragStarted && !game.finished && dragEnable(game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId),
+                    'drop-disable': dragStarted && !game.finished && !dragEnable(game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId),
+                    'card-won': (game.playerTwoScore == 1 && game.finished),
+                    'card-ahead': (game.playerOneIntermediateResult < game.playerTwoIntermediateResult && !game.finished),
+                    'card-draw': (game.playerOneIntermediateResult == game.playerTwoIntermediateResult && !game.finished &&
+                                  game.playerTwoIntermediateResult != 0 && game.playerOneIntermediateResult != 0),
+                    'card-behind': (game.playerOneIntermediateResult > game.playerTwoIntermediateResult && !game.finished),
+                    'card-not-won': (game.playerTwoScore == 0 && game.finished)} ">
+      <div  class="game-card-line game-card-line-playerName">{{game.playerTwoPlayerName}}</div>
+      <div  class="game-card-line game-card-line-playerName">SGW: {{game.playerTwoIntermediateResult}}</div>
+      <div  class="game-card-line">
+        Score: {{game.playerTwoScore}}
+        CP: {{game.playerTwoControlPoints}}
+        VP: {{game.playerTwoVictoryPoints}}
+      </div>
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid &&
+                        game.playerTwoIntermediateResult == 0 && game.playerOneIntermediateResult == 0"
+                (click)="clickSwapTeam($event,game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)" mdTooltip="Swap Player Mode"
+                class="swap-player-mode">swap_horiz
+      </mdl-icon>
+      <mdl-icon *ngIf="swapPlayerMode && !game.finished && game.playerTwoIntermediateResult == 0 && game.playerOneIntermediateResult == 0"
+                (click)="endSwapPlayer($event)" mdTooltip="Exit Swap Player Mode"
+                class="swap-player-mode">cancel
+      </mdl-icon>
+    </md-card>
+  </div>
+</div>
+

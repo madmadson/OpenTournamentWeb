@@ -419,10 +419,6 @@ export class TournamentService implements OnDestroy {
     }
   }
 
-  pairMatchesforTeamMatch(config: TournamentTeamGamesConfiguration) {
-    this.tournamentGameService.createMatchesForTeam(config);
-
-  }
 
   gameResultEntered(gameResult: GameResult) {
 
@@ -487,6 +483,20 @@ export class TournamentService implements OnDestroy {
 
   }
 
+  endTeamTournament(config: TournamentManagementConfiguration) {
+    this.rankingService.pushRankingForRound(config);
+    this.rankingService.pushTeamRankingForRound(config);
+
+    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
+    registrationRef.update(
+      {finished: true, visibleRound: (config.round - 1)}
+    );
+    this.snackBar.open('Successfully end TeamTournament', '', {
+      duration: 5000
+    });
+
+  }
+
   undoTournamentEnd(config: TournamentManagementConfiguration) {
     this.rankingService.eraseRankingsForRound(config);
 
@@ -529,7 +539,6 @@ export class TournamentService implements OnDestroy {
       duration: 5000
     });
   }
-
 
   scenarioSelectedAction(scenarioSelected: ScenarioSelectedModel) {
     const query = this.afoDatabase.list('tournament-games/' + scenarioSelected.tournamentId).take(1);
@@ -597,6 +606,32 @@ export class TournamentService implements OnDestroy {
           update({'scenario': scenarioSelected.scenario});
         }
       });
+    });
+  }
+
+  undoTeamTournamentEnd(config: TournamentManagementConfiguration) {
+    this.rankingService.eraseRankingsForRound(config);
+    this.rankingService.eraseTeamRankingsForRound(config);
+
+    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
+    registrationRef.update(
+      {finished: false}
+    );
+    this.snackBar.open('Successfully undo end TeamTournament', '', {
+      duration: 5000
+    });
+  }
+
+  uploadTeamTournament(tournamentId: string) {
+
+    this.tournamentGameService.calculateEloForTournament();
+
+    const registrationRef = this.afoDatabase.object('tournaments/' + tournamentId);
+    registrationRef.update(
+      {uploaded: true}
+    );
+    this.snackBar.open('Successfully upload Tournament', '', {
+      duration: 5000
     });
   }
 }

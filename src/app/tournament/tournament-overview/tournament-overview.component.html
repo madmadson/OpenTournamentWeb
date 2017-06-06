@@ -75,6 +75,7 @@
                                       (onSwapTeam)="handleSwapTeam($event)"
                                       (onTeamGameResult)="handleTeamGameResult($event)"
                                       (onPublishRound)="handlePublishRound($event)"
+                                      (onEndTeamTournament)="handleEndTeamTournament($event)"
                                       (onScenarioSelectedForTeamTournament)="handleScenarioSelectedForTeamTournament($event)"
       ></tournament-team-round-overview>
     </mdl-tab-panel>
@@ -85,10 +86,19 @@
                                    [actualTournament]="actualTournament"
                                    [authenticationStoreState$]="authenticationStoreState$"
                                    [actualTournamentArmyList$]="actualTournamentArmyList$"
-                                   [finalRankings$]="getFinalRanking()"
+                                   [finalPlayerRankings$]="getFinalPlayerRankings()"
                                    (onUndoTournamentEnd)="handleUndoTournamentEnd($event)"
-                                   (onUploadTournament)="handleUploadTournament()"
-        ></tournament-final-rankings>
+                                   (onUploadTournament)="handleUploadTournament()">
+        </tournament-final-rankings>
+        <tournament-team-final-rankings *ngIf="actualTournament.teamSize > 0"
+                                        [actualTournament]="actualTournament"
+                                        [authenticationStoreState$]="authenticationStoreState$"
+                                        [actualTournamentArmyList$]="actualTournamentArmyList$"
+                                        [finalPlayerRankings$]="getFinalPlayerRankings(round)"
+                                        [finalTeamRankings$]="getFinalTeamRankings(round)"
+                                        (onUndoTeamTournamentEnd)="handleUndoTeamTournamentEnd($event)"
+                                        (onUploadTeamTournament)="handleUploadTeamTournament()">
+        </tournament-team-final-rankings>
       </div>
     </mdl-tab-panel>
   </mdl-tabs>

@@ -12,7 +12,8 @@ import {
   TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION, UNDO_TOURNAMENT_END_ACTION, SWAP_PLAYER_ACTION,
   UPLOAD_TOURNAMENT_ACTION, TEAM_TOURNAMENT_NEW_ROUND_ACTION, TOURNAMENT_KILL_TEAM_ROUND_ACTION,
   SCENARIO_SELECTED_ACTION, TOURNAMENT_PAIR_AGAIN_TEAM_ACTION, SWAP_TEAM_ACTION, TEAM_GAME_RESULT_ENTERED_ACTION,
-  SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION
+  SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION, END_TEAM_TOURNAMENT_ACTION, UNDO_TEAM_TOURNAMENT_END_ACTION,
+  UPLOAD_TEAM_TOURNAMENT_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
 
@@ -24,6 +25,11 @@ export class TournamentEffectService {
     .ofType(END_TOURNAMENT_ACTION)
     .debug('END_TOURNAMENT_ACTION')
     .map(action => this.tournamentService.endTournament(action.payload));
+
+  @Effect({dispatch: false}) endTeamTournament = this.actions$
+    .ofType(END_TEAM_TOURNAMENT_ACTION)
+    .debug('END_TEAM_TOURNAMENT_ACTION')
+    .map(action => this.tournamentService.endTeamTournament(action.payload));
 
   @Effect({dispatch: false}) pairNewRound = this.actions$
     .ofType(TOURNAMENT_NEW_ROUND_ACTION)
@@ -50,10 +56,20 @@ export class TournamentEffectService {
     .debug('UNDO_TOURNAMENT_END_ACTION')
     .map(action => this.tournamentService.undoTournamentEnd(action.payload));
 
+  @Effect({dispatch: false}) undoTeamTournamentEnd = this.actions$
+    .ofType(UNDO_TEAM_TOURNAMENT_END_ACTION)
+    .debug('UNDO_TEAM_TOURNAMENT_END_ACTION')
+    .map(action => this.tournamentService.undoTeamTournamentEnd(action.payload));
+
   @Effect({dispatch: false}) uploadTournament = this.actions$
     .ofType(UPLOAD_TOURNAMENT_ACTION)
     .debug('UPLOAD_TOURNAMENT_ACTION')
     .map(action => this.tournamentService.uploadTournament(action.payload));
+
+  @Effect({dispatch: false}) uploadTeamTournament = this.actions$
+    .ofType(UPLOAD_TEAM_TOURNAMENT_ACTION)
+    .debug('UPLOAD_TEAM_TOURNAMENT_ACTION')
+    .map(action => this.tournamentService.uploadTeamTournament(action.payload));
 
   @Effect({dispatch: false}) addDummyPlayer = this.actions$
     .ofType(ADD_DUMMY_PLAYER_ACTION)

@@ -5,12 +5,10 @@ import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {Player} from '../../../../shared/model/player';
 import { MdDialog} from '@angular/material';
 import {WindowRefService} from '../../service/window-ref-service';
-import {ShowTeamDialogComponent} from '../../dialogs/show-team-dialog';
 
 import * as _ from 'lodash';
-import {ShowTeamRankingDialogComponent} from "../../dialogs/show-team-ranking-dialog";
-import {TournamentTeam} from "../../../../shared/model/tournament-team";
-import {ShowArmyListDialogComponent} from "../../dialogs/show-army-lists-dialog";
+import {ShowTeamRankingDialogComponent} from '../../dialogs/show-team-ranking-dialog';
+import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog';
 
 @Component({
   selector: 'tournament-team-ranking-list',

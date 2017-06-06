@@ -2,14 +2,14 @@
 <div *ngIf="currentUserId === actualTournament?.creatorUid" class="action-card-container">
   <md-card *ngIf="!actualTournament.uploaded" class="action-card" >
     <div class="action-button-wrapper">
-      <button (click)="publishTournament()"
+      <button (click)="publishTeamTournament()"
               type="button"
               class="positive-background action-button"
               md-raised-button>
         <md-icon>cloud_upload</md-icon>
         Publish All
       </button>
-      <button (click)="undoTournamentEnd()"
+      <button (click)="undoTeamTournamentEnd()"
               type="button"
               class="negative-background action-button"
               md-raised-button>
@@ -21,9 +21,10 @@
 </div>
 <md-card class="tournament-ranking-table-card">
   <h3 class="heading">Final Rankings</h3>
-  <tournament-ranking-table
-    [actualTournamentArmyList$]="armyLists"
-    [rankingsForRound$]="finalPlayerRankings$"
+  <tournament-team-ranking-list
+    [actualTournamentArmyList$]="armyLists$"
+    [teamRankingsForRound$]="finalTeamRankings$"
+    [playerRankingsForRound$]="finalPlayerRankings$"
     [userPlayerData]="userPlayerData"
-  ></tournament-ranking-table>
+  ></tournament-team-ranking-list>
 </md-card>
