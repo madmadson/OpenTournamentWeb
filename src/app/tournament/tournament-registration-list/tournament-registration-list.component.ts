@@ -2,8 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Registration} from '../../../../shared/model/registration';
 import {Player} from '../../../../shared/model/player';
 import {Tournament} from '../../../../shared/model/tournament';
-import {WindowRefService} from "../../service/window-ref-service";
-import {TournamentPlayer} from "../../../../shared/model/tournament-player";
+import {WindowRefService} from '../../service/window-ref-service';
 
 
 @Component({

@@ -21,7 +21,7 @@ import {Player} from "../../../shared/model/player";
 @Component({
   selector: 'my-tournaments',
   templateUrl: './my-site.component.html',
-  styleUrls: ['./my-site.component.css']
+  styleUrls: ['./my-site.component.scss']
 })
 export class MySiteComponent {
   groupedTournaments$: Observable<TournamentListVM[]>;
@@ -62,7 +62,9 @@ export class MySiteComponent {
     this.groupedTournaments$ = store.select(
       state => {
 
-        return _.chain(state.tournaments.tournaments)
+        return _.chain(state.tournaments.tournaments).sortBy(function (value) {
+          return new Date(value.beginDate);
+        })
           .filter(function (tournament) {
             return tournament.creatorUid === state.authenticationStoreState.currentUserId;
           })

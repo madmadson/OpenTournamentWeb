@@ -20,8 +20,8 @@
 
 <div *ngFor="let game of teamGamesForRound; let i = index; let even = even"
      [ngClass]="{'even': even,
-                 'my-item':isItMyGame(game),
-                 'clickable-tournament-game': (myGameOrAdmin(game) && !dragStarted)
+                 'my-item':isItMyTeamGame(game),
+                 'clickable-tournament-game': !dragStarted
                  }"
      (click)="openTeamMatchDialog(game)">
   <div class="table-info">Tables {{game.playingField}}</div>

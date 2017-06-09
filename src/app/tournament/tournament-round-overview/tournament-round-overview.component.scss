@@ -4,7 +4,7 @@
 .fullscreen-mode{
   position: absolute;
   display: inline-block;
-  top: $main_tick;
+  top: $halve_tick;
   right: $main_tick;
 }
 
@@ -16,7 +16,7 @@
 .print-rankings-icon{
   position: absolute;
   display: inline-block;
-  top: $main_tick;
+  top: $halve_tick;
   right: 50px;
 }
 
@@ -29,7 +29,7 @@
 .table-mode{
   position: absolute;
   display: inline-block;
-  top: $main_tick;
+  top: $halve_tick;
   right: 50px;
 }
 
@@ -41,7 +41,7 @@
 .print-games-icon{
   position: absolute;
   display: inline-block;
-  top: $main_tick;
+  top: $halve_tick;
   right: 90px;
 }
 

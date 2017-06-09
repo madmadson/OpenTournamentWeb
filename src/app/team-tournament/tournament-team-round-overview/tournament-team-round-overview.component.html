@@ -74,6 +74,7 @@
     <h4 *ngIf="allGamesFiltered?.length == 0" class="warning-text">No Games found (Filter?)</h4>
     <tournament-team-game-list *ngIf="!gamesTableMode"
                                [actualTournament]="actualTournament"
+                               [actualTournamentTeams$]="actualTournamentTeams$"
                                [authenticationStoreState$]="authenticationStoreState$"
                                [actualTournamentArmyLists$]="actualTournamentArmyLists$"
                                [teamGamesForRound]="allGamesFiltered"

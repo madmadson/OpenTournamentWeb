@@ -654,6 +654,8 @@ export class GameResultDialogComponent {
     if (this.gameModel.playerTwoScore === 1) {
       this.gameModel.playerTwoScore = 0;
     }
+
+    this.sureButton = false;
   }
 
   playerOneNotWin() {
@@ -665,6 +667,8 @@ export class GameResultDialogComponent {
     if (this.gameModel.playerOneScore === 1) {
       this.gameModel.playerOneScore = 0;
     }
+
+    this.sureButton = false;
   }
 
   playerTwoNotWin() {

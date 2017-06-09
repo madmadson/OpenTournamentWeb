@@ -61,6 +61,7 @@
       ></tournament-round-overview>
       <tournament-team-round-overview *ngIf="actualTournament.teamSize > 0"
                                       [round]="round"
+                                      [actualTournamentTeams$]="actualTournamentTeams$"
                                       [actualTournament]="actualTournament"
                                       [authenticationStoreState$]="authenticationStoreState$"
                                       [actualTournamentArmyLists$]="actualTournamentArmyList$"

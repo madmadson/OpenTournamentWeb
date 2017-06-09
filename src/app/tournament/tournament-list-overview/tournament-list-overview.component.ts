@@ -11,7 +11,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'tournament-list-overview',
   templateUrl: 'tournament-list-overview.component.html',
-  styleUrls: ['tournament-list-overview.component.css']
+  styleUrls: ['tournament-list-overview.component.scss']
 })
 export class TournamentListOverviewComponent {
 

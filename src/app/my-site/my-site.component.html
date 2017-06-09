@@ -18,18 +18,20 @@
 
 <mdl-tabs mdl-ripple *ngIf="userPlayerData">
   <mdl-tab-panel mdl-tab-panel-title="{{getMyTournamentsTitle()}}">
-    <md-card class="tournament-list-card">
-      <h4 class="heading big-heading" *ngIf="(groupedTournaments$ | async).length == 0">It's time to organize a Tournament!</h4>
-      <h4 class="heading" *ngIf="(groupedTournaments$ | async).length > 0">My organized Tournaments ({{(allTournaments$| async) ?.length}})</h4>
-      <button md-fab class="create-action" (click)="openCreateTournamentDialog()">
-        <md-icon>add</md-icon>
-      </button>
-      <mdl-list *ngFor="let groupedTournaments of groupedTournaments$ | async">
-        <h4 md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h4>
-        <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
-        <md-divider></md-divider>
-      </mdl-list>
-    </md-card>
+    <div class="flex-container">
+      <md-card class="tournament-list-card">
+        <h4 class="heading big-heading" *ngIf="(groupedTournaments$ | async).length == 0">It's time to organize a Tournament!</h4>
+        <h4 class="heading" *ngIf="(groupedTournaments$ | async).length > 0">My organized Tournaments ({{(allTournaments$| async) ?.length}})</h4>
+        <button md-fab class="create-action" (click)="openCreateTournamentDialog()">
+          <md-icon>add</md-icon>
+        </button>
+        <mdl-list *ngFor="let groupedTournaments of groupedTournaments$ | async">
+          <h4 md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h4>
+          <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
+          <md-divider></md-divider>
+        </mdl-list>
+      </md-card>
+    </div>
   </mdl-tab-panel>
   <mdl-tab-panel mdl-tab-panel-title="{{getMyRegistrationTitle()}}">
     <h4 class="heading" *ngIf="(myRegistrations$ | async).length == 0">No Registrations found</h4>

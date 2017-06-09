@@ -74,8 +74,6 @@ export class TournamentTeamRankingListComponent implements OnInit {
       }
     });
 
-    console.log('show team teamArmyLists' + JSON.stringify(this.armyLists));
-
     this.dialog.open(ShowArmyListDialogComponent, {
       data: {
         tournamentRank: team,

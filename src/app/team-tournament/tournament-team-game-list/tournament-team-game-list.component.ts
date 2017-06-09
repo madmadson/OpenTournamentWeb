@@ -19,6 +19,7 @@ import {getAllScenarios} from '../../../../shared/model/szenarios';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {ArmyList} from '../../../../shared/model/armyList';
+import {TournamentTeam} from '../../../../shared/model/tournament-team';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
   @Input() teamGamesForRound: TournamentGame[];
   @Input() playerGamesForRound$: Observable<TournamentGame[]>;
   @Input() rankingsForRound$: Observable<TournamentRanking[]>;
+  @Input() actualTournamentTeams$: Observable<TournamentTeam[]>;
 
   @Output() onTeamMatchGameResult = new EventEmitter<GameResult>();
   @Output() onSwapPlayer = new EventEmitter<SwapGames>();
@@ -59,6 +61,8 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 
   selectedScenario: string;
 
+  loggedInUserTeam: string;
+
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar,
               private renderer: Renderer2,
@@ -70,11 +74,24 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 
   ngOnInit() {
 
+    const that = this;
+
     this.armyLists$ = this.actualTournamentArmyLists$;
 
     this.authenticationStoreState$.subscribe(auth => {
       this.userPlayerData = auth.userPlayerData;
       this.currentUserId = auth.currentUserId;
+
+      this.actualTournamentTeams$.subscribe(teams => {
+        if (this.userPlayerData ) {
+          _.each(teams, function (team: TournamentTeam) {
+            if (team.registeredPlayerIds.indexOf(that.userPlayerData.id) !== -1) {
+              that.loggedInUserTeam = team.teamName;
+            }
+          });
+        }
+      });
+
     });
 
     this.rankingsForRound$.subscribe(rankings => {
@@ -520,18 +537,10 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 
   }
 
-  myGameOrAdmin(selectedGame: TournamentGame) {
-    if (this.userPlayerData) {
-      return (selectedGame.playerOnePlayerId === this.userPlayerData.id && !selectedGame.finished) ||
-        (selectedGame.playerTwoPlayerId === this.userPlayerData.id && !selectedGame.finished) ||
-        this.currentUserId === this.actualTournament.creatorUid;
-    }
-  }
-
-  isItMyGame(droppedGame: TournamentGame) {
-    if (this.userPlayerData) {
-      return (droppedGame.playerOnePlayerId === this.userPlayerData.id) ||
-        (droppedGame.playerTwoPlayerId === this.userPlayerData.id);
+  isItMyTeamGame(game: TournamentGame) {
+    if (this.userPlayerData && this.loggedInUserTeam) {
+      return (game.playerOnePlayerName === this.loggedInUserTeam) ||
+        (game.playerTwoPlayerName === this.loggedInUserTeam);
     }
   }
 }

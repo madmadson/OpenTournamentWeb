@@ -23,6 +23,7 @@ import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 import {NewRoundDialogComponent} from '../../dialogs/round-overview/new-round-dialog';
 import {FinishTournamentDialogComponent} from 'app/dialogs/finish-tournament-dialog';
+import {TournamentTeam} from "../../../../shared/model/tournament-team";
 
 @Component({
   selector: 'tournament-team-round-overview',
@@ -38,6 +39,8 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
 
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
+
+  @Input() actualTournamentTeams$: Observable<TournamentTeam[]>;
 
   @Input() playerRankingsForRound$: Observable<TournamentRanking[]>;
   @Input() teamRankingsForRound$: Observable<TournamentRanking[]>;
