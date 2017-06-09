@@ -38,6 +38,8 @@ export class TournamentTeamListComponent implements OnInit {
   truncateMax: number;
   smallScreen: boolean;
 
+  teamDeleteRequested: string;
+
   armyLists: ArmyList[];
 
   constructor(public dialog: MdDialog,
@@ -112,6 +114,8 @@ export class TournamentTeamListComponent implements OnInit {
 
     event.stopPropagation();
 
+    this.teamDeleteRequested = '';
+
     const allPlayersForTeam = _.filter(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
       return player.teamName === team.teamName;
     });
@@ -124,12 +128,32 @@ export class TournamentTeamListComponent implements OnInit {
     });
   }
 
+  teamDeleteRequestedClicked(event: any, team: TournamentTeam ) {
+    event.stopPropagation();
+
+    this.teamDeleteRequested = team.teamName;
+  }
+
+  teamDeleteDeclinedClicked(event: any) {
+    event.stopPropagation();
+
+    this.teamDeleteRequested = '';
+  }
+
   checkTournamentFull(team: TournamentTeam) {
     const allPlayersForTeam = _.filter(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
       return player.teamName === team.teamName;
     });
 
-    return allPlayersForTeam.length >= this.actualTournament.teamSize;
+    return allPlayersForTeam.length === this.actualTournament.teamSize;
+  }
+
+  checkTournamentOver(team: TournamentTeam) {
+    const allPlayersForTeam = _.filter(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      return player.teamName === team.teamName;
+    });
+
+    return allPlayersForTeam.length > this.actualTournament.teamSize;
   }
 
   showArmyList(event: any, team: TournamentTeam) {

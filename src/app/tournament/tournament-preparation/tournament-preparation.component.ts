@@ -788,6 +788,24 @@ export class StartTournamentDialogComponent {
     return allTeamsFull;
   }
 
+  checkNoTeamIsOver9000(): boolean {
+
+    const that = this;
+
+    let teamIsOver9000 = false;
+
+    _.each(this.allActualTournamentTeams, function (team: TournamentTeam) {
+
+      const playersFromTeam = _.filter(that.allActualTournamentPlayers, function (player: TournamentPlayer) {
+        return team.teamName === player.teamName;
+      });
+      if (that.actualTournament.teamSize < playersFromTeam.length) {
+        teamIsOver9000 = true;
+      }
+    });
+    return teamIsOver9000;
+  }
+
   startTournament() {
 
     this.onStartTournament.emit({

@@ -13,7 +13,7 @@
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>
   <mdl-list-item-secondary-content *ngIf="checkTournamentFull(team)" >
-    <div class="align-fix negative team-capacity">Team Full</div>
+    <div class="align-fix positive team-capacity">Team Full</div>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="!checkTournamentFull(team)">
     <button *ngIf="!myRegistration && userPlayerData"

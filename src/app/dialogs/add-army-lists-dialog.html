@@ -1,25 +1,26 @@
 <div *ngIf="registration" class="heading">ArmyLists for {{registration.playerName}}</div>
 <div *ngIf="tournamentPlayer" class="heading">ArmyLists for {{tournamentPlayer.playerName}}</div>
-<md-card>
-  <p *ngIf="armyLists.length > 6" style="color: red">Maximum reached for ArmyLists</p>
-  <md-tab-group [selectedIndex]="selectedTab">
-    <md-tab *ngIf="armyLists.length <= 6" label="AddArmyList">
-      <form #armyListForm="ngForm">
-        <md-input-container
-          class="full-width">
-          <input
-            mdInput
-            type="text"
-            placeholder="Army List Name"
-            maxlength="30"
-            required
-            #armyListName
-            [(ngModel)]="armyListModel.name" name="name">
-          <md-hint align="end">{{armyListName.value.length}} / 30</md-hint>
-        </md-input-container>
+<md-dialog-content>
+  <md-card>
+    <p *ngIf="armyLists.length > 6" style="color: red">Maximum reached for ArmyLists</p>
+    <md-tab-group [selectedIndex]="selectedTab">
+      <md-tab *ngIf="armyLists.length <= 6" label="AddArmyList">
+        <form #armyListForm="ngForm">
+          <md-input-container
+            class="full-width">
+            <input
+              mdInput
+              type="text"
+              placeholder="Army List Name"
+              maxlength="30"
+              required
+              #armyListName
+              [(ngModel)]="armyListModel.name" name="name">
+            <md-hint align="end">{{armyListName.value.length}} / 30</md-hint>
+          </md-input-container>
 
-        <md-input-container
-          class="full-width max-height">
+          <md-input-container
+            class="full-width max-height">
         <textarea
           mdInput
           placeholder="Army List - (paste ArmyList here (Warroom/Troopcreator or something)"
@@ -29,39 +30,40 @@
           #armyList
           [(ngModel)]="armyListModel.list"
           name="list"></textarea>
-          <md-hint align="end">{{armyList.value.length}} / 1000</md-hint>
+            <md-hint align="end">{{armyList.value.length}} / 1000</md-hint>
+          </md-input-container>
+          <button class="save-button"
+                  type="button"
+                  color="accent"
+                  md-raised-button
+                  (click)="addArmyList()"
+                  [disabled]="armyListForm.invalid">
+            <md-icon>add</md-icon>
+            Save ArmyList
+          </button>
+        </form>
+      </md-tab>
+      <md-tab *ngFor="let armyList of armyLists" label="{{armyList.name}}">
+        <md-input-container
+          class="full-width">
+      <textarea
+        mdInput
+        class="fix-height"
+        disabled
+      >{{armyList.list}}</textarea>
         </md-input-container>
         <button class="save-button"
                 type="button"
                 color="accent"
                 md-raised-button
-                (click)="addArmyList()"
-                [disabled]="armyListForm.invalid">
-          <md-icon>add</md-icon>
-          Save ArmyList
+                (click)="deleteArmyList(armyList)">
+          <md-icon>remove</md-icon>
+          Delete ArmyList
         </button>
-      </form>
-    </md-tab>
-    <md-tab *ngFor="let armyList of armyLists" label="{{armyList.name}}">
-      <md-input-container
-        class="full-width">
-      <textarea
-        mdInput
-        class="fix-height"
-        disabled
-        >{{armyList.list}}</textarea>
-      </md-input-container>
-      <button class="save-button"
-              type="button"
-              color="accent"
-              md-raised-button
-              (click)="deleteArmyList(armyList)">
-        <md-icon>remove</md-icon>
-        Delete ArmyList
-      </button>
-    </md-tab>
-  </md-tab-group>
-</md-card>
+      </md-tab>
+    </md-tab-group>
+  </md-card>
+</md-dialog-content>
 <div md-dialog-actions>
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
 </div>

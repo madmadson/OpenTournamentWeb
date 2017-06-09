@@ -13,7 +13,7 @@ import {Registration} from '../../../../shared/model/registration';
 @Component({
   selector: 'tournament-registration-form',
   templateUrl: './tournament-registration-form.component.html',
-  styleUrls: ['./tournament-registration-form.component.css']
+  styleUrls: ['./tournament-registration-form.component.scss']
 })
 export class TournamentRegistrationFormComponent implements OnInit {
 

@@ -1,102 +1,102 @@
 <h3 class="heading">New Tournament Player</h3>
+<md-dialog-content>
+  <form #tournamentPlayerForm="ngForm">
+    <md-input-container
+      class="full-width">
+      <input
+        mdInput
+        type="text"
+        placeholder="Full PlayerName"
+        maxlength="50"
+        required
+        #fullPlayerName
+        (blur)="checkName()"
+        [(ngModel)]="tournamentPlayerModel.playerName" name="playerName">
+      <md-hint *ngIf="playerNameAlreadyInUse" align="start" class="negative">
+        There is already a Player with that name
+      </md-hint>
+      <md-hint align="end">{{fullPlayerName.value.length}} / 50</md-hint>
+    </md-input-container>
+    <md-input-container
+      class="full-width">
+      <input
+        mdInput
+        [disabled]="preselectTeam"
+        type="text"
+        placeholder="TeamName"
+        maxlength="50"
+        [(ngModel)]="tournamentPlayerModel.teamName"
+        name="teamName"
+        #teamName>
+      <md-hint align="end">{{teamName.value.length}} / 50</md-hint>
+    </md-input-container>
+    <md-input-container  *ngIf="tournament?.teamSize === 0"
+      class="full-width">
+      <input
+        mdInput
+        type="text"
+        placeholder="Meta"
+        maxlength="50"
+        [(ngModel)]="tournamentPlayerModel.meta"
+        name="meta"
+        #meta>
+      <md-hint align="end">{{meta.value.length}} / 50</md-hint>
+    </md-input-container>
+    <md-input-container *ngIf="tournament?.teamSize === 0"
+                        class="full-width">
+      <input
+        mdInput
+        type="text"
+        placeholder="Origin"
+        maxlength="50"
+        [(ngModel)]="tournamentPlayerModel.origin"
+        name="origin"
+        #origin>
+      <md-hint align="end">{{origin.value.length}} / 50</md-hint>
+    </md-input-container>
+    <md-select *ngIf="tournament?.teamSize === 0"
+      class="full-width-select-box"
+      placeholder="Country"
+      #country
+      name="country"
+      [(ngModel)]="tournamentPlayerModel.country">
+      <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>
+    </md-select>
+    <md-select
+      class="full-width-select-box"
+      placeholder="Faction"
+      #faction
+      name="faction"
+      [(ngModel)]="tournamentPlayerModel.faction">
+      <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
+    </md-select>
 
-<form #tournamentPlayerForm="ngForm">
-  <md-input-container
-    class="full-width">
-    <input
-      mdInput
-      type="text"
-      placeholder="Full PlayerName"
-      maxlength="50"
-      required
-      #fullPlayerName
-      (blur)="checkName()"
-      [(ngModel)]="tournamentPlayerModel.playerName" name="playerName">
-    <md-hint *ngIf="playerNameAlreadyInUse" align="start" class="negative">
-      There is already a Player with that name</md-hint>
-    <md-hint align="end">{{fullPlayerName.value.length}} / 50</md-hint>
-  </md-input-container>
-  <md-input-container
-    class="full-width">
-    <input
-      mdInput
-      [disabled]="preselectTeam"
-      type="text"
-      placeholder="TeamName"
-      maxlength="50"
-      [(ngModel)]="tournamentPlayerModel.teamName"
-      name="teamName"
-      #teamName>
-    <md-hint align="end">{{teamName.value.length}} / 50</md-hint>
-  </md-input-container>
-  <md-input-container
-    class="full-width">
-    <input
-      mdInput
-      type="text"
-      placeholder="Meta"
-      maxlength="50"
-      [(ngModel)]="tournamentPlayerModel.meta"
-      name="meta"
-      #meta>
-    <md-hint align="end">{{meta.value.length}} / 50</md-hint>
-  </md-input-container>
-  <md-input-container
-    class="full-width">
-    <input
-      mdInput
-      type="text"
-      placeholder="Origin"
-      maxlength="50"
-      [(ngModel)]="tournamentPlayerModel.origin"
-      name="origin"
-      #origin>
-    <md-hint align="end">{{origin.value.length}} / 50</md-hint>
-  </md-input-container>
-  <md-select
-    class="full-width-select-box"
-    placeholder="Country"
-    #country
-    name="country"
-    [(ngModel)]="tournamentPlayerModel.country">
-    <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>
-  </md-select>
-  <md-select
-    class="full-width-select-box"
-    placeholder="Faction"
-    #faction
-    name="faction"
-    [(ngModel)]="tournamentPlayerModel.faction">
-    <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
-  </md-select>
-
-  <button *ngIf="playerNameAlreadyInUse"
-          type="button"
-          class="negative-background"
-          md-raised-button
-          [disabled]="true">
-    <md-icon>warning</md-icon>
-    PlayerName already in use
-  </button>
-  <button *ngIf="dummyNotAllowed"
-          type="button"
-          class="negative-background"
-          md-raised-button
-          [disabled]="true">
-    <md-icon>warning</md-icon>
-    Dummy ist not a valid name
-  </button>
-  <button *ngIf="!playerNameAlreadyInUse && !dummyNotAllowed"
-          type="button"
-          color="accent"
-          md-raised-button
-          (click)="saveTournamentPlayer()"
-          [disabled]="tournamentPlayerForm.invalid">
-    <md-icon>add</md-icon>
-    Save Tournament Player
-  </button>
-
-</form>
+    <button *ngIf="playerNameAlreadyInUse"
+            type="button"
+            class="negative-background"
+            md-raised-button
+            [disabled]="true">
+      <md-icon>warning</md-icon>
+      PlayerName already in use
+    </button>
+    <button *ngIf="dummyNotAllowed"
+            type="button"
+            class="negative-background"
+            md-raised-button
+            [disabled]="true">
+      <md-icon>warning</md-icon>
+      Dummy ist not a valid name
+    </button>
+    <button *ngIf="!playerNameAlreadyInUse && !dummyNotAllowed"
+            class="full-width positive-background"
+            md-raised-button
+            (click)="saveTournamentPlayer()"
+            [disabled]="tournamentPlayerForm.invalid">
+      <md-icon>add</md-icon>
+      Save Tournament Player
+    </button>
+  </form>
+</md-dialog-content>
 <div md-dialog-actions>
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
 </div>

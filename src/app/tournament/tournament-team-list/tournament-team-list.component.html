@@ -7,16 +7,18 @@
   <mdl-list-item-primary-content>
     <mdl-icon mdl-list-item-avatar mdl-badge="{{getPlayersForTeam(team.teamName)}}" mdl-badge-overlap>group</mdl-icon>
     <span class="player-name">{{team.teamName  | truncate:truncateMax}}</span>
-
     <mdl-list-item-text-body>
       <div>{{team.country}}</div>
       <div>{{team.meta}}</div>
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>
-  <mdl-list-item-secondary-content *ngIf="checkTournamentFull(team)" >
-    <div class="align-fix negative team-capacity">Team Full</div>
+  <mdl-list-item-secondary-content *ngIf="checkTournamentFull(team) && teamDeleteRequested != team.teamName">
+    <div class="align-fix positive team-capacity">Team Full</div>
   </mdl-list-item-secondary-content>
-  <mdl-list-item-secondary-content *ngIf="!checkTournamentFull(team)">
+  <mdl-list-item-secondary-content *ngIf="checkTournamentOver(team) && teamDeleteRequested != team.teamName">
+  <div class="align-fix negative team-capacity">TeamSize Over9000!</div>
+  </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="!checkTournamentFull(team) && teamDeleteRequested != team.teamName">
     <button (click)="addPlayerToTeam($event, team)"
             type="button"
             class="positive-background"
@@ -26,11 +28,29 @@
     </button>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content
-    *ngIf="isAdmin()">
+    *ngIf="isAdmin() && teamDeleteRequested != team.teamName">
     <md-icon class="list-action" (click)="showArmyList($event, team)">list</md-icon>
   </mdl-list-item-secondary-content>
-  <mdl-list-item-secondary-content *ngIf="isAdmin()">
-    <md-icon md-tooltip="Delete Team" class="negative  list-action" (click)="eraseTeam($event, team)">delete</md-icon>
+  <mdl-list-item-secondary-content *ngIf="isAdmin() && teamDeleteRequested != team.teamName">
+    <md-icon md-tooltip="Delete Team" class="negative  list-action" (click)="teamDeleteRequestedClicked($event, team)">delete</md-icon>
+  </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="teamDeleteRequested == team.teamName">
+    <button (click)="eraseTeam($event, team)"
+            class="negative-background"
+            type="button"
+            md-raised-button>
+      <md-icon >delete</md-icon>
+      Really Delete?
+    </button>
+  </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="teamDeleteRequested == team.teamName">
+    <button (click)="teamDeleteDeclinedClicked($event)"
+            class="positive-background"
+            type="button"
+            md-raised-button>
+      <md-icon >not_interested</md-icon>
+      No
+    </button>
   </mdl-list-item-secondary-content>
 </mdl-list-item>
 

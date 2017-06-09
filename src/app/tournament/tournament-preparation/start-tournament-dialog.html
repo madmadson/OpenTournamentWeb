@@ -77,7 +77,8 @@
   </ng-container>
   <ng-container *ngIf="actualTournament.teamSize > 0">
     <h3 class="heading negative" *ngIf="!checkAllTeamsAreFull()">All Teams have to be fully loaded</h3>
-    <ng-container *ngIf="checkAllTeamsAreFull()">
+    <h3 class="heading negative" *ngIf="checkNoTeamIsOver9000()">TeamOver9000 detected!</h3>
+    <ng-container *ngIf="checkAllTeamsAreFull() && !checkNoTeamIsOver9000()">
       <ng-container *ngIf="allActualTournamentTeams.length % 2; else startTeam">
         <h3 class="heading negative">Uneven Tournament Teams</h3>
         <button *ngIf="!dummyTeamAlreadyIn()" (click)="addDummyTeam()"

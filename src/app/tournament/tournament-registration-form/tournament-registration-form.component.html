@@ -12,7 +12,7 @@
         class="full-width">
         <input mdInput type="text" placeholder="Player Name" formControlName="playerName" required>
       </md-input-container>
-      <md-input-container
+      <md-input-container *ngIf="actualTournament?.teamSize == 0"
         class="full-width">
         <input mdInput type="text" placeholder="Meta" formControlName="meta">
       </md-input-container>

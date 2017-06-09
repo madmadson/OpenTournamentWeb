@@ -50,7 +50,7 @@ import {RegistrationPush} from '../../../../shared/dto/registration-push';
 @Component({
   selector: 'tournament-overview',
   templateUrl: './tournament-overview.component.html',
-  styleUrls: ['./tournament-overview.component.css']
+  styleUrls: ['./tournament-overview.component.scss']
 })
 export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
