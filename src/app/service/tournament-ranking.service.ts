@@ -487,17 +487,9 @@ export class TournamentRankingService implements OnDestroy {
         return (ranking.tournamentRound === (i) && ranking.playerName === gameResult.gameAfter.playerTwoTeamName);
       })[0];
 
-      const actualRoundTeamMatchTeamOne: TournamentGame = _.filter(this.allTeamGames, function (game: TournamentGame) {
-        return (game.tournamentRound === (i) &&
-                game.playerOnePlayerName === gameResult.gameAfter.playerOneTeamName ||
-                game.playerTwoPlayerName === gameResult.gameAfter.playerOneTeamName);
-      })[0];
 
-      const actualRoundTeamMatchTeamTwo: TournamentGame = _.filter(this.allTeamGames, function (game: TournamentGame) {
-        return (game.tournamentRound === (i) &&
-                game.playerOnePlayerName === gameResult.gameAfter.playerTwoTeamName ||
-                game.playerTwoPlayerName === gameResult.gameAfter.playerTwoTeamName);
-      })[0];
+
+
 
 
       let newScoreTeamOne = 0;
@@ -546,32 +538,39 @@ export class TournamentRankingService implements OnDestroy {
       }
 
       // there is a round after
-      if (i > gameResult.gameAfter.tournamentRound && actualRoundTeamMatchTeamOne) {
+      if (i > gameResult.gameAfter.tournamentRound) {
 
-        if (actualRoundTeamMatchTeamOne.finished) {
-          newScoreTeamOne = lastRoundRankingTeamOne.score + (teamOneScore > teamTwoScore ? 1 : 0);
+        const actualRoundTeamMatchTeamOne: TournamentGame = _.filter(this.allTeamGames, function (game: TournamentGame) {
+          return (game.tournamentRound === (i) &&
+          (game.playerOnePlayerName === gameResult.gameAfter.playerOneTeamName ||
+          game.playerTwoPlayerName === gameResult.gameAfter.playerOneTeamName));
+        })[0];
+
+        if (actualRoundTeamMatchTeamOne) {
+
+          if (gameResult.gameAfter.playerOnePlayerName === actualRoundTeamMatchTeamOne.playerOnePlayerName) {
+            newScoreTeamOne = lastRoundRankingTeamOne.score + actualRoundTeamMatchTeamOne.playerOneScore;
+            newSecondScoreTeamOne = lastRoundRankingTeamOne.secondScore + actualRoundTeamMatchTeamOne.playerOneIntermediateResult;
+            newCPTeamOne = lastRoundRankingTeamOne.controlPoints + actualRoundTeamMatchTeamOne.playerOneControlPoints;
+            newVPTeamOne = lastRoundRankingTeamOne.victoryPoints + actualRoundTeamMatchTeamOne.playerOneVictoryPoints;
+          } else {
+            newScoreTeamOne = lastRoundRankingTeamOne.score + actualRoundTeamMatchTeamOne.playerTwoScore;
+            newSecondScoreTeamOne = lastRoundRankingTeamOne.secondScore + actualRoundTeamMatchTeamOne.playerTwoIntermediateResult;
+            newCPTeamOne = lastRoundRankingTeamOne.controlPoints + actualRoundTeamMatchTeamOne.playerTwoControlPoints;
+            newVPTeamOne = lastRoundRankingTeamOne.victoryPoints + actualRoundTeamMatchTeamOne.playerTwoVictoryPoints;
+          }
+
+          const playerOneRankingRef = this.afoDatabase
+            .object('tournament-team-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingTeamOne.id);
+
+          playerOneRankingRef.update(
+            {
+              score: newScoreTeamOne,
+              secondScore: newSecondScoreTeamOne,
+              controlPoints: newCPTeamOne,
+              victoryPoints: newVPTeamOne,
+            });
         }
-
-        if (gameResult.gameAfter.playerOnePlayerName === actualRoundTeamMatchTeamOne.playerOnePlayerName) {
-          newSecondScoreTeamOne = lastRoundRankingTeamOne.secondScore + actualRoundTeamMatchTeamOne.playerOneIntermediateResult;
-          newCPTeamOne = lastRoundRankingTeamOne.controlPoints + actualRoundTeamMatchTeamOne.playerOneControlPoints;
-          newVPTeamOne = lastRoundRankingTeamOne.victoryPoints + actualRoundTeamMatchTeamOne.playerOneVictoryPoints;
-        } else {
-          newSecondScoreTeamOne = lastRoundRankingTeamOne.secondScore + actualRoundTeamMatchTeamOne.playerTwoIntermediateResult;
-          newCPTeamOne = lastRoundRankingTeamOne.controlPoints + actualRoundTeamMatchTeamOne.playerTwoControlPoints;
-          newVPTeamOne = lastRoundRankingTeamOne.victoryPoints + actualRoundTeamMatchTeamOne.playerTwoVictoryPoints;
-        }
-
-        const playerOneRankingRef = this.afoDatabase
-          .object('tournament-team-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingTeamOne.id);
-
-        playerOneRankingRef.update(
-          {
-            score: newScoreTeamOne,
-            secondScore: newSecondScoreTeamOne,
-            controlPoints: newCPTeamOne,
-            victoryPoints: newVPTeamOne,
-          });
       }
 
 
@@ -623,30 +622,38 @@ export class TournamentRankingService implements OnDestroy {
       }
 
 
-      if (i > gameResult.gameAfter.tournamentRound && actualRoundTeamMatchTeamTwo) {
+      if (i > gameResult.gameAfter.tournamentRound) {
 
-        if (actualRoundTeamMatchTeamTwo.finished) {
-          newScoreTeamTwo = lastRoundRankingTeamTwo.score + (teamOneScore < teamTwoScore ? 1 : 0);
-        }
-        if (gameResult.gameAfter.playerTwoPlayerName === actualRoundTeamMatchTeamTwo.playerOnePlayerName) {
-          newSecondScoreTeamTwo = lastRoundRankingTeamTwo.secondScore + actualRoundTeamMatchTeamOne.playerOneIntermediateResult;
-          newCPTeamTwo = lastRoundRankingTeamTwo.controlPoints + actualRoundTeamMatchTeamOne.playerOneControlPoints;
-          newVPTeamTwo = lastRoundRankingTeamTwo.victoryPoints + actualRoundTeamMatchTeamOne.playerOneVictoryPoints;
-        } else {
-          newSecondScoreTeamTwo = lastRoundRankingTeamTwo.secondScore + actualRoundTeamMatchTeamOne.playerTwoIntermediateResult;
-          newCPTeamTwo = lastRoundRankingTeamTwo.controlPoints + actualRoundTeamMatchTeamOne.playerTwoControlPoints;
-          newVPTeamTwo = lastRoundRankingTeamTwo.victoryPoints + actualRoundTeamMatchTeamOne.playerTwoVictoryPoints;
-        }
+        const actualRoundTeamMatchTeamTwo: TournamentGame = _.filter(this.allTeamGames, function (game: TournamentGame) {
+          return (game.tournamentRound === (i) &&
+          (game.playerOnePlayerName === gameResult.gameAfter.playerTwoTeamName ||
+          game.playerTwoPlayerName === gameResult.gameAfter.playerTwoTeamName));
+        })[0];
 
-        const teamTwoRankingRef = this.afoDatabase
-          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingTeamTwo.id);
-        teamTwoRankingRef.update(
-          {
-            score: newScoreTeamTwo,
-            secondScore: newSecondScoreTeamTwo,
-            controlPoints: newCPTeamTwo,
-            victoryPoints: newVPTeamTwo,
-          });
+        if (actualRoundTeamMatchTeamTwo) {
+
+          if (gameResult.gameAfter.playerTwoPlayerName === actualRoundTeamMatchTeamTwo.playerOnePlayerName) {
+            newScoreTeamTwo = lastRoundRankingTeamTwo.score + actualRoundTeamMatchTeamTwo.playerOneScore;
+            newSecondScoreTeamTwo = lastRoundRankingTeamTwo.secondScore + actualRoundTeamMatchTeamTwo.playerOneIntermediateResult;
+            newCPTeamTwo = lastRoundRankingTeamTwo.controlPoints + actualRoundTeamMatchTeamTwo.playerOneControlPoints;
+            newVPTeamTwo = lastRoundRankingTeamTwo.victoryPoints + actualRoundTeamMatchTeamTwo.playerOneVictoryPoints;
+          } else {
+            newScoreTeamTwo = lastRoundRankingTeamTwo.score + actualRoundTeamMatchTeamTwo.playerTwoScore;
+            newSecondScoreTeamTwo = lastRoundRankingTeamTwo.secondScore + actualRoundTeamMatchTeamTwo.playerTwoIntermediateResult;
+            newCPTeamTwo = lastRoundRankingTeamTwo.controlPoints + actualRoundTeamMatchTeamTwo.playerTwoControlPoints;
+            newVPTeamTwo = lastRoundRankingTeamTwo.victoryPoints + actualRoundTeamMatchTeamTwo.playerTwoVictoryPoints;
+          }
+
+          const teamTwoRankingRef = this.afoDatabase
+            .object('tournament-team-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingTeamTwo.id);
+          teamTwoRankingRef.update(
+            {
+              score: newScoreTeamTwo,
+              secondScore: newSecondScoreTeamTwo,
+              controlPoints: newCPTeamTwo,
+              victoryPoints: newVPTeamTwo,
+            });
+        }
       }
     }
   }
