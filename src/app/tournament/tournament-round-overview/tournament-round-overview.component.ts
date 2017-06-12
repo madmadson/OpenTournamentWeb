@@ -127,7 +127,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       data: {
         tournament: this.actualTournament,
         rankings$: this.rankingsForRound$,
-        round: this.round
+        round: this.round,
+        teamMatch: false
       }
     });
   }
@@ -137,7 +138,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       data: {
         tournament: this.actualTournament,
         games$: this.gamesForRound$,
-        round: this.round
+        round: this.round,
+        teamMatch: false
       }
     });
   }
@@ -216,7 +218,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   openPairAgainDialog() {
     const dialogRef = this.dialog.open(PairAgainDialogComponent, {
       data: {
-        round: this.round
+        round: this.round,
+        teamMatch: false
       },
       width: '600px',
     });

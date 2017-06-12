@@ -487,11 +487,6 @@ export class TournamentRankingService implements OnDestroy {
         return (ranking.tournamentRound === (i) && ranking.playerName === gameResult.gameAfter.playerTwoTeamName);
       })[0];
 
-
-
-
-
-
       let newScoreTeamOne = 0;
       let newSecondScoreTeamOne = 0;
       let newCPTeamOne = 0;
@@ -548,7 +543,7 @@ export class TournamentRankingService implements OnDestroy {
 
         if (actualRoundTeamMatchTeamOne) {
 
-          if (gameResult.gameAfter.playerOnePlayerName === actualRoundTeamMatchTeamOne.playerOnePlayerName) {
+          if (gameResult.gameAfter.playerOneTeamName === actualRoundTeamMatchTeamOne.playerOnePlayerName) {
             newScoreTeamOne = lastRoundRankingTeamOne.score + actualRoundTeamMatchTeamOne.playerOneScore;
             newSecondScoreTeamOne = lastRoundRankingTeamOne.secondScore + actualRoundTeamMatchTeamOne.playerOneIntermediateResult;
             newCPTeamOne = lastRoundRankingTeamOne.controlPoints + actualRoundTeamMatchTeamOne.playerOneControlPoints;
@@ -632,7 +627,7 @@ export class TournamentRankingService implements OnDestroy {
 
         if (actualRoundTeamMatchTeamTwo) {
 
-          if (gameResult.gameAfter.playerTwoPlayerName === actualRoundTeamMatchTeamTwo.playerOnePlayerName) {
+          if (gameResult.gameAfter.playerTwoTeamName === actualRoundTeamMatchTeamTwo.playerOnePlayerName) {
             newScoreTeamTwo = lastRoundRankingTeamTwo.score + actualRoundTeamMatchTeamTwo.playerOneScore;
             newSecondScoreTeamTwo = lastRoundRankingTeamTwo.secondScore + actualRoundTeamMatchTeamTwo.playerOneIntermediateResult;
             newCPTeamTwo = lastRoundRankingTeamTwo.controlPoints + actualRoundTeamMatchTeamTwo.playerOneControlPoints;

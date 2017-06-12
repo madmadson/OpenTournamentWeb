@@ -9,7 +9,8 @@ import * as _ from 'lodash';
 
 @Component({
   selector: 'print-rankings-dialog',
-  templateUrl: './print-rankings-dialog.html'
+  templateUrl: './print-rankings-dialog.html',
+  styleUrls: ['./print-rankings-dialog.scss']
 })
 export class PrintRankingsDialogComponent {
 
@@ -19,6 +20,8 @@ export class PrintRankingsDialogComponent {
   round: number;
   window: any;
 
+  teamMatch: boolean;
+
   @ViewChild('printarea') printarea: ElementRef;
 
   constructor(public dialogRef: MdDialogRef<PrintRankingsDialogComponent>,
@@ -26,11 +29,18 @@ export class PrintRankingsDialogComponent {
               private winRef: WindowRefService) {
 
     this.tournament = data.tournament;
-    this.round =  data.round;
+    this.round = data.round;
+    this.teamMatch = data.teamMatch;
 
-    this.rankings$ = data.rankings$.map(rankings => {
-      return _.orderBy(rankings, ['score', 'sos', 'controlPoints', 'victoryPoints'], ['desc', 'desc', 'desc', 'desc']);
-    });
+    if (!data.teamMatch) {
+      this.rankings$ = data.rankings$.map(rankings => {
+        return _.orderBy(rankings, ['score', 'sos', 'controlPoints', 'victoryPoints'], ['desc', 'desc', 'desc', 'desc']);
+      });
+    } else {
+      this.rankings$ = data.rankings$.map(rankings => {
+        return _.orderBy(rankings, ['score', 'secondScore', 'controlPoints', 'victoryPoints'], ['desc', 'desc', 'desc', 'desc']);
+      });
+    }
 
     this.window = this.winRef.nativeWindow;
   }

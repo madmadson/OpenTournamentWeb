@@ -2,8 +2,7 @@
 
 <md-dialog-content>
 
-  <button type="button" class="full-width-button save-button" color="accent" md-raised-button (click)="printLists()">Print</button>
-  <div #printarea class="print-area">
+ <div #printarea class="print-area">
     <div *ngFor="let armyList of armyLists$ | async">
       <h3 *ngIf="armyList.teamName">{{armyList.teamName}} - {{armyList.playerName}} - {{armyList.name}}</h3>
       <h3 *ngIf="!armyList.teamName">{{armyList.playerName}} - {{armyList.name}}</h3>
@@ -12,5 +11,12 @@
   </div>
 </md-dialog-content>
 <div md-dialog-actions>
-  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  <div class="full-width">
+  <button type="button" class="big-button" color="primary" md-raised-button (click)="dialogRef.close()">
+    Close Dialog
+  </button>
+  <button type="button" class="right-align-button big-button" color="accent" md-raised-button (click)="printLists()">
+    Print
+  </button>
+  </div>
 </div>

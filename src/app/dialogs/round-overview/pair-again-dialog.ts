@@ -14,15 +14,20 @@ export class PairAgainDialogComponent {
   originRestriction: boolean;
   countryRestriction: boolean;
 
+  teamMatch: boolean;
+  round: number;
+
   constructor(public dialogRef: MdDialogRef<PairAgainDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
+    this.teamMatch = data.teamMatch;
+    this.round = data.round;
   }
 
   pairRoundAgain() {
 
     this.onPairAgain.emit({
       tournamentId: '',
-      round: this.data.round,
+      round: this.round,
       teamRestriction: this.teamRestriction,
       metaRestriction: this.metaRestriction,
       originRestriction: this.originRestriction,

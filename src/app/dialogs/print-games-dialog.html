@@ -2,17 +2,17 @@
 
 <md-dialog-content>
 
-  <button type="button" class="full-width-button save-button" color="accent" md-raised-button (click)="printLists()">
-    Print
-  </button>
+
   <div #printarea class="print-area">
     <h3>Scenario: {{scenario}}</h3>
     <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
       <thead>
       <tr>
         <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">Table</th>
-        <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">PlayerOne</th>
-        <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">PlayerTwo</th>
+        <th *ngIf="!teamMatch" style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">PlayerOne</th>
+        <th *ngIf="teamMatch" style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">TeamOne</th>
+        <th *ngIf="!teamMatch" style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">PlayerTwo</th>
+        <th *ngIf="teamMatch" style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">TeamTwo</th>
       </tr>
       </thead>
       <tbody *ngFor="let game of games$ | async; let i = index;">
@@ -35,5 +35,12 @@
   </div>
 </md-dialog-content>
 <div md-dialog-actions>
-  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  <div class="full-width">
+    <button type="button" class="big-button" color="primary" md-raised-button (click)="dialogRef.close()">
+      Close Dialog
+    </button>
+    <button type="button" class="right-align-button big-button" color="accent" md-raised-button (click)="printLists()">
+      Print
+    </button>
+  </div>
 </div>

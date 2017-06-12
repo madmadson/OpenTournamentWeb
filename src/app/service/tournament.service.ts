@@ -30,7 +30,6 @@ import {
   SubscribeTournamentTeamRegistrationsAction,
   SubscribeTournamentTeamsAction
 } from '../store/actions/tournament-teams-actions';
-import {TournamentTeamGamesConfiguration} from '../../../shared/dto/tournament-team-games-config';
 import {SubscribeTournamentTeamGamesAction} from '../store/actions/tournament-team-games-actions';
 import {SubscribeTournamentTeamRankingsAction} from '../store/actions/tournament-team-rankings-actions';
 import {ScenarioSelectedModel} from '../../../shared/dto/scenario-selected-model';
@@ -360,10 +359,11 @@ export class TournamentService implements OnDestroy {
 
     // first delete all pairings.
     this.rankingService.eraseRankingsForRound(config);
-    this.tournamentGameService.eraseGamesForRound(config);
+    this.rankingService.pushRankingForRound(config);
 
-    const newRankings: TournamentRanking[] = this.rankingService.pushTeamRankingForRound(config);
-    const successFullyPaired: boolean = this.tournamentGameService.createTeamGamesForRound(config, newRankings);
+    const newTeamRankings: TournamentRanking[] = this.rankingService.pushTeamRankingForRound(config);
+    const successFullyPaired: boolean = this.tournamentGameService.createTeamGamesForRound(config, newTeamRankings);
+
     if (successFullyPaired) {
       this.snackBar.open('Round ' + config.round + ' paired again successfully ', '', {
         duration: 5000

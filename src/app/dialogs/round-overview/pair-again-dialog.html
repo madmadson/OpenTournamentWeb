@@ -6,7 +6,7 @@
       <h4 mdl-card-title-text>Pairing Options</h4>
     </mdl-card-title>
     <mdl-card-supporting-text>
-      <div class="full-width">
+      <div class="full-width" *ngIf="!teamMatch">
         <mdl-switch [(ngModel)]="teamRestriction" mdl-ripple>
           <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
             info
@@ -22,7 +22,7 @@
           Meta Restriction
         </mdl-switch>
       </div>
-      <div class="full-width">
+      <div class="full-width" *ngIf="!teamMatch">
         <mdl-switch [(ngModel)]="originRestriction" mdl-ripple>
           <md-icon class="align-fix" mdTooltip="Player in same Origin don't play against each other">
             info

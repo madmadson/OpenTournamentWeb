@@ -2,9 +2,6 @@
 
 <md-dialog-content>
 
-  <button type="button" class="full-width-button save-button" color="accent" md-raised-button (click)="printLists()">
-    Print
-  </button>
   <div #printarea class="print-area">
 
     <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
@@ -13,7 +10,8 @@
         <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">#</th>
         <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">Player</th>
         <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">Score</th>
-        <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">SOS</th>
+        <th  *ngIf="!teamMatch" style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">SOS</th>
+        <th  *ngIf="teamMatch" style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">SGW</th>
         <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">CP</th>
         <th style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">VP</th>
       </tr>
@@ -29,7 +27,8 @@
           <div *ngIf="rank.elo != 0">{{rank.elo}}</div>
         </td>
         <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.score}}</td>
-        <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.sos}}</td>
+        <td *ngIf="!teamMatch" style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.sos}}</td>
+        <td *ngIf="teamMatch" style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.secondScore}}</td>
         <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.controlPoints}}</td>
         <td style="padding: 10px; text-align: left;border: 1px solid black;border-collapse: collapse;">{{rank.victoryPoints}}</td>
       </tr>
@@ -38,5 +37,12 @@
   </div>
 </md-dialog-content>
 <div md-dialog-actions>
-  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  <div class="full-width">
+    <button type="button" class="big-button" color="primary" md-raised-button (click)="dialogRef.close()">
+      Close Dialog
+    </button>
+    <button type="button" class="right-align-button big-button" color="accent" md-raised-button (click)="printLists()">
+      Print
+    </button>
+  </div>
 </div>

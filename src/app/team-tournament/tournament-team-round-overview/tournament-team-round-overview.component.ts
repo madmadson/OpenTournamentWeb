@@ -227,7 +227,8 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   openPairAgainDialog() {
     const dialogRef = this.dialog.open(PairAgainDialogComponent, {
       data: {
-        round: this.round
+        round: this.round,
+        teamMatch: true
       },
       width: '600px',
     });
@@ -251,7 +252,8 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
       data: {
         tournament: this.actualTournament,
         rankings$: this.teamRankingsForRound$,
-        round: this.round
+        round: this.round,
+        teamMatch: true
       }
     });
   }
@@ -261,7 +263,8 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
       data: {
         tournament: this.actualTournament,
         games$: this.teamGamesForRound$,
-        round: this.round
+        round: this.round,
+        teamMatch: true
       }
     });
   }

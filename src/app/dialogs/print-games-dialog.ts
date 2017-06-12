@@ -8,7 +8,8 @@ import {TournamentGame} from "../../../shared/model/tournament-game";
 
 @Component({
   selector: 'print-games-dialog',
-  templateUrl: './print-games-dialog.html'
+  templateUrl: './print-games-dialog.html',
+  styleUrls: ['./print-games-dialog.scss']
 })
 export class PrintGamesDialogComponent {
 
@@ -17,7 +18,7 @@ export class PrintGamesDialogComponent {
   scenario: string;
   round: number;
 
-
+  teamMatch: boolean;
   window: any;
 
   @ViewChild('printarea') printarea: ElementRef;
@@ -29,6 +30,7 @@ export class PrintGamesDialogComponent {
     this.tournament = data.tournament;
     this.games$ = data.games$;
     this.round = data.round;
+    this.teamMatch = data.teamMatch;
 
     data.games$.subscribe((games: TournamentGame[]) => {
        this.scenario = games[0].scenario;

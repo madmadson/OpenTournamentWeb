@@ -527,7 +527,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   openGameResultDialog(selectedGame: TournamentGame) {
 
-    if (this.myGameOrAdmin(selectedGame)) {
+    if (this.myGameOrAdmin(selectedGame) && !this.actualTournament.finished) {
 
       const admin = this.isAdmin();
 

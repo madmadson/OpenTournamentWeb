@@ -9,7 +9,8 @@ import * as _ from 'lodash';
 
 @Component({
   selector: 'print-army-lists-dialog',
-  templateUrl: './print-army-lists-dialog.html'
+  templateUrl: './print-army-lists-dialog.html',
+  styleUrls: ['./print-army-lists-dialog.scss']
 })
 export class PrintArmyListsDialogComponent {
 
