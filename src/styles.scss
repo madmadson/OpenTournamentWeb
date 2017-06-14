@@ -3,6 +3,7 @@
 
 $success_color: #388E3C;
 $fail_color: #FF1501;
+$color_info: deepskyblue;
 $hover_color: #1e05ff;
 
 $main_tick: 12px;
@@ -451,3 +452,16 @@ md-card {
 .print-area {
   max-height: 300px;
 }
+
+snack-bar-container.snackBar-success {
+  background-color: $success_color;
+}
+
+snack-bar-container.snackBar-fail {
+  background-color: $fail_color;
+}
+
+snack-bar-container.snackBar-info {
+  background-color: $color_info;
+}
+

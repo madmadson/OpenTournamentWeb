@@ -55,10 +55,12 @@ export class LoginService implements OnInit, OnDestroy {
             this.subscribeAsPlayer(auth.auth.uid);
 
             this.snackBar.open('Login Successfully', '', {
+              extraClasses: ['snackBar-success'],
               duration: 5000
             });
           } else {
             const snackBarRef = this.snackBar.open('Please verify your userEmail first', 'SEND EMAIL AGAIN', {
+              extraClasses: ['snackBar-info'],
               duration: 5000
             });
             snackBarRef.onAction().subscribe(() => {
@@ -105,6 +107,7 @@ export class LoginService implements OnInit, OnDestroy {
       user.auth.sendEmailVerification();
 
       this.snackBar.open('Registration Successful. Please verify your userEmail.', '', {
+        extraClasses: ['snackBar-success'],
         duration: 5000
       });
       this.router.navigate(['/login']);
@@ -134,6 +137,7 @@ export class LoginService implements OnInit, OnDestroy {
       console.log(error);
 
       this.snackBar.open('Failed to login. Please check Email/Password', '', {
+        extraClasses: ['snackBar-fail'],
         duration: 5000
       });
     });
@@ -181,6 +185,7 @@ export class LoginService implements OnInit, OnDestroy {
       console.log(error);
 
       this.snackBar.open('Failed to login with ' + loginProvider + '. Already registered with userEmail?', '', {
+        extraClasses: ['snackBar-fail'],
         duration: 5000
       });
     });
@@ -190,6 +195,7 @@ export class LoginService implements OnInit, OnDestroy {
     this.fb.auth().sendPasswordResetEmail(email);
 
     this.snackBar.open('Send userEmail to ' + email, '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
     this.router.navigate(['/login']);

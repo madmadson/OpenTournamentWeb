@@ -228,11 +228,13 @@ export class TournamentService implements OnDestroy {
       tournamentTeamRef.update({registeredPlayerIds: newListOfRegisteredTeamMembers});
 
       this.snackBar.open('Registered for Team: ' + registrationPush.registration.teamName, '', {
+        extraClasses: ['snackBar-success'],
         duration: 5000
       });
     } else {
 
       this.snackBar.open('Registration saved successfully', '', {
+        extraClasses: ['snackBar-success'],
         duration: 5000
       });
     }
@@ -250,6 +252,7 @@ export class TournamentService implements OnDestroy {
     registrationRef.update({isTournamentPlayer: true});
 
     this.snackBar.open('Tournament Player saved successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -295,6 +298,7 @@ export class TournamentService implements OnDestroy {
       registrationRef.update({isTournamentPlayer: false});
     }
     this.snackBar.open('Tournament Player deleted successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -305,6 +309,7 @@ export class TournamentService implements OnDestroy {
     tournamentArmyListRef.push(armyList);
 
     this.snackBar.open('Army List saved successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -315,6 +320,7 @@ export class TournamentService implements OnDestroy {
     armyListRef.remove();
 
     this.snackBar.open('ArmyList deleted successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -326,6 +332,7 @@ export class TournamentService implements OnDestroy {
     tournamentPlayers.push(dummy);
 
     this.snackBar.open('Dummy Player successfully inserted', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -336,6 +343,7 @@ export class TournamentService implements OnDestroy {
     tournamentPlayers.push(player);
 
     this.snackBar.open('Tournament Player saved successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -345,11 +353,13 @@ export class TournamentService implements OnDestroy {
     const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
     if (successFullyPaired) {
       this.snackBar.open('Round ' + config.round + ' paired again successfully ', '', {
+        extraClasses: ['snackBar-success'],
         duration: 5000
       });
 
     } else {
       this.snackBar.open('Failed to pair Round ' + config.round + ' again. Check Pairing Options.', '', {
+        extraClasses: ['snackBar-fail'],
         duration: 5000
       });
     }
@@ -366,11 +376,13 @@ export class TournamentService implements OnDestroy {
 
     if (successFullyPaired) {
       this.snackBar.open('Round ' + config.round + ' paired again successfully ', '', {
+        extraClasses: ['snackBar-success'],
         duration: 5000
       });
 
     } else {
       this.snackBar.open('Failed to pair Round ' + config.round + ' again. Check Pairing Options.', '', {
+        extraClasses: ['snackBar-fail'],
         duration: 5000
       });
     }
@@ -388,11 +400,13 @@ export class TournamentService implements OnDestroy {
       const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
       registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
       this.snackBar.open('new Round Paired', '', {
+        extraClasses: ['snackBar-success'],
         duration: 5000
       });
 
     } else {
       this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
+        extraClasses: ['snackBar-fail'],
         duration: 5000
       });
     }
@@ -409,11 +423,13 @@ export class TournamentService implements OnDestroy {
       const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
       registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
       this.snackBar.open('new Round Paired', '', {
+        extraClasses: ['snackBar-success'],
         duration: 5000
       });
 
     } else {
       this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
+        extraClasses: ['snackBar-fail'],
         duration: 5000
       });
     }
@@ -428,6 +444,7 @@ export class TournamentService implements OnDestroy {
     this.rankingService.updateRankingAfterGameResultEntered(gameResult);
 
     this.snackBar.open('Game Result Entered Successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -438,6 +455,7 @@ export class TournamentService implements OnDestroy {
     gameRef.update({visibleRound: publish.roundToPublish});
 
     this.snackBar.open('Round ' + publish.roundToPublish + ' successfully published', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -451,6 +469,7 @@ export class TournamentService implements OnDestroy {
     tournament.update({actualRound: (config.round - 1), visibleRound: (config.round - 1)});
 
     this.snackBar.open('Round ' + config.round + ' successfully killed with fire!', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -466,6 +485,7 @@ export class TournamentService implements OnDestroy {
       {actualRound: (config.round - 1), visibleRound: (config.round - 1)});
 
     this.snackBar.open('Round ' + config.round + ' successfully killed with fire!', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -478,6 +498,7 @@ export class TournamentService implements OnDestroy {
       {finished: true, visibleRound: (config.round - 1)}
     );
     this.snackBar.open('Successfully end Tournament', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
 
@@ -492,6 +513,7 @@ export class TournamentService implements OnDestroy {
       {finished: true, visibleRound: (config.round - 1)}
     );
     this.snackBar.open('Successfully end TeamTournament', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
 
@@ -505,6 +527,7 @@ export class TournamentService implements OnDestroy {
       {finished: false}
     );
     this.snackBar.open('Successfully undo end Tournament', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -522,6 +545,7 @@ export class TournamentService implements OnDestroy {
     gameTwoRef.update(game2);
 
     this.snackBar.open('Successfully swap player', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
 
@@ -536,6 +560,7 @@ export class TournamentService implements OnDestroy {
       {uploaded: true}
     );
     this.snackBar.open('Successfully upload Tournament', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -567,6 +592,7 @@ export class TournamentService implements OnDestroy {
     gameTwoRef.update(game2);
 
     this.snackBar.open('Successfully swap teams', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -583,6 +609,7 @@ export class TournamentService implements OnDestroy {
     this.rankingService.updateTeamRankingAfterGameResultEntered(gameResult);
 
     this.snackBar.open('Game Result Entered Successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -618,6 +645,7 @@ export class TournamentService implements OnDestroy {
       {finished: false}
     );
     this.snackBar.open('Successfully undo end TeamTournament', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -631,6 +659,7 @@ export class TournamentService implements OnDestroy {
       {uploaded: true}
     );
     this.snackBar.open('Successfully upload Tournament', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }

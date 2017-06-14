@@ -510,10 +510,12 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
           playedAgainstOther = true;
           if (tournamentPlayerTwoId === game.playerOneTournamentPlayerId) {
             that.snackBar.open(rank.playerName + ' already played against ' + game.playerOnePlayerName, '', {
+              extraClasses: ['snackBar-info'],
               duration: 5000
             });
           } else {
             that.snackBar.open(rank.playerName + ' already played against ' + game.playerTwoPlayerName, '', {
+              extraClasses: ['snackBar-info'],
               duration: 5000
             });
           }

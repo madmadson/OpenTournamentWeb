@@ -10,18 +10,27 @@
     </p>
   </md-card-content>
   <md-card-actions>
-    <button *ngIf="!loggedIn"  type="button" color="primary" md-raised-button routerLink="/login">First Login/Register</button>
+    <button *ngIf="!loggedIn" type="button" color="primary" md-raised-button routerLink="/login">First Login/Register
+    </button>
     <button *ngIf="loggedIn" type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player
       Profile
-    </button>  </md-card-actions>
+    </button>
+  </md-card-actions>
 </md-card>
 
 <mdl-tabs mdl-ripple *ngIf="userPlayerData">
+  <mdl-tab-panel mdl-tab-panel-title="myProfile">
+    <div class="flex-container">
+      <player-form [playerData]="userPlayerData"></player-form>
+    </div>
+  </mdl-tab-panel>
   <mdl-tab-panel mdl-tab-panel-title="{{getMyTournamentsTitle()}}">
     <div class="flex-container">
-      <md-card class="tournament-list-card">
-        <h4 class="heading big-heading" *ngIf="(groupedTournaments$ | async).length == 0">It's time to organize a Tournament!</h4>
-        <h4 class="heading" *ngIf="(groupedTournaments$ | async).length > 0">My organized Tournaments ({{(allTournaments$| async) ?.length}})</h4>
+      <md-card class="single-list-card">
+        <h4 class="heading big-heading" *ngIf="(groupedTournaments$ | async).length == 0">It's time to organize a
+          Tournament!</h4>
+        <h4 class="heading" *ngIf="(groupedTournaments$ | async).length > 0">My organized Tournaments
+          ({{(allTournaments$| async) ?.length}})</h4>
         <button md-fab class="create-action" (click)="openCreateTournamentDialog()">
           <md-icon>add</md-icon>
         </button>
@@ -34,16 +43,24 @@
     </div>
   </mdl-tab-panel>
   <mdl-tab-panel mdl-tab-panel-title="{{getMyRegistrationTitle()}}">
-    <h4 class="heading" *ngIf="(myRegistrations$ | async).length == 0">No Registrations found</h4>
-    <player-registrations-table *ngIf="(myRegistrations$ | async).length > 0"
-        [myRegistrations$]="myRegistrations$">
-    </player-registrations-table>
+    <div class="flex-container">
+      <md-card class="single-list-card">
+        <h4 class="heading" *ngIf="myRegistrations.length == 0">No Registrations found</h4>
+        <player-registrations-table *ngIf="myRegistrations.length > 0"
+                                    [myRegistrations]="myRegistrations">
+        </player-registrations-table>
+      </md-card>
+    </div>
   </mdl-tab-panel>
   <mdl-tab-panel mdl-tab-panel-title="{{getMyGamesTitle()}}">
-    <h4 class="heading" *ngIf="(myGames$ | async).length == 0">No Played Games found</h4>
-    <player-games-table *ngIf="(myGames$ | async).length > 0"
-      [myGames$]="myGames$">
-    </player-games-table>
+    <div class="flex-container">
+      <md-card class="single-list-card">
+        <h4 class="heading" *ngIf="(myGames$ | async).length == 0">No Played Games found</h4>
+        <player-games-table *ngIf="(myGames$ | async).length > 0"
+                            [myGames$]="myGames$">
+        </player-games-table>
+      </md-card>
+    </div>
   </mdl-tab-panel>
 </mdl-tabs>
 

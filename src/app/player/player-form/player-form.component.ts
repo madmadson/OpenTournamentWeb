@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../../store/application-state';
@@ -10,9 +10,9 @@ import {getAllCountries} from '../../../../shared/model/countries';
 @Component({
   selector: 'player-form',
   templateUrl: './player-form.component.html',
-  styleUrls: ['./player-form.component.css']
+  styleUrls: ['./player-form.component.scss']
 })
-export class PlayerFormComponent  {
+export class PlayerFormComponent implements OnInit {
 
 
   @Input()
@@ -34,10 +34,11 @@ export class PlayerFormComponent  {
       this.currentUserId = authenticationState.currentUserId;
       this.currentUserEmail = authenticationState.currentUserEmail;
     });
-    this.initForm();
-
   }
 
+  ngOnInit() {
+    this.initForm();
+  }
 
   initForm() {
     this.playerForm = this.formBuilder.group({
@@ -47,6 +48,7 @@ export class PlayerFormComponent  {
       lastName: [this.playerData ? this.playerData.lastName : '', [Validators.required]],
       origin: [this.playerData ? this.playerData.origin : ''],
       meta: [this.playerData ? this.playerData.meta : ''],
+      elo: [this.playerData ? {value: this.playerData.elo, disabled: true} : ''],
       country: [this.playerData ? this.playerData.country : ''],
     });
   }
@@ -54,6 +56,10 @@ export class PlayerFormComponent  {
   save() {
 
     const playerModel: Player = this.preparePlayer();
+
+    if (this.playerData) {
+      playerModel.id = this.playerData.id;
+    }
 
     this.store.dispatch(new PlayerPushAction(playerModel));
 
@@ -67,9 +73,9 @@ export class PlayerFormComponent  {
       this.currentUserId,
       this.currentUserEmail,
       formModel.firstName as string,
-      formModel.nickName as string,
+      this.playerData ? this.playerData.nickName : formModel.nickName as string,
       formModel.lastName as string,
-      1000,
+      this.playerData ? this.playerData.elo : formModel.elo as number,
       formModel.origin as string,
       formModel.meta as string,
       formModel.country as string

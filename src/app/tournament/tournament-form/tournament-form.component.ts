@@ -11,7 +11,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 @Component({
   selector: 'tournament-form',
   templateUrl: './tournament-form.component.html',
-  styleUrls: ['./tournament-form.component.css']
+  styleUrls: ['./tournament-form.component.scss']
 })
 export class TournamentFormComponent implements OnInit {
 
@@ -73,6 +73,7 @@ export class TournamentFormComponent implements OnInit {
                 initialEndDate, Validators.required],
       teamTournament: [this.tournament.teamSize > 0],
       teamSize: [this.tournament.teamSize],
+      dailyMail: [this.tournament.dailyMail],
       maxParticipants: [this.tournament.maxParticipants,
         Validators.compose([Validators.required, CustomValidators.min(2), CustomValidators.max(9999)])]
     });
@@ -202,12 +203,14 @@ export class TournamentFormComponent implements OnInit {
       location: formModel.location as string,
       beginDate: formModel.beginDate as string,
       endDate: formModel.endDate as string,
-      actualRound: 0,
-      visibleRound: 0,
+      actualRound: this.tournament.actualRound,
+      visibleRound: this.tournament.visibleRound,
       maxParticipants: formModel.maxParticipants as number,
-      actualParticipants: 0,
+      actualParticipants: this.tournament.actualParticipants,
       teamSize: formModel.teamSize as number,
       creatorUid: this.tournament.creatorUid,
+      creatorMail: this.tournament.creatorMail,
+      dailyMail: true,
       finished: false,
       uploaded: false
     };

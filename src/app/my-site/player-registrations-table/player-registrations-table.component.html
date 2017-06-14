@@ -8,7 +8,7 @@
     <th class="small-three-space-table-cell">Link</th>
   </tr>
   </thead>
-  <tbody *ngFor="let reg of myRegistrations$ | async; let i = index; let even = even"
+  <tbody *ngFor="let reg of myRegistrations; let i = index; let even = even"
          [ngClass]="{'even': even} ">
   <tr class="table-row">
     <td class="small-three-space-table-cell reg-table-cell">{{i +1}}</td>

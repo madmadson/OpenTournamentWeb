@@ -78,6 +78,10 @@ export class PlayersService implements OnDestroy {
 
     if (player.id) {
       this.afoDatabase.object('players/' + player.id).set(player);
+      that.snackBar.open('Player Profile successfully updated.', '', {
+        extraClasses: ['snackBar-success'],
+        duration: 5000
+      });
     } else {
       const players = this.afoDatabase.list('players');
 
@@ -87,12 +91,14 @@ export class PlayersService implements OnDestroy {
         if (!userData) {
           players.push(player);
           that.snackBar.open('Player Profile successfully created. You can register to tournaments', '', {
+            extraClasses: ['snackBar-success'],
             duration: 5000
           });
           that.router.navigate(['/home']);
         } else {
 
           that.snackBar.open('NickName already in use. Please try another one.', '', {
+            extraClasses: ['snackBar-fail'],
             duration: 5000
           });
         }
@@ -100,34 +106,4 @@ export class PlayersService implements OnDestroy {
 
     }
   }
-
-
 }
-
-// this.pushPlayer({
-//   playerName: 'Player1',
-//   location: 'Karlsruhe',
-//   beginDate: moment('2017-03-12').format(),
-//   endDate: moment('2017-03-12').format(),
-//   actualRound: 0,
-//   maxParticipants: 16,
-//   teamSize: 1
-// });
-// this.pushPlayer({
-//   playerName: 'Player2',
-//   location: 'Oberhausen',
-//   beginDate: moment('2017-03-17').format(),
-//   endDate: moment('2017-03-18').format(),
-//   actualRound: 1,
-//   maxParticipants: 64,
-//   teamSize: 3
-// });
-// this.pushPlayer({
-//   playerName: 'Player3',
-//   location: 'Erfurt',
-//   beginDate: moment('2017-04-01').format(),
-//   endDate: moment('2017-04-01').format(),
-//   actualRound: 0,
-//   maxParticipants: 32,
-//   teamSize: 1
-// });

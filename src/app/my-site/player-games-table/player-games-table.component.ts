@@ -5,7 +5,7 @@ import {TournamentGame} from '../../../../shared/model/tournament-game';
 @Component({
   selector: 'player-games-table',
   templateUrl: './player-games-table.component.html',
-  styleUrls: ['./player-games-table.component.css']
+  styleUrls: ['./player-games-table.component.scss']
 })
 export class PlayerGamesTableComponent implements OnInit {
 

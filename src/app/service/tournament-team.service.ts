@@ -216,6 +216,7 @@ export class TournamentTeamService implements OnDestroy {
     tournamentTeamsRef.push(team);
 
     this.snackBar.open('Team registered successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -244,6 +245,7 @@ export class TournamentTeamService implements OnDestroy {
     });
 
     this.snackBar.open('Team Registration accepted successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -277,6 +279,7 @@ export class TournamentTeamService implements OnDestroy {
     });
 
     this.snackBar.open('Tournament Team deleted successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -296,6 +299,7 @@ export class TournamentTeamService implements OnDestroy {
 
 
     this.snackBar.open('Tournament Team Registration deleted successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -307,6 +311,7 @@ export class TournamentTeamService implements OnDestroy {
     tournamentPlayers.push(dummy);
 
     this.snackBar.open('Dummy Team successfully inserted', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }

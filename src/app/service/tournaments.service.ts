@@ -80,6 +80,7 @@ export class TournamentsService implements OnDestroy {
     tournaments.push(newTournament);
 
     this.snackBar.open('Tournament saved successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
@@ -89,6 +90,7 @@ export class TournamentsService implements OnDestroy {
     tournamentRef.set(tournament);
 
     this.snackBar.open('Tournament edited successfully', '', {
+      extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }

@@ -1,4 +1,3 @@
-
 import {Observable} from 'rxjs/Observable';
 import {TournamentListVM} from '../tournament/tournamentList.vm';
 import {Store} from '@ngrx/store';
@@ -15,8 +14,9 @@ import {Component} from '@angular/core';
 import {MySiteSubscribeAction} from '../store/actions/my-site-actions';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
-import {WindowRefService} from "../service/window-ref-service";
-import {Player} from "../../../shared/model/player";
+import {WindowRefService} from '../service/window-ref-service';
+import {Player} from '../../../shared/model/player';
+import {register} from "ts-node/dist";
 
 @Component({
   selector: 'my-tournaments',
@@ -28,8 +28,9 @@ export class MySiteComponent {
   allTournaments$: Observable<Tournament[]>;
 
   creatorId: string;
+  creatorMail: string;
 
-  myRegistrations$: Observable<Registration[]>;
+  myRegistrations: Registration[];
   myGames$: Observable<TournamentGame[]>;
 
   smallScreen: boolean;
@@ -46,6 +47,7 @@ export class MySiteComponent {
     this.store.select(state => state.authenticationStoreState).subscribe(
       authenticationStoreState => {
         this.creatorId = authenticationStoreState.currentUserId;
+        this.creatorMail = authenticationStoreState.currentUserEmail;
         if (authenticationStoreState.userPlayerData) {
           this.store.dispatch(new MySiteSubscribeAction(authenticationStoreState.userPlayerData.id));
         }
@@ -78,10 +80,12 @@ export class MySiteComponent {
           .value();
       });
 
-    this.myRegistrations$ = this.store.select(state => state.mySiteSoreData.myRegistrations);
+    this.store.select(state => state.mySiteSoreData.myRegistrations).subscribe((registrations: Registration[]) => {
+        this.myRegistrations = _.chain(registrations).sortBy(function (reg: Registration) {
+          return new Date(reg.tournamentDate);
+        }).reverse().value();
+    });
     this.myGames$ = this.store.select(state => state.mySiteSoreData.myGames);
-
-
   }
 
   getMyTournamentsTitle(): string {
@@ -111,7 +115,8 @@ export class MySiteComponent {
   openCreateTournamentDialog(): void {
     const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
       data: {
-        tournament: new Tournament('', '', '', '', 16, 0, 0, 0, 0, this.creatorId, false, false)
+        tournament: new Tournament('', '', '', '', 16, 0, 0, 0, 0,
+          this.creatorId, this.creatorMail, true, false, false)
       },
       width: '800px'
     });
