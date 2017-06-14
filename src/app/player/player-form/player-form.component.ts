@@ -22,8 +22,8 @@ export class PlayerFormComponent implements OnInit {
 
   countries: string[];
 
-  private currentUserId: string;
-  private currentUserEmail: string;
+  currentUserId: string;
+  currentUserEmail: string;
 
   constructor(protected formBuilder: FormBuilder,
               protected store: Store<ApplicationState>) {
