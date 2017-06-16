@@ -63,7 +63,7 @@ exports.mailForTournamentManager = functions.https.onRequest((req, res) => {
             mailOptions.subject = 'Daily Mail for your Tournament: ' + tournament.name;
             mailOptions.text = 'Hello,\n';
 
-            mailOptions.text = mailOptions.text + 'Here is a list of all registrations and armyLists:\n';
+            mailOptions.text = mailOptions.text + 'Here is a list of all registrations and armyLists:\n\n';
 
             mailOptions.text = mailOptions.text + 'Registrations: \n';
             _.each(regs, function (registration) {
@@ -76,8 +76,8 @@ exports.mailForTournamentManager = functions.https.onRequest((req, res) => {
               mailOptions.text = mailOptions.text + armyList.name + '\n';
             });
 
-            mailOptions.text = 'You can switch off this mail in the configuration of your tournament';
-            mailOptions.text = 'Thanks, Your OpenTournament team';
+            mailOptions.text = mailOptions.text + '\nYou can switch off this mail in the configuration of your tournament.\n\n';
+            mailOptions.text = mailOptions.text + 'Thanks, your OpenTournament team';
 
             mailTransport.sendMail(mailOptions).then(() => {
               console.log('Send mail to ' + tournament.creatorMail);
