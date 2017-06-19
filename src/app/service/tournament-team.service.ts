@@ -1,7 +1,7 @@
-import {Inject, Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
-import {FirebaseRef} from 'angularfire2';
+import * as firebase from 'firebase';
 
 import {
   AddTournamentTeamAction, AddTournamentTeamRegistrationAction, ChangeTournamentTeamAction,
@@ -30,7 +30,7 @@ import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 
 @Injectable()
-export class TournamentTeamService implements OnDestroy {
+export class TournamentTeamService {
 
   tournamentTeamsRef: firebase.database.Reference;
   tournamentTeamsRegistrationRef: firebase.database.Reference;
@@ -39,24 +39,7 @@ export class TournamentTeamService implements OnDestroy {
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<ApplicationState>,
-              @Inject(FirebaseRef) private fb,
               private snackBar: MdSnackBar) {
-  }
-
-  ngOnDestroy(): void {
-
-    if (this.tournamentTeamsRef) {
-      this.tournamentTeamsRef.off();
-    }
-    if (this.tournamentTeamsRegistrationRef) {
-      this.tournamentTeamsRegistrationRef.off();
-    }
-    if (this.tournamentTeamGamesRef) {
-      this.tournamentTeamGamesRef.off();
-    }
-    if (this.tournamentTeamRankingsRef) {
-      this.tournamentTeamRankingsRef.off();
-    }
   }
 
   public subscribeOnTournamentTeams(tournamentId: string) {
@@ -64,13 +47,10 @@ export class TournamentTeamService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearTournamentTeamsAction());
-    if (this.tournamentTeamsRef) {
-      this.tournamentTeamsRef.off();
-    }
 
     console.log('subscribeOnTournamentGames');
 
-    this.tournamentTeamsRef = this.fb.database().ref('tournament-teams/' + tournamentId);
+    this.tournamentTeamsRef = firebase.database().ref('tournament-teams/' + tournamentId);
 
     this.tournamentTeamsRef.on('child_added', function (snapshot) {
 
@@ -102,13 +82,10 @@ export class TournamentTeamService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearTeamRankingsAction());
-    if (this.tournamentTeamRankingsRef) {
-      this.tournamentTeamRankingsRef.off();
-    }
 
     console.log('subscribeOnTournamentTeamRankings');
 
-    this.tournamentTeamRankingsRef = this.fb.database().ref('tournament-team-rankings/' + tournamentId);
+    this.tournamentTeamRankingsRef = firebase.database().ref('tournament-team-rankings/' + tournamentId);
 
     this.tournamentTeamRankingsRef.on('child_added', function (snapshot) {
 
@@ -146,7 +123,7 @@ export class TournamentTeamService implements OnDestroy {
 
     console.log('subscribeOnTournamentTeamGames');
 
-    this.tournamentTeamGamesRef = this.fb.database().ref('tournament-team-games/' + tournamentId);
+    this.tournamentTeamGamesRef = firebase.database().ref('tournament-team-games/' + tournamentId);
 
     this.tournamentTeamGamesRef.on('child_added', function (snapshot) {
 
@@ -178,13 +155,10 @@ export class TournamentTeamService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearTournamentTeamRegistrationsAction());
-    if (this.tournamentTeamsRegistrationRef) {
-      this.tournamentTeamsRegistrationRef.off();
-    }
 
     console.log('tournamentTeamsRegistrationRef');
 
-    this.tournamentTeamsRegistrationRef = this.fb.database().ref('tournament-team-registrations/' + tournamentId);
+    this.tournamentTeamsRegistrationRef = firebase.database().ref('tournament-team-registrations/' + tournamentId);
 
     this.tournamentTeamsRegistrationRef.on('child_added', function (snapshot) {
 

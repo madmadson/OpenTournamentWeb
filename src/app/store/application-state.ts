@@ -16,6 +16,7 @@ import {MySiteStoreData} from './reducers/mySiteReducer';
 import {ActualTournamentTeamsStoreData} from './reducers/tournamentTeamReducer';
 import {ActualTournamentTeamGamesStoreData} from './reducers/tournamentTeamGameReducer';
 import {ActualTournamentTeamRankingsStoreData} from "./reducers/tournamentTeamRankingReducer";
+import {GamesStoreData} from "./reducers/gamesReducer";
 
 
 export interface ApplicationState {
@@ -23,6 +24,7 @@ export interface ApplicationState {
   routerState: RouterState;
   tournaments: TournamentStoreData;
   players: PlayerStoreData;
+  games: GamesStoreData;
   authenticationStoreState: AuthenticationStoreState;
   mySiteSoreData: MySiteStoreData;
 

@@ -9,13 +9,11 @@
       to add you easily to the tournament you just registered for.
     </p>
   </md-card-content>
-  <md-card-actions>
-    <button *ngIf="!loggedIn" type="button" color="primary" md-raised-button routerLink="/login">First Login/Register
-    </button>
-    <button *ngIf="loggedIn" type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player
-      Profile
-    </button>
-  </md-card-actions>
+  <button *ngIf="!loggedIn" type="button" color="primary" md-raised-button routerLink="/login">First Login/Register
+  </button>
+  <button *ngIf="loggedIn" type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player
+    Profile
+  </button>
 </md-card>
 
 <mdl-tabs mdl-ripple *ngIf="userPlayerData">

@@ -5,7 +5,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {AppComponent} from './app.component';
 import {TournamentListComponent} from './tournament/tournament-list/tournament-list.component';
-import {AngularFireModule} from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 import {GameEditComponent} from './game-edit/game-edit.component';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {HomePageComponent} from './home-page/home-page.component';
@@ -125,14 +126,21 @@ import {
   TournamentTeamGameListComponent
 } from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
 import {NewRoundDialogComponent} from './dialogs/round-overview/new-round-dialog';
-import {FinishTournamentDialogComponent} from "./dialogs/finish-tournament-dialog";
+import {FinishTournamentDialogComponent} from './dialogs/finish-tournament-dialog';
 import { TournamentTeamFinalRankingsComponent } from './team-tournament/tournament-team-final-rankings/tournament-team-final-rankings.component';
+import {AngularFireModule} from 'angularfire2';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { GameListOverviewComponent } from './games/game-list-overview/game-list-overview.component';
+import {GamesReducer} from './store/reducers/gamesReducer';
+import {GamesEffectService} from "./store/effects/games-effect.service";
+import {GamesService} from "./service/games.service";
 
 
 const reducers = {
   routerState: routerReducer,
   tournaments: TournamentsReducer,
   players: PlayersReducer,
+  games: GamesReducer,
   authenticationStoreState: AuthenticationReducer,
   mySiteSoreData: MySiteReducer,
 
@@ -186,11 +194,14 @@ export const firebaseConfDev = {
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    AngularFireModule.initializeApp(firebaseConfDev),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
     EffectsModule.run(AuthEffectService),
     EffectsModule.run(TournamentEffectService),
     EffectsModule.run(TournamentsEffectService),
     EffectsModule.run(PlayersEffectService),
+    EffectsModule.run(GamesEffectService),
     EffectsModule.run(RankingEffectService),
     EffectsModule.run(TournamentGameEffectService),
     EffectsModule.run(MySiteEffectService),
@@ -209,7 +220,8 @@ export const firebaseConfDev = {
     DateTimePickerModule,
     MdlExpansionPanelModule,
     MdlSelectModule,
-    AngularFireOfflineModule
+    AngularFireOfflineModule,
+    NgxPaginationModule
   ],
   declarations: [
     AppComponent,
@@ -266,7 +278,8 @@ export const firebaseConfDev = {
     ShowArmyListDialogComponent,
     TournamentTeamGameListComponent,
     TeamMatchDialogComponent,
-    TournamentTeamFinalRankingsComponent
+    TournamentTeamFinalRankingsComponent,
+    GameListOverviewComponent
   ],
   providers: [
     LoginService,
@@ -274,6 +287,7 @@ export const firebaseConfDev = {
     AuthGuard,
     TournamentService,
     PlayersService,
+    GamesService,
     TournamentRankingService,
     TournamentGameService,
     TournamentTeamService,

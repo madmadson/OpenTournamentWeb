@@ -4,7 +4,7 @@
 
 <mdl-list-item lines="3"
                class="list-item"
-               *ngFor="let player of players; let i = index; let even = even;"
+               *ngFor="let player of players | paginate: { itemsPerPage: 10, currentPage: p }; let i = index; let even = even;"
                [ngClass]="{'even': even}">
 
   <mdl-list-item-primary-content>
@@ -24,4 +24,5 @@
     <span >{{player.elo}}</span>
   </mdl-list-item-secondary-content>
 </mdl-list-item>
+<pagination-controls (pageChange)="p = $event"></pagination-controls>
 

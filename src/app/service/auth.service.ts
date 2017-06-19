@@ -1,16 +1,18 @@
-import {Inject, Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 import {
   DeleteUserPlayerDataAction, SaveUserDataAction,
   SaveUserPlayerDataAction
 } from '../store/actions/auth-actions';
-import {AngularFire, AuthMethods, AuthProviders, FirebaseRef} from 'angularfire2';
+
 import {Subscription} from 'rxjs/Subscription';
 import {Router} from '@angular/router';
 import {MdSnackBar} from '@angular/material';
 import {Player} from '../../../shared/model/player';
-
+import * as firebase from 'firebase';
+import {AngularFireAuth} from 'angularfire2/auth';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class LoginService implements OnInit, OnDestroy {
@@ -19,15 +21,17 @@ export class LoginService implements OnInit, OnDestroy {
   private query: any;
   private redirectUrl: string;
 
-  constructor(protected afService: AngularFire,
+  user: Observable<firebase.User>;
+
+  constructor(public afAuth: AngularFireAuth,
               private store: Store<ApplicationState>,
               private  router: Router,
-              @Inject(FirebaseRef) private fb,
               private snackBar: MdSnackBar) {
 
+    this.user = afAuth.authState;
   }
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     this.store.select(state => state.authenticationStoreState.redirectUrl).subscribe(redirectUrl => {
       this.redirectUrl = redirectUrl;
     });
@@ -40,19 +44,20 @@ export class LoginService implements OnInit, OnDestroy {
 
   subscribeOnAuthentication() {
 
-    this.authSubscription = this.afService.auth.subscribe(
+
+    this.authSubscription = this.user.subscribe(
       (auth) => {
 
         if (auth != null) {
           console.log('authenticated!');
 
-          if (auth.auth.emailVerified) {
+          if (auth.emailVerified) {
 
             this.store.dispatch(new SaveUserDataAction(
-              {uid: auth.auth.uid, displayName: auth.auth.displayName, photoURL: auth.auth.photoURL, email: auth.auth.email}
+              {uid: auth.uid, displayName: auth.displayName, photoURL: auth.photoURL, email: auth.email}
             ));
 
-            this.subscribeAsPlayer(auth.auth.uid);
+            this.subscribeAsPlayer(auth.uid);
 
             this.snackBar.open('Login Successfully', '', {
               extraClasses: ['snackBar-success'],
@@ -64,7 +69,7 @@ export class LoginService implements OnInit, OnDestroy {
               duration: 5000
             });
             snackBarRef.onAction().subscribe(() => {
-              auth.auth.sendEmailVerification();
+              auth.sendEmailVerification();
               snackBarRef.dismiss();
             });
           }
@@ -77,7 +82,7 @@ export class LoginService implements OnInit, OnDestroy {
 
     const that = this;
 
-    this.query = this.fb.database().ref('players').orderByChild('userUid')
+    this.query = firebase.database().ref('players').orderByChild('userUid')
       .equalTo(userUid).limitToFirst(1);
 
     this.query.once('child_added').then(function (snapshot) {
@@ -102,7 +107,7 @@ export class LoginService implements OnInit, OnDestroy {
 
     const that = this;
 
-    this.afService.auth.createUser({email: payload.email, password: payload.password}).then((user) => {
+    this.afAuth.auth.createUserWithEmailAndPassword(payload.email, payload.password).then((user) => {
 
       user.auth.sendEmailVerification();
 
@@ -121,16 +126,12 @@ export class LoginService implements OnInit, OnDestroy {
   }
 
   loginWithEmailAndPassword(login: LoginModel) {
-
-
-    this.afService.auth.login(
-      {email: login.email, password: login.password},
-      {provider: AuthProviders.Password, method: AuthMethods.Password}
+    this.afAuth.auth.signInWithEmailAndPassword(login.email, login.password
     ).then(() => {
-      if (this.redirectUrl !== undefined){
+      if (this.redirectUrl !== undefined) {
         console.log('found redirect!' + this.redirectUrl);
         this.router.navigate([this.redirectUrl]);
-      }else {
+      } else {
         this.router.navigate(['/home']);
       }
     }).catch((error: any) => {
@@ -152,33 +153,27 @@ export class LoginService implements OnInit, OnDestroy {
 
   logout() {
 
-    this.afService.auth.logout();
+    this.afAuth.auth.signOut();
 
     this.router.navigate(['/login']);
   }
 
   private login(loginProvider ?: string) {
     let provider;
-    let method;
     if (loginProvider === 'google') {
-      provider = AuthProviders.Google;
-      method = AuthMethods.Popup;
+      provider = new firebase.auth.GoogleAuthProvider();
     } else if (loginProvider === 'facebook') {
-      provider = AuthProviders.Facebook;
-      method = AuthMethods.Popup;
+      provider = new firebase.auth.FacebookAuthProvider();
     } else {
-      provider = AuthProviders.Anonymous;
-      method = AuthMethods.Anonymous;
+      provider = new firebase.auth.GoogleAuthProvider();
     }
 
-    this.afService.auth.login({
-      provider: provider,
-      method: method,
-    }).then(() => {
-      if (this.redirectUrl !== undefined){
+    this.afAuth.auth.signInWithPopup(
+      provider).then(() => {
+      if (this.redirectUrl !== undefined) {
         console.log('found redirect!' + this.redirectUrl);
         this.router.navigate([this.redirectUrl]);
-      }else {
+      } else {
         this.router.navigate(['/home']);
       }
     }).catch((error: any) => {
@@ -192,7 +187,7 @@ export class LoginService implements OnInit, OnDestroy {
   }
 
   resetPassword(email: string) {
-    this.fb.auth().sendPasswordResetEmail(email);
+    this.afAuth.auth.sendPasswordResetEmail(email);
 
     this.snackBar.open('Send userEmail to ' + email, '', {
       extraClasses: ['snackBar-success'],

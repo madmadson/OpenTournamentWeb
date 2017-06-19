@@ -28,7 +28,7 @@
   <div class="game-cards-container">
     <md-card
       draggable="true"
-      (click)="confirmSwapPlayer($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
+      (click)="confirmSwapPlayerWithPlayerOne($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       class="game-card"
       [ngClass]="{  'move-able:': !game.finished,
                     'drop-enable': dragStarted && !game.finished && dragEnableForPlayerOne(game),
@@ -56,7 +56,7 @@
     </div>
     <md-card
       draggable="true"
-      (click)="confirmSwapPlayer($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
+      (click)="confirmSwapPlayerWithPlayerTwo($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
       class="game-card"
       [ngClass]="{  'move-able:': !game.finished,
                     'drop-enable': dragStarted && !game.finished && dragEnableForPlayerTwo(game),

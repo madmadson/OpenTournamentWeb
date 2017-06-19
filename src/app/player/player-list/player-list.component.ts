@@ -6,7 +6,7 @@ import {WindowRefService} from "../../service/window-ref-service";
 @Component({
   selector: 'player-list',
   templateUrl: './player-list.component.html',
-  styleUrls: ['./player-list.component.css']
+  styleUrls: ['./player-list.component.scss']
 })
 export class PlayerListComponent {
 

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from './store/application-state';
 
@@ -9,7 +9,7 @@ import {GlobalEventService} from './service/global-event-service';
 import { Subscription } from 'rxjs/Subscription';
 import {MdSidenav} from '@angular/material';
 import {WindowRefService} from './service/window-ref-service';
-import {Observable} from "rxjs/Observable";
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'app-root',

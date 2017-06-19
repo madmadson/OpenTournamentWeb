@@ -1,0 +1,14 @@
+<h2 class="heading">Online Games ({{filteredGames?.length}}/{{orderedGames?.length}})</h2>
+<md-card>
+  <mdl-textfield type="text"
+                 maxlength="50"
+                 placeholder="Filter by PlayerNames"
+                 #seachInput
+                 (keyup)="search(seachInput.value)">
+  </mdl-textfield>
+  <h4 *ngIf="filteredGames?.length == 0">No Games found</h4>
+  <mdl-list>
+    <games-list [games]="filteredGames"></games-list>
+  </mdl-list>
+</md-card>
+

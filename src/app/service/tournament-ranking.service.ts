@@ -1,8 +1,7 @@
-import {Inject, Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
-import {AngularFireDatabase, FirebaseRef} from 'angularfire2';
-
+import * as firebase from 'firebase';
 
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {Tournament} from '../../../shared/model/tournament';
@@ -22,7 +21,7 @@ import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 
 @Injectable()
-export class TournamentRankingService implements OnDestroy {
+export class TournamentRankingService {
 
   tournamentRankingsRef: firebase.database.Reference;
 
@@ -35,9 +34,7 @@ export class TournamentRankingService implements OnDestroy {
   actualTournament: Tournament;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected fireDB: AngularFireDatabase,
-              protected store: Store<ApplicationState>,
-              @Inject(FirebaseRef) private fb) {
+              protected store: Store<ApplicationState>) {
 
     this.store.select(state => state).subscribe(state => {
       this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
@@ -51,26 +48,16 @@ export class TournamentRankingService implements OnDestroy {
 
   }
 
-  ngOnDestroy(): void {
-
-    if (this.tournamentRankingsRef) {
-      this.tournamentRankingsRef.off();
-    }
-
-  }
-
   public subscribeOnTournamentRankings(tournamentId: string) {
 
     const that = this;
 
     this.store.dispatch(new ClearRankingAction());
-    if (this.tournamentRankingsRef) {
-      this.tournamentRankingsRef.off();
-    }
+
 
     console.log('subscribeOnTournamentRankings');
 
-    this.tournamentRankingsRef = this.fb.database().ref('tournament-rankings/' + tournamentId);
+    this.tournamentRankingsRef = firebase.database().ref('tournament-rankings/' + tournamentId);
 
     this.tournamentRankingsRef.on('child_added', function (snapshot) {
 
@@ -183,7 +170,7 @@ export class TournamentRankingService implements OnDestroy {
           newTournamentRanking.opponentTournamentPlayerIds = lastRoundRanking.opponentTournamentPlayerIds;
         }
       });
-      const tournamentRankingsRef = that.fireDB
+      const tournamentRankingsRef = that.afoDatabase
         .list('tournament-team-rankings/' + newTournamentRanking.tournamentId);
       tournamentRankingsRef.push(newTournamentRanking);
 
@@ -195,11 +182,10 @@ export class TournamentRankingService implements OnDestroy {
 
   eraseRankingsForRound(config: TournamentManagementConfiguration) {
 
-    const query = this.fb.database().ref('tournament-rankings/' + config.tournamentId).orderByChild('tournamentRound')
+    const query = firebase.database().ref('tournament-rankings/' + config.tournamentId).orderByChild('tournamentRound')
       .equalTo(config.round);
 
-    query.once('value', function (snapshot) {
-
+    query.once('value').then(function (snapshot) {
       snapshot.forEach(function (child) {
         child.ref.remove();
       });
@@ -208,11 +194,10 @@ export class TournamentRankingService implements OnDestroy {
 
   eraseTeamRankingsForRound(config: TournamentManagementConfiguration) {
 
-    const query = this.fb.database().ref('tournament-team-rankings/' + config.tournamentId).orderByChild('tournamentRound')
+    const query = firebase.database().ref('tournament-team-rankings/' + config.tournamentId).orderByChild('tournamentRound')
       .equalTo(config.round);
 
-    query.once('value', function (snapshot) {
-
+    query.once('value').then(function (snapshot) {
       snapshot.forEach(function (child) {
         child.ref.remove();
       });

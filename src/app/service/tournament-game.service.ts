@@ -1,7 +1,7 @@
-import {Inject, Injectable, OnDestroy} from '@angular/core';
+import { Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
-import {AngularFireDatabase, FirebaseRef} from 'angularfire2';
+import * as firebase from 'firebase';
 
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
@@ -16,7 +16,6 @@ import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-
 import {Tournament} from '../../../shared/model/tournament';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
-import {TournamentTeamGamesConfiguration} from '../../../shared/dto/tournament-team-games-config';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {SwapGames} from '../../../shared/dto/swap-player';
 import {GameResult} from '../../../shared/dto/game-result';
@@ -39,8 +38,7 @@ export class TournamentGameService implements OnDestroy {
   private newTeamGames: TournamentGame[];
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected store: Store<ApplicationState>,
-              @Inject(FirebaseRef) private fb) {
+              protected store: Store<ApplicationState>) {
 
     this.store.select(state => state).subscribe(state => {
 
@@ -67,13 +65,10 @@ export class TournamentGameService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearTournamentGamesAction());
-    if (this.tournamentGamesRef) {
-      this.tournamentGamesRef.off();
-    }
 
     console.log('subscribeOnTournamentGames');
 
-    this.tournamentGamesRef = this.fb.database().ref('tournament-games/' + tournamentId);
+    this.tournamentGamesRef = firebase.database().ref('tournament-games/' + tournamentId);
 
     this.tournamentGamesRef.on('child_added', function (snapshot) {
 

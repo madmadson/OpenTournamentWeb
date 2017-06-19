@@ -1,7 +1,7 @@
-import {Inject, Injectable, OnDestroy} from '@angular/core';
+import { Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
-import {FirebaseRef} from 'angularfire2';
+import * as firebase from 'firebase';
 
 import {
   AddArmyListAction, ArmyListDeletedAction, ClearArmyListsAction,
@@ -40,41 +40,17 @@ import {Tournament} from '../../../shared/model/tournament';
 
 
 @Injectable()
-export class TournamentService implements OnDestroy {
+export class TournamentService  {
 
   private tournamentRegistrationsRef: firebase.database.Reference;
   private tournamentPlayerRef: firebase.database.Reference;
   private armyListsRef: firebase.database.Reference;
-  private tournamentTeamsRef: firebase.database.Reference;
-  private tournamentTeamRegistrationsRef: firebase.database.Reference;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected rankingService: TournamentRankingService,
               protected tournamentGameService: TournamentGameService,
               protected store: Store<ApplicationState>,
-              @Inject(FirebaseRef) protected fb,
               private snackBar: MdSnackBar) {}
-
-  ngOnDestroy(): void {
-
-    console.log('destroyed!');
-
-    if (this.tournamentRegistrationsRef) {
-      this.tournamentRegistrationsRef.off();
-    }
-    if (this.tournamentPlayerRef) {
-      this.tournamentPlayerRef.off();
-    }
-    if (this.armyListsRef) {
-      this.armyListsRef.off();
-    }
-    if (this.tournamentTeamsRef) {
-      this.tournamentTeamsRef.off();
-    }
-    if (this.tournamentTeamRegistrationsRef) {
-      this.tournamentTeamRegistrationsRef.off();
-    }
-  }
 
 
   subscribeOnTournament(tournamentId: string) {
@@ -105,12 +81,8 @@ export class TournamentService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearRegistrationAction());
-    if (this.tournamentRegistrationsRef) {
-      this.tournamentRegistrationsRef.off();
-    }
 
-
-    this.tournamentRegistrationsRef = this.fb.database().ref('tournament-registrations/' + tournamentId);
+    this.tournamentRegistrationsRef = firebase.database().ref('tournament-registrations/' + tournamentId);
 
     this.tournamentRegistrationsRef.on('child_added', function (snapshot) {
 
@@ -141,13 +113,10 @@ export class TournamentService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearTournamentPlayerAction());
-    if (this.tournamentPlayerRef) {
-      this.tournamentPlayerRef.off();
-    }
 
     console.log('subscribeOnTournamentPlayers');
 
-    this.tournamentPlayerRef = this.fb.database().ref('tournament-players/' + tournamentId);
+    this.tournamentPlayerRef = firebase.database().ref('tournament-players/' + tournamentId);
 
     this.tournamentPlayerRef.on('child_added', function (snapshot) {
 
@@ -178,11 +147,9 @@ export class TournamentService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new ClearArmyListsAction());
-    if (this.armyListsRef) {
-      this.armyListsRef.off();
-    }
 
-    this.armyListsRef = this.fb.database().ref('tournament-armyLists/' + tournamentId);
+
+    this.armyListsRef = firebase.database().ref('tournament-armyLists/' + tournamentId);
 
     this.armyListsRef.on('child_added', function (snapshot) {
 

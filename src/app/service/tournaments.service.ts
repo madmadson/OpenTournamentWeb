@@ -1,7 +1,8 @@
-import {Inject, Injectable, OnDestroy} from '@angular/core';
+import { Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
-import {FirebaseRef} from 'angularfire2';
+import * as firebase from 'firebase';
+
 import {
   TournamentAddedAction,
   TournamentChangedAction,
@@ -13,20 +14,11 @@ import {MdSnackBar} from '@angular/material';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 @Injectable()
-export class TournamentsService implements OnDestroy {
-
-  private tournamentsReference: firebase.database.Reference;
+export class TournamentsService  {
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<ApplicationState>,
-              @Inject(FirebaseRef) private fb,
               private snackBar: MdSnackBar) {
-  }
-
-  ngOnDestroy(): void {
-    if (this.tournamentsReference) {
-      this.tournamentsReference.off();
-    }
   }
 
 
@@ -35,15 +27,11 @@ export class TournamentsService implements OnDestroy {
     console.log('subscribe on tournaments');
     this.store.dispatch(new TournamentsClearAction());
 
-    if (this.tournamentsReference) {
-      this.tournamentsReference.off();
-    }
-
     const that = this;
 
-    this.tournamentsReference = this.fb.database().ref('tournaments').orderByChild('beginDate');
+    const tournamentsReference = firebase.database().ref('tournaments').orderByChild('beginDate');
 
-    this.tournamentsReference.on('child_added', function (snapshot) {
+    tournamentsReference.on('child_added', function (snapshot) {
 
       const tournament: Tournament = Tournament.fromJson(snapshot.val());
       tournament.id = snapshot.key;
@@ -52,7 +40,7 @@ export class TournamentsService implements OnDestroy {
 
     });
 
-    this.tournamentsReference.on('child_changed', function (snapshot) {
+    tournamentsReference.on('child_changed', function (snapshot) {
 
       const tournament: Tournament = Tournament.fromJson(snapshot.val());
       tournament.id = snapshot.key;
@@ -60,18 +48,11 @@ export class TournamentsService implements OnDestroy {
       that.store.dispatch(new TournamentChangedAction(tournament));
     });
 
-    this.tournamentsReference.on('child_removed', function (snapshot) {
+    tournamentsReference.on('child_removed', function (snapshot) {
 
       that.store.dispatch(new TournamentDeletedAction(snapshot.key));
     });
 
-  }
-
-  unsubscribeOnTournaments() {
-
-    if (this.tournamentsReference) {
-      this.tournamentsReference.off();
-    }
   }
 
   pushTournament(newTournament: Tournament) {

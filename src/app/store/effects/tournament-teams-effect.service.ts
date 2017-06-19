@@ -11,7 +11,7 @@ import {
 } from '../actions/tournament-teams-actions';
 import {TournamentTeamService} from '../../service/tournament-team.service';
 import {TOURNAMENT_TEAM_GAMES_SUBSCRIBE_ACTION} from '../actions/tournament-team-games-actions';
-import {TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION} from "../actions/tournament-team-rankings-actions";
+import {TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION} from '../actions/tournament-team-rankings-actions';
 
 
 

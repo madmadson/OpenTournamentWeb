@@ -1,6 +1,6 @@
 import {
   AfterContentChecked,
-  Component, EventEmitter, Inject, Input, OnInit, Output, Renderer2
+  Component, EventEmitter, Inject, Input, OnInit, Output
 } from '@angular/core';
 import {Player} from '../../../../shared/model/player';
 import {Observable} from 'rxjs/Observable';
@@ -62,7 +62,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar,
-              private renderer: Renderer2,
               private messageService: GlobalEventService,
               private winRef: WindowRefService) {
     this.smallScreen = this.winRef.nativeWindow.screen.width < 1024;
@@ -159,7 +158,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     this.messageService.broadcast('swapPlayerMode', false);
   }
 
-  confirmSwapPlayer(event: any, droppedGame: TournamentGame,
+  confirmSwapPlayerWithPlayerOne(event: any, droppedGame: TournamentGame,
                     droppedTournamentPlayerId: string,
                     droppedTournamentPlayerOpponentId: string) {
 
@@ -168,6 +167,11 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
       event.stopPropagation();
 
       if (!droppedGame.finished && this.draggedGame) {
+
+        if (this.teamMatch && this.draggedGameTeamName !== droppedGame.playerOneTeamName) {
+          return;
+        }
+
         this.swapPlayerMode = false;
         this.dragStarted = false;
         this.messageService.broadcast('swapPlayerMode', false);
@@ -185,37 +189,36 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     }
   }
 
-  startDrag(event: any, game: TournamentGame, dragTournamentPlayerId: string,
-            dragTournamentPlayerOpponentId: string) {
+  confirmSwapPlayerWithPlayerTwo(event: any, droppedGame: TournamentGame,
+                                 droppedTournamentPlayerId: string,
+                                 droppedTournamentPlayerOpponentId: string) {
+    if (this.dragStarted) {
 
-    event.preventDefault();
-    event.stopPropagation();
+      event.stopPropagation();
 
-    if (!this.smallScreen) {
+      if (!droppedGame.finished && this.draggedGame) {
 
-      if (!game.finished && this.actualTournament.creatorUid === this.userPlayerData.userUid) {
-        const that = this;
+        if (this.teamMatch && this.draggedGameTeamName !== droppedGame.playerTwoTeamName) {
+          return;
+        }
 
-        console.log('drag started');
+        this.swapPlayerMode = false;
+        this.dragStarted = false;
+        this.messageService.broadcast('swapPlayerMode', false);
 
-        // firefox foo
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('text/plain', null);
-
-        this.draggedTournamentPlayerId = dragTournamentPlayerId;
-        this.draggedTournamentPlayerCurrentOpponentId = dragTournamentPlayerOpponentId;
-        this.draggedGame = game;
-        this.dragStarted = true;
-
-        _.each(this.rankingsForRound, function (ranking: TournamentRanking) {
-          if (ranking.tournamentPlayerId === dragTournamentPlayerId) {
-            that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
+        // Don't do anything if dropping the same column we're dragging.
+        if (droppedTournamentPlayerId !== this.draggedTournamentPlayerId &&
+          droppedGame !== this.draggedGame) {
+          if (!this.playedAgainstOthers(this.draggedTournamentPlayerId, droppedTournamentPlayerOpponentId, droppedGame) &&
+            !this.playedAgainstOthers(droppedTournamentPlayerId, this.draggedTournamentPlayerCurrentOpponentId, this.draggedGame)) {
+            this.doSwapping(droppedGame, droppedTournamentPlayerId);
           }
-        });
+        }
+
       }
     }
-    return true;
   }
+
 
   dragEnableForPlayerOne(potentialDroppedGame: TournamentGame): boolean {
 
@@ -243,82 +246,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     }
   }
 
-
-  dragOver(event: any, tournamentPlayerId: string, opponentTournamentPlayerId: string) {
-
-    event.preventDefault();
-
-    if (this.draggedGame) {
-      if (this.draggedTournamentPlayerId === tournamentPlayerId ||
-        this.draggedTournamentPlayerId === opponentTournamentPlayerId ||
-        _.includes(this.draggedTournamentPlayerOpponentIds, opponentTournamentPlayerId)) {
-        event.target.classList.add('drag-over-disable');
-      } else {
-        event.target.classList.add('drag-over-enable');
-      }
-    }
-    return true;
-  }
-
-  dragLeave(event: any) {
-    event.preventDefault();
-
-    event.target.classList.remove('drag-over-disable');
-    event.target.classList.remove('drag-over-enable');
-
-    return false;
-  }
-
-
-  endDrag(event: any) {
-
-    event.target.classList.remove('drag-over-disable');
-    event.target.classList.remove('drag-over-enable');
-
-    this.dragStarted = false;
-    if (this.smallScreen) {
-      this.renderer.removeClass(document.body, 'prevent-scrolling');
-    }
-
-    return false;
-  }
-
-  dropped(event: any, droppedGame: TournamentGame,
-          droppedTournamentPlayerId: string,
-          droppedTournamentPlayerOpponentId: string) {
-
-    if (event.preventDefault) {
-      event.preventDefault();
-    }
-    if (event.stopPropagation) {
-      event.stopPropagation();
-    }
-
-    event.target.classList.remove('drag-over-disable');
-    event.target.classList.remove('drag-over-enable');
-    if (this.smallScreen) {
-      this.renderer.removeClass(document.body, 'prevent-scrolling');
-    }
-
-    if (!droppedGame.finished && this.draggedGame) {
-
-      // Don't do anything if dropping the same column we're dragging.
-      if (droppedTournamentPlayerId !== this.draggedTournamentPlayerId &&
-        droppedGame !== this.draggedGame) {
-        if (!this.playedAgainstOthers(this.draggedTournamentPlayerId, droppedTournamentPlayerOpponentId, droppedGame) &&
-          !this.playedAgainstOthers(droppedTournamentPlayerId, this.draggedTournamentPlayerCurrentOpponentId, this.draggedGame)) {
-          this.doSwapping(droppedGame, droppedTournamentPlayerId);
-        }
-      }
-    }
-    this.dragStarted = false;
-    this.draggedTournamentPlayerId = undefined;
-    this.draggedTournamentPlayerCurrentOpponentId = undefined;
-    this.draggedGame = undefined;
-
-
-    return false;
-  }
 
   private doSwapping(droppedGame: TournamentGame, droppedTournamentPlayerId: string) {
     const newGameOne = this.createGameOne(droppedGame, droppedTournamentPlayerId);

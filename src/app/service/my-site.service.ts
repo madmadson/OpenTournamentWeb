@@ -1,5 +1,4 @@
-import {Inject, Injectable, OnDestroy} from '@angular/core';
-import {FirebaseRef} from 'angularfire2';
+import { Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 
@@ -12,30 +11,19 @@ import {
 } from 'app/store/actions/my-site-actions';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
-
+import * as firebase from 'firebase';
 
 @Injectable()
-export class MySiteService implements OnDestroy {
+export class MySiteService {
 
   private myRegistrationsRef: firebase.database.Reference;
   private myGamesRef: firebase.database.Reference;
 
 
-  constructor(protected store: Store<ApplicationState>,
-              @Inject(FirebaseRef) private fb) {
+  constructor(protected store: Store<ApplicationState>) {
 
   }
 
-  ngOnDestroy(): void {
-
-    if (this.myRegistrationsRef) {
-      this.myRegistrationsRef.off();
-    }
-    if (this.myGamesRef) {
-      this.myGamesRef.off();
-    }
-
-  }
 
   subscribeOnMySite(playerId: string) {
 
@@ -53,11 +41,8 @@ export class MySiteService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new MyRegistrationsClearAction());
-    if (this.myRegistrationsRef) {
-      this.myRegistrationsRef.off();
-    }
 
-    this.myRegistrationsRef = this.fb.database().ref('players-registrations/' + playerId);
+    this.myRegistrationsRef = firebase.database().ref('players-registrations/' + playerId);
 
     this.myRegistrationsRef.on('child_added', function (snapshot) {
 
@@ -91,11 +76,8 @@ export class MySiteService implements OnDestroy {
     const that = this;
 
     this.store.dispatch(new MyGamesClearAction());
-    if (this.myGamesRef) {
-      this.myGamesRef.off();
-    }
 
-    this.myGamesRef = this.fb.database().ref('players-games/' + playerId);
+    this.myGamesRef = firebase.database().ref('players-games/' + playerId);
 
     this.myGamesRef.on('child_added', function (snapshot) {
 

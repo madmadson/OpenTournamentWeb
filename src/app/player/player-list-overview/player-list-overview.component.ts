@@ -11,7 +11,7 @@ import {Subscription} from 'rxjs/Subscription';
 @Component({
   selector: 'player-list-overview',
   templateUrl: './player-list-overview.component.html',
-  styleUrls: ['./player-list-overview.component.css']
+  styleUrls: ['./player-list-overview.component.scss']
 })
 export class PlayerListOverviewComponent implements OnInit, OnDestroy {
 

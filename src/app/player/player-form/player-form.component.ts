@@ -14,7 +14,6 @@ import {getAllCountries} from '../../../../shared/model/countries';
 })
 export class PlayerFormComponent implements OnInit {
 
-
   @Input()
   playerData: Player;
 
@@ -48,7 +47,7 @@ export class PlayerFormComponent implements OnInit {
       lastName: [this.playerData ? this.playerData.lastName : '', [Validators.required]],
       origin: [this.playerData ? this.playerData.origin : ''],
       meta: [this.playerData ? this.playerData.meta : ''],
-      elo: [this.playerData ? {value: this.playerData.elo, disabled: true} : ''],
+      elo: [this.playerData ? {value: this.playerData.elo, disabled: true} : {value: 1000, disabled: true}],
       country: [this.playerData ? this.playerData.country : ''],
     });
   }
@@ -75,7 +74,7 @@ export class PlayerFormComponent implements OnInit {
       formModel.firstName as string,
       this.playerData ? this.playerData.nickName : formModel.nickName as string,
       formModel.lastName as string,
-      this.playerData ? this.playerData.elo : formModel.elo as number,
+      this.playerData ? this.playerData.elo : 1000,
       formModel.origin as string,
       formModel.meta as string,
       formModel.country as string

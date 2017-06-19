@@ -14,6 +14,7 @@ import {RegisterPageComponent} from './auth/register-page/register-page.componen
 import {PasswordForgetComponent} from './auth/password-forget/password-forget.component';
 import {TournamentOverviewComponent} from './tournament/tournament-overview/tournament-overview.component';
 import {AboutComponent} from './about/about.component';
+import {GameListOverviewComponent} from './games/game-list-overview/game-list-overview.component';
 
 
 const routes: Routes = [
@@ -24,6 +25,7 @@ const routes: Routes = [
   {path: 'password-forget', component: PasswordForgetComponent},
   {path: 'tournaments', component: TournamentListOverviewComponent},
   {path: 'players', component: PlayerListOverviewComponent},
+  {path: 'games', component: GameListOverviewComponent},
   {path: 'my-site', component: MySiteComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'tournament/:id', component: TournamentOverviewComponent},
   {path: 'player-profile', component: PlayerFormComponent},

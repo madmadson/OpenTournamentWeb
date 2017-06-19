@@ -9,11 +9,6 @@ import {LoginService} from '../../service/auth.service';
 @Injectable()
 export class AuthEffectService {
 
-  constructor(
-    private actions$: Actions,
-    private loginService: LoginService
-  ) { }
-
   @Effect({dispatch: false}) login = this.actions$
     .ofType(LOGIN_ACTION)
     .debug('LOGIN_ACTION')
@@ -45,4 +40,8 @@ export class AuthEffectService {
     .debug('LOGOUT_ACTION')
     .map(action => this.loginService.logout());
 
+  constructor(
+    private actions$: Actions,
+    private loginService: LoginService
+  ) { }
 }

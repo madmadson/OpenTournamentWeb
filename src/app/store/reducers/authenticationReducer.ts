@@ -9,8 +9,6 @@ import * as _ from 'lodash';
 
 import {AuthenticationStoreState} from '../authentication-state';
 
-
-
  const INITIAL_STATE: AuthenticationStoreState = {
 
   currentUserId: undefined,

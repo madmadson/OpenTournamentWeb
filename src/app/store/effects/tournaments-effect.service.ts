@@ -3,8 +3,7 @@ import {Actions, Effect} from '@ngrx/effects';
 import {TournamentsService} from '../../service/tournaments.service';
 import {
   TOURNAMENT_PUSH_ACTION, TOURNAMENT_SET_ACTION,
-  TOURNAMENTS_SUBSCRIBE_ACTION,
-  TOURNAMENTS_UNSUBSCRIBE_ACTION
+  TOURNAMENTS_SUBSCRIBE_ACTION
 } from '../actions/tournaments-actions';
 
 @Injectable()
@@ -15,12 +14,6 @@ export class TournamentsEffectService {
     .ofType(TOURNAMENTS_SUBSCRIBE_ACTION)
     .debug('TOURNAMENTS_SUBSCRIBE_ACTION')
     .map(action => this.tournamentService.subscribeOnTournaments());
-
-  @Effect({dispatch: false}) unsubscribe = this.actions$
-    .ofType(TOURNAMENTS_UNSUBSCRIBE_ACTION)
-    .debug('TOURNAMENTS_UNSUBSCRIBE_ACTION')
-    .map(action => this.tournamentService.unsubscribeOnTournaments());
-
 
   @Effect({dispatch: false}) pushTournament = this.actions$
     .ofType(TOURNAMENT_PUSH_ACTION)
@@ -37,7 +30,4 @@ export class TournamentsEffectService {
     private actions$: Actions,
     private tournamentService: TournamentsService
   ) { }
-
-
-
 }

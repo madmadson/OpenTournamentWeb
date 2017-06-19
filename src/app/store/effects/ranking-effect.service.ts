@@ -3,7 +3,6 @@ import {Actions, Effect} from '@ngrx/effects';
 import {TournamentRankingService} from '../../service/tournament-ranking.service';
 import {TOURNAMENT_RANKINGS_SUBSCRIBE_ACTION} from '../actions/tournament-rankings-actions';
 
-
 @Injectable()
 export class RankingEffectService {
 
@@ -11,7 +10,6 @@ export class RankingEffectService {
     .ofType(TOURNAMENT_RANKINGS_SUBSCRIBE_ACTION)
     .debug('TOURNAMENT_RANKINGS_SUBSCRIBE_ACTION')
     .map(action => this.rankingService.subscribeOnTournamentRankings(action.payload));
-
 
   constructor(
     private actions$: Actions,
