@@ -1,9 +1,151 @@
 <h3 class="heading">Manage Tournament</h3>
+<md-dialog-content>
+  <!--<tournament-form-->
+  <!--[tournament]="tournament"-->
+  <!--(onSaveTournament)="handleSaveTournament($event)"></tournament-form>-->
 
-<tournament-form
-  [tournament]="tournament"
-  (onSaveTournament)="handleSaveTournament($event)"></tournament-form>
 
+  <form [formGroup]="tournamentForm" novalidate>
+    <div class="form-group">
+      <md-input-container
+        dividerColor="{{ (tournamentForm.get('name').invalid && tournamentForm.get('name').dirty) ? 'warn' : 'primary' }}"
+        class="full-width">
+        <input mdInput
+               required
+               placeholder="TournamentName"
+               formControlName="name"
+               #inputName>
+        <md-hint align="end">{{inputName.value.length}} / 5-30</md-hint>
+        <md-hint *ngIf="tournamentForm.get('name').invalid && tournamentForm.get('name').dirty" style="color: red">
+          <span>{{tournamentForm.get('name').getError('message')}}</span>
+        </md-hint>
+      </md-input-container>
+      <md-input-container
+        dividerColor="{{ (tournamentForm.get('location').invalid && tournamentForm.get('location').dirty) ? 'warn' : 'primary' }}"
+        class="full-width">
+        <input mdInput
+               required
+               placeholder="Location"
+               formControlName="location"
+               #inputLocation>
+        <md-hint align="end">{{inputLocation.value.length}} / 5-30</md-hint>
+        <md-hint *ngIf="tournamentForm.get('location').invalid && tournamentForm.get('location').dirty"
+                 style="color: red">
+          <span>{{tournamentForm.get('location').getError('message')}}</span>
+        </md-hint>
+      </md-input-container>
+    </div>
+
+    <md-input-container class="full-width">
+      <input mdInput
+             name="beginDate"
+             placeholder="Start"
+             formControlName="beginDate"
+             [ngModel]="tournamentForm.get('beginDate').value"
+             [mode]="'dropdown'"
+             [dateTimePicker]="tournamentForm.get('beginDate').value"
+             (dateTimePickerChange)="setBeginDate($event)"
+             theme="gray"
+             readonly
+             required
+      />
+    </md-input-container>
+    <md-input-container class="full-width">
+      <input mdInput
+             name="endDate"
+             placeholder="End"
+             formControlName="endDate"
+             [ngModel]="tournamentForm.get('endDate').value"
+             [mode]="'dropdown'"
+             [dateTimePicker]="tournamentForm.get('endDate').value"
+             (dateTimePickerChange)="setEndDate($event)"
+             theme="gray"
+             readonly
+             required/>
+    </md-input-container>
+    <div class="full-width">
+      <md-checkbox formControlName="dailyMail"
+                   mdTooltip="You will receive a daily mail with all Registrations and ArmyLists"
+      >DailyMail
+      </md-checkbox>
+    </div>
+
+    <div class="full-width">
+      <md-checkbox
+        formControlName="teamTournament"
+      >TeamTournament
+      </md-checkbox>
+    </div>
+    <md-input-container *ngIf="tournamentForm.get('teamTournament').value" class="full-width">
+      <input mdInput
+             type="number"
+             min="2"
+             max="20"
+             placeholder="TeamSize"
+             formControlName="teamSize"
+             required
+             #inputTeamSizes>
+      <md-hint align="end">{{inputTeamSizes.value}} / 2-20</md-hint>
+      <md-hint *ngIf="tournamentForm.get('teamSize').invalid && tournamentForm.get('teamSize').dirty"
+               style="color: red">
+        <span>{{tournamentForm.get('teamSize').getError('message')}}</span>
+      </md-hint>
+
+    </md-input-container>
+    <md-input-container
+      dividerColor="{{ (tournamentForm.get('maxParticipants').invalid && tournamentForm.get('maxParticipants').dirty) ? 'warn' : 'primary' }}"
+      class="full-width">
+      <input mdInput
+             type="number"
+             min="2"
+             max="9999"
+             placeholder="MaxParticipants"
+             formControlName="maxParticipants"
+             required
+             #inputMaxParticipants>
+      <md-hint align="end">{{inputMaxParticipants.value}} / 2-9999</md-hint>
+      <md-hint *ngIf="tournamentForm.get('maxParticipants').invalid && tournamentForm.get('maxParticipants').dirty"
+               style="color: red">
+        <span>{{tournamentForm.get('maxParticipants').getError('message')}}</span>
+      </md-hint>
+    </md-input-container>
+
+    <!--<md-input-container-->
+       <!--class="full-width">-->
+      <!--<input mdInput-->
+             <!--maxlength="50"-->
+             <!--placeholder="PaymentLink (Paypal.me)"-->
+             <!--formControlName="payLink"-->
+             <!--#payLink>-->
+      <!--<md-hint align="end">{{payLink.value.length}} / 30</md-hint>-->
+    <!--</md-input-container>-->
+    <md-input-container
+      class="full-width">
+      <textarea
+        mdInput
+        maxlength="1000"
+        placeholder="Tournament Description"
+        formControlName="description"
+        #description>
+      </textarea>
+      <md-hint align="end">{{description.value.length}} / 1000</md-hint>
+    </md-input-container>
+  </form>
+
+</md-dialog-content>
 <div md-dialog-actions>
-  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  <div class="full-width">
+    <button type="button" md-raised-button
+            color="primary"
+            (click)="dialogRef.close()">
+      Close Dialog
+    </button>
+    <button type="button" md-raised-button
+            class="right-align-button"
+            (click)="saveTournament()"
+            color="accent"
+            [disabled]="tournamentForm.invalid">
+      Save Tournament
+    </button>
+  </div>
 </div>

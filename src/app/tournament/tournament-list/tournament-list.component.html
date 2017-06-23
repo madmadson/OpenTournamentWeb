@@ -24,24 +24,31 @@
     </mdl-icon>
     <span>{{tournament.name | truncate:truncateMax}}</span>
     <mdl-list-item-text-body>
-      <div mdTooltip="Tournament Date"
+      <div
            *ngIf="(tournament.beginDate | date:'MM/d/yy') === (tournament.endDate | date:'MM/d/yy')">
         {{tournament.beginDate | date:'EEE, d'}}
         <ng-container *ngIf="!verySmallDevice">
           / {{tournament.beginDate | date:'HH:mm'}}-{{tournament.endDate | date:'HH:mm'}}
         </ng-container>
       </div>
-      <div mdTooltip="Tournament Date"
-           *ngIf="(tournament.beginDate | date:'MM/d/yy') !== (tournament.endDate | date:'MM/d/yy')">
+      <div *ngIf="(tournament.beginDate | date:'MM/d/yy') !== (tournament.endDate | date:'MM/d/yy')">
         {{tournament.beginDate | date:'EEE, d'}} - {{tournament.endDate | date:'EEE, d'}}
         <ng-container *ngIf="!verySmallDevice">
           / {{tournament.beginDate | date:'HH:mm'}}-{{tournament.endDate | date:'HH:mm'}}
         </ng-container>
       </div>
-      <div mdTooltip="Location">{{tournament.location | truncate:truncateMax}}</div>
+      <div>{{tournament.location | truncate:truncateMax}}</div>
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>
   <mdl-list-item-secondary-content *ngIf="!verySmallDevice">
-    <div>{{tournament.actualParticipants}}/{{tournament.maxParticipants}}</div>
+    <div class="participants-info">{{tournament.actualParticipants}}/{{tournament.maxParticipants}}</div>
+  </mdl-list-item-secondary-content>
+
+  <mdl-list-item-secondary-content>
+    <mdl-icon class="tournament-info-icon list-action"
+              mdTooltip="Info to Tournament"
+              (click)="openInfoDialog($event, tournament)">
+      info
+    </mdl-icon>
   </mdl-list-item-secondary-content>
 </mdl-list-item>

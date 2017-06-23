@@ -1,4 +1,4 @@
-@import "../../../styles";
+@import '../../../styles';
 
 .player-name-table-cell{
   font-size: 1.2em;
@@ -6,11 +6,42 @@
   font-weight: bold;
 }
 
+.game-list-vs-divider{
+  text-align: center;
+  font-size: 2em;
+  margin-top: $main_tick;
+  margin-bottom: $main_tick;
+}
+
+.game-list-head-counter{
+  margin: $halve_tick;
+  padding: 0;
+}
+
+.game-list-item{
+  text-align: left;
+  margin: $main_tick;
+  padding: $main_tick;
+}
+
 
 .game-table-won {
-  color: #1fad49;
+  color: $success_color;
 }
 
 .game-table-lost {
-  color: #ff7e72;
+  color: $fail_color;
+}
+
+.game-list-full-width-td{
+  text-align: center;
+}
+
+.games-table-row:hover{
+  background-color: $color_info;
+  cursor: pointer;
+}
+
+.centered{
+  text-align: center;
 }

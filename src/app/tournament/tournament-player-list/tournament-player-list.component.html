@@ -9,9 +9,9 @@
 
     <mdl-list-item-text-body>
       <div>{{tournamentPlayer.faction}}</div>
-      <div mdTooltip="TEAM" *ngIf="smallScreen">{{tournamentPlayer.teamName }}</div>
-      <div mdTooltip="TEAM - META - ORIGIN - COUNTRY" *ngIf="!smallScreen">
-        {{tournamentPlayer.teamName }} - {{tournamentPlayer.meta}} - {{tournamentPlayer.origin}} - {{tournamentPlayer.country}}
+      <div mdTooltip="Team" *ngIf="smallScreen">{{tournamentPlayer.teamName }}</div>
+      <div mdTooltip="Team - Locality - Country" *ngIf="!smallScreen">
+        {{tournamentPlayer.teamName }} - {{tournamentPlayer.meta}}  - {{tournamentPlayer.country}}
       </div>
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>

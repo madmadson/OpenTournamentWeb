@@ -7,7 +7,6 @@ import {HomePageComponent} from './home-page/home-page.component';
 import {PageNotFoundComponent} from './not-found.component';
 import {MySiteComponent} from './my-site/my-site.component';
 import {AuthGuard} from './service/auth-guard.service';
-import {TournamentRegistrationFormComponent} from './tournament/tournament-registration-form/tournament-registration-form.component';
 import {PlayerListOverviewComponent} from './player/player-list-overview/player-list-overview.component';
 import {PlayerFormComponent} from './player/player-form/player-form.component';
 import {RegisterPageComponent} from './auth/register-page/register-page.component';
@@ -29,7 +28,6 @@ const routes: Routes = [
   {path: 'my-site', component: MySiteComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'tournament/:id', component: TournamentOverviewComponent},
   {path: 'player-profile', component: PlayerFormComponent},
-  {path: 'tournament/:id/register', component: TournamentRegistrationFormComponent},
   {path: 'game', component: GameEditComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: '**', component: PageNotFoundComponent}

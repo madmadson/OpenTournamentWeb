@@ -5,6 +5,7 @@ $success_color: #388E3C;
 $fail_color: #FF1501;
 $color_info: deepskyblue;
 $hover_color: #1e05ff;
+$color_dark_primary: #512DA8;
 
 $main_tick: 12px;
 $halve_tick: 6px;
@@ -465,3 +466,10 @@ snack-bar-container.snackBar-info {
   background-color: $color_info;
 }
 
+.mat-dialog-container{
+  max-width: 100vw !important;
+}
+
+.mdl-list__item-primary-content{
+  line-height: 16px !important;
+}

@@ -15,6 +15,7 @@ export class PlayerListComponent {
 
   smallScreen: boolean;
   truncateMax: number;
+  page = 1;
 
   constructor(private router: Router,
               private winRef: WindowRefService) {

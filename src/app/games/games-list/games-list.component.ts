@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {Router} from '@angular/router';
 import {WindowRefService} from '../../service/window-ref-service';
@@ -10,11 +10,12 @@ import {WindowRefService} from '../../service/window-ref-service';
 })
 export class GamesListComponent implements OnInit {
 
-  @Input()
-  games: TournamentGame[];
+  @Input() games: TournamentGame[];
 
   smallScreen: boolean;
   truncateMax: number;
+
+  page = 1;
 
   constructor(private router: Router,
               private winRef: WindowRefService) {

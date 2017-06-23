@@ -26,6 +26,7 @@ import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-p
 import {PrintArmyListsDialogComponent} from '../../dialogs/print-army-lists-dialog';
 import {AddArmyListsDialogComponent} from '../../dialogs/add-army-lists-dialog';
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
+import {AddPlayerRegistrationDialogComponent} from '../../dialogs/tournament-preparation/add-player-registration-dialog';
 
 
 
@@ -253,7 +254,7 @@ export class TournamentPreparationComponent implements OnInit {
   }
 
   openRegistrationDialog() {
-    const dialogRef = this.dialog.open(RegisterDialogComponent, {
+    const dialogRef = this.dialog.open(AddPlayerRegistrationDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
         userPlayerData: this.userPlayerData
@@ -505,36 +506,6 @@ export class TournamentPreparationComponent implements OnInit {
 }
 
 
-@Component({
-  selector: 'registration-dialog',
-  templateUrl: './registration-dialog.html'
-})
-export class RegisterDialogComponent {
-
-  userPlayerData: Player;
-  actualTournament: Tournament;
-  team: TournamentTeam;
-
-  @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
-
-  constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-
-    this.userPlayerData = data.userPlayerData;
-    this.actualTournament = data.actualTournament;
-    this.team = data.team;
-  }
-
-  onSaveRegistrationForTeamTournament(registration: Registration) {
-
-    this.onAddTournamentRegistration.emit({
-      registration: registration,
-      tournament: this.actualTournament,
-      tournamentTeam: this.team,
-    });
-    this.dialogRef.close();
-  }
-}
 
 @Component({
   selector: 'create-team-dialog',
@@ -555,7 +526,7 @@ export class CreateTeamDialogComponent implements OnInit {
   teamNameAlreadyInUse: boolean;
   dummyNotAllowed: boolean;
 
-  constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>,
+  constructor(public dialogRef: MdDialogRef<CreateTeamDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
               private formBuilder: FormBuilder) {
 
@@ -645,7 +616,7 @@ export class RegisterTeamDialogComponent implements OnInit {
   teamNameAlreadyInUse: boolean;
   dummyNotAllowed: boolean;
 
-  constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>,
+  constructor(public dialogRef: MdDialogRef<RegisterTeamDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
               private formBuilder: FormBuilder) {
 

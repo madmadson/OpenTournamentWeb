@@ -1,34 +1,53 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-
-import * as moment from 'moment';
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {Player} from '../../../../shared/model/player';
-import {getAllFactions} from '../../../../shared/model/factions';
-
 import {Tournament} from '../../../../shared/model/tournament';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
+import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
+import {RegistrationPush} from '../../../../shared/dto/registration-push';
 import {Registration} from '../../../../shared/model/registration';
 
+import * as moment from 'moment';
+
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {getAllFactions} from '../../../../shared/model/factions';
 
 @Component({
-  selector: 'tournament-registration-form',
-  templateUrl: './tournament-registration-form.component.html',
-  styleUrls: ['./tournament-registration-form.component.scss']
+  selector: 'add-player-registration-dialog',
+  templateUrl: './add-player-registration-dialog.html',
+  styleUrls: ['./add-player-registration-dialog.scss']
 })
-export class TournamentRegistrationFormComponent implements OnInit {
+export class AddPlayerRegistrationDialogComponent  implements OnInit {
 
-  @Input() actualTournament: Tournament;
-  @Input() userPlayerData: Player;
-  @Input() team: TournamentTeam;
-
-  @Output() onSaveRegistration = new EventEmitter<Registration>();
+  userPlayerData: Player;
+  actualTournament: Tournament;
+  team: TournamentTeam;
 
   tournamentRegistrationForm: FormGroup;
   factions: string[];
 
-  constructor(private formBuilder: FormBuilder) {
+  @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
+
+  constructor(public dialogRef: MdDialogRef<AddPlayerRegistrationDialogComponent>,
+              @Inject(MD_DIALOG_DATA) public data: any,
+              private formBuilder: FormBuilder) {
+
+    this.userPlayerData = data.userPlayerData;
+    this.actualTournament = data.actualTournament;
+    this.team = data.team;
 
     this.factions = getAllFactions();
+  }
+
+  saveTournamentRegistration() {
+
+    const registration = this.prepareSaveRegistration();
+
+    this.onAddTournamentRegistration.emit({
+      registration: registration,
+      tournament: this.actualTournament,
+      tournamentTeam: this.team,
+    });
+    this.dialogRef.close();
   }
 
   ngOnInit() {
@@ -54,11 +73,6 @@ export class TournamentRegistrationFormComponent implements OnInit {
     }
   }
 
-  saveTournamentRegistration() {
-
-    const registration = this.prepareSaveRegistration();
-    this.onSaveRegistration.emit(registration);
-  }
 
   prepareSaveRegistration(): Registration {
     const formModel = this.tournamentRegistrationForm.getRawValue();
@@ -79,8 +93,9 @@ export class TournamentRegistrationFormComponent implements OnInit {
       country: this.userPlayerData.country,
       elo: this.userPlayerData.elo,
       faction: formModel.faction,
-      isTournamentPlayer: false
+      isTournamentPlayer: false,
+      armyListForTournament: false,
+      paidForTournament: false
     };
   }
-
 }

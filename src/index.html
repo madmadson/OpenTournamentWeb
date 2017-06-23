@@ -11,16 +11,16 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/material.deep_purple-amber.min.css" />
+  <link rel="stylesheet" href="assets/css/material.deep_purple-amber.min.css"/>
   <link rel="manifest" href="manifest.json">
 
   <noscript>Sorry, your browser does not support JavaScript!</noscript>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+      navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
         // Registration was successful
         console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }).catch(function(err) {
+      }).catch(function (err) {
         // registration failed :(
         console.log('ServiceWorker registration failed: ', err);
       });
@@ -28,45 +28,55 @@
   </script>
   <style>
 
-    .loading-heading{
+    .loading-heading {
       text-align: center;
       font-size: 1.8em;
       margin-right: 12px;
       margin-left: 12px;
       margin-bottom: 12px;
-      color: #FFC107;
+      color: #673AB7;
     }
+
     @media only screen and (min-width: 500px) {
       .loading-heading {
         font-size: 3em;
       }
     }
 
-    .container{
+    .container {
       display: flex;
       justify-content: center;
       width: 98vw;
+      margin-top: 24px;
     }
 
     .loader {
       border: 16px solid #f3f3f3;
       border-radius: 50%;
       border-top: 16px solid #673AB7;
-      width: 120px;
-      height: 120px;
+      width: 96px;
+      height: 96px;
       -webkit-animation: spin 2s linear infinite;
       animation: spin 2s linear infinite;
       max-width: 50%;
     }
 
     @-webkit-keyframes spin {
-      0% { -webkit-transform: rotate(0deg); }
-      100% { -webkit-transform: rotate(360deg); }
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
@@ -74,7 +84,11 @@
 <app-root>
   <h1 class="loading-heading">Load OpenTournament</h1>
   <div class="container">
-    <div class="loader"></div>
+    <div class="loader">
+    </div>
+  </div>
+  <div class="container">
+    <img src="assets/icon_final_192.png">
   </div>
 </app-root>
 <dialog-outlet></dialog-outlet>

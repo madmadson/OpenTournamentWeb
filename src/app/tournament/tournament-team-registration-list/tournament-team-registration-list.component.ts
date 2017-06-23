@@ -6,15 +6,15 @@ import {WindowRefService} from '../../service/window-ref-service';
 import {Registration} from '../../../../shared/model/registration';
 
 import * as _ from 'lodash';
-import {RegisterDialogComponent} from '../tournament-preparation/tournament-preparation.component';
+
 import {Player} from '../../../../shared/model/player';
 import {Tournament} from '../../../../shared/model/tournament';
 import {ShowTeamRegistrationDialogComponent} from '../../dialogs/show-team-registration-dialog';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
-import {NewTournamentPlayerDialogComponent} from "../../dialogs/add-tournament-player-dialog";
-import {TournamentPlayer} from "../../../../shared/model/tournament-player";
-import {RegistrationPush} from "../../../../shared/dto/registration-push";
-import {dummyGames} from "../../game-edit/game";
+
+import {RegistrationPush} from '../../../../shared/dto/registration-push';
+
+import {AddPlayerRegistrationDialogComponent} from '../../dialogs/tournament-preparation/add-player-registration-dialog';
 
 
 @Component({
@@ -74,7 +74,7 @@ export class TournamentTeamRegistrationListComponent {
 
     event.stopPropagation();
 
-    const dialogRef = this.dialog.open(RegisterDialogComponent, {
+    const dialogRef = this.dialog.open(AddPlayerRegistrationDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
         userPlayerData: this.userPlayerData,

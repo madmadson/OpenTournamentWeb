@@ -16,7 +16,7 @@
     </th>
   </tr>
   </thead>
-  <tbody *ngFor="let game of games | paginate: { itemsPerPage: 10, currentPage: p }; let i = index; let even = even">
+  <tbody *ngFor="let game of games | paginate: { itemsPerPage: 10, currentPage: page }; let i = index; let even = even">
   <tr class="games-table-row" (click)="onSelect(game)">
     <td *ngIf="smallScreen" class="game-list-full-width-td">
       <div [ngClass]="{'game-table-won': (playerOneWon(game)),
@@ -68,7 +68,7 @@
   </tr>
   </tbody>
 </table>
-<pagination-controls (pageChange)="p = $event"></pagination-controls>
+<pagination-controls (pageChange)="page = $event"></pagination-controls>
 
 
 

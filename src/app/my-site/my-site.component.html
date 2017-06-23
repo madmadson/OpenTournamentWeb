@@ -53,9 +53,9 @@
   <mdl-tab-panel mdl-tab-panel-title="{{getMyGamesTitle()}}">
     <div class="flex-container">
       <md-card class="single-list-card">
-        <h4 class="heading" *ngIf="(myGames$ | async).length == 0">No Played Games found</h4>
-        <player-games-table *ngIf="(myGames$ | async).length > 0"
-                            [myGames$]="myGames$">
+        <h4 class="heading" *ngIf="myGames?.length == 0">No Played Games found</h4>
+        <player-games-table *ngIf="myGames?.length > 0"
+                            [myGames]="myGames">
         </player-games-table>
       </md-card>
     </div>

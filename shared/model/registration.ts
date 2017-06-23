@@ -1,4 +1,3 @@
-import {ArmyList} from './armyList';
 
 export class Registration {
 
@@ -19,22 +18,26 @@ export class Registration {
   elo: number;
   faction: string;
   isTournamentPlayer: boolean;
+  armyListForTournament: boolean;
+  paidForTournament: boolean;
 
   static fromJson({ tournamentId, tournamentName, tournamentLocation, tournamentDate, playerName, email,
                     origin, meta,
-                    registrationDate, teamName, playerId, teamId, country, elo, faction, isTournamentPlayer}): Registration {
+                    registrationDate, teamName, playerId, teamId, country, elo, faction,
+                    isTournamentPlayer, armyListForTournament, paidForTournament}): Registration {
     return new Registration(
       tournamentId, tournamentName, tournamentLocation, tournamentDate, playerName, email, origin,
       meta, registrationDate,
-      teamName, playerId, teamId, country, elo, faction, isTournamentPlayer);
+      teamName, playerId, teamId, country, elo, faction,
+      armyListForTournament, paidForTournament, isTournamentPlayer );
   }
-
 
   constructor(tournamentId: string, tournamentName: string, tournamentLocation: string, tournamentDate: string,
               playerName: string, email: string, origin: string,
               meta: string, registrationDate: string,
               teamName: string, playerId: string, teamId: string,
-              country: string, elo: number, faction: string, isTournamentPlayer: boolean) {
+              country: string, elo: number, faction: string,
+              isTournamentPlayer: boolean, armyListForTournament: boolean, paidForTournament: boolean) {
 
     this.tournamentId = tournamentId;
     this.tournamentName = tournamentName;
@@ -53,6 +56,8 @@ export class Registration {
     this.elo = elo;
     this.faction = faction;
     this.isTournamentPlayer = isTournamentPlayer;
+    this.armyListForTournament = armyListForTournament;
+    this.paidForTournament = paidForTournament;
   }
 }
 

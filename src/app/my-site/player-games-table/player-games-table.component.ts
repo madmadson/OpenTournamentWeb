@@ -1,6 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
+import {Router} from "@angular/router";
+import {WindowRefService} from "../../service/window-ref-service";
 
 @Component({
   selector: 'player-games-table',
@@ -9,9 +11,23 @@ import {TournamentGame} from '../../../../shared/model/tournament-game';
 })
 export class PlayerGamesTableComponent implements OnInit {
 
-  @Input() myGames$: Observable<TournamentGame[]>;
+  @Input() myGames: TournamentGame[];
+  smallScreen: boolean;
+  truncateMax: number;
 
-  constructor() { }
+  page = 1;
+
+  constructor(private router: Router,
+              private winRef: WindowRefService) {
+
+    if (this.winRef.nativeWindow.screen.width < 800) {
+      this.smallScreen = true;
+      this.truncateMax = 30;
+    } else {
+      this.smallScreen = false;
+      this.truncateMax = 40;
+    }
+  }
 
   ngOnInit() {
   }
@@ -22,6 +38,8 @@ export class PlayerGamesTableComponent implements OnInit {
   }
   playerTwoWon(game: TournamentGame): boolean {
     return game.playerOneScore < game.playerTwoScore;
-
+  }
+  onSelect(game: TournamentGame) {
+    this.router.navigate(['/tournament/' + game.tournamentId]);
   }
 }

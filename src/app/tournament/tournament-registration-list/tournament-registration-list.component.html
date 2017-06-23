@@ -8,11 +8,10 @@
 
     <mdl-list-item-text-body>
       <div class="registration-list-item">{{registration.faction}}</div>
-      <div mdTooltip="TEAMNAME" class="registration-list-item" *ngIf="smallScreen">{{registration.teamName | truncate:truncateMax}}</div>
-      <div mdTooltip="TEAMNAME - META - ORIGIN" class="registration-list-item" *ngIf="!smallScreen">
+      <div mdTooltip="Team" class="registration-list-item" *ngIf="smallScreen">{{registration.teamName | truncate:truncateMax}}</div>
+      <div mdTooltip="Team - Locality" class="registration-list-item" *ngIf="!smallScreen">
         {{registration.teamName | truncate:truncateMax }} -
-        {{registration.meta | truncate:truncateMax}} -
-        {{registration.origin | truncate:truncateMax}}
+        {{registration.meta | truncate:truncateMax}}
       </div>
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>

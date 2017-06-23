@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {Player} from '../../../../shared/model/player';
 import {Tournament} from '../../../../shared/model/tournament';
 import {ArmyList} from '../../../../shared/model/armyList';
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 
 import {WindowRefService} from '../../service/window-ref-service';
@@ -28,7 +27,7 @@ export class TournamentPlayerListComponent implements OnInit {
   smallScreen: boolean;
   truncateMax: number;
 
-  constructor(public dialog: MdDialog,
+  constructor(
               private winRef: WindowRefService) {
 
     if (this.winRef.nativeWindow.screen.width < 500) {

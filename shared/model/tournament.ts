@@ -17,24 +17,26 @@ export class Tournament {
   dailyMail: boolean;
   finished: boolean;
   uploaded: boolean;
+  payLink: string;
+  description: string;
 
   static fromJson({name, location, beginDate, endDate,
                     maxParticipants, actualParticipants,
                     teamSize, actualRound, visibleRound, creatorUid, creatorMail,
-                    dailyMail, finished, uploaded}): Tournament {
+                    dailyMail, finished, uploaded, payLink, description}): Tournament {
     return new Tournament(
       name, location,
       beginDate, endDate,
       maxParticipants, actualParticipants, teamSize, actualRound,
       visibleRound, creatorUid, creatorMail, dailyMail,
-      finished, uploaded);
+      finished, uploaded, payLink, description);
   }
 
 
   constructor(name: string, location: string, beginDate: string, endDate: string,
               maxParticipants: number, actualParticipants: number, teamSize: number, actualRound: number,
               visibleRound: number, creatorUid: string, creatorMail: string,
-              dailyMail: boolean, finished: boolean, uploaded: boolean) {
+              dailyMail: boolean, finished: boolean, uploaded: boolean, payLink: string, description: string) {
     this.name = name;
     this.location = location;
     this.beginDate = beginDate;
@@ -49,6 +51,9 @@ export class Tournament {
     this.dailyMail = dailyMail;
     this.finished = finished;
     this.uploaded = uploaded;
+    this.payLink = payLink;
+    this.description = description;
+
   }
 }
 

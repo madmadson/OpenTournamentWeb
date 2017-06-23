@@ -2,11 +2,10 @@ import {Component, EventEmitter, Inject, Output} from '@angular/core';
 import {Registration} from '../../../shared/model/registration';
 import {ArmyList} from '../../../shared/model/armyList';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
-import {RegisterDialogComponent} from '../tournament/tournament-preparation/tournament-preparation.component';
 
 import * as _ from 'lodash';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
-import {TournamentTeam} from "../../../shared/model/tournament-team";
+import {TournamentTeam} from '../../../shared/model/tournament-team';
 
 @Component({
   selector: 'add-army-lists-dialog',
@@ -16,7 +15,6 @@ export class AddArmyListsDialogComponent {
 
   registration: Registration;
   tournamentPlayer: TournamentPlayer;
-  tournamentTeam: TournamentTeam;
   armyLists: ArmyList[];
 
   armyListModel: ArmyList;
@@ -25,7 +23,7 @@ export class AddArmyListsDialogComponent {
   @Output() onSaveArmyList = new EventEmitter<ArmyList>();
   @Output() onDeleteArmyList = new EventEmitter<ArmyList>();
 
-  constructor(public dialogRef: MdDialogRef<RegisterDialogComponent>,
+  constructor(public dialogRef: MdDialogRef<AddArmyListsDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
 
     const that = this;

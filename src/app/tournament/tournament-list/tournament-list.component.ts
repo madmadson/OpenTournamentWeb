@@ -3,6 +3,8 @@ import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
 import {Tournament} from '../../../../shared/model/tournament';
 import {WindowRefService} from '../../service/window-ref-service';
+import {TournamentInfoDialogComponent} from "../../dialogs/tournament-overview/tournament-info-dialog";
+import {MdDialog} from "@angular/material";
 
 @Component({
   selector: 'tournament-list',
@@ -16,12 +18,13 @@ export class TournamentListComponent  {
   verySmallDevice: boolean;
   truncateMax: number;
 
-  constructor(private router: Router,
+  constructor(public dialog: MdDialog,
+              private router: Router,
               private winRef: WindowRefService) {
 
     if (this.winRef.nativeWindow.screen.width < 500) {
       this.verySmallDevice = true;
-      this.truncateMax = 20;
+      this.truncateMax = 30;
     }  else {
       this.verySmallDevice = false;
       this.truncateMax = 40;
@@ -33,5 +36,15 @@ export class TournamentListComponent  {
     this.router.navigate(['/tournament', tournament.id]);
   }
 
+  openInfoDialog(event: any, tournament: Tournament) {
 
+    event.stopPropagation();
+
+    this.dialog.open(TournamentInfoDialogComponent, {
+      data: {
+        tournament: tournament
+      },
+      width: '800px'
+    });
+  }
 }

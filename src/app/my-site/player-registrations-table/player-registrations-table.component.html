@@ -1,28 +1,40 @@
-<table class="full-width mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--3dp">
+<ng-container *ngIf="!myRegistrations">
+  <div class="heading">Load Registrations...
+    <mdl-spinner single-color active></mdl-spinner>
+  </div>
+</ng-container>
+
+<table class="full-width mdl-data-table mdl-shadow--3dp">
   <thead>
   <tr>
-    <th class="small-three-space-table-cell">#</th>
-    <th class="mdl-data-table__cell--non-numeric">Tournament</th>
-    <th class="small-three-space-table-cell">Team</th>
-    <th class="small-three-space-table-cell">Faction</th>
-    <th class="small-three-space-table-cell">Link</th>
+    <th *ngIf="smallScreen" class="centered">Registrations</th>
+    <th *ngIf="!smallScreen" class="centered">Tournament</th>
+    <th *ngIf="!smallScreen" class="centered">Team</th>
+    <th *ngIf="!smallScreen" class="centered">Faction</th>
   </tr>
   </thead>
-  <tbody *ngFor="let reg of myRegistrations; let i = index; let even = even"
-         [ngClass]="{'even': even} ">
-  <tr class="table-row">
-    <td class="small-three-space-table-cell reg-table-cell">{{i +1}}</td>
-    <td class="mdl-data-table__cell--non-numeric">
-      <div class="tournament-name-table-cell">{{reg.tournamentName | truncate:40}}</div>
+  <tbody
+    *ngFor="let reg of myRegistrations | paginate: { itemsPerPage: 10, currentPage: page }; let i = index; let even = even">
+  <tr class="games-table-row" (click)="onSelect(reg)">
+    <td *ngIf="smallScreen" class="game-list-full-width-td">
+      <div class="player-name-table-cell">
+        {{reg.tournamentName | truncate:truncateMax}}
+      </div>
       <div>{{reg.tournamentLocation}}</div>
-      <div> {{reg.tournamentDate | date:'MM/d/yy HH:mm'}}</div>
+      <div>{{reg.tournamentDate | date:'MM/d/yy HH:mm'}}</div>
+      <div>{{reg.teamName}}</div>
+      <div>{{reg.faction}}</div>
     </td>
-    <td class="small-three-space-table-cell">{{reg.teamName}}</td>
-    <td class="small-three-space-table-cell">{{reg.faction}}</td>
-    <td class="small-three-space-table-cell">
-      <a  [routerLink]="['/tournament/' + reg.tournamentId]">Go To Tournament</a>
+    <td *ngIf="!smallScreen" class="game-list-full-width-td">
+      <div class="player-name-table-cell">
+        {{reg.tournamentName | truncate:truncateMax}}
+      </div>
+      <div>{{reg.tournamentLocation}}</div>
+      <div>{{reg.tournamentDate | date:'MM/d/yy HH:mm'}}</div>
     </td>
+    <td *ngIf="!smallScreen" class="game-list-full-width-td">{{reg.teamName}}</td>
+    <td *ngIf="!smallScreen" class="game-list-full-width-td">{{reg.faction}}</td>
   </tr>
   </tbody>
 </table>
-
+<pagination-controls (pageChange)="page = $event"></pagination-controls>

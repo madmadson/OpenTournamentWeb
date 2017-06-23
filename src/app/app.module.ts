@@ -32,16 +32,14 @@ import {PageNotFoundComponent} from './not-found.component';
 import {AppRoutingModule} from './app-routing.module';
 
 import 'hammerjs';
-import {TournamentFormComponent} from './tournament/tournament-form/tournament-form.component';
 import {CustomFormsModule} from 'ng2-validation';
 import {AuthGuard} from './service/auth-guard.service';
 import {
    CreateTeamDialogComponent,
-  RegisterDialogComponent, RegisterTeamDialogComponent, StartTournamentDialogComponent,
+   RegisterTeamDialogComponent, StartTournamentDialogComponent,
   TournamentPreparationComponent,
 
 } from './tournament/tournament-preparation/tournament-preparation.component';
-import {TournamentRegistrationFormComponent} from './tournament/tournament-registration-form/tournament-registration-form.component';
 import {TournamentEffectService} from './store/effects/tournament-effect.service';
 import {TournamentService} from './service/tournament.service';
 import {PlayerListOverviewComponent} from './player/player-list-overview/player-list-overview.component';
@@ -132,8 +130,10 @@ import {AngularFireModule} from 'angularfire2';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { GameListOverviewComponent } from './games/game-list-overview/game-list-overview.component';
 import {GamesReducer} from './store/reducers/gamesReducer';
-import {GamesEffectService} from "./store/effects/games-effect.service";
-import {GamesService} from "./service/games.service";
+import {GamesEffectService} from './store/effects/games-effect.service';
+import {GamesService} from './service/games.service';
+import {TournamentInfoDialogComponent} from './dialogs/tournament-overview/tournament-info-dialog';
+import {AddPlayerRegistrationDialogComponent} from './dialogs/tournament-preparation/add-player-registration-dialog';
 
 
 const reducers = {
@@ -232,16 +232,14 @@ export const firebaseConfDev = {
     TournamentListOverviewComponent,
     MySiteComponent,
     PageNotFoundComponent,
-    TournamentFormComponent,
     TournamentPreparationComponent,
-    TournamentRegistrationFormComponent,
     PlayerListOverviewComponent,
     PlayerListComponent,
     PlayerFormComponent,
     RegisterPageComponent,
     PasswordForgetComponent,
     TournamentRegistrationListComponent,
-    RegisterDialogComponent,
+
     TournamentPlayerListComponent,
     AddArmyListsDialogComponent,
     NewTournamentPlayerDialogComponent,
@@ -279,7 +277,9 @@ export const firebaseConfDev = {
     TournamentTeamGameListComponent,
     TeamMatchDialogComponent,
     TournamentTeamFinalRankingsComponent,
-    GameListOverviewComponent
+    GameListOverviewComponent,
+    TournamentInfoDialogComponent,
+    AddPlayerRegistrationDialogComponent
   ],
   providers: [
     LoginService,
@@ -296,7 +296,6 @@ export const firebaseConfDev = {
     WindowRefService,
   ],
   entryComponents: [
-    RegisterDialogComponent,
     AddArmyListsDialogComponent,
     NewTournamentPlayerDialogComponent,
     StartTournamentDialogComponent,
@@ -315,7 +314,9 @@ export const firebaseConfDev = {
     PrintGamesDialogComponent,
     ShowTeamRankingDialogComponent,
     ShowArmyListDialogComponent,
-    TeamMatchDialogComponent
+    TeamMatchDialogComponent,
+    TournamentInfoDialogComponent,
+    AddPlayerRegistrationDialogComponent
   ],
   bootstrap: [AppComponent]
 })

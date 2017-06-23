@@ -33,24 +33,12 @@
     <input
       mdInput
       type="text"
-      placeholder="Meta"
+      placeholder="Locality"
       maxlength="50"
       [(ngModel)]="tournamentPlayerModel.meta"
       name="meta"
       #meta>
     <md-hint align="end">{{meta.value.length}} / 50</md-hint>
-  </md-input-container>
-  <md-input-container
-    class="full-width">
-    <input
-      mdInput
-      type="text"
-      placeholder="Origin"
-      maxlength="50"
-      [(ngModel)]="tournamentPlayerModel.origin"
-      name="origin"
-      #origin>
-    <md-hint align="end">{{origin.value.length}} / 50</md-hint>
   </md-input-container>
   <md-select
     class="full-width-select-box"
@@ -68,10 +56,13 @@
     [(ngModel)]="tournamentPlayerModel.faction">
     <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
   </md-select>
-
+</form>
+<div md-dialog-actions>
+  <div class="full-width">
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
   <button *ngIf="playerNameAlreadyInUse"
           type="button"
-          class="negative-background"
+          class="right-align-button negative-background"
           md-raised-button
           [disabled]="true">
     <md-icon>warning</md-icon>
@@ -79,7 +70,7 @@
   </button>
   <button *ngIf="dummyNotAllowed"
           type="button"
-          class="negative-background"
+          class="right-align-button negative-background"
           md-raised-button
           [disabled]="true">
     <md-icon>warning</md-icon>
@@ -89,13 +80,11 @@
           type="button"
           color="accent"
           md-raised-button
+          class="right-align-button"
           (click)="saveTournamentPlayer()"
           [disabled]="tournamentPlayerForm.invalid">
     <md-icon>add</md-icon>
     Save Tournament Player
   </button>
-
-</form>
-<div md-dialog-actions>
-  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  </div>
 </div>

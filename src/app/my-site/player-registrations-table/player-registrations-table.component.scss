@@ -1,21 +1,39 @@
 @import "../../../styles";
 
-.tournament-name-table-cell{
+
+.player-name-table-cell{
   font-size: 1.2em;
   margin-bottom: 6px;
   font-weight: bold;
 }
 
-.reg-table-cell {
-  font-size: 1.5em;
-  font-weight: bold;
+.game-list-vs-divider{
+  text-align: center;
+  font-size: 2em;
+  margin-top: $main_tick;
+  margin-bottom: $main_tick;
 }
 
-.small-three-space-table-cell {
-  width:20px;
+.game-list-head-counter{
+  margin: $halve_tick;
+  padding: 0;
 }
 
-.army-list-icon:hover {
+.game-list-item{
+  text-align: left;
+  margin: $main_tick;
+  padding: $main_tick;
+}
+
+.game-list-full-width-td{
+  text-align: center;
+}
+
+.games-table-row:hover{
+  background-color: $color_info;
   cursor: pointer;
-  color: deepskyblue;
+}
+
+.centered{
+  text-align: center;
 }
