@@ -45,10 +45,11 @@ export class TournamentTeamService {
   public subscribeOnTournamentTeams(tournamentId: string) {
 
     const that = this;
-
     this.store.dispatch(new ClearTournamentTeamsAction());
 
-    console.log('subscribeOnTournamentGames');
+    if (this.tournamentTeamsRef) {
+      this.tournamentTeamsRef.off();
+    }
 
     this.tournamentTeamsRef = firebase.database().ref('tournament-teams/' + tournamentId);
 
@@ -80,10 +81,11 @@ export class TournamentTeamService {
   public subscribeOnTournamentTeamRankings(tournamentId: string) {
 
     const that = this;
-
     this.store.dispatch(new ClearTeamRankingsAction());
 
-    console.log('subscribeOnTournamentTeamRankings');
+    if (this.tournamentTeamRankingsRef) {
+      this.tournamentTeamRankingsRef.off();
+    }
 
     this.tournamentTeamRankingsRef = firebase.database().ref('tournament-team-rankings/' + tournamentId);
 
@@ -115,13 +117,10 @@ export class TournamentTeamService {
   public subscribeOnTournamentTeamGames(tournamentId: string) {
 
     const that = this;
-
     this.store.dispatch(new ClearTournamentTeamGamesAction());
     if (this.tournamentTeamGamesRef) {
       this.tournamentTeamGamesRef.off();
     }
-
-    console.log('subscribeOnTournamentTeamGames');
 
     this.tournamentTeamGamesRef = firebase.database().ref('tournament-team-games/' + tournamentId);
 
@@ -153,10 +152,11 @@ export class TournamentTeamService {
   public subscribeOnTournamentTeamRegistrations(tournamentId: string) {
 
     const that = this;
-
     this.store.dispatch(new ClearTournamentTeamRegistrationsAction());
 
-    console.log('tournamentTeamsRegistrationRef');
+    if (this.tournamentTeamsRegistrationRef) {
+      this.tournamentTeamsRegistrationRef.off();
+    }
 
     this.tournamentTeamsRegistrationRef = firebase.database().ref('tournament-team-registrations/' + tournamentId);
 

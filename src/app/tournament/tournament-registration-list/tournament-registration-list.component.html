@@ -1,6 +1,7 @@
 <mdl-list-item lines="3"
                class="list-item"
                *ngFor="let registration of registrations; let i = index; let even = even;"
+               (click)="showRegistrationInfo(registration)"
                [ngClass]="{'even': even, 'my-item':isItMe(registration.playerId)} ">
   <mdl-list-item-primary-content>
     <mdl-icon mdl-list-item-avatar mdl-badge="{{i +1}}" mdl-badge-overlap>person</mdl-icon>
@@ -8,7 +9,9 @@
 
     <mdl-list-item-text-body>
       <div class="registration-list-item">{{registration.faction}}</div>
-      <div mdTooltip="Team" class="registration-list-item" *ngIf="smallScreen">{{registration.teamName | truncate:truncateMax}}</div>
+      <div mdTooltip="Team" class="registration-list-item" *ngIf="smallScreen">{{registration.teamName |
+        truncate:truncateMax}}
+      </div>
       <div mdTooltip="Team - Locality" class="registration-list-item" *ngIf="!smallScreen">
         {{registration.teamName | truncate:truncateMax }} -
         {{registration.meta | truncate:truncateMax}}
@@ -18,28 +21,39 @@
 
   <span *ngIf="!smallScreen" class="list-secondary-spacer"></span>
 
-  <mdl-list-item-secondary-content *ngIf="!smallScreen">
-    <mdl-list-item-secondary-info class="align-fix elo-info">ELO<img class="padding-fix-icon"
-                                                                     src="../../../assets/my_crown_small.png">
-    </mdl-list-item-secondary-info>
-    <span>{{registration.elo}}</span>
+  <!--<mdl-list-item-secondary-content *ngIf="!smallScreen">-->
+    <!--<mdl-list-item-secondary-info class="align-fix elo-info">ELO<img class="padding-fix-icon"-->
+                                                                     <!--src="../../../assets/my_crown_small.png">-->
+    <!--</mdl-list-item-secondary-info>-->
+    <!--<span>{{registration.elo}}</span>-->
+  <!--</mdl-list-item-secondary-content>-->
+
+  <mdl-list-item-secondary-content *ngIf="!smallScreen && !registration.armyListForTournament">
+    <md-icon  md-tooltip="No ArmyList uploaded yet" class="negative list-icon">assignment_late</md-icon>
+  </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="!smallScreen && registration.armyListForTournament">
+    <md-icon  md-tooltip="ArmyLists okay" class="positive list-icon">assignment_turned_in</md-icon>
+  </mdl-list-item-secondary-content>
+
+  <mdl-list-item-secondary-content *ngIf="!smallScreen && !registration.paidForTournament">
+    <md-icon  md-tooltip="Player has not paid yet" class="negative list-icon">money_off</md-icon>
+  </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="!smallScreen && registration.paidForTournament">
+    <md-icon md-tooltip="Player has paid" class="positive list-icon">attach_money</md-icon>
   </mdl-list-item-secondary-content>
 
   <mdl-list-item-secondary-content
-    *ngIf="isAdmin || isItMe(registration.playerId) && actualTournament?.actualRound === 0">
-    <md-icon class="positive list-action" (click)="addArmyLists(registration)">playlist_add</md-icon>
+    *ngIf="isItMe(registration.playerId) && actualTournament?.actualRound === 0">
+    <md-icon class="positive list-action" (click)="addArmyLists($event, registration)">playlist_add</md-icon>
   </mdl-list-item-secondary-content>
-  <ng-container *ngIf="isAdmin && !registration.isTournamentPlayer  && actualTournament.actualRound === 0 ">
+  <ng-container
+    *ngIf="isAdmin && !registration.isTournamentPlayer  && actualTournament?.actualRound === 0 ">
+
+    <!--<mdl-list-item-secondary-content>-->
+      <!--<md-icon class="negative list-action" (click)="deleteRegistration(registration)">delete</md-icon>-->
+    <!--</mdl-list-item-secondary-content>-->
     <mdl-list-item-secondary-content>
-      <md-icon class="negative list-action" (click)="deleteRegistration(registration)">delete</md-icon>
-    </mdl-list-item-secondary-content>
-    <mdl-list-item-secondary-content *ngIf="!smallScreen">
-      <a href='mailto:{{registration.email}}'>
-        <md-icon class="info list-action">email</md-icon>
-      </a>
-    </mdl-list-item-secondary-content>
-    <mdl-list-item-secondary-content>
-      <md-icon class="positive  list-action" (click)="acceptRegistration(registration)">check_circle</md-icon>
+      <md-icon class="positive  list-action" (click)="acceptRegistration($event, registration)">check_circle</md-icon>
     </mdl-list-item-secondary-content>
   </ng-container>
 </mdl-list-item>

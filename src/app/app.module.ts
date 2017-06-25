@@ -134,6 +134,10 @@ import {GamesEffectService} from './store/effects/games-effect.service';
 import {GamesService} from './service/games.service';
 import {TournamentInfoDialogComponent} from './dialogs/tournament-overview/tournament-info-dialog';
 import {AddPlayerRegistrationDialogComponent} from './dialogs/tournament-preparation/add-player-registration-dialog';
+import {
+  PlayerRegistrationInfoDialogComponent,
+  ShowSingleArmyListDialogComponent
+} from "./dialogs/tournament-preparation/player-registration-info-dialog";
 
 
 const reducers = {
@@ -279,7 +283,9 @@ export const firebaseConfDev = {
     TournamentTeamFinalRankingsComponent,
     GameListOverviewComponent,
     TournamentInfoDialogComponent,
-    AddPlayerRegistrationDialogComponent
+    AddPlayerRegistrationDialogComponent,
+    PlayerRegistrationInfoDialogComponent,
+    ShowSingleArmyListDialogComponent
   ],
   providers: [
     LoginService,
@@ -316,7 +322,9 @@ export const firebaseConfDev = {
     ShowArmyListDialogComponent,
     TeamMatchDialogComponent,
     TournamentInfoDialogComponent,
-    AddPlayerRegistrationDialogComponent
+    AddPlayerRegistrationDialogComponent,
+    PlayerRegistrationInfoDialogComponent,
+    ShowSingleArmyListDialogComponent
   ],
   bootstrap: [AppComponent]
 })

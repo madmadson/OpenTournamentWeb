@@ -25,7 +25,7 @@ export class LoginService implements OnInit, OnDestroy {
 
   constructor(public afAuth: AngularFireAuth,
               private store: Store<ApplicationState>,
-              private  router: Router,
+              private router: Router,
               private snackBar: MdSnackBar) {
 
     this.user = afAuth.authState;

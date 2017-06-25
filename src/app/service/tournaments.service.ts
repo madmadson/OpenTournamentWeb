@@ -16,6 +16,8 @@ import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 @Injectable()
 export class TournamentsService  {
 
+  private tournamentsReference: firebase.database.Reference;
+
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<ApplicationState>,
               private snackBar: MdSnackBar) {
@@ -24,14 +26,18 @@ export class TournamentsService  {
 
   subscribeOnTournaments() {
 
-    console.log('subscribe on tournaments');
+
     this.store.dispatch(new TournamentsClearAction());
 
     const that = this;
 
-    const tournamentsReference = firebase.database().ref('tournaments').orderByChild('beginDate');
+    if (this.tournamentsReference) {
+      this.tournamentsReference.off();
+    }
 
-    tournamentsReference.on('child_added', function (snapshot) {
+    this.tournamentsReference = firebase.database().ref('tournaments');
+
+    this.tournamentsReference.on('child_added', function (snapshot) {
 
       const tournament: Tournament = Tournament.fromJson(snapshot.val());
       tournament.id = snapshot.key;
@@ -40,7 +46,7 @@ export class TournamentsService  {
 
     });
 
-    tournamentsReference.on('child_changed', function (snapshot) {
+    this.tournamentsReference.on('child_changed', function (snapshot) {
 
       const tournament: Tournament = Tournament.fromJson(snapshot.val());
       tournament.id = snapshot.key;
@@ -48,7 +54,7 @@ export class TournamentsService  {
       that.store.dispatch(new TournamentChangedAction(tournament));
     });
 
-    tournamentsReference.on('child_removed', function (snapshot) {
+    this.tournamentsReference.on('child_removed', function (snapshot) {
 
       that.store.dispatch(new TournamentDeletedAction(snapshot.key));
     });

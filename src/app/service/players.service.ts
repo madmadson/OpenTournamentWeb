@@ -29,11 +29,12 @@ export class PlayersService  {
 
   subscribeOnPlayers() {
 
-    console.log('subscribe on players');
     this.store.dispatch(new PlayersClearAction());
-
-
     const that = this;
+
+    if (this.playersRef) {
+      this.playersRef.off();
+    }
 
     this.playersRef = firebase.database().ref('players');
 

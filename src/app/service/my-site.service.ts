@@ -24,23 +24,20 @@ export class MySiteService {
 
   }
 
-
   subscribeOnMySite(playerId: string) {
-
-    console.log('subscribe on mySite');
 
     this.subscribeOnMyRegistrations(playerId);
     this.subscribeOnMyGames(playerId);
-
   }
 
   private subscribeOnMyRegistrations(playerId: string) {
 
-    console.log('subscribeOnMyRegistrations');
-
     const that = this;
-
     this.store.dispatch(new MyRegistrationsClearAction());
+
+    if (this.myRegistrationsRef) {
+      this.myRegistrationsRef.off();
+    }
 
     this.myRegistrationsRef = firebase.database().ref('players-registrations/' + playerId);
 
@@ -71,11 +68,12 @@ export class MySiteService {
 
   private subscribeOnMyGames(playerId: string) {
 
-    console.log('subscribeOnMyGames');
-
     const that = this;
-
     this.store.dispatch(new MyGamesClearAction());
+
+    if (this.myGamesRef) {
+      this.myGamesRef.off();
+    }
 
     this.myGamesRef = firebase.database().ref('players-games/' + playerId);
 

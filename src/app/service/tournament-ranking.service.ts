@@ -54,8 +54,9 @@ export class TournamentRankingService {
 
     this.store.dispatch(new ClearRankingAction());
 
-
-    console.log('subscribeOnTournamentRankings');
+    if (this.tournamentRankingsRef) {
+      this.tournamentRankingsRef.off();
+    }
 
     this.tournamentRankingsRef = firebase.database().ref('tournament-rankings/' + tournamentId);
 

@@ -5,7 +5,6 @@ import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 
 import * as _ from 'lodash';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
-import {TournamentTeam} from '../../../shared/model/tournament-team';
 
 @Component({
   selector: 'add-army-lists-dialog',

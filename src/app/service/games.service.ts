@@ -19,11 +19,12 @@ export class GamesService  {
 
   subscribeOnGames() {
 
-    console.log('subscribe on games');
+    const that = this;
     this.store.dispatch(new GamesClearAction());
 
-
-    const that = this;
+    if (this.gamesRef) {
+      this.gamesRef.off();
+    }
 
     this.gamesRef = firebase.database().ref('players-games');
 

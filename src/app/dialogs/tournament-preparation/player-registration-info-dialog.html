@@ -1,0 +1,78 @@
+<md-dialog-content>
+  <h4 class="heading">Registration for {{playerRegistration.playerName}}</h4>
+
+  <md-input-container class="full-width ">
+    <input mdInput
+           placeholder="RegistrationDate"
+           readonly
+           disabled
+           value=" {{playerRegistration.registrationDate | date: 'EEE, d HH:mm'}}">
+  </md-input-container>
+  <div class="full-width">
+    <img class="padding-fix-icon" src="../../../assets/my_crown_small.png">
+    <md-input-container>
+      <input mdInput
+             placeholder="Elo"
+             readonly
+             disabled
+             value=" {{playerRegistration.elo}}">
+    </md-input-container>
+  </div>
+  <md-input-container class="full-width ">
+    <input mdInput
+           placeholder="Team"
+           readonly
+           disabled
+           value=" {{playerRegistration.teamName ? playerRegistration.teamName : 'No Team'}}">
+  </md-input-container>
+
+  <md-input-container class="full-width">
+    <input mdInput
+           placeholder="Faction"
+           readonly
+           disabled
+           value="{{ playerRegistration.faction ? playerRegistration.faction : 'No Faction selected'}}">
+  </md-input-container>
+
+  <ng-container *ngIf="isAdmin">
+    <h3 class="heading">Admin Area</h3>
+    <div class="full-width">
+      <md-icon class="align-fix">attach_money</md-icon>
+      <md-checkbox
+        [checked]="playerRegistration.paidForTournament"
+        (change)="changePaidForTournament()"
+        mdTooltip="Check all ArmyLists before you check"
+      >Player paid?
+      </md-checkbox>
+    </div>
+
+    <div class="full-width">
+      <md-icon class="align-fix">assignment_late</md-icon>
+      <md-checkbox
+        [checked]="playerRegistration.armyListForTournament"
+        (change)="changeArmyListForTournament()"
+        mdTooltip="Check all ArmyLists before you check"
+      >ArmyLists Okay?
+      </md-checkbox>
+    </div>
+
+    <ng-container *ngFor="let armyList of armyLists; let i = index">
+      <div class="full-width">
+        <md-icon md-tooltip="Show List" class="info" (click)="showArmyList(armyList)">info</md-icon>
+        <md-input-container class="big-text">
+          <input mdInput
+                 placeholder="List {{i +1}}"
+                 readonly
+                 disabled
+                 value="{{armyList.name}}">
+        </md-input-container>
+      </div>
+    </ng-container>
+  </ng-container>
+
+</md-dialog-content>
+<div md-dialog-actions>
+  <div class="full-width">
+    <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  </div>
+</div>

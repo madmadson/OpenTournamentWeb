@@ -22,7 +22,7 @@ import {GameResult} from '../../../shared/dto/game-result';
 
 
 @Injectable()
-export class TournamentGameService implements OnDestroy {
+export class TournamentGameService {
 
   tournamentGamesRef: firebase.database.Reference;
   allRankings: TournamentRanking[];
@@ -54,11 +54,6 @@ export class TournamentGameService implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.tournamentGamesRef) {
-      this.tournamentGamesRef.off();
-    }
-  }
 
   public subscribeOnTournamentGames(tournamentId: string) {
 
@@ -66,7 +61,9 @@ export class TournamentGameService implements OnDestroy {
 
     this.store.dispatch(new ClearTournamentGamesAction());
 
-    console.log('subscribeOnTournamentGames');
+    if (this.tournamentGamesRef) {
+      this.tournamentGamesRef.off();
+    }
 
     this.tournamentGamesRef = firebase.database().ref('tournament-games/' + tournamentId);
 

@@ -56,7 +56,7 @@ export class TournamentRankingListComponent implements OnInit {
     }
   }
 
-  showArmyList(ranking: TournamentRanking){
+  showArmyList(ranking: TournamentRanking) {
 
     const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
       if (list.tournamentPlayerId) {

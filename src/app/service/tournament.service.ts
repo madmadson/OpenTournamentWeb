@@ -82,6 +82,10 @@ export class TournamentService  {
 
     this.store.dispatch(new ClearRegistrationAction());
 
+    if (this.tournamentRegistrationsRef) {
+      this.tournamentRegistrationsRef.off();
+    }
+
     this.tournamentRegistrationsRef = firebase.database().ref('tournament-registrations/' + tournamentId);
 
     this.tournamentRegistrationsRef.on('child_added', function (snapshot) {
@@ -114,7 +118,9 @@ export class TournamentService  {
 
     this.store.dispatch(new ClearTournamentPlayerAction());
 
-    console.log('subscribeOnTournamentPlayers');
+    if (this.tournamentPlayerRef) {
+      this.tournamentPlayerRef.off();
+    }
 
     this.tournamentPlayerRef = firebase.database().ref('tournament-players/' + tournamentId);
 
@@ -148,6 +154,9 @@ export class TournamentService  {
 
     this.store.dispatch(new ClearArmyListsAction());
 
+    if (this.armyListsRef) {
+      this.armyListsRef.off();
+    }
 
     this.armyListsRef = firebase.database().ref('tournament-armyLists/' + tournamentId);
 
@@ -213,7 +222,6 @@ export class TournamentService  {
 
     const tournamentPlayers = this.afoDatabase.list('tournament-players/' + registration.tournamentId);
     tournamentPlayers.push(tournamentPlayer);
-
 
     const registrationRef = this.afoDatabase.object('tournament-registrations/' + registration.tournamentId + '/' + registration.id);
     registrationRef.update({isTournamentPlayer: true});

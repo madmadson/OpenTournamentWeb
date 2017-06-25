@@ -241,6 +241,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleAddTournamentRegistration(registrationPush: RegistrationPush) {
+    console.log('add reg ' + JSON.stringify(registrationPush));
     this.store.dispatch(new RegistrationPushAction(registrationPush));
   }
 

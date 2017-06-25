@@ -148,6 +148,7 @@
           [isAdmin]="currentUserId === actualTournament?.creatorUid"
           [userPlayerData]="userPlayerData"
           [registrations]="allRegistrations"
+          [actualTournamentArmyList$]="armyLists$"
           (onAcceptRegistration)="acceptRegistration($event)"
           (onDeleteRegistration)="deleteMyRegistration($event)"
           (onAddArmyLists)="openAddArmyListDialog($event)">
