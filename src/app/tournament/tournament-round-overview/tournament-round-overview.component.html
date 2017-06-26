@@ -14,7 +14,7 @@
       <button *ngIf="allGamesUntouched"
               (click)="openPairAgainDialog()"
               type="button"
-              class="positive-background action-button"
+              class="color-positive-background action-button"
               md-raised-button>
         <md-icon>undo</md-icon>
         Pair Again
@@ -22,7 +22,7 @@
       <button *ngIf="allGamesFinished"
               (click)="openNewRoundDialog()"
               type="button"
-              class="positive-background action-button"
+              class="color-positive-background action-button"
               md-raised-button>
         <md-icon>play_arrow</md-icon>
         New Round
@@ -31,7 +31,7 @@
       <button *ngIf="allGamesFinished"
               (click)="openFinishTournamentDialog()"
               type="button"
-              class="positive-background action-button"
+              class="color-positive-background action-button"
               md-raised-button>
         <md-icon>flag</md-icon>
         End Tournament
@@ -40,7 +40,7 @@
       <button *ngIf="actualTournament.visibleRound < actualTournament.actualRound"
               (click)="publishRound()"
               type="button"
-              class="positive-background action-button"
+              class="color-positive-background action-button"
               md-raised-button>
         <md-icon>cloud_upload</md-icon>
         Publish Round
@@ -48,7 +48,7 @@
 
       <button (click)="openKillRoundDialog()"
               type="button"
-              class="negative-background action-button"
+              class="color-negative-background action-button"
               md-raised-button>
         <md-icon>warning</md-icon>
         Kill Round
@@ -80,7 +80,7 @@
                    #seachInput
                    (keyup)="search(seachInput.value)">
     </mdl-textfield>
-    <h4 *ngIf="allGamesFiltered?.length == 0" class="warning-text">No Games found (Filter?)</h4>
+    <h4 *ngIf="allGamesFiltered?.length == 0">No Games found (Filter?)</h4>
     <tournament-game-list *ngIf="!gamesTableMode"
                           [teamMatch]="false"
                           [actualTournament]="actualTournament"

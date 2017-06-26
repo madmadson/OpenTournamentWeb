@@ -36,10 +36,17 @@
 
   <ng-container *ngIf="isAdmin">
     <h3 class="heading">Admin Area</h3>
+        <div class="right-align-button">
+          <a href='mailto:{{playerRegistration.email}}'>
+            <md-icon class="color-info list-action">email</md-icon>
+          </a>
+          <md-icon class="color-negative list-action" (click)="deleteRegistration(playerRegistration)">delete</md-icon>
+        </div>
+
     <div class="full-width">
       <md-icon class="align-fix">attach_money</md-icon>
       <md-checkbox
-        [checked]="playerRegistration.paidForTournament"
+        [checked]="playerRegistration.paymentChecked"
         (change)="changePaidForTournament()"
         mdTooltip="Check all ArmyLists before you check"
       >Player paid?
@@ -49,7 +56,7 @@
     <div class="full-width">
       <md-icon class="align-fix">assignment_late</md-icon>
       <md-checkbox
-        [checked]="playerRegistration.armyListForTournament"
+        [checked]="playerRegistration.armyListsChecked"
         (change)="changeArmyListForTournament()"
         mdTooltip="Check all ArmyLists before you check"
       >ArmyLists Okay?
@@ -58,7 +65,7 @@
 
     <ng-container *ngFor="let armyList of armyLists; let i = index">
       <div class="full-width">
-        <md-icon md-tooltip="Show List" class="info" (click)="showArmyList(armyList)">info</md-icon>
+        <md-icon md-tooltip="Show List" class="color-info" (click)="showArmyList(armyList)">info</md-icon>
         <md-input-container class="big-text">
           <input mdInput
                  placeholder="List {{i +1}}"

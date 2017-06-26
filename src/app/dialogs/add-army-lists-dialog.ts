@@ -5,6 +5,8 @@ import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 
 import * as _ from 'lodash';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
+import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
 
 @Component({
   selector: 'add-army-lists-dialog',
@@ -19,7 +21,8 @@ export class AddArmyListsDialogComponent {
   armyListModel: ArmyList;
   selectedTab = 0;
 
-  @Output() onSaveArmyList = new EventEmitter<ArmyList>();
+  @Output() onSaveArmyListForTournamentPlayer = new EventEmitter<ArmyListTournamentPlayerPush>();
+  @Output() onSaveArmyListForRegistration = new EventEmitter<ArmyListRegistrationPush>();
   @Output() onDeleteArmyList = new EventEmitter<ArmyList>();
 
   constructor(public dialogRef: MdDialogRef<AddArmyListsDialogComponent>,
@@ -63,17 +66,29 @@ export class AddArmyListsDialogComponent {
 
   addArmyList() {
     this.selectedTab = (this.armyLists.length + 1);
-    this.onSaveArmyList.emit(this.armyListModel);
+
     if (this.registration) {
       this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.id,
         '', this.registration.playerId, this.registration.playerName,
         this.registration.teamName, 'New List', 'PAST HERE');
+
+      this.onSaveArmyListForRegistration.emit({
+        armyList: this.armyListModel,
+        registration: this.registration
+      });
+
     } else {
-      this.armyListModel = new ArmyList(this.tournamentPlayer.tournamentId,
-        '', this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
+      this.armyListModel = new ArmyList(this.tournamentPlayer.tournamentId, '',
+        this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
         this.tournamentPlayer.playerName, this.tournamentPlayer.teamName, 'New List', 'PAST HERE');
 
+      this.onSaveArmyListForTournamentPlayer.emit({
+        armyList: this.armyListModel,
+        tournamentPlayer: this.tournamentPlayer
+      });
     }
+
+
   };
 
   deleteArmyList(armyList: ArmyList) {

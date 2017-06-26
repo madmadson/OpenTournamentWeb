@@ -8,11 +8,11 @@
     <md-icon>flag</md-icon>
     End Tournament
   </button>
-  <h4 class="info-text">
+  <h4 class="color-info">
     You can undo Tournament Finishing.
   </h4>
 
-  <h4 class="warning-text" *ngIf="(round ) < suggestedRoundToPlay">
+  <h4 class="color-negative" *ngIf="(round ) < suggestedRoundToPlay">
     You are going to end Tournament with less Rounds then suggested.
   </h4>
 </md-dialog-content>

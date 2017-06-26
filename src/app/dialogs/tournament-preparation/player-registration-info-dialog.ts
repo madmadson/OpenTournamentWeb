@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, Output, EventEmitter} from '@angular/core';
 
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
 
@@ -8,6 +8,7 @@ import {Registration} from '../../../../shared/model/registration';
 import {getAllFactions} from '../../../../shared/model/factions';
 import {ArmyList} from '../../../../shared/model/armyList';
 import * as _ from 'lodash';
+import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
 
 
 @Component({
@@ -22,6 +23,9 @@ export class PlayerRegistrationInfoDialogComponent {
 
   factions: string[];
   isAdmin: boolean;
+
+  @Output() onSetPaymentChecked = new EventEmitter<PlayerRegistrationChange>();
+  @Output() onDeleteRegistration = new EventEmitter<Registration>();
 
   constructor(public dialog: MdDialog,
               public dialogRef: MdDialogRef<PlayerRegistrationInfoDialogComponent>,
@@ -51,12 +55,31 @@ export class PlayerRegistrationInfoDialogComponent {
   }
   changeArmyListForTournament() {
 
-    console.log(this.playerRegistration.armyListForTournament);
+    console.log(this.playerRegistration.armyListsChecked);
+    this.onSetPaymentChecked.emit({
+      registration: this.playerRegistration,
+      paymentChecked: this.playerRegistration.paymentChecked,
+      armyListsChecked: !this.playerRegistration.armyListsChecked,
+      playerUploadedArmyLists: this.playerRegistration.playerUploadedArmyLists,
+      playerMarkedPayment: this.playerRegistration.playerMarkedPayment
+    });
+
   }
 
   changePaidForTournament() {
 
-    console.log(this.playerRegistration.armyListForTournament);
+    console.log(this.playerRegistration.armyListsChecked);
+    this.onSetPaymentChecked.emit({
+      registration: this.playerRegistration,
+      paymentChecked: !this.playerRegistration.paymentChecked,
+      armyListsChecked: this.playerRegistration.armyListsChecked,
+      playerUploadedArmyLists: this.playerRegistration.playerUploadedArmyLists,
+      playerMarkedPayment: this.playerRegistration.playerMarkedPayment
+    });
+  }
+
+  deleteRegistration(registration: Registration) {
+    this.onDeleteRegistration.emit(registration);
   }
 }
 

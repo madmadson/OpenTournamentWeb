@@ -112,44 +112,24 @@ button:hover{
   margin-left: 3px;
 }
 
-.negative-background{
-  background-color: #D32F2F;
+.color-negative-background{
+  background-color: $fail_color;
 }
 
-.positive-background{
-  background-color: #388E3C;
+.color-positive-background{
+  background-color: $success_color;
 }
 
-.negative{
-  color: #D32F2F;
+.color-negative{
+  color: $fail_color;
 }
 
-.negative:hover{
-  color: black;
+.color-positive{
+  color: $success_color;
 }
 
-.positive{
-  color: #388E3C;
-}
-
-.positive:hover{
-  color: black;
-}
-
-.info{
-  color: blue;
-}
-
-.info:hover{
-  color: black;
-}
-
-.warning-text{
-  color: #D32F2F;
-}
-
-.info-text{
-  color: blue;
+.color-info{
+  color: deepskyblue;
 }
 
 md-card {

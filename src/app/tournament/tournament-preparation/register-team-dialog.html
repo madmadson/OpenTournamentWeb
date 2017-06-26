@@ -7,7 +7,7 @@
           class="full-width">
           <input mdInput type="text" (blur)="checkTeamName()" placeholder="Team Name" maxlength="50"
                  formControlName="teamName" required>
-          <md-hint *ngIf="teamNameAlreadyInUse" align="start" class="negative">
+          <md-hint *ngIf="teamNameAlreadyInUse" align="start" class="color-negative">
             There is already a Team with that name
           </md-hint>
           <md-hint align="end">{{registerTournamentForm.get('teamName').value.length}} / 50</md-hint>
@@ -30,7 +30,7 @@
 
     <button *ngIf="teamNameAlreadyInUse"
             type="button"
-            class="right-align-button negative-background"
+            class="right-align-button color-negative-background"
             md-raised-button
             [disabled]="true">
       <md-icon>warning</md-icon>
@@ -38,7 +38,7 @@
     </button>
     <button *ngIf="dummyNotAllowed"
             type="button"
-            class="right-align-button negative-background"
+            class="right-align-button color-negative-background"
             md-raised-button
             [disabled]="true">
       <md-icon>warning</md-icon>

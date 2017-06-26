@@ -94,8 +94,10 @@ export class AddPlayerRegistrationDialogComponent  implements OnInit {
       elo: this.userPlayerData.elo,
       faction: formModel.faction,
       isTournamentPlayer: false,
-      armyListForTournament: false,
-      paidForTournament: false
+      armyListsChecked: false,
+      paymentChecked: false,
+      playerMarkedPayment: false,
+      playerUploadedArmyLists: false
     };
   }
 }

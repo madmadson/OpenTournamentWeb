@@ -1,16 +1,16 @@
 <h3 class="heading">Kill Round {{data.round}} with Fire!</h3>
 
 <button (click)="enableKill = true"
-        class="big-button negative-background"
+        class="big-button color-negative-background"
         type="button"
         md-raised-button>
   <md-icon>warning</md-icon>
   I know what I do
 </button>
-<h4 class="warning-text">All data is lost due to this action. There is no way back!</h4>
+<h4 class="color-negative">All data is lost due to this action. There is no way back!</h4>
 
 <button (click)="killIt()"
-        class="full-width big-button negative-background"
+        class="full-width big-button color-negative-background"
         type="button"
         [disabled]="!enableKill"
         md-raised-button>

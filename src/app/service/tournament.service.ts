@@ -37,6 +37,9 @@ import {ScenarioSelectedModel} from '../../../shared/dto/scenario-selected-model
 import * as _ from 'lodash';
 import {AfoObjectObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {Tournament} from '../../../shared/model/tournament';
+import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-change';
+import {ArmyListRegistrationPush} from "../../../shared/dto/armyList-registration-push";
+import {ArmyListTournamentPlayerPush} from "../../../shared/dto/armyList-tournamentPlayer-push";
 
 
 @Injectable()
@@ -278,12 +281,23 @@ export class TournamentService  {
     });
   }
 
-  pushArmyList(armyList: ArmyList) {
+  pushArmyListForRegistration(armyListRegistrationPush: ArmyListRegistrationPush) {
 
-    const tournamentArmyListRef = this.afoDatabase.list('tournament-armyLists/' + armyList.tournamentId);
-    tournamentArmyListRef.push(armyList);
+    const tournamentArmyListRef = this.afoDatabase.list('tournament-armyLists/' + armyListRegistrationPush.armyList.tournamentId);
+    tournamentArmyListRef.push(armyListRegistrationPush.armyList);
 
-    this.snackBar.open('Army List saved successfully', '', {
+    this.snackBar.open('Army List for Registration saved  successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  pushArmyListForTournamentPlayer(armyListTournamentPlayerPush: ArmyListTournamentPlayerPush) {
+
+    const tournamentArmyListRef = this.afoDatabase.list('tournament-armyLists/' + armyListTournamentPlayerPush.armyList.tournamentId);
+    tournamentArmyListRef.push(armyListTournamentPlayerPush.armyList);
+
+    this.snackBar.open('Army List for TournamentPlayer saved successfully', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });
@@ -634,6 +648,22 @@ export class TournamentService  {
       {uploaded: true}
     );
     this.snackBar.open('Successfully upload Tournament', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  playerRegistrationChangeAction(regChange: PlayerRegistrationChange) {
+    const registrationRef = this.afoDatabase.object('tournament-registrations/' +
+      regChange.registration.tournamentId + '/' + regChange.registration.id);
+    registrationRef.update({
+      armyListsChecked: regChange.armyListsChecked,
+      paymentChecked:  regChange.paymentChecked,
+      playerMarkedPayment: regChange.playerMarkedPayment,
+      playerUploadedArmyLists: regChange.playerUploadedArmyLists
+    });
+
+    this.snackBar.open('Successfully update Player Registration', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });

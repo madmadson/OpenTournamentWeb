@@ -13,15 +13,15 @@
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>
   <mdl-list-item-secondary-content *ngIf="checkTournamentFull(team) && teamDeleteRequested != team.teamName">
-    <div class="align-fix positive team-capacity">Team Full</div>
+    <div class="align-fix color-positive team-capacity">Team Full</div>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="checkTournamentOver(team) && teamDeleteRequested != team.teamName">
-  <div class="align-fix negative team-capacity">TeamSize Over9000!</div>
+  <div class="align-fix color-negative team-capacity">TeamSize Over9000!</div>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="!checkTournamentFull(team) && teamDeleteRequested != team.teamName">
     <button (click)="addPlayerToTeam($event, team)"
             type="button"
-            class="positive-background"
+            class="color-positive-background"
             md-raised-button>
       <md-icon>add</md-icon>
       Add Player
@@ -32,11 +32,11 @@
     <md-icon class="list-action" (click)="showArmyList($event, team)">list</md-icon>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="isAdmin() && teamDeleteRequested != team.teamName && actualTournament?.actualRound === 0">
-    <md-icon md-tooltip="Delete Team" class="negative  list-action" (click)="teamDeleteRequestedClicked($event, team)">delete</md-icon>
+    <md-icon md-tooltip="Delete Team" class="color-negative  list-action" (click)="teamDeleteRequestedClicked($event, team)">delete</md-icon>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="teamDeleteRequested == team.teamName">
     <button (click)="eraseTeam($event, team)"
-            class="negative-background"
+            class="color-negative-background"
             type="button"
             md-raised-button>
       <md-icon >delete</md-icon>
@@ -45,7 +45,7 @@
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="teamDeleteRequested == team.teamName">
     <button (click)="teamDeleteDeclinedClicked($event)"
-            class="positive-background"
+            class="color-positive-background"
             type="button"
             md-raised-button>
       <md-icon >not_interested</md-icon>

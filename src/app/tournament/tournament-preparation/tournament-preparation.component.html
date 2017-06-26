@@ -7,14 +7,14 @@
 
       <button (click)="openPrintArmyListDialog()"
               type="button"
-              class="positive-background action-button"
+              class="color-positive-background action-button"
               md-raised-button>
         <md-icon>list</md-icon>
         Print Lists
       </button>
       <button (click)="openTournamentFormDialog()"
               type="button"
-              class="positive-background action-button"
+              class="color-positive-background action-button"
               md-raised-button>
         <md-icon>build</md-icon>
         Edit
@@ -22,7 +22,7 @@
       <button *ngIf="allActualTournamentPlayers?.length > 1"
               (click)="openStartTournamentDialog()"
               type="button"
-              class=" positive-background action-button"
+              class=" color-positive-background action-button"
               md-raised-button>
         <md-icon>play_arrow</md-icon>
         Start Tournament
@@ -31,7 +31,7 @@
         <button *ngIf="userPlayerData && !myRegistration "
                 type="button"
                 (click)="openRegistrationDialog()"
-                class="positive-background action-button"
+                class="color-positive-background action-button"
                 md-raised-button>
           <md-icon>add</md-icon>
           Register me
@@ -39,7 +39,7 @@
         <button *ngIf="myRegistration && !alreadyInTournament()"
                 (click)="deleteMyRegistration(myRegistration)"
                 type="button"
-                class="negative-background action-button"
+                class="color-negative-background action-button"
                 md-raised-button>
           <md-icon>delete</md-icon>
           I'm out
@@ -49,14 +49,14 @@
         <button *ngIf="userPlayerData && !teamCreator "
                 type="button"
                 (click)="openRegisterTeamDialog()"
-                class="positive-background action-button"
+                class="color-positive-background action-button"
                 md-raised-button>
           <md-icon>group_add</md-icon>
           Register Team
         </button>
         <button *ngIf="userPlayerData && teamCreator "
                 type="button"
-                class="positive-background action-button"
+                class="color-positive-background action-button"
                 (click)="openShowTeamDialog()"
                 md-raised-button>
           <md-icon>edit</md-icon>
@@ -65,7 +65,7 @@
         <button *ngIf="myRegistration && !alreadyInTournament()"
                 (click)="deleteMyRegistration(myRegistration)"
                 type="button"
-                class="negative-background action-button"
+                class="color-negative-background action-button"
                 md-raised-button>
           <md-icon>delete</md-icon>
           I'm out
@@ -79,14 +79,14 @@
         <button *ngIf="!myRegistration && actualTournament?.teamSize === 0"
                 type="button"
                 (click)="openRegistrationDialog()"
-                class="positive-background action-button"
+                class="color-positive-background action-button"
                 md-raised-button>
           <md-icon>add</md-icon>
           Register
         </button>
         <button *ngIf="userPlayerData && teamCreator "
                 type="button"
-                class="positive-background action-button"
+                class="color-positive-background action-button"
                 (click)="openShowTeamDialog()"
                 md-raised-button>
           <md-icon>edit</md-icon>
@@ -95,7 +95,7 @@
         <button *ngIf="!teamCreator && actualTournament?.teamSize > 0"
                 type="button"
                 (click)="openRegisterTeamDialog()"
-                class="positive-background action-button"
+                class="color-positive-background action-button"
                 md-raised-button>
           <md-icon>group_add</md-icon>
           Register Team
@@ -106,13 +106,13 @@
         <button *ngIf="myRegistration && !alreadyInTournament()"
                 (click)="deleteMyRegistration(myRegistration)"
                 type="button"
-                class="negative-background action-button"
+                class="color-negative-background action-button"
                 md-raised-button>
           <md-icon>delete</md-icon>
           I'm out
         </button>
         <div *ngIf="myRegistration && alreadyInTournament()">
-          <md-icon class="positive align-fix">done</md-icon>
+          <md-icon class="color-positive align-fix">done</md-icon>
           You are added to the Tournament
         </div>
       </div>
@@ -151,7 +151,8 @@
           [actualTournamentArmyList$]="armyLists$"
           (onAcceptRegistration)="acceptRegistration($event)"
           (onDeleteRegistration)="deleteMyRegistration($event)"
-          (onAddArmyLists)="openAddArmyListDialog($event)">
+          (onAddArmyListForRegistrationDialog)="openAddArmyListForRegistrationDialog($event)"
+          (onSetPaymentChecked)="handleSetPaymentChecked($event)">
         </tournament-registration-list>
       </mdl-list>
     </md-card>
@@ -175,7 +176,7 @@
           (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)"
           (onEraseTeamRegistration)="handleEraseTeamRegistration($event)"
           (onKickPlayer)="handleKickTournamentPlayer($event)"
-          (onAddArmyLists)="openAddArmyListDialog($event)">
+          (onAddArmyLists)="addArmyListForRegistrationDialog($event)">
         </tournament-team-registration-list>
       </mdl-list>
     </md-card>
@@ -227,7 +228,7 @@
       <div class="action-button-wrapper">
         <button *ngIf="actualTournament?.actualRound === 0"
                 type="button"
-                class="positive-background action-button"
+                class="color-positive-background action-button"
                 md-raised-button
                 (click)="openCreateTeamDialog()">
           <md-icon>group_add</md-icon>

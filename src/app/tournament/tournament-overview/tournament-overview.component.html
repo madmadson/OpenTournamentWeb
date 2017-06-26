@@ -27,7 +27,8 @@
           (onAddTournamentPlayer)="handleAddTournamentPlayer($event)"
           (onAcceptRegistration)="handleAcceptRegistration($event)"
           (onAddTournamentRegistration)="handleAddTournamentRegistration($event)"
-          (onAddArmyList)="handleAddArmyList($event)"
+          (onAddArmyListForRegistration)="handleAddArmyListForRegistation($event)"
+          (onAddArmyListForTournamentPlayer)="handleAddArmyListForTournamentPlayer($event)"
           (onDeleteArmyList)="handleDeleteArmyList($event)"
           (onDeleteTournamentPlayer)="handleDeleteTournamentPlayer($event)"
           (onDeleteRegistration)="handleDeleteRegistration($event)"
@@ -36,6 +37,7 @@
           (onRegisterTeamForTeamTournament)="handleRegisterTeamForTeamTournament($event)"
           (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)"
           (onEraseTeamRegistration)="handleEraseTeamRegistration($event)"
+          (onSetPaymentChecked)="handleSetPaymentChecked($event)"
         ></tournament-preparation>
       </div>
     </mdl-tab-panel>

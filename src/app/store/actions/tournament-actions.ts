@@ -10,6 +10,9 @@ import {PublishRound} from '../../../../shared/dto/publish-round';
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
 import {SwapGames} from '../../../../shared/dto/swap-player';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
+import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
+import {ArmyListRegistrationPush} from "../../../../shared/dto/armyList-registration-push";
+import {ArmyListTournamentPlayerPush} from "../../../../shared/dto/armyList-tournamentPlayer-push";
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -141,11 +144,19 @@ export class TournamentPlayerEraseAction implements Action {
   }
 }
 
-export const ARMY_LIST_PUSH_ACTION = 'ARMY_LIST_PUSH_ACTION';
-export class ArmyListPushAction implements Action {
+export const ARMY_LIST_FOR_REGISTRATION_PUSH_ACTION = 'ARMY_LIST_FOR_REGISTRATION_PUSH_ACTION';
+export class ArmyListForRegistrationPushAction implements Action {
 
-  readonly type = 'ARMY_LIST_PUSH_ACTION';
-  constructor(public payload: ArmyList) {
+  readonly type = 'ARMY_LIST_FOR_REGISTRATION_PUSH_ACTION';
+  constructor(public payload: ArmyListRegistrationPush) {
+  }
+}
+
+export const ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION = 'ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION';
+export class ArmyListForTournamentPlayerPushAction implements Action {
+
+  readonly type = 'ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION';
+  constructor(public payload: ArmyListTournamentPlayerPush) {
   }
 }
 
@@ -339,5 +350,13 @@ export class EndTeamTournamentAction implements Action {
 
   readonly type = 'END_TEAM_TOURNAMENT_ACTION';
   constructor(public payload: TournamentManagementConfiguration) {
+  }
+}
+
+export const PLAYER_REGISTRATION_CHANGE_ACTION = 'PLAYER_REGISTRATION_CHANGE_ACTION';
+export class PlayerRegistrationChangeAction implements Action {
+
+  readonly type = 'PLAYER_REGISTRATION_CHANGE_ACTION';
+  constructor(public payload: PlayerRegistrationChange) {
   }
 }

@@ -27,8 +27,9 @@ import {PrintArmyListsDialogComponent} from '../../dialogs/print-army-lists-dial
 import {AddArmyListsDialogComponent} from '../../dialogs/add-army-lists-dialog';
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
 import {AddPlayerRegistrationDialogComponent} from '../../dialogs/tournament-preparation/add-player-registration-dialog';
-
-
+import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
+import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
+import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
 
 @Component({
   selector: 'tournament-preparation',
@@ -54,7 +55,8 @@ export class TournamentPreparationComponent implements OnInit {
   @Output() onAddTournamentPlayer = new EventEmitter<TournamentPlayer>();
   @Output() onAcceptRegistration = new EventEmitter<Registration>();
   @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
-  @Output() onAddArmyList = new EventEmitter<ArmyList>();
+  @Output() onAddArmyListForRegistration = new EventEmitter<ArmyListRegistrationPush>();
+  @Output() onAddArmyListForTournamentPlayer = new EventEmitter<ArmyListTournamentPlayerPush>();
   @Output() onCreateTeamForTeamTournament = new EventEmitter<TournamentTeam>();
   @Output() onRegisterTeamForTeamTournament = new EventEmitter<TournamentTeam>();
   @Output() onAcceptTeamRegistration = new EventEmitter<TeamRegistrationPush>();
@@ -64,6 +66,7 @@ export class TournamentPreparationComponent implements OnInit {
   @Output() onDeleteRegistration = new EventEmitter<RegistrationPush>();
   @Output() onDeleteArmyList = new EventEmitter<ArmyList>();
   @Output() onEraseTournamentTeam = new EventEmitter<TournamentTeamEraseModel>();
+  @Output() onSetPaymentChecked = new EventEmitter<PlayerRegistrationChange>();
 
   allRegistrations: Registration[];
   userPlayerData: Player;
@@ -347,7 +350,7 @@ export class TournamentPreparationComponent implements OnInit {
     const saveEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(registration => {
 
       if (registration !== undefined) {
-        this.openAddArmyListDialog(registration);
+        this.openAddArmyListForRegistrationDialog(registration);
       }
     });
     dialogRef.afterClosed().subscribe(() => {
@@ -386,10 +389,10 @@ export class TournamentPreparationComponent implements OnInit {
           armyLists: this.actualTournamentArmyList$
         }
       });
-      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyList.subscribe(armyList => {
+      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForTournamentPlayer.subscribe(armyList => {
 
         if (armyList !== undefined) {
-          this.onAddArmyList.emit(armyList);
+          this.onAddArmyListForTournamentPlayer.emit(armyList);
         }
       });
       const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
@@ -407,38 +410,8 @@ export class TournamentPreparationComponent implements OnInit {
     }
   }
 
-  addArmyListForTeam(team: TournamentTeam) {
 
-    if (team !== undefined) {
-
-      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
-        data: {
-          tournamentTeam: team,
-          armyLists: this.actualTournamentArmyList$
-        }
-      });
-      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyList.subscribe(armyList => {
-
-        if (armyList !== undefined) {
-          this.onAddArmyList.emit(armyList);
-        }
-      });
-      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
-
-        if (armyList !== undefined) {
-          this.onDeleteArmyList.emit(armyList);
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-
-        saveEventSubscribe.unsubscribe();
-        deleteEventSubscribe.unsubscribe();
-      });
-    }
-  }
-
-  openAddArmyListDialog(registration: Registration) {
+  openAddArmyListForRegistrationDialog(registration: Registration) {
     if (registration !== undefined) {
 
       const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
@@ -447,10 +420,11 @@ export class TournamentPreparationComponent implements OnInit {
           armyLists: this.actualTournamentArmyList$
         }
       });
-      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyList.subscribe(armyList => {
+      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
+        armyListRegistrationPush => {
 
-        if (armyList !== undefined) {
-          this.onAddArmyList.emit(armyList);
+        if (armyListRegistrationPush !== undefined) {
+          this.onAddArmyListForRegistration.emit(armyListRegistrationPush);
         }
       });
       const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
@@ -466,6 +440,10 @@ export class TournamentPreparationComponent implements OnInit {
         deleteEventSubscribe.unsubscribe();
       });
     }
+  }
+
+  handleSetPaymentChecked(regChange: PlayerRegistrationChange) {
+    this.onSetPaymentChecked.emit(regChange);
   }
 
   alreadyInTournament(): TournamentPlayer {

@@ -15,12 +15,13 @@ import * as _ from 'lodash';
 import {
   TournamentPlayerPushAction, TournamentSubscribeAction,
   TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
-  ArmyListEraseAction, RegistrationPushAction, ArmyListPushAction, TournamentPairAgainAction, GameResultEnteredAction,
+  ArmyListEraseAction, RegistrationPushAction, TournamentPairAgainAction, GameResultEnteredAction,
   TournamentNewRoundAction, AddDummyPlayerAction, PublishRoundAction, TournamentKillRoundAction,
   RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction,
   TeamTournamentNewRoundAction, TournamentKillTeamRoundAction, TournamentPairAgainTeamAction, ScenarioSelectedAction,
   SwapTeamAction, TeamGameResultEnteredAction, ScenarioSelectedTeamTournamentAction, EndTeamTournamentAction,
-  UndoTeamTournamentEndAction, UploadTeamTournamentAction,
+  UndoTeamTournamentEndAction, UploadTeamTournamentAction, PlayerRegistrationChangeAction,
+  ArmyListForRegistrationPushAction, ArmyListForTournamentPlayerPushAction,
 } from '../../store/actions/tournament-actions';
 
 
@@ -46,6 +47,9 @@ import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-pus
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
+import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
+import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
+import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
 
 @Component({
   selector: 'tournament-overview',
@@ -245,8 +249,12 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new RegistrationPushAction(registrationPush));
   }
 
-  handleAddArmyList(armyList: ArmyList) {
-    this.store.dispatch(new ArmyListPushAction(armyList));
+  handleAddArmyListForRegistation(armyListRegistrationPush: ArmyListRegistrationPush) {
+    this.store.dispatch(new ArmyListForRegistrationPushAction(armyListRegistrationPush));
+  }
+
+  handleAddArmyListForTournamentPlayer(armyListTournamentPlayerPush: ArmyListTournamentPlayerPush) {
+    this.store.dispatch(new ArmyListForTournamentPlayerPushAction(armyListTournamentPlayerPush));
   }
 
   handleDeleteArmyList(armyList: ArmyList) {
@@ -352,6 +360,10 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleEraseTeamRegistration(teamRegPush: TeamRegistrationPush) {
     this.store.dispatch(new TournamentTeamRegistrationEraseAction(teamRegPush));
+  }
+
+  handleSetPaymentChecked(regChange: PlayerRegistrationChange) {
+    this.store.dispatch(new PlayerRegistrationChangeAction(regChange));
   }
 
   handleCreateTeamForTeamTournament(team: TournamentTeam) {

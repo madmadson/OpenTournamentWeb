@@ -18,18 +18,20 @@ export class Registration {
   elo: number;
   faction: string;
   isTournamentPlayer: boolean;
-  armyListForTournament: boolean;
-  paidForTournament: boolean;
+  armyListsChecked: boolean;
+  paymentChecked: boolean;
+  playerMarkedPayment: boolean;
+  playerUploadedArmyLists: boolean;
 
   static fromJson({ tournamentId, tournamentName, tournamentLocation, tournamentDate, playerName, email,
                     origin, meta,
                     registrationDate, teamName, playerId, teamId, country, elo, faction,
-                    isTournamentPlayer, armyListForTournament, paidForTournament}): Registration {
+                    isTournamentPlayer, armyListsChecked, paymentChecked,
+                    playerMarkedPayment, playerUploadedArmyLists}): Registration {
     return new Registration(
       tournamentId, tournamentName, tournamentLocation, tournamentDate, playerName, email, origin,
-      meta, registrationDate,
-      teamName, playerId, teamId, country, elo, faction,
-      armyListForTournament, paidForTournament, isTournamentPlayer );
+      meta, registrationDate, teamName, playerId, teamId, country, elo, faction,
+      isTournamentPlayer, armyListsChecked, paymentChecked, playerMarkedPayment, playerUploadedArmyLists);
   }
 
   constructor(tournamentId: string, tournamentName: string, tournamentLocation: string, tournamentDate: string,
@@ -37,7 +39,8 @@ export class Registration {
               meta: string, registrationDate: string,
               teamName: string, playerId: string, teamId: string,
               country: string, elo: number, faction: string,
-              isTournamentPlayer: boolean, armyListForTournament: boolean, paidForTournament: boolean) {
+              isTournamentPlayer: boolean, armyListsChecked: boolean, paymentChecked: boolean,
+              playerMarkedPayment: boolean, playerUploadedArmyLists: boolean) {
 
     this.tournamentId = tournamentId;
     this.tournamentName = tournamentName;
@@ -56,9 +59,9 @@ export class Registration {
     this.elo = elo;
     this.faction = faction;
     this.isTournamentPlayer = isTournamentPlayer;
-    this.armyListForTournament = armyListForTournament;
-    this.paidForTournament = paidForTournament;
+    this.armyListsChecked = armyListsChecked;
+    this.paymentChecked = paymentChecked;
+    this.playerMarkedPayment = playerMarkedPayment;
+    this.playerUploadedArmyLists = playerUploadedArmyLists;
   }
 }
-
-

@@ -3,10 +3,11 @@ import {Registration} from '../../../../shared/model/registration';
 import {Player} from '../../../../shared/model/player';
 import {Tournament} from '../../../../shared/model/tournament';
 import {WindowRefService} from '../../service/window-ref-service';
-import {MdDialog} from "@angular/material";
-import {PlayerRegistrationInfoDialogComponent} from "../../dialogs/tournament-preparation/player-registration-info-dialog";
-import {Observable} from "rxjs/Observable";
-import {ArmyList} from "../../../../shared/model/armyList";
+import {MdDialog} from '@angular/material';
+import {PlayerRegistrationInfoDialogComponent} from '../../dialogs/tournament-preparation/player-registration-info-dialog';
+import {Observable} from 'rxjs/Observable';
+import {ArmyList} from '../../../../shared/model/armyList';
+import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
 
 
 @Component({
@@ -24,7 +25,8 @@ export class TournamentRegistrationListComponent implements OnInit {
 
   @Output() onAcceptRegistration = new EventEmitter<Registration>();
   @Output() onDeleteRegistration = new EventEmitter<Registration>();
-  @Output() onAddArmyLists = new EventEmitter<Registration>();
+  @Output() onAddArmyListForRegistrationDialog = new EventEmitter<Registration>();
+  @Output() onSetPaymentChecked = new EventEmitter<PlayerRegistrationChange>();
 
   smallScreen: boolean;
   truncateMax: number;
@@ -62,22 +64,37 @@ export class TournamentRegistrationListComponent implements OnInit {
     this.onAcceptRegistration.emit(registration);
   }
 
-  deleteRegistration(registration: Registration) {
-    this.onDeleteRegistration.emit(registration);
-  }
-
   addArmyLists(event: any, registration: Registration) {
     event.stopPropagation();
-    this.onAddArmyLists.emit(registration);
+    this.onAddArmyListForRegistrationDialog.emit(registration);
   }
 
   showRegistrationInfo(playerRegistration: Registration) {
-    this.dialog.open(PlayerRegistrationInfoDialogComponent, {
+    const dialogRef = this.dialog.open(PlayerRegistrationInfoDialogComponent, {
       data: {
         playerRegistration: playerRegistration,
         armyLists: this.armyLists,
         isAdmin: this.isAdmin
       }
+    });
+    const saveEventSubscribe = dialogRef.componentInstance.onSetPaymentChecked.subscribe(
+      (playerRegistrationChange: PlayerRegistrationChange) => {
+      if (playerRegistrationChange) {
+        this.onSetPaymentChecked.emit(playerRegistrationChange);
+      }
+      dialogRef.close();
+    });
+    const deleteEventSubscribe = dialogRef.componentInstance.onDeleteRegistration.subscribe(
+      (reg: Registration) => {
+        if (reg) {
+          this.onDeleteRegistration.emit(reg);
+        }
+        dialogRef.close();
+      });
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+      deleteEventSubscribe.unsubscribe();
     });
   }
 }

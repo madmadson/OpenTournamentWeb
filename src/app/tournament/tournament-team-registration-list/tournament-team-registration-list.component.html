@@ -13,13 +13,13 @@
     </mdl-list-item-text-body>
   </mdl-list-item-primary-content>
   <mdl-list-item-secondary-content *ngIf="checkTournamentFull(team)" >
-    <div class="align-fix positive team-capacity">Team Full</div>
+    <div class="align-fix color-positive team-capacity">Team Full</div>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="!checkTournamentFull(team) && actualTournament?.actualRound === 0">
     <button *ngIf="!myRegistration && userPlayerData"
             (click)="joinTeam($event, team)"
             type="button"
-            class="positive-background"
+            class="color-positive-background"
             md-raised-button>
       <md-icon>add</md-icon>
       Join Team
@@ -27,13 +27,13 @@
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content
     *ngIf="isItMyTeam(team) && actualTournament?.actualRound === 0">
-    <md-icon class="positive list-action" (click)="addArmyLists($event, myRegistration)">playlist_add</md-icon>
+    <md-icon class="color-positive list-action" (click)="addArmyLists($event, myRegistration)">playlist_add</md-icon>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="isAdminOrCreator(team) && !team.isAcceptedTournamentTeam && actualTournament?.actualRound === 0">
-    <md-icon md-tooltip="Delete Team" class="negative list-action" (click)="eraseTeamRegistration($event, team)">delete</md-icon>
+    <md-icon md-tooltip="Delete Team" class="color-negative list-action" (click)="eraseTeamRegistration($event, team)">delete</md-icon>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="isAdmin() && !team.isAcceptedTournamentTeam  && actualTournament.actualRound === 0">
-    <md-icon class="positive list-action" (click)="acceptTeamRegistration($event, team)">check_circle</md-icon>
+    <md-icon class="color-positive list-action" (click)="acceptTeamRegistration($event, team)">check_circle</md-icon>
   </mdl-list-item-secondary-content>
 </mdl-list-item>
 

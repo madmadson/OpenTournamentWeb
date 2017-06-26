@@ -2,18 +2,16 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 
 import {
-  ARMY_LIST_ERASE_ACTION,
-  ARMY_LIST_PUSH_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION,
-  REGISTRATION_ERASE_ACTION,
+  ARMY_LIST_ERASE_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION, REGISTRATION_ERASE_ACTION,
   REGISTRATION_PUSH_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, REGISTRATION_ACCEPT_ACTION,
-  TOURNAMENT_SUBSCRIBE_ACTION,
-  TOURNAMENT_PAIR_AGAIN_ACTION,
+  TOURNAMENT_SUBSCRIBE_ACTION, TOURNAMENT_PAIR_AGAIN_ACTION,
   GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION, ADD_DUMMY_PLAYER_ACTION, PUBLISH_ROUND_ACTION,
   TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION, UNDO_TOURNAMENT_END_ACTION, SWAP_PLAYER_ACTION,
   UPLOAD_TOURNAMENT_ACTION, TEAM_TOURNAMENT_NEW_ROUND_ACTION, TOURNAMENT_KILL_TEAM_ROUND_ACTION,
   SCENARIO_SELECTED_ACTION, TOURNAMENT_PAIR_AGAIN_TEAM_ACTION, SWAP_TEAM_ACTION, TEAM_GAME_RESULT_ENTERED_ACTION,
   SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION, END_TEAM_TOURNAMENT_ACTION, UNDO_TEAM_TOURNAMENT_END_ACTION,
-  UPLOAD_TEAM_TOURNAMENT_ACTION
+  UPLOAD_TEAM_TOURNAMENT_ACTION, PLAYER_REGISTRATION_CHANGE_ACTION, ARMY_LIST_FOR_REGISTRATION_PUSH_ACTION,
+  ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
 
@@ -149,10 +147,15 @@ export class TournamentEffectService {
     .debug('TOURNAMENT_PLAYER_ERASE_ACTION')
     .map(action => this.tournamentService.eraseTournamentPlayer(action.payload));
 
-  @Effect({dispatch: false}) pushArmyList = this.actions$
-    .ofType(ARMY_LIST_PUSH_ACTION)
-    .debug('ARMY_LIST_PUSH_ACTION')
-    .map(action => this.tournamentService.pushArmyList(action.payload));
+  @Effect({dispatch: false}) pushArmyListForRegistration = this.actions$
+    .ofType(ARMY_LIST_FOR_REGISTRATION_PUSH_ACTION)
+    .debug('ARMY_LIST_FOR_REGISTRATION_PUSH_ACTION')
+    .map(action => this.tournamentService.pushArmyListForRegistration(action.payload));
+
+  @Effect({dispatch: false}) pushArmyListForTournamentPlayer = this.actions$
+    .ofType(ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION)
+    .debug('ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION')
+    .map(action => this.tournamentService.pushArmyListForTournamentPlayer(action.payload));
 
   @Effect({dispatch: false}) eraseArmyList = this.actions$
     .ofType(ARMY_LIST_ERASE_ACTION)
@@ -163,6 +166,11 @@ export class TournamentEffectService {
     .ofType(TOURNAMENT_PLAYER_PUSH_ACTION)
     .debug('TOURNAMENT_PLAYER_PUSH_ACTION')
     .map(action => this.tournamentService.pushNewTournamentPlayer(action.payload));
+
+  @Effect({dispatch: false}) playerRegistrationChangeAction = this.actions$
+    .ofType(PLAYER_REGISTRATION_CHANGE_ACTION)
+    .debug('PLAYER_REGISTRATION_CHANGE_ACTION')
+    .map(action => this.tournamentService.playerRegistrationChangeAction(action.payload));
 
   constructor(
     private actions$: Actions,

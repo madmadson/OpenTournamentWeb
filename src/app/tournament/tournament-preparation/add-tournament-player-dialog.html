@@ -12,7 +12,7 @@
       #fullPlayerName
       (blur)="checkName()"
       [(ngModel)]="tournamentPlayerModel.playerName" name="playerName">
-    <md-hint *ngIf="playerNameAlreadyInUse" align="start" class="negative">
+    <md-hint *ngIf="playerNameAlreadyInUse" align="start" class="color-negative">
       There is already a Player with that name</md-hint>
     <md-hint align="end">{{fullPlayerName.value.length}} / 50</md-hint>
   </md-input-container>
@@ -62,7 +62,7 @@
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
   <button *ngIf="playerNameAlreadyInUse"
           type="button"
-          class="right-align-button negative-background"
+          class="right-align-button color-negative-background"
           md-raised-button
           [disabled]="true">
     <md-icon>warning</md-icon>
@@ -70,7 +70,7 @@
   </button>
   <button *ngIf="dummyNotAllowed"
           type="button"
-          class="right-align-button negative-background"
+          class="right-align-button color-negative-background"
           md-raised-button
           [disabled]="true">
     <md-icon>warning</md-icon>
