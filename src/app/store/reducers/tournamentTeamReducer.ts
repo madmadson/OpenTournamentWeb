@@ -1,19 +1,15 @@
 import {Action} from '@ngrx/store';
 
 import * as _ from 'lodash';
-import {
-  TOURNAMENT_ADDED_ACTION, TOURNAMENT_CHANGED_ACTION, TOURNAMENT_DELETED_ACTION,
-  TOURNAMENTS_CLEAR_ACTION
-} from '../actions/tournaments-actions';
-import {Tournament} from '../../../../shared/model/tournament';
-import {TournamentTeam} from "../../../../shared/model/tournament-team";
+
+import {TournamentTeam} from '../../../../shared/model/tournament-team';
 import {
   TOURNAMENT_TEAM_ADDED_ACTION, TOURNAMENT_TEAM_CHANGED_ACTION, TOURNAMENT_TEAM_DELETED_ACTION,
   TOURNAMENT_TEAM_REGISTRATION_ADDED_ACTION, TOURNAMENT_TEAM_REGISTRATION_CHANGED_ACTION,
   TOURNAMENT_TEAM_REGISTRATION_DELETED_ACTION,
   TOURNAMENT_TEAM_REGISTRATIONS_CLEAR_ACTION,
   TOURNAMENT_TEAMS_CLEAR_ACTION
-} from "../actions/tournament-teams-actions";
+} from '../actions/tournament-teams-actions';
 
 
 

@@ -30,6 +30,7 @@ import {AddPlayerRegistrationDialogComponent} from '../../dialogs/tournament-pre
 import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
 import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
+import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 
 @Component({
   selector: 'tournament-preparation',
@@ -66,7 +67,8 @@ export class TournamentPreparationComponent implements OnInit {
   @Output() onDeleteRegistration = new EventEmitter<RegistrationPush>();
   @Output() onDeleteArmyList = new EventEmitter<ArmyList>();
   @Output() onEraseTournamentTeam = new EventEmitter<TournamentTeamEraseModel>();
-  @Output() onSetPaymentChecked = new EventEmitter<PlayerRegistrationChange>();
+  @Output() onPlayerRegChangeEventSubscribe = new EventEmitter<PlayerRegistrationChange>();
+  @Output() onTeamChangeEventSubscribe = new EventEmitter<TeamRegistrationChange>();
 
   allRegistrations: Registration[];
   userPlayerData: Player;
@@ -80,7 +82,6 @@ export class TournamentPreparationComponent implements OnInit {
   currentUserId: string;
 
   suggestedRoundsToPlay: number;
-
 
   tournamentTeamRegistrations: number;
   tournamentTeams: number;
@@ -148,6 +149,15 @@ export class TournamentPreparationComponent implements OnInit {
     this.filteredActualTournamentPlayers = _.filter(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
       return player.playerName.toLocaleLowerCase().includes(searchString.toLowerCase());
     });
+
+  }
+
+  isAdmin(): boolean {
+    if (this.actualTournament && this.currentUserId) {
+      return (this.currentUserId === this.actualTournament.creatorUid);
+    } else {
+      return false;
+    }
 
   }
 
@@ -231,8 +241,13 @@ export class TournamentPreparationComponent implements OnInit {
 
     const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
       data: {
-        tournament: this.actualTournament
-      }
+        tournament: this.actualTournament,
+        allActualTournamentPlayers: this.allActualTournamentPlayers,
+        allRegistrations: this.allRegistrations,
+        tournamentTeams: this.tournamentTeams,
+        tournamentTeamRegistrations: this.tournamentTeamRegistrations
+      },
+      width: '800px'
     });
     const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
       if (tournament) {
@@ -325,13 +340,24 @@ export class TournamentPreparationComponent implements OnInit {
 
   openShowTeamDialog() {
 
+    const isAdmin = this.isAdmin();
+
     const dialogRef = this.dialog.open(ShowTeamRegistrationDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
         team: this.teamCreator,
         allRegistrations: this.allRegistrations,
         userPlayerData: this.userPlayerData,
-        myTeam: this.myTeam
+        myTeam: this.myTeam,
+        isAdmin: isAdmin
+      }
+    });
+
+    const deleteEventSubscribe = dialogRef.componentInstance.onDeleteTeam.subscribe(teamToDelete => {
+
+      if (teamToDelete !== undefined) {
+        this.onEraseTeamRegistration.emit(teamToDelete);
+        dialogRef.close();
       }
     });
 
@@ -347,7 +373,7 @@ export class TournamentPreparationComponent implements OnInit {
       }
     });
 
-    const saveEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(registration => {
+    const openArmyListDialogEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(registration => {
 
       if (registration !== undefined) {
         this.openAddArmyListForRegistrationDialog(registration);
@@ -355,8 +381,9 @@ export class TournamentPreparationComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(() => {
 
+      deleteEventSubscribe.unsubscribe();
       kickEventSubscribe.unsubscribe();
-      saveEventSubscribe.unsubscribe();
+      openArmyListDialogEventSubscribe.unsubscribe();
     });
 
   }
@@ -442,8 +469,12 @@ export class TournamentPreparationComponent implements OnInit {
     }
   }
 
-  handleSetPaymentChecked(regChange: PlayerRegistrationChange) {
-    this.onSetPaymentChecked.emit(regChange);
+  handlePlayerRegChange(regChange: PlayerRegistrationChange) {
+    this.onPlayerRegChangeEventSubscribe.emit(regChange);
+  }
+
+  handleTeamRegChange(regChange: TeamRegistrationChange) {
+    this.onTeamChangeEventSubscribe.emit(regChange);
   }
 
   alreadyInTournament(): TournamentPlayer {
@@ -549,7 +580,13 @@ export class CreateTeamDialogComponent implements OnInit {
       meta: formModel.meta,
       isAcceptedTournamentTeam: false,
       tournamentPlayerIds: [],
-      registeredPlayerIds: []
+      registeredPlayerIds: [],
+      creatorMail: '',
+      leaderName: 'Created by Orga',
+      armyListsChecked: false,
+      paymentChecked: false,
+      playerMarkedPayment: false,
+      playerUploadedArmyLists:  false
     };
   }
 
@@ -637,7 +674,13 @@ export class RegisterTeamDialogComponent implements OnInit {
       meta: formModel.meta,
       isAcceptedTournamentTeam: false,
       tournamentPlayerIds: [],
-      registeredPlayerIds: []
+      registeredPlayerIds: [],
+      creatorMail: this.userPlayerData.userEmail,
+      leaderName: this.userPlayerData.nickName,
+      armyListsChecked: false,
+      paymentChecked: false,
+      playerMarkedPayment: false,
+      playerUploadedArmyLists:  false
     };
   }
 

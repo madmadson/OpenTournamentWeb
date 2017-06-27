@@ -3,6 +3,23 @@
 <h6 *ngIf="rankingsForTeam.length === 0">
   No  Player found for Team
 </h6>
+
+<md-input-container class="full-width ">
+  <input mdInput
+         placeholder="TeamLeader"
+         readonly
+         disabled
+         value=" {{teamRanking.leaderName}}">
+</md-input-container>
+
+<md-input-container class="full-width ">
+  <input mdInput
+         placeholder="Locality"
+         readonly
+         disabled
+         value=" {{teamRanking.meta}}">
+</md-input-container>
+
 <table class="ranking-table full-width mdl-data-table mdl-js-data-table mdl-shadow--3dp">
   <thead>
   <tr>

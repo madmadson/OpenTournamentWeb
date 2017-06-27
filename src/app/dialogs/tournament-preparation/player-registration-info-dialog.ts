@@ -9,6 +9,7 @@ import {getAllFactions} from '../../../../shared/model/factions';
 import {ArmyList} from '../../../../shared/model/armyList';
 import * as _ from 'lodash';
 import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
+import {ShowSingleArmyListDialogComponent} from "../mini-dialog/show-single-army-list-dialog";
 
 
 @Component({
@@ -24,7 +25,7 @@ export class PlayerRegistrationInfoDialogComponent {
   factions: string[];
   isAdmin: boolean;
 
-  @Output() onSetPaymentChecked = new EventEmitter<PlayerRegistrationChange>();
+  @Output() onRegChangeEventSubscribe = new EventEmitter<PlayerRegistrationChange>();
   @Output() onDeleteRegistration = new EventEmitter<Registration>();
 
   constructor(public dialog: MdDialog,
@@ -55,8 +56,7 @@ export class PlayerRegistrationInfoDialogComponent {
   }
   changeArmyListForTournament() {
 
-    console.log(this.playerRegistration.armyListsChecked);
-    this.onSetPaymentChecked.emit({
+    this.onRegChangeEventSubscribe.emit({
       registration: this.playerRegistration,
       paymentChecked: this.playerRegistration.paymentChecked,
       armyListsChecked: !this.playerRegistration.armyListsChecked,
@@ -68,8 +68,7 @@ export class PlayerRegistrationInfoDialogComponent {
 
   changePaidForTournament() {
 
-    console.log(this.playerRegistration.armyListsChecked);
-    this.onSetPaymentChecked.emit({
+    this.onRegChangeEventSubscribe.emit({
       registration: this.playerRegistration,
       paymentChecked: !this.playerRegistration.paymentChecked,
       armyListsChecked: this.playerRegistration.armyListsChecked,
@@ -83,20 +82,4 @@ export class PlayerRegistrationInfoDialogComponent {
   }
 }
 
-@Component({
-  selector: 'single-list-dialog',
-  template: `
-    <h3>{{armyList.name}}</h3>
-    <pre>{{armyList.list}}</pre>
-  `
-})
-export class ShowSingleArmyListDialogComponent {
 
-  armyList: ArmyList;
-
-  constructor(public dialogRef: MdDialogRef<ShowSingleArmyListDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-
-    this.armyList = data.armyList;
-  }
-}

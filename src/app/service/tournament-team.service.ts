@@ -27,6 +27,7 @@ import {
   ClearTeamRankingsAction, DeleteTournamentTeamRankingAction
 } from '../store/actions/tournament-team-rankings-actions';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {TeamRegistrationChange} from "../../../shared/dto/team-registration-change";
 
 
 @Injectable()
@@ -279,12 +280,29 @@ export class TournamentTeamService {
   }
 
   addDummyTeam(tournamentId: string) {
-    const dummy = new TournamentTeam(false, tournamentId, '', 'DUMMY', '', '', true, [], []);
+    const dummy = new TournamentTeam(false, tournamentId, '', 'DUMMY', '', '', true, [], [], '', 'DUMMY-LEADER',
+                                     false, false, false, false);
 
     const tournamentPlayers = this.afoDatabase.list('tournament-teams/' + tournamentId);
     tournamentPlayers.push(dummy);
 
     this.snackBar.open('Dummy Team successfully inserted', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  teamRegistrationChange(change: TeamRegistrationChange) {
+    const registrationRef = this.afoDatabase.object('tournament-team-registrations/' +
+      change.team.tournamentId + '/' + change.team.id);
+    registrationRef.update({
+      armyListsChecked: change.armyListsChecked,
+      paymentChecked:  change.paymentChecked,
+      playerMarkedPayment: change.playerMarkedPayment,
+      playerUploadedArmyLists: change.playerUploadedArmyLists
+    });
+
+    this.snackBar.open('Successfully update Team Registration', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });

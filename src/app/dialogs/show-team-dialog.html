@@ -2,6 +2,23 @@
 <h6 *ngIf="allTournamentPlayerForTeam.length === 0">
   No  Player found for Team
 </h6>
+
+<md-input-container class="full-width ">
+  <input mdInput
+         placeholder="TeamLeader"
+         readonly
+         disabled
+         value=" {{team.leaderName}}">
+</md-input-container>
+
+<md-input-container class="full-width ">
+  <input mdInput
+         placeholder="Locality"
+         readonly
+         disabled
+         value=" {{team.meta}}">
+</md-input-container>
+
 <mdl-list>
   <mdl-list-item lines="3"
                  class="list-item"

@@ -38,9 +38,10 @@
     <h3 class="heading">Admin Area</h3>
         <div class="right-align-button">
           <a href='mailto:{{playerRegistration.email}}'>
-            <md-icon class="color-info list-action">email</md-icon>
+            <md-icon md-tooltip="Mail Player" class="color-info list-action">email</md-icon>
           </a>
-          <md-icon class="color-negative list-action" (click)="deleteRegistration(playerRegistration)">delete</md-icon>
+          <md-icon md-tooltip="Delete Registration"
+                   class="color-negative list-action" (click)="deleteRegistration(playerRegistration)">delete</md-icon>
         </div>
 
     <div class="full-width">

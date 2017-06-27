@@ -26,7 +26,7 @@ export class TournamentRegistrationListComponent implements OnInit {
   @Output() onAcceptRegistration = new EventEmitter<Registration>();
   @Output() onDeleteRegistration = new EventEmitter<Registration>();
   @Output() onAddArmyListForRegistrationDialog = new EventEmitter<Registration>();
-  @Output() onSetPaymentChecked = new EventEmitter<PlayerRegistrationChange>();
+  @Output() onPlayerRegChangeEventSubscribe = new EventEmitter<PlayerRegistrationChange>();
 
   smallScreen: boolean;
   truncateMax: number;
@@ -77,13 +77,14 @@ export class TournamentRegistrationListComponent implements OnInit {
         isAdmin: this.isAdmin
       }
     });
-    const saveEventSubscribe = dialogRef.componentInstance.onSetPaymentChecked.subscribe(
+    const regChangeEventSubscribe = dialogRef.componentInstance.onRegChangeEventSubscribe.subscribe(
       (playerRegistrationChange: PlayerRegistrationChange) => {
       if (playerRegistrationChange) {
-        this.onSetPaymentChecked.emit(playerRegistrationChange);
+        this.onPlayerRegChangeEventSubscribe.emit(playerRegistrationChange);
       }
       dialogRef.close();
     });
+
     const deleteEventSubscribe = dialogRef.componentInstance.onDeleteRegistration.subscribe(
       (reg: Registration) => {
         if (reg) {
@@ -93,7 +94,7 @@ export class TournamentRegistrationListComponent implements OnInit {
       });
     dialogRef.afterClosed().subscribe(() => {
 
-      saveEventSubscribe.unsubscribe();
+      regChangeEventSubscribe.unsubscribe();
       deleteEventSubscribe.unsubscribe();
     });
   }

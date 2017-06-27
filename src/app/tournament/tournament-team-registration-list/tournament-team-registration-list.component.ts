@@ -15,6 +15,7 @@ import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-pus
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
 
 import {AddPlayerRegistrationDialogComponent} from '../../dialogs/tournament-preparation/add-player-registration-dialog';
+import {TeamRegistrationChange} from "../../../../shared/dto/team-registration-change";
 
 
 @Component({
@@ -36,6 +37,7 @@ export class TournamentTeamRegistrationListComponent {
   @Output() onAcceptTeamRegistration = new EventEmitter<TeamRegistrationPush>();
   @Output() onEraseTeamRegistration = new EventEmitter<TeamRegistrationPush>();
   @Output() onAddArmyLists = new EventEmitter<Registration>();
+  @Output() onTeamRegChangeEventSubscribe = new EventEmitter<TeamRegistrationChange>();
 
   truncateMax: number;
   smallScreen: boolean;
@@ -127,15 +129,42 @@ export class TournamentTeamRegistrationListComponent {
 
   showTeam(team: TournamentTeam) {
 
+    const isAdmin = this.isAdmin();
+
     const dialogRef = this.dialog.open(ShowTeamRegistrationDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
         userPlayerData: this.userPlayerData,
         team: team,
         allRegistrations: this.allRegistrations,
-        myTeam: this.myTeam
+        myTeam: this.myTeam,
+        isAdmin: isAdmin
       }
     });
+
+    const deleteEventSubscribe = dialogRef.componentInstance.onDeleteTeam.subscribe(teamToDelete => {
+      if (teamToDelete !== undefined) {
+        const allPlayersForTeam = _.filter(this.allRegistrations, function (reg: Registration) {
+          return reg.teamName === team.teamName;
+        });
+
+        this.onEraseTeamRegistration.emit({
+          tournament: this.actualTournament,
+          team: teamToDelete,
+          registrations: allPlayersForTeam
+        });
+
+        dialogRef.close();
+      }
+    });
+
+    const teamChangeEventSubscribe = dialogRef.componentInstance.onTeamRegistrationChanged.subscribe(
+      (teamRegChange: TeamRegistrationChange) => {
+        if (teamRegChange) {
+          this.onTeamRegChangeEventSubscribe.emit(teamRegChange);
+        }
+        dialogRef.close();
+      });
 
     const kickEventSubscribe = dialogRef.componentInstance.onKickPlayer.subscribe(registration => {
 
@@ -145,7 +174,7 @@ export class TournamentTeamRegistrationListComponent {
       }
     });
 
-    const saveEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(registration => {
+    const addArmyListEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(registration => {
 
       if (registration !== undefined) {
         this.onAddArmyLists.emit(registration);
@@ -153,8 +182,10 @@ export class TournamentTeamRegistrationListComponent {
     });
     dialogRef.afterClosed().subscribe(() => {
 
+      teamChangeEventSubscribe.unsubscribe();
+      deleteEventSubscribe.unsubscribe();
       kickEventSubscribe.unsubscribe();
-      saveEventSubscribe.unsubscribe();
+      addArmyListEventSubscribe.unsubscribe();
     });
 
   }

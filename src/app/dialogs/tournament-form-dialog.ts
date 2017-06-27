@@ -5,9 +5,12 @@ import {CustomValidators} from 'ng2-validation';
 
 import * as moment from 'moment';
 
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators} from '@angular/forms';
 import {StartTournamentDialogComponent} from '../tournament/tournament-preparation/tournament-preparation.component';
 import {Tournament} from '../../../shared/model/tournament';
+import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {Registration} from '../../../shared/model/registration';
+
 
 @Component({
   selector: 'tournament-form-dialog',
@@ -19,6 +22,11 @@ export class TournamentFormDialogComponent implements OnInit {
   @Output() onSaveTournament = new EventEmitter<Tournament>();
 
   tournament: Tournament;
+  allActualTournamentPlayers: TournamentPlayer[];
+  allRegistrations: Registration[];
+
+  tournamentTeams: number;
+  tournamentTeamRegistrations: number;
 
   tournamentForm: FormGroup;
   dateFormat = 'dd, M/D/YY HH:mm';
@@ -48,10 +56,13 @@ export class TournamentFormDialogComponent implements OnInit {
 
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
-              protected fb: FormBuilder,
               protected snackBar: MdSnackBar) {
 
     this.tournament = data.tournament;
+    this.allActualTournamentPlayers = data.allActualTournamentPlayers;
+    this.allRegistrations = data.allRegistrations;
+    this.tournamentTeams = data.tournamentTeams;
+    this.tournamentTeamRegistrations = data.tournamentTeamRegistrations;
   }
 
   ngOnInit() {
@@ -64,25 +75,28 @@ export class TournamentFormDialogComponent implements OnInit {
     const initialBeginDate = moment().weekday(6).hours(10).minutes(0).add(1, 'week').format(this.dateFormat);
     const initialEndDate = moment().weekday(6).hours(20).minutes(0).add(1, 'week').format(this.dateFormat);
 
-
-    this.tournamentForm = this.fb.group({
-      name: [this.tournament.name,
-        Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
-      location: [this.tournament.location,
-        Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])],
-      beginDate: [this.tournament.beginDate ?
+    this.tournamentForm = new FormGroup({
+      name: new FormControl(this.tournament.name, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])),
+      location: new FormControl(this.tournament.location, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])),
+      beginDate: new FormControl(this.tournament.beginDate ?
         moment(this.tournament.beginDate).format(this.dateFormat) :
-        initialBeginDate, Validators.required],
-      endDate: [this.tournament.endDate ?
+        initialBeginDate, Validators.required),
+      endDate:  new FormControl(this.tournament.endDate ?
         moment(this.tournament.endDate).format(this.dateFormat) :
-        initialEndDate, Validators.required],
-      teamTournament: [this.tournament.teamSize > 0],
-      teamSize: [this.tournament.teamSize],
-      dailyMail: [this.tournament.dailyMail],
-      maxParticipants: [this.tournament.maxParticipants,
-        Validators.compose([Validators.required, CustomValidators.min(2), CustomValidators.max(9999)])],
-      description: [this.tournament.description],
-      payLink: [this.tournament.payLink]
+        initialEndDate, Validators.required),
+
+      teamTournament: new FormControl( {value: this.tournament.teamSize > 0,
+        disabled:  (this.allActualTournamentPlayers.length > 0 ||
+                    this.allRegistrations.length > 0 ||
+                    this.tournamentTeams > 0 ||
+                    this.tournamentTeamRegistrations > 0)
+      }),
+      teamSize: new FormControl(this.tournament.teamSize),
+      dailyMail: new FormControl(this.tournament.dailyMail),
+      maxParticipants: new FormControl(this.tournament.maxParticipants,
+        Validators.compose([Validators.required, CustomValidators.min(2), CustomValidators.max(9999)])),
+      description: new FormControl(this.tournament.description),
+      payLink: new FormControl(this.tournament.payLink)
     });
 
 

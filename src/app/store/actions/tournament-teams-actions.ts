@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
-import {PlayerRegistrationChange} from "../../../../shared/dto/playerRegistration-change";
+import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 
 
 export const TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION = 'TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION';
@@ -130,5 +130,13 @@ export class ChangeTournamentTeamAction implements Action {
 
   readonly type = 'TOURNAMENT_TEAM_CHANGED_ACTION';
   constructor(public payload: TournamentTeam) {
+  }
+}
+
+export const TEAM_REGISTRATION_CHANGE_ACTION = 'TEAM_REGISTRATION_CHANGE_ACTION';
+export class TeamRegistrationChangeAction implements Action {
+
+  readonly type = 'TEAM_REGISTRATION_CHANGE_ACTION';
+  constructor(public payload: TeamRegistrationChange) {
   }
 }

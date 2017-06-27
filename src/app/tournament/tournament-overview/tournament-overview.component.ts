@@ -41,7 +41,7 @@ import {
   TournamentTeamEraseAction,
   TournamentTeamPushAction, TournamentTeamRegistrationAcceptAction,
   TournamentTeamRegistrationPushAction,
-  TournamentTeamRegistrationEraseAction, AddDummyTeamAction,
+  TournamentTeamRegistrationEraseAction, AddDummyTeamAction, TeamRegistrationChangeAction,
 } from '../../store/actions/tournament-teams-actions';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
@@ -50,6 +50,7 @@ import {RegistrationPush} from '../../../../shared/dto/registration-push';
 import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
 import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
+import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 
 @Component({
   selector: 'tournament-overview',
@@ -362,8 +363,12 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TournamentTeamRegistrationEraseAction(teamRegPush));
   }
 
-  handleSetPaymentChecked(regChange: PlayerRegistrationChange) {
+  handlePlayerRegChange(regChange: PlayerRegistrationChange) {
     this.store.dispatch(new PlayerRegistrationChangeAction(regChange));
+  }
+
+  handleTeamChange(teamChange: TeamRegistrationChange) {
+    this.store.dispatch(new TeamRegistrationChangeAction(teamChange));
   }
 
   handleCreateTeamForTeamTournament(team: TournamentTeam) {

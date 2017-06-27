@@ -1,10 +1,6 @@
 <h3 class="heading">Manage Tournament</h3>
 <md-dialog-content>
-  <!--<tournament-form-->
-  <!--[tournament]="tournament"-->
-  <!--(onSaveTournament)="handleSaveTournament($event)"></tournament-form>-->
-
-
+L:{{allActualTournamentPlayers?.length}}
   <form [formGroup]="tournamentForm" novalidate>
     <div class="form-group">
       <md-input-container
@@ -75,6 +71,13 @@
         formControlName="teamTournament"
       >TeamTournament
       </md-checkbox>
+      <span class="color-info small-text"
+            *ngIf="allRegistrations?.length > 0 ||
+                   allActualTournamentPlayers?.length > 0 ||
+                   tournamentTeams > 0 ||
+                   tournamentTeamRegistrations > 0">
+        You cannot change this when there are Registrations or TournamentPlayer
+      </span>
     </div>
     <md-input-container *ngIf="tournamentForm.get('teamTournament').value" class="full-width">
       <input mdInput
@@ -98,12 +101,12 @@
       <input mdInput
              type="number"
              min="2"
-             max="9999"
+             max="500"
              placeholder="MaxParticipants"
              formControlName="maxParticipants"
              required
              #inputMaxParticipants>
-      <md-hint align="end">{{inputMaxParticipants.value}} / 2-9999</md-hint>
+      <md-hint align="end">{{inputMaxParticipants.value}} / 2-500</md-hint>
       <md-hint *ngIf="tournamentForm.get('maxParticipants').invalid && tournamentForm.get('maxParticipants').dirty"
                style="color: red">
         <span>{{tournamentForm.get('maxParticipants').getError('message')}}</span>
@@ -123,12 +126,13 @@
       class="full-width">
       <textarea
         mdInput
-        maxlength="1000"
+        maxlength="3000"
         placeholder="Tournament Description"
         formControlName="description"
+        class="max-height"
         #description>
       </textarea>
-      <md-hint align="end">{{description.value.length}} / 1000</md-hint>
+      <md-hint align="end">{{description.value.length}} / 3000</md-hint>
     </md-input-container>
   </form>
 

@@ -135,9 +135,9 @@ import {GamesService} from './service/games.service';
 import {TournamentInfoDialogComponent} from './dialogs/tournament-overview/tournament-info-dialog';
 import {AddPlayerRegistrationDialogComponent} from './dialogs/tournament-preparation/add-player-registration-dialog';
 import {
-  PlayerRegistrationInfoDialogComponent,
-  ShowSingleArmyListDialogComponent
-} from "./dialogs/tournament-preparation/player-registration-info-dialog";
+  PlayerRegistrationInfoDialogComponent
+} from './dialogs/tournament-preparation/player-registration-info-dialog';
+import {ShowSingleArmyListDialogComponent} from './dialogs/mini-dialog/show-single-army-list-dialog';
 
 
 const reducers = {

@@ -1,7 +1,24 @@
 <h3 class="heading">Team {{team.teamName}}</h3>
-<h6 *ngIf="allRegistrationsForTeam.length === 0">
+<h6 class="heading" *ngIf="allRegistrationsForTeam?.length === 0">
   No registered Player found for Team
 </h6>
+
+<md-input-container class="full-width ">
+  <input mdInput
+         placeholder="TeamLeader"
+         readonly
+         disabled
+         value=" {{team.leaderName}}">
+</md-input-container>
+
+<md-input-container class="full-width ">
+  <input mdInput
+         placeholder="Locality"
+         readonly
+         disabled
+         value=" {{team.meta}}">
+</md-input-container>
+
 <mdl-list>
   <mdl-list-item lines="3"
                  class="list-item"
@@ -33,7 +50,40 @@
   </mdl-list-item>
 </mdl-list>
 
+<ng-container *ngIf="isAdmin">
+  <h3 class="heading">Admin Area</h3>
+  <div class="right-align-button">
+    <a href='mailto:{{team.creatorMail}}'>
+      <md-icon md-tooltip="Mail Team Creator" class="color-info list-action">email</md-icon>
+    </a>
+    <md-icon md-tooltip="Delete whole Team"
+             class="color-negative list-action" (click)="deleteTeam(team)">delete</md-icon>
+  </div>
+
+  <div class="full-width">
+    <md-icon class="align-fix">attach_money</md-icon>
+    <md-checkbox
+      [checked]="team.paymentChecked"
+      (change)="changePaidForTournament()"
+      mdTooltip="Check all ArmyLists before you check"
+    >Team paid?
+    </md-checkbox>
+  </div>
+
+  <div class="full-width">
+    <md-icon class="align-fix">assignment_late</md-icon>
+    <md-checkbox
+      [checked]="team.armyListsChecked"
+      (change)="changeArmyListForTournament()"
+      mdTooltip="Check all ArmyLists before you check"
+    >ArmyLists Okay?
+    </md-checkbox>
+  </div>
+</ng-container>
+
 
 <div md-dialog-actions>
-  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  <div class="full-width">
+     <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  </div>
 </div>

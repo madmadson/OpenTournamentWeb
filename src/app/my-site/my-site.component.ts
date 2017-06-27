@@ -118,7 +118,11 @@ export class MySiteComponent {
     const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
       data: {
         tournament: new Tournament('', '', '', '', 16, 0, 0, 0, 0,
-          this.creatorId, this.creatorMail, true, false, false, '', '')
+          this.creatorId, this.creatorMail, true, false, false, '', ''),
+        allActualTournamentPlayers: [],
+        allRegistrations: [],
+        tournamentTeams: 0,
+        tournamentTeamRegistrations: 0
       },
       width: '800px'
     });

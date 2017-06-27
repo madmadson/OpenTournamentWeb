@@ -1,7 +1,7 @@
 <div class="action-card-container">
   <md-card
     *ngIf="(actualTournament?.actualRound === 0 &&
-            currentUserId === actualTournament?.creatorUid); else nonAdmin"
+            isAdmin()); else nonAdmin"
     class="action-card">
     <div class="action-button-wrapper">
 
@@ -152,7 +152,7 @@
           (onAcceptRegistration)="acceptRegistration($event)"
           (onDeleteRegistration)="deleteMyRegistration($event)"
           (onAddArmyListForRegistrationDialog)="openAddArmyListForRegistrationDialog($event)"
-          (onSetPaymentChecked)="handleSetPaymentChecked($event)">
+          (onPlayerRegChangeEventSubscribe)="handlePlayerRegChange($event)">
         </tournament-registration-list>
       </mdl-list>
     </md-card>
@@ -176,7 +176,8 @@
           (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)"
           (onEraseTeamRegistration)="handleEraseTeamRegistration($event)"
           (onKickPlayer)="handleKickTournamentPlayer($event)"
-          (onAddArmyLists)="addArmyListForRegistrationDialog($event)">
+          (onAddArmyLists)="openAddArmyListForRegistrationDialog($event)"
+          (onTeamRegChangeEventSubscribe)="handleTeamRegChange($event)">
         </tournament-team-registration-list>
       </mdl-list>
     </md-card>
