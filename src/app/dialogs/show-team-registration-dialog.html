@@ -53,9 +53,9 @@
 <ng-container *ngIf="isAdmin">
   <h3 class="heading">Admin Area</h3>
   <div class="right-align-button">
-    <a href='mailto:{{team.creatorMail}}'>
-      <md-icon md-tooltip="Mail Team Creator" class="color-info list-action">email</md-icon>
-    </a>
+    <md-icon md-tooltip="Mail to Team Creator" (click)="sendMail(team.creatorMail)" class="color-info list-action">
+      email
+    </md-icon>
     <md-icon md-tooltip="Delete whole Team"
              class="color-negative list-action" (click)="deleteTeam(team)">delete</md-icon>
   </div>

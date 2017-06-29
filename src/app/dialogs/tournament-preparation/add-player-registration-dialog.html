@@ -16,7 +16,10 @@
         class="full-width">
         <input mdInput type="text" placeholder="Team" formControlName="teamName">
       </md-input-container>
-      <md-select class="full-width" placeholder="Faction" formControlName="faction">
+      <md-select class="full-width"
+                 required
+                 placeholder="Faction"
+                 formControlName="faction">
         <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
       </md-select>
     </div>

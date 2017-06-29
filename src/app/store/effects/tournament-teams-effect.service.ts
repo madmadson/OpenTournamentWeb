@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 
 import {
-  ADD_DUMMY_TEAM_ACTION, TEAM_REGISTRATION_CHANGE_ACTION,
+  ADD_DUMMY_TEAM_ACTION, ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION, TEAM_REGISTRATION_CHANGE_ACTION,
   TOURNAMENT_TEAM_ERASE_ACTION,
   TOURNAMENT_TEAM_PUSH_ACTION, TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION, TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION,
   TOURNAMENT_TEAM_REGISTRATION_PUSH_ACTION,
@@ -72,6 +72,11 @@ export class TournamentTeamEffectService {
     .ofType(TEAM_REGISTRATION_CHANGE_ACTION)
     .debug('TEAM_REGISTRATION_CHANGE_ACTION')
     .map(action => this.tournamentTeamService.teamRegistrationChange(action.payload));
+
+  @Effect({dispatch: false}) armyListForTeamRegistration = this.actions$
+    .ofType(ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION)
+    .debug('ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION')
+    .map(action => this.tournamentTeamService.armyListForTeamRegistration(action.payload));
 
 
   constructor(

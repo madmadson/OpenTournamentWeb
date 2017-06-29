@@ -28,6 +28,8 @@ import {
 } from '../store/actions/tournament-team-rankings-actions';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {TeamRegistrationChange} from "../../../shared/dto/team-registration-change";
+import {ArmyListRegistrationPush} from "../../../shared/dto/armyList-registration-push";
+import {ArmyListTeamPush} from "../../../shared/dto/team-armyList-push";
 
 
 @Injectable()
@@ -303,6 +305,23 @@ export class TournamentTeamService {
     });
 
     this.snackBar.open('Successfully update Team Registration', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  armyListForTeamRegistration(armyListTeamPush: ArmyListTeamPush) {
+    const tournamentArmyListRef = this.afoDatabase.list('tournament-armyLists/' + armyListTeamPush.armyList.tournamentId);
+    tournamentArmyListRef.push(armyListTeamPush.armyList);
+
+    const registrationRef = this.afoDatabase.object('tournament-team-registrations/' +
+      armyListTeamPush.team.tournamentId + '/' + armyListTeamPush.team.id);
+    registrationRef.update({
+      playerUploadedArmyLists: true,
+      armyListsChecked: false
+    });
+
+    this.snackBar.open('ArmyList for Team-Registration saved successfully', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });

@@ -286,7 +286,14 @@ export class TournamentService  {
     const tournamentArmyListRef = this.afoDatabase.list('tournament-armyLists/' + armyListRegistrationPush.armyList.tournamentId);
     tournamentArmyListRef.push(armyListRegistrationPush.armyList);
 
-    this.snackBar.open('Army List for Registration saved  successfully', '', {
+    const registrationRef = this.afoDatabase.object('tournament-registrations/' +
+      armyListRegistrationPush.registration.tournamentId + '/' + armyListRegistrationPush.registration.id);
+    registrationRef.update({
+      playerUploadedArmyLists: true,
+      armyListsChecked: false
+    });
+
+    this.snackBar.open('ArmyList for Registration saved  successfully', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });
@@ -656,7 +663,8 @@ export class TournamentService  {
   playerRegistrationChangeAction(regChange: PlayerRegistrationChange) {
     const registrationRef = this.afoDatabase.object('tournament-registrations/' +
       regChange.registration.tournamentId + '/' + regChange.registration.id);
-    registrationRef.update({
+
+     registrationRef.update({
       armyListsChecked: regChange.armyListsChecked,
       paymentChecked:  regChange.paymentChecked,
       playerMarkedPayment: regChange.playerMarkedPayment,

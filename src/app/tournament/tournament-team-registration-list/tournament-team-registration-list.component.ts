@@ -16,6 +16,7 @@ import {RegistrationPush} from '../../../../shared/dto/registration-push';
 
 import {AddPlayerRegistrationDialogComponent} from '../../dialogs/tournament-preparation/add-player-registration-dialog';
 import {TeamRegistrationChange} from "../../../../shared/dto/team-registration-change";
+import {ArmyListTeamPush} from "../../../../shared/dto/team-armyList-push";
 
 
 @Component({
@@ -36,7 +37,7 @@ export class TournamentTeamRegistrationListComponent {
   @Output() onKickPlayer = new EventEmitter<Registration>();
   @Output() onAcceptTeamRegistration = new EventEmitter<TeamRegistrationPush>();
   @Output() onEraseTeamRegistration = new EventEmitter<TeamRegistrationPush>();
-  @Output() onAddArmyLists = new EventEmitter<Registration>();
+  @Output() onAddArmyListsForTeam = new EventEmitter<ArmyListTeamPush>();
   @Output() onTeamRegChangeEventSubscribe = new EventEmitter<TeamRegistrationChange>();
 
   truncateMax: number;
@@ -60,14 +61,6 @@ export class TournamentTeamRegistrationListComponent {
   isAdmin(): boolean {
     if (this.actualTournament && this.userPlayerData) {
       return this.actualTournament.creatorUid === this.userPlayerData.userUid;
-    }
-    return false;
-  }
-
-  isAdminOrCreator(team: TournamentTeam): boolean {
-    if (this.actualTournament && this.userPlayerData) {
-      return this.actualTournament.creatorUid === this.userPlayerData.userUid ||
-        team.creatorUid === this.userPlayerData.userUid;
     }
     return false;
   }
@@ -127,7 +120,7 @@ export class TournamentTeamRegistrationListComponent {
     });
   }
 
-  showTeam(team: TournamentTeam) {
+  showTeamDialog(team: TournamentTeam) {
 
     const isAdmin = this.isAdmin();
 
@@ -177,7 +170,11 @@ export class TournamentTeamRegistrationListComponent {
     const addArmyListEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(registration => {
 
       if (registration !== undefined) {
-        this.onAddArmyLists.emit(registration);
+        this.onAddArmyListsForTeam.emit({
+          registration: registration,
+          team: this.myTeam,
+          armyList: null
+        });
       }
     });
     dialogRef.afterClosed().subscribe(() => {
@@ -213,11 +210,15 @@ export class TournamentTeamRegistrationListComponent {
     return allPlayersForTeam.length >= this.actualTournament.teamSize;
   }
 
-  addArmyLists(event: any, registration: Registration) {
+  addTeamArmyLists(event: any, registration: Registration) {
 
     event.stopPropagation();
 
-    this.onAddArmyLists.emit(registration);
+    this.onAddArmyListsForTeam.emit({
+      registration: registration,
+      team: this.myTeam,
+      armyList: null
+    });
   }
 
 }

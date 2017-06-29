@@ -31,6 +31,7 @@ import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistratio
 import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
+import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
 
 @Component({
   selector: 'tournament-preparation',
@@ -58,6 +59,8 @@ export class TournamentPreparationComponent implements OnInit {
   @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
   @Output() onAddArmyListForRegistration = new EventEmitter<ArmyListRegistrationPush>();
   @Output() onAddArmyListForTournamentPlayer = new EventEmitter<ArmyListTournamentPlayerPush>();
+  @Output() onAddArmyListForTeamRegistration = new EventEmitter<ArmyListTeamPush>();
+  @Output() onAddArmyListForTeamTournamentPlayer = new EventEmitter<ArmyListTeamPush>();
   @Output() onCreateTeamForTeamTournament = new EventEmitter<TournamentTeam>();
   @Output() onRegisterTeamForTeamTournament = new EventEmitter<TournamentTeam>();
   @Output() onAcceptTeamRegistration = new EventEmitter<TeamRegistrationPush>();
@@ -454,6 +457,83 @@ export class TournamentPreparationComponent implements OnInit {
           this.onAddArmyListForRegistration.emit(armyListRegistrationPush);
         }
       });
+      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
+
+        if (armyList !== undefined) {
+          this.onDeleteArmyList.emit(armyList);
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+
+        saveEventSubscribe.unsubscribe();
+        deleteEventSubscribe.unsubscribe();
+      });
+    }
+  }
+
+  openAddArmyListForRegistrationDialogForTeam(teamArmyList: ArmyListTeamPush) {
+    if (teamArmyList.registration !== undefined) {
+
+      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
+        data: {
+          registration: teamArmyList.registration,
+          armyLists: this.actualTournamentArmyList$
+        }
+      });
+      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
+        (armyListRegistrationPush: ArmyListRegistrationPush) => {
+
+          if (armyListRegistrationPush !== undefined) {
+
+            const armyListForTeamRegistrationPush: ArmyListTeamPush = {
+              armyList: armyListRegistrationPush.armyList,
+              team: teamArmyList.team,
+              registration: teamArmyList.registration
+            };
+
+            console.log('armyListForTeamRegistrationPush: ' + JSON.stringify(armyListForTeamRegistrationPush));
+
+            this.onAddArmyListForTeamRegistration.emit(
+              armyListForTeamRegistrationPush
+            );
+          }
+        });
+      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
+
+        if (armyList !== undefined) {
+          this.onDeleteArmyList.emit(armyList);
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+
+        saveEventSubscribe.unsubscribe();
+        deleteEventSubscribe.unsubscribe();
+      });
+    }
+  }
+
+  openAddArmyListForTournamentPlayerDialogForTeam(teamArmyList: ArmyListTeamPush) {
+    if (teamArmyList.registration !== undefined) {
+
+      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
+        data: {
+          registration: teamArmyList.registration,
+          armyLists: this.actualTournamentArmyList$
+        }
+      });
+      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
+        (armyListRegistrationPush: ArmyListRegistrationPush) => {
+
+          if (armyListRegistrationPush !== undefined) {
+            this.onAddArmyListForTeamRegistration.emit({
+              armyList: armyListRegistrationPush.armyList,
+              team: teamArmyList.team,
+              registration: teamArmyList.registration
+            });
+          }
+        });
       const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
 
         if (armyList !== undefined) {

@@ -6,6 +6,7 @@ $fail_color: #FF1501;
 $color_info: deepskyblue;
 $hover_color: #1e05ff;
 $color_dark_primary: #512DA8;
+$color_secondary: #FFC107;
 
 $main_tick: 12px;
 $halve_tick: 6px;
@@ -128,8 +129,12 @@ button:hover{
   color: $success_color;
 }
 
+.color-secondary{
+  color: $color_secondary;
+}
+
 .color-info{
-  color: deepskyblue;
+  color: $color_info;
 }
 
 .small-text{
@@ -466,4 +471,12 @@ snack-bar-container.snackBar-info {
 
 .mdl-list__item-primary-content{
   line-height: 16px !important;
+}
+
+.info-icon{
+  color: $color_info;
+}
+
+.info-icon:hover{
+  color: $hover_color;
 }

@@ -8,9 +8,8 @@ import {Registration} from '../../../shared/model/registration';
 import * as _ from 'lodash';
 
 import {Player} from '../../../shared/model/player';
-import {ArmyList} from '../../../shared/model/armyList';
-import {ShowSingleArmyListDialogComponent} from './mini-dialog/show-single-army-list-dialog';
 import {TeamRegistrationChange} from '../../../shared/dto/team-registration-change';
+import {WindowRefService} from '../service/window-ref-service';
 
 @Component({
   selector: 'show-team-registration-dialog',
@@ -35,7 +34,8 @@ export class ShowTeamRegistrationDialogComponent {
 
   constructor(public dialog: MdDialog,
               public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
+              @Inject(MD_DIALOG_DATA) public data: any,
+              private winRef: WindowRefService) {
 
     this.tournament = data.actualTournament;
     this.team = data.team;
@@ -86,22 +86,15 @@ export class ShowTeamRegistrationDialogComponent {
     this.onAddArmyLists.emit(registration);
   }
 
-  showArmyList(armyList: ArmyList) {
-    this.dialog.open(ShowSingleArmyListDialogComponent, {
-      data: {
-        armyList: armyList
-      }
-    });
-  }
 
   changeArmyListForTournament() {
 
-    console.log(this.team.armyListsChecked);
+    this.handleUndefined();
     this.onTeamRegistrationChanged.emit({
       team: this.team,
       paymentChecked: this.team.paymentChecked,
       armyListsChecked: !this.team.armyListsChecked,
-      playerUploadedArmyLists: this.team.playerUploadedArmyLists,
+      playerUploadedArmyLists: false,
       playerMarkedPayment: this.team.playerMarkedPayment
     });
 
@@ -109,17 +102,37 @@ export class ShowTeamRegistrationDialogComponent {
 
   changePaidForTournament() {
 
-    console.log(this.team.armyListsChecked);
+    this.handleUndefined();
     this.onTeamRegistrationChanged.emit({
       team: this.team,
       paymentChecked: !this.team.paymentChecked,
       armyListsChecked: this.team.armyListsChecked,
       playerUploadedArmyLists: this.team.playerUploadedArmyLists,
-      playerMarkedPayment: this.team.playerMarkedPayment
+      playerMarkedPayment: false
     });
   }
 
   deleteTeam(team: TournamentTeam) {
     this.onDeleteTeam.emit(team);
+  }
+
+  sendMail(mail: string) {
+    this.winRef.nativeWindow.location.href = 'mailto:' + mail + '?subject=Tournament Organizer from ' +
+      this.tournament.name;
+  }
+
+  private handleUndefined() {
+    if (typeof this.team.paymentChecked === 'undefined') {
+      this.team.paymentChecked = false;
+    }
+    if (typeof this.team.armyListsChecked === 'undefined') {
+      this.team.armyListsChecked = false;
+    }
+    if (typeof this.team.playerUploadedArmyLists === 'undefined') {
+      this.team.playerUploadedArmyLists = false;
+    }
+    if (typeof this.team.playerMarkedPayment === 'undefined') {
+      this.team.playerMarkedPayment = false;
+    }
   }
 }

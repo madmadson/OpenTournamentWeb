@@ -54,6 +54,7 @@
       class="full-width-select-box"
       placeholder="Faction"
       #faction
+      required
       name="faction"
       [(ngModel)]="tournamentPlayerModel.faction">
       <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
@@ -86,7 +87,7 @@
             (click)="saveTournamentPlayer()"
             [disabled]="tournamentPlayerForm.invalid">
       <md-icon>add</md-icon>
-      Save Tournament Player
+      Save Player
     </button>
   </div>
 </div>

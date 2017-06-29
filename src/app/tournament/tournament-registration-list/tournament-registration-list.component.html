@@ -22,11 +22,14 @@
 
   <span *ngIf="!smallScreen" class="list-secondary-spacer"></span>
 
-  <mdl-list-item-secondary-content *ngIf="!smallScreen && !registration.armyListsChecked">
+  <mdl-list-item-secondary-content *ngIf="!smallScreen && !registration.armyListsChecked && !registration.playerUploadedArmyLists">
     <md-icon  md-tooltip="No ArmyList uploaded yet" class="color-negative list-icon">assignment_late</md-icon>
   </mdl-list-item-secondary-content>
+  <mdl-list-item-secondary-content *ngIf="!smallScreen && registration.playerUploadedArmyLists">
+    <md-icon  md-tooltip="ArmyLists uploaded" class="color-secondary list-icon">assignment_returned</md-icon>
+  </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="!smallScreen && registration.armyListsChecked">
-    <md-icon  md-tooltip="ArmyLists okay" class="color-positive list-icon">assignment_turned_in</md-icon>
+    <md-icon  md-tooltip="ArmyLists checked" class="color-positive list-icon">assignment_turned_in</md-icon>
   </mdl-list-item-secondary-content>
 
   <mdl-list-item-secondary-content *ngIf="!smallScreen && !registration.paymentChecked">

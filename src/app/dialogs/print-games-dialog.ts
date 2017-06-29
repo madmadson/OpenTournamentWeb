@@ -1,17 +1,19 @@
-import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, OnDestroy, ViewChild} from '@angular/core';
 import {Tournament} from '../../../shared/model/tournament';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {WindowRefService} from '../service/window-ref-service';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
-import {TournamentGame} from "../../../shared/model/tournament-game";
+import {TournamentGame} from '../../../shared/model/tournament-game';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'print-games-dialog',
   templateUrl: './print-games-dialog.html',
   styleUrls: ['./print-games-dialog.scss']
 })
-export class PrintGamesDialogComponent {
+export class PrintGamesDialogComponent implements OnDestroy {
+
 
   tournament: Tournament;
   games$: Observable<TournamentGame[]>;
@@ -20,6 +22,8 @@ export class PrintGamesDialogComponent {
 
   teamMatch: boolean;
   window: any;
+
+  subscription: Subscription;
 
   @ViewChild('printarea') printarea: ElementRef;
 
@@ -32,11 +36,18 @@ export class PrintGamesDialogComponent {
     this.round = data.round;
     this.teamMatch = data.teamMatch;
 
-    data.games$.subscribe((games: TournamentGame[]) => {
-       this.scenario = games[0].scenario;
+    this.subscription = data.games$.subscribe((games: TournamentGame[]) => {
+      if (games[0]) {
+        this.scenario = games[0].scenario;
+      }
     });
 
     this.window = this.winRef.nativeWindow;
+  }
+
+  ngOnDestroy(): void {
+
+    this.subscription.unsubscribe();
   }
 
   printLists() {

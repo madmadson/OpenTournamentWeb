@@ -42,6 +42,7 @@ import {
   TournamentTeamPushAction, TournamentTeamRegistrationAcceptAction,
   TournamentTeamRegistrationPushAction,
   TournamentTeamRegistrationEraseAction, AddDummyTeamAction, TeamRegistrationChangeAction,
+  ArmyListForTeamRegistrationPushAction,
 } from '../../store/actions/tournament-teams-actions';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
@@ -51,6 +52,7 @@ import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistratio
 import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
+import {ArmyListTeamPush} from "../../../../shared/dto/team-armyList-push";
 
 @Component({
   selector: 'tournament-overview',
@@ -250,12 +252,21 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new RegistrationPushAction(registrationPush));
   }
 
-  handleAddArmyListForRegistation(armyListRegistrationPush: ArmyListRegistrationPush) {
+  handleAddArmyListForRegistration(armyListRegistrationPush: ArmyListRegistrationPush) {
     this.store.dispatch(new ArmyListForRegistrationPushAction(armyListRegistrationPush));
   }
 
   handleAddArmyListForTournamentPlayer(armyListTournamentPlayerPush: ArmyListTournamentPlayerPush) {
     this.store.dispatch(new ArmyListForTournamentPlayerPushAction(armyListTournamentPlayerPush));
+  }
+
+
+  handleAddArmyListForTeamRegistration(armyListTeamPush: ArmyListTeamPush) {
+    this.store.dispatch(new ArmyListForTeamRegistrationPushAction(armyListTeamPush));
+  }
+
+  handleAddArmyListForTeamTournamentPlayer(armyListTeamPush: ArmyListTeamPush) {
+    console.log('push player army list for team');
   }
 
   handleDeleteArmyList(armyList: ArmyList) {
