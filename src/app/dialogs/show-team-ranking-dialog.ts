@@ -55,10 +55,8 @@ export class ShowTeamRankingDialogComponent {
   showArmyList(ranking: TournamentRanking) {
 
     const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
-      if (list.tournamentPlayerId) {
-        return (list.tournamentPlayerId === ranking.tournamentPlayerId);
-      } else {
-        return (list.playerId === ranking.playerId);
+      if (list.teamName === ranking.teamName && list.playerName === ranking.playerName){
+        return true;
       }
     });
 

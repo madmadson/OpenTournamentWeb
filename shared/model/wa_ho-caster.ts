@@ -74,27 +74,9 @@ export function getWMHOCaster(faction: string): string[] {
       'Zerkova2 (Obavnik Kommander Zerkova & Reaver Guard)',
       'Kozlov1 (Lord Kozlov, Viscount of Scarsgrad)'
     ];
-  } else if (faction === 'Mercenaries') {
+  }  else if (faction === 'Menoth') {
     return [
-      'Ashlynn (Ashlynn D\'Elyse)',
-      'Blaize1 (Constance Blaize, Knight of the Prophet)',
-      'Caine3 (Caine\'s Hellslingers)',
-      'Cyphon1 (Cognifex Cyphon)',
-      'Damiano1 (Captain Damiano)',
-      'Fiona1 (Fiona the Black)',
-      'Grundback1 (Gorten Grundback)',
-      'MacBain1 (Drake MacBain)',
-      'Madhammer1 (Durgen Madhammer)',
-      'Magnus1 (Magnus the Traitor)',
-      'Magnus2 (Magnus the Warlord)',
-      'Montador1 (Captain Bartolo Montador)',
-      'Ossrum1 (General Ossrum)',
-      'Shae1 (Captain Phinneus Shae)',
-      'Thexus1 (Exulon Thexus)',
-    ];
-  } else if (faction === 'Menoth') {
-    return [
-      'Amon (High Allegiant Amon Ad-Raza)',
+      'Amon1 (High Allegiant Amon Ad-Raza)',
       'Durant2 (Sovereign Tristan Durant)',
       'Durst1 (Anson Durst, Rock of the Faith)',
       'Harbinger1 (The Harbinger of Menoth)',
@@ -114,9 +96,27 @@ export function getWMHOCaster(faction: string): string[] {
       'Thyra1 (Thyra, Flame of Sorrow)',
       'Vindictus1 (Vice Scrutator Vindictus)'
     ];
+  } else if (faction === 'Mercenaries') {
+    return [
+      'Ashlynn1 (Ashlynn D\'Elyse)',
+      'Blaize1 (Constance Blaize, Knight of the Prophet)',
+      'Caine3 (Caine\'s Hellslingers)',
+      'Cyphon1 (Cognifex Cyphon)',
+      'Damiano1 (Captain Damiano)',
+      'Fiona1 (Fiona the Black)',
+      'Grundback1 (Gorten Grundback)',
+      'MacBain1 (Drake MacBain)',
+      'Madhammer1 (Durgen Madhammer)',
+      'Magnus1 (Magnus the Traitor)',
+      'Magnus2 (Magnus the Warlord)',
+      'Montador1 (Captain Bartolo Montador)',
+      'Ossrum1 (General Ossrum)',
+      'Shae1 (Captain Phinneus Shae)',
+      'Thexus1 (Exulon Thexus)',
+    ];
   } else if (faction === 'Retribution') {
     return [
-      'Elara1 (Elara, Death\'s Shadow)',
+      'Elara2 (Elara, Death\'s Shadow)',
       'Garryth1 (Garryth, Blade of Retribution)',
       'Goreshade4 (Lord Ghyrrshyld, the Forgiven)',
       'Helynna1 (Magister Helynna)',
@@ -223,7 +223,7 @@ export function getWMHOCaster(faction: string): string[] {
       'Gunnbjorn1 (Captain Gunnbjorn)',
       'Grim1 (Grim Angus)',
       'Grim2 (Hunters Grim)',
-      'Grissel (Grissel Bloodsong, Fell Caller)',
+      'Grissel1 (Grissel Bloodsong, Fell Caller)',
       'Grisse2 (Grissel Bloodsong, Marshal of the Kriels)',
       'Madrak1 (Madrak Ironhide, Thornwood Chieftain)',
       'Madrak2 (Madrak Ironhide, World Ender)',
@@ -231,6 +231,6 @@ export function getWMHOCaster(faction: string): string[] {
       'Ragnor1 (Ragnor Skysplitter, the Runemaster)'
     ];
   } else {
-    return [];
+    return ['No Caster found for Faction'];
   }
 }

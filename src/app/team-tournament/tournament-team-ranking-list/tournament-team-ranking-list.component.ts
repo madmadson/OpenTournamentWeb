@@ -53,7 +53,6 @@ export class TournamentTeamRankingListComponent implements OnInit {
 
   showTeam(team: TournamentRanking) {
 
-
     this.dialog.open(ShowTeamRankingDialogComponent, {
       data: {
         userPlayerData: this.userPlayerData,
