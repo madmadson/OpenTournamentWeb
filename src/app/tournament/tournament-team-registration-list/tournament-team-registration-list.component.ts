@@ -15,8 +15,8 @@ import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-pus
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
 
 import {AddPlayerRegistrationDialogComponent} from '../../dialogs/tournament-preparation/add-player-registration-dialog';
-import {TeamRegistrationChange} from "../../../../shared/dto/team-registration-change";
-import {ArmyListTeamPush} from "../../../../shared/dto/team-armyList-push";
+import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
+import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
 
 
 @Component({
@@ -92,6 +92,25 @@ export class TournamentTeamRegistrationListComponent {
 
   acceptTeamRegistration(event: any, team: TournamentTeam) {
 
+    const newTournamentTeam: TournamentTeam = {
+      id: team.id,
+      isRegisteredTeam: team.isRegisteredTeam,
+      tournamentId: team.tournamentId,
+      creatorUid: team.creatorUid,
+      teamName: team.teamName,
+      country: team.country,
+      meta: team.meta,
+      isAcceptedTournamentTeam: team.isAcceptedTournamentTeam,
+      armyListsChecked: team.armyListsChecked ? team.armyListsChecked : false,
+      paymentChecked: team.paymentChecked ? team.paymentChecked : false,
+      playerMarkedPayment: team.playerMarkedPayment ? team.playerMarkedPayment : false,
+      playerUploadedArmyLists: team.playerUploadedArmyLists ? team.playerUploadedArmyLists : false,
+      creatorMail: team.creatorMail ? team.creatorMail : 'noMail',
+      leaderName: team.leaderName ? team.leaderName : 'noLeader',
+      tournamentPlayerIds: team.tournamentPlayerIds,
+      registeredPlayerIds: team.registeredPlayerIds
+    };
+
     event.stopPropagation();
 
     const allPlayersForTeam = _.filter(this.allRegistrations, function (reg: Registration) {
@@ -100,7 +119,7 @@ export class TournamentTeamRegistrationListComponent {
 
     this.onAcceptTeamRegistration.emit({
       tournament: this.actualTournament,
-      team: team,
+      team: newTournamentTeam,
       registrations: allPlayersForTeam
     });
   }
