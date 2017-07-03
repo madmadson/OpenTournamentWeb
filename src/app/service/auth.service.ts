@@ -64,9 +64,10 @@ export class LoginService implements OnInit, OnDestroy {
               duration: 5000
             });
           } else {
-            const snackBarRef = this.snackBar.open('Please verify your userEmail first', 'SEND EMAIL AGAIN', {
+            const snackBarRef = this.snackBar.open('Found account without verified email. Please verify your email first. ' +
+              'Check your spam folder for an email with \'noreply@devopentournament.firebaseapp.com\'', 'SEND EMAIL AGAIN', {
               extraClasses: ['snackBar-info'],
-              duration: 5000
+              duration: 20000
             });
             snackBarRef.onAction().subscribe(() => {
               auth.sendEmailVerification();
@@ -107,15 +108,15 @@ export class LoginService implements OnInit, OnDestroy {
 
     const that = this;
 
-    this.afAuth.auth.createUserWithEmailAndPassword(payload.email, payload.password).then((user) => {
+    this.afAuth.auth.createUserWithEmailAndPassword(payload.email, payload.password).then((user: firebase.User) => {
 
-      user.auth.sendEmailVerification();
+      user.sendEmailVerification();
 
       this.snackBar.open('Registration Successful. Please verify your userEmail.', '', {
         extraClasses: ['snackBar-success'],
         duration: 5000
       });
-      this.router.navigate(['/login']);
+     this.router.navigate(['/login']);
 
     }).catch(function (error) {
 

@@ -8,7 +8,7 @@ import {ResetPasswordAction} from '../../store/actions/auth-actions';
 @Component({
   selector: 'password-forget',
   templateUrl: './password-forget.component.html',
-  styleUrls: ['./password-forget.component.css']
+  styleUrls: ['./password-forget.component.scss']
 })
 export class PasswordForgetComponent implements OnInit {
 
