@@ -37,4 +37,13 @@ export class Player {
   }
 }
 
+export function getEloFactorForPlayer(playerElo: number): number {
 
+  if (playerElo > 2400 ) {
+    return 10;
+  } else if (playerElo < 1500) {
+    return 40;
+  } else {
+    return 20;
+  }
+}

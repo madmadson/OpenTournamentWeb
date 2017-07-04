@@ -38,8 +38,8 @@ import * as _ from 'lodash';
 import {AfoObjectObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {Tournament} from '../../../shared/model/tournament';
 import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-change';
-import {ArmyListRegistrationPush} from "../../../shared/dto/armyList-registration-push";
-import {ArmyListTournamentPlayerPush} from "../../../shared/dto/armyList-tournamentPlayer-push";
+import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
+import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
 
 
 @Injectable()

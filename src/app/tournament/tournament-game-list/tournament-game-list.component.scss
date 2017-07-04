@@ -85,6 +85,10 @@
   align-items: center;
 }
 
+.player-score-switch{
+  width: auto !important;
+}
+
 .game-result-playerName{
   width: 100%;
   text-align: center;
@@ -120,17 +124,6 @@
   font-size:24px;
 }
 
-.won-button{
-  width: 80%;
-  background: #388E3C;
-  color: white;
-}
-
-.not-won-button{
-  width: 80%;
-  background: #D32F2F;
-  color: white;
-}
 
 .game-result-card-divider{
   font-weight: bold;
@@ -166,3 +159,9 @@
   cursor: pointer;
 }
 
+.score-heading-label{
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: bold;
+  width: 100%;
+}

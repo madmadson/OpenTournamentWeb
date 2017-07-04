@@ -1,6 +1,8 @@
 <md-dialog-content>
-  <ng-container *ngIf="!gameModel" >
-    <div class="heading">Load Game... <mdl-spinner  single-color active></mdl-spinner></div>
+  <ng-container *ngIf="!gameModel">
+    <div class="heading">Load Game...
+      <mdl-spinner single-color active></mdl-spinner>
+    </div>
   </ng-container>
   <span *ngIf="!(isConnected | async) && !admin">
       You cannot inserted your gameResult while offline!
@@ -15,22 +17,25 @@
                [ngClass]="{'card-won': gameModel.playerOneScore == 1,
                            'card-not-won': gameModel.playerOneScore == 0} ">
         <h4 class="game-result-playerName">{{gameModel.playerOnePlayerName | truncate:35}}</h4>
+        <div *ngIf="gameModel.playerOneScore" class="score-heading-label">WON</div>
+        <div *ngIf="gameModel.playerTwoScore" class="score-heading-label">LOST</div>
+        <div *ngIf="!gameModel.playerTwoScore && !gameModel.playerOneScore" class="score-heading-label">DRAW</div>
 
-        <button *ngIf="gameModel.playerOneScore == 0"
-                class="big-button won-button"
-                (click)="playerOneWin()"
-                type="button"
-                md-raised-button>WON</button>
-        <button *ngIf="gameModel.playerOneScore == 1"
-                class="big-button not-won-button"
-                (click)="playerOneNotWin()"
-                type="button"
-                md-raised-button>NOT WON</button>
+        <div class="full-width game-result-card-line">
+          <mdl-switch (change)="playerOneWinChange()"
+                      [(ngModel)]="gameModel.playerOneScore"
+                      name="playerOneWin"
+                      class="player-score-switch"
+                      mdl-ripple>Score
+          </mdl-switch>
+        </div>
+
         <div class="full-width game-result-card-line">
           <md-icon
             class="remove-button"
             (click)="decreasePlayerOneCP()">
-            remove_circle_outline</md-icon>
+            remove_circle_outline
+          </md-icon>
           <md-input-container class="game-result-input">
             <input
               mdInput
@@ -45,13 +50,15 @@
           <md-icon
             class="add-button"
             (click)="increasePlayerOneCP()">
-            add_circle_outline</md-icon>
+            add_circle_outline
+          </md-icon>
         </div>
         <div class="full-width game-result-card-line">
           <md-icon
             class="remove-button"
             (click)="decreasePlayerOneVP()">
-            remove_circle_outline</md-icon>
+            remove_circle_outline
+          </md-icon>
           <md-input-container class="game-result-input">
             <input
               mdInput
@@ -66,14 +73,15 @@
           <md-icon
             class="add-button"
             (click)="increasePlayerOneVP()">
-            add_circle_outline</md-icon>
+            add_circle_outline
+          </md-icon>
         </div>
         <md-select *ngIf="playerOneArmyLists?.length > 0; else noArmyList"
-          class="full-width"
-          placeholder="PlayerOne ArmyList"
-          #playerOneArmyList
-          name="playerOneArmyList"
-          [(ngModel)]="gameModel.playerOneArmyList">
+                   class="full-width"
+                   placeholder="PlayerOne ArmyList"
+                   #playerOneArmyList
+                   name="playerOneArmyList"
+                   [(ngModel)]="gameModel.playerOneArmyList">
           <md-option *ngFor="let armyList of playerOneArmyLists" [value]="armyList.name">{{ armyList.name }}</md-option>
         </md-select>
       </md-card>
@@ -84,21 +92,25 @@
                [ngClass]="{'card-won': gameModel.playerTwoScore == 1,
                            'card-not-won': gameModel.playerTwoScore == 0} ">
         <h4 class="game-result-playerName">{{gameModel.playerTwoPlayerName | truncate:35}}</h4>
-        <button *ngIf="gameModel.playerTwoScore == 0"
-                class="big-button won-button"
-                (click)="playerTwoWin()"
-                type="button"
-                md-raised-button>WON</button>
-        <button *ngIf="gameModel.playerTwoScore == 1"
-                class="big-button not-won-button"
-                (click)="playerTwoNotWin()"
-                type="button"
-                md-raised-button>NOT WON</button>
+        <div *ngIf="gameModel.playerOneScore" class="score-heading-label">LOST</div>
+        <div *ngIf="gameModel.playerTwoScore" class="score-heading-label">WON</div>
+        <div *ngIf="!gameModel.playerTwoScore && !gameModel.playerOneScore" class="score-heading-label">DRAW</div>
+
+        <div class="full-width game-result-card-line">
+          <mdl-switch (change)="playerTwoWinChange()"
+                      [(ngModel)]="gameModel.playerTwoScore"
+                      name="playerTwoWin"
+                      class="player-score-switch"
+                      mdl-ripple>Score
+          </mdl-switch>
+        </div>
+
         <div class="full-width game-result-card-line">
           <md-icon
             class="remove-button"
             (click)="decreasePlayerTwoCP()">
-            remove_circle_outline</md-icon>
+            remove_circle_outline
+          </md-icon>
           <md-input-container class="game-result-input">
             <input
               mdInput
@@ -114,13 +126,15 @@
           <md-icon
             class="add-button"
             (click)="increasePlayerTwoCP()">
-            add_circle_outline</md-icon>
+            add_circle_outline
+          </md-icon>
         </div>
         <div class="full-width game-result-card-line">
           <md-icon
             class="remove-button"
             (click)="decreasePlayerTwoVP()">
-            remove_circle_outline</md-icon>
+            remove_circle_outline
+          </md-icon>
           <md-input-container class="game-result-input">
             <input
               mdInput
@@ -136,14 +150,15 @@
           <md-icon
             class="add-button"
             (click)="increasePlayerTwoVP()">
-            add_circle_outline</md-icon>
+            add_circle_outline
+          </md-icon>
         </div>
         <md-select *ngIf="playerTwoArmyLists?.length > 0; else noArmyList"
-          class="full-width"
-          placeholder="PlayerTwo ArmyList"
-          #playerTwoArmyList
-          name="playerTwoArmyList"
-          [(ngModel)]="gameModel.playerTwoArmyList">
+                   class="full-width"
+                   placeholder="PlayerTwo ArmyList"
+                   #playerTwoArmyList
+                   name="playerTwoArmyList"
+                   [(ngModel)]="gameModel.playerTwoArmyList">
           <md-option *ngFor="let armyList of playerTwoArmyLists" [value]="armyList.name">{{ armyList.name }}</md-option>
         </md-select>
         <ng-template #noArmyList>No ArmyList for Player found</ng-template>
@@ -153,7 +168,8 @@
 </md-dialog-content>
 <md-dialog-actions>
   <div class="full-width">
-    <button class="big-button" type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+    <button class="big-button" type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog
+    </button>
     <button *ngIf="sureButton"
             (click)="pushGameResult()"
             class="right-align-button big-button color-positive-background"

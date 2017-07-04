@@ -578,31 +578,21 @@ export class GameResultDialogComponent {
     });
   }
 
-  playerOneWin() {
-    this.gameModel.playerOneScore = 1;
-    if (this.gameModel.playerTwoScore === 1) {
+  playerOneWinChange() {
+    if (this.gameModel.playerOneScore) {
       this.gameModel.playerTwoScore = 0;
-    }
 
+    }
     this.sureButton = false;
   }
 
-  playerOneNotWin() {
-    this.gameModel.playerOneScore = 0;
-  }
-
-  playerTwoWin() {
-    this.gameModel.playerTwoScore = 1;
-    if (this.gameModel.playerOneScore === 1) {
+  playerTwoWinChange() {
+    if (this.gameModel.playerTwoScore) {
       this.gameModel.playerOneScore = 0;
     }
-
     this.sureButton = false;
   }
 
-  playerTwoNotWin() {
-    this.gameModel.playerTwoScore = 0;
-  }
 
   decreasePlayerOneCP() {
     const actualCP = this.gameModel.playerOneControlPoints;
@@ -725,6 +715,13 @@ export class GameResultDialogComponent {
     }
     if (!this.gameModel.playerTwoVictoryPoints) {
       this.gameModel.playerTwoVictoryPoints = 0;
+    }
+
+    if (this.gameModel.playerOneScore) {
+      this.gameModel.playerOneScore = 1;
+    }
+    if (this.gameModel.playerTwoScore) {
+      this.gameModel.playerTwoScore = 1;
     }
 
     this.onGameResult.emit({gameBefore: this.givenGame, gameAfter: this.gameModel});

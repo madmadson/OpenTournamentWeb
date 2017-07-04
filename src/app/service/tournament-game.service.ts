@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 import * as firebase from 'firebase';
@@ -19,6 +19,7 @@ import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {SwapGames} from '../../../shared/dto/swap-player';
 import {GameResult} from '../../../shared/dto/game-result';
+import {getEloFactorForPlayer} from '../../../shared/model/player';
 
 
 @Injectable()
@@ -127,7 +128,6 @@ export class TournamentGameService {
     return true;
 
   }
-
 
 
   createTeamGamesForRound(config: TournamentManagementConfiguration, newRankings: TournamentRanking[]): boolean {
@@ -565,7 +565,6 @@ export class TournamentGameService {
 
     const that = this;
 
-
     _.each(this.allRegistrations, function (reg: Registration) {
 
       const playersRegRef = that.afoDatabase.object('players-registrations/' + reg.playerId + '/' + reg.id);
@@ -590,31 +589,33 @@ export class TournamentGameService {
       }
 
       if (game.playerOnePlayerId && game.playerTwoPlayerId) {
-        const valueOnePlayerOne = ((game.playerOneElo - game.playerTwoElo) / 400);
-        const valueTwoPlayerOne = 1 + Math.pow(10, valueOnePlayerOne);
-        const expectancyValuePlayerOne = 1 / valueTwoPlayerOne;
+        const eloDifferenceForPlayerOne = game.playerTwoElo - game.playerOneElo;
+        const percentagePlayerOne = 1 / (1 + Math.pow(10, (eloDifferenceForPlayerOne / 400)));
 
-        const valueOnePlayerTwo = ((game.playerTwoElo - game.playerOneElo) / 400);
-        const valueTwoPlayerTwo = 1 + Math.pow(10, valueOnePlayerTwo);
-        const expectancyValuePlayerTwo = 1 / valueTwoPlayerTwo;
+        const eloDifferenceForPlayerTwo =  game.playerOneElo - game.playerTwoElo;
+        const percentagePlayerTwo = 1 / ( 1 + Math.pow(10, (eloDifferenceForPlayerTwo / 400)));
 
         let newEloPlayerOne;
         let newEloPlayerTwo;
 
+        let eloFactor: number = getEloFactorForPlayer(game.playerOneElo);
+
         if (game.playerOneScore > game.playerTwoScore) {
-          newEloPlayerOne = Math.round(game.playerOneElo + 40 * (1 - expectancyValuePlayerOne));
+          newEloPlayerOne = game.playerOneElo + (Math.round(eloFactor * (1 - percentagePlayerOne)));
         } else if (game.playerOneScore === game.playerTwoScore) {
-          newEloPlayerOne = Math.round(game.playerOneElo + 40 * (0.5 - expectancyValuePlayerOne));
+          newEloPlayerOne = game.playerOneElo + (Math.round(eloFactor * (0.5 - percentagePlayerOne)));
         } else {
-          newEloPlayerOne = Math.round(game.playerOneElo + 40 * (0 - expectancyValuePlayerOne));
+          newEloPlayerOne = game.playerOneElo + (Math.round(eloFactor * (0 - percentagePlayerOne)));
         }
 
+        eloFactor = getEloFactorForPlayer(game.playerTwoElo);
+
         if (game.playerOneScore < game.playerTwoScore) {
-          newEloPlayerTwo = Math.round(game.playerTwoElo + 40 * (1 - expectancyValuePlayerTwo));
+          newEloPlayerTwo = game.playerTwoElo + ( Math.round(eloFactor * (1 - percentagePlayerTwo)));
         } else if (game.playerOneScore === game.playerTwoElo) {
-          newEloPlayerTwo = Math.round(game.playerTwoElo + 40 * (0.5 - expectancyValuePlayerTwo));
+          newEloPlayerTwo = game.playerTwoElo + (Math.round(eloFactor * (0.5 - percentagePlayerTwo)));
         } else {
-          newEloPlayerTwo = Math.round(game.playerTwoElo + 40 * (0 - expectancyValuePlayerTwo));
+          newEloPlayerTwo = game.playerTwoElo + (Math.round(eloFactor * (0 - percentagePlayerTwo)));
         }
         const playerOneGameTournamentRef = that.afoDatabase.object('players-games/' + game.playerOnePlayerId + '/' + game.id);
         playerOneGameTournamentRef.update({
@@ -652,6 +653,7 @@ export class TournamentGameService {
       }
     });
   }
+
 
   newPlayerGamesForTeamMatch(swapTeam: SwapGames) {
 

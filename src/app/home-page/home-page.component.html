@@ -1,20 +1,21 @@
-
-
 <h1 class="heading">Welcome to OpenTournament!</h1>
 
 <md-card *ngIf="!userPlayerData">
-  <md-card-title>Are you a Player?</md-card-title>
-  <md-card-subtitle>No Problem just create your Player-Profile</md-card-subtitle>
+  <md-card-header>
+    <md-card-title>Are you a Player?</md-card-title>
+    <md-card-subtitle>No Problem just create your Player-Profile</md-card-subtitle>
+  </md-card-header>
   <md-card-content>
     <p>
       In OpenTournament you can register for Tournaments. The Organizer can use your registration
       to add you easily to the tournament you just registered for.
     </p>
   </md-card-content>
-  <md-card-actions>
-    <button *ngIf="!loggedIn"  type="button" color="primary" md-raised-button routerLink="/login">First Login/Register</button>
-    <button *ngIf="loggedIn"  type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player Profile</button>
-  </md-card-actions>
+  <button *ngIf="!loggedIn" type="button" color="primary" md-raised-button routerLink="/login">First Login/Register
+  </button>
+  <button *ngIf="loggedIn" type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player
+    Profile
+  </button>
 </md-card>
 
 <md-card>
@@ -28,7 +29,8 @@
     </p>
     <ul>
       <li>
-        ** NEW ** There is now the possibility to manage uploaded armyList state and payment state for registered players
+        ** NEW ** There is now the possibility to manage uploaded armyList state and payment state for registered
+        players
       </li>
       <li>Under "MySite" you see all your MyProfile/Tournaments/Registrations/Games</li>
       <li>
@@ -53,13 +55,13 @@
         something). The organizer may check (and correct) the result.
       </li>
       <li>
-        You can upload your ArmyList with your registration. Only the tournament organizer  will see it.
+        You can upload your ArmyList with your registration. Only the tournament organizer will see it.
         After the Tournament is finished. All can see what faction and lists were played through the tournament.
       </li>
       <li>
-          There is a option to enter your played list (you need to insert one or more ArmyList(s) in registration).
-          After the tournament you can see the exact result of all your games.
-          On top you can see ELO changes for each game you played.
+        There is a option to enter your played list (you need to insert one or more ArmyList(s) in registration).
+        After the tournament you can see the exact result of all your games.
+        On top you can see ELO changes for each game you played.
       </li>
     </ul>
   </md-card-content>
@@ -77,7 +79,8 @@
         ** NEW ** TeamTournament Mode. Finally :)
       </li>
       <li>
-        ** NEW ** There is now the possibility to manage uploaded armyList state and payment state for registered players.
+        ** NEW ** There is now the possibility to manage uploaded armyList state and payment state for registered
+        players.
         You can manage that state as an organizer.
       </li>
       <li>Under "MySite/MyTournaments" you see all your Organized Tournaments</li>
@@ -138,10 +141,10 @@
     </p>
     <ul>
       <li>Drop Player from Tournament</li>
-     <li>
-       Player List Details/ Global Game List -> finally everyone can see all uploaded games with all the data.
-       Statistic Dudes get shinny Eyes!
-     </li>
+      <li>
+        Player List Details/ Global Game List -> finally everyone can see all uploaded games with all the data.
+        Statistic Dudes get shinny Eyes!
+      </li>
     </ul>
   </md-card-content>
 </md-card>
