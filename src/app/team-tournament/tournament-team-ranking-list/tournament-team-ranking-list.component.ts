@@ -17,6 +17,7 @@ import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog'
 })
 export class TournamentTeamRankingListComponent implements OnInit {
 
+  @Input() isAdmin: boolean;
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() teamRankingsForRound$: Observable<TournamentRanking[]>;
   @Input() playerRankingsForRound$: Observable<TournamentRanking[]>;

@@ -6,7 +6,9 @@
                  #seachInput
                  (keyup)="search(seachInput.value)">
   </mdl-textfield>
-  <h4 *ngIf="filteredGames?.length == 0">No Games found</h4>
+  <ng-container *ngIf="filteredGames?.length == 0" >
+    <div class="heading">Load Games... <mdl-spinner  single-color active></mdl-spinner></div>
+  </ng-container>
   <mdl-list>
     <games-list [games]="filteredGames"></games-list>
   </mdl-list>

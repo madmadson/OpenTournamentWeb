@@ -44,7 +44,8 @@ export class NewTournamentPlayerDialogComponent {
       origin: '',
       meta: '',
       country: '',
-      faction: ''
+      faction: '',
+      droppedInRound: 0
     };
   }
 

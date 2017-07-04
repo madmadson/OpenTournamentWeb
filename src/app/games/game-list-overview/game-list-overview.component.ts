@@ -25,7 +25,7 @@ export class GameListOverviewComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.gameSub = this.store.select(state => state.games.games).map(games => {
-      return _.orderBy(games, ['playerOnePlayerName'], ['desc']);
+      return _.orderBy(games, ['id'], ['desc']);
     }).subscribe(orderedGames => {
       this.orderedGames = orderedGames;
       this.filteredGames = orderedGames;

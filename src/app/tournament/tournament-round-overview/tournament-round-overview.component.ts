@@ -37,6 +37,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   @Input() round: number;
   @Input() actualTournament: Tournament;
+  @Input() isAdmin: boolean;
 
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;

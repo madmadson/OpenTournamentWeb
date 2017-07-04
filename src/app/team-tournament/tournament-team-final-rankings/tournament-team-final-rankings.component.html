@@ -1,5 +1,5 @@
 
-<div *ngIf="currentUserId === actualTournament?.creatorUid" class="action-card-container">
+<div *ngIf="isAdmin" class="action-card-container">
   <md-card *ngIf="!actualTournament.uploaded" class="action-card" >
     <div class="action-button-wrapper">
       <button (click)="publishTeamTournament()"

@@ -41,6 +41,7 @@ import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
 export class TournamentPreparationComponent implements OnInit {
 
   @Input() actualTournament: Tournament;
+  @Input() isAdmin: boolean;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() actualTournamentRegisteredPlayers$: Observable<Registration[]>;
@@ -155,14 +156,14 @@ export class TournamentPreparationComponent implements OnInit {
 
   }
 
-  isAdmin(): boolean {
-    if (this.actualTournament && this.currentUserId) {
-      return (this.currentUserId === this.actualTournament.creatorUid);
-    } else {
-      return false;
-    }
-
-  }
+  // isAdmin(): boolean {
+  //   if (this.actualTournament && this.currentUserId) {
+  //     return (this.currentUserId === this.actualTournament.creatorUid);
+  //   } else {
+  //     return false;
+  //   }
+  //
+  // }
 
   openStartTournamentDialog() {
 
@@ -343,8 +344,6 @@ export class TournamentPreparationComponent implements OnInit {
 
   openShowTeamDialog() {
 
-    const isAdmin = this.isAdmin();
-
     const dialogRef = this.dialog.open(ShowTeamRegistrationDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
@@ -352,7 +351,7 @@ export class TournamentPreparationComponent implements OnInit {
         allRegistrations: this.allRegistrations,
         userPlayerData: this.userPlayerData,
         myTeam: this.myTeam,
-        isAdmin: isAdmin
+        isAdmin: this.isAdmin
       }
     });
 
@@ -666,7 +665,8 @@ export class CreateTeamDialogComponent implements OnInit {
       armyListsChecked: false,
       paymentChecked: false,
       playerMarkedPayment: false,
-      playerUploadedArmyLists:  false
+      playerUploadedArmyLists:  false,
+      droppedInRound: 0
     };
   }
 
@@ -760,7 +760,8 @@ export class RegisterTeamDialogComponent implements OnInit {
       armyListsChecked: false,
       paymentChecked: false,
       playerMarkedPayment: false,
-      playerUploadedArmyLists:  false
+      playerUploadedArmyLists:  false,
+      droppedInRound: 0
     };
   }
 

@@ -28,7 +28,7 @@ import {TournamentTeam} from '../../../../shared/model/tournament-team';
   styleUrls: ['./tournament-team-game-list.component.scss']
 })
 export class TournamentTeamGameListComponent implements OnInit, AfterContentChecked {
-
+  @Input() isAdmin: boolean;
   @Input() actualTournament: Tournament;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;

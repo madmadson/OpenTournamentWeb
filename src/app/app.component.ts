@@ -33,6 +33,8 @@ export class AppComponent implements OnDestroy {
   sideNavOpen: boolean;
   isConnected: Observable<boolean>;
 
+  smallScreen: boolean;
+
   constructor(private router: Router,
               private store: Store<ApplicationState>,
               private messageService: GlobalEventService,
@@ -62,6 +64,12 @@ export class AppComponent implements OnDestroy {
       Observable.fromEvent(window, 'online').map(() => true),
       Observable.fromEvent(window, 'offline').map(() => false));
 
+    if (this.winRef.nativeWindow.screen.width < 800) {
+      this.smallScreen = true;
+    } else {
+      this.smallScreen = false;
+    }
+
   }
 
   ngOnDestroy(): void {
@@ -77,6 +85,12 @@ export class AppComponent implements OnDestroy {
   login() {
 
     this.router.navigate(['/login']);
+  }
+
+  closeIfSmallDevice() {
+    if (this.smallScreen) {
+      this.sidenav.close();
+    }
   }
 
 }

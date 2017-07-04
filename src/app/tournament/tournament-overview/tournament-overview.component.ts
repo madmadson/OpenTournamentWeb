@@ -52,7 +52,7 @@ import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistratio
 import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
-import {ArmyListTeamPush} from "../../../../shared/dto/team-armyList-push";
+import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
 
 @Component({
   selector: 'tournament-overview',
@@ -87,6 +87,8 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   smallScreen: boolean;
   onlyHamburgerMenu: boolean;
 
+  isAdmin: boolean;
+
   constructor(private store: Store<ApplicationState>,
               private activeRouter: ActivatedRoute,
               private messageService: GlobalEventService,
@@ -106,6 +108,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
       }
     );
   }
+
   ngOnInit() {
     this.actualTournamentArmyList$ = this.store.select(state => state.actualTournamentArmyLists.actualTournamentArmyLists);
     this.actualTournamentRegisteredPlayers$ = this.store.select(
@@ -146,6 +149,8 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
         if (state.authenticationStoreState) {
           this.currentUserId =  state.authenticationStoreState.currentUserId;
+
+          this.isAdmin = this.checkIfAdmin();
         }
       });
 
@@ -159,12 +164,21 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
       this.smallScreen = false;
       this.onlyHamburgerMenu = false;
     }
+
   }
 
   ngOnDestroy() {
     this.store.dispatch(new TournamentUnsubscribeAction());
     this.fullScreenModeSub.unsubscribe();
     this.swapPlayerModeSub.unsubscribe();
+  }
+
+  checkIfAdmin(): boolean {
+    if (this.actualTournament && this.currentUserId) {
+      return (this.currentUserId === this.actualTournament.creatorUid);
+    } else {
+      return false;
+    }
   }
 
   getRoundPageTitle(index: number): string {

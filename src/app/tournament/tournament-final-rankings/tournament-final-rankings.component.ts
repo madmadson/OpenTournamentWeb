@@ -10,10 +10,11 @@ import {TournamentManagementConfiguration} from '../../../../shared/dto/tourname
 @Component({
   selector: 'tournament-final-rankings',
   templateUrl: './tournament-final-rankings.component.html',
-  styleUrls: ['./tournament-final-rankings.component.css']
+  styleUrls: ['./tournament-final-rankings.component.scss']
 })
 export class TournamentFinalRankingsComponent implements OnInit {
   @Input() actualTournament: Tournament;
+  @Input() isAdmin: boolean;
 
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;

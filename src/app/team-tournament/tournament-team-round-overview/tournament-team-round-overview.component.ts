@@ -35,6 +35,7 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   private swapPlayerModeSub: Subscription;
 
   @Input() round: number;
+  @Input() isAdmin: boolean;
   @Input() actualTournament: Tournament;
 
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;

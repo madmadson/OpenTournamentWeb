@@ -108,7 +108,8 @@ export class TournamentTeamRegistrationListComponent {
       creatorMail: team.creatorMail ? team.creatorMail : 'noMail',
       leaderName: team.leaderName ? team.leaderName : 'noLeader',
       tournamentPlayerIds: team.tournamentPlayerIds,
-      registeredPlayerIds: team.registeredPlayerIds
+      registeredPlayerIds: team.registeredPlayerIds,
+      droppedInRound: 0
     };
 
     event.stopPropagation();

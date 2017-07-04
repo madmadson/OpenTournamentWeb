@@ -1,5 +1,5 @@
 
-<div *ngIf="currentUserId === actualTournament?.creatorUid" class="action-card-container">
+<div *ngIf="isAdmin" class="action-card-container">
   <md-card *ngIf="!actualTournament.uploaded" class="action-card" >
     <div class="action-button-wrapper">
       <button (click)="publishTournament()"
@@ -22,6 +22,7 @@
 <md-card class="tournament-ranking-table-card">
   <h3 class="heading">Final Rankings</h3>
   <tournament-ranking-table
+    [isAdmin]="isAdmin"
     [actualTournamentArmyList$]="armyLists"
     [rankingsForRound$]="finalPlayerRankings$"
     [userPlayerData]="userPlayerData"

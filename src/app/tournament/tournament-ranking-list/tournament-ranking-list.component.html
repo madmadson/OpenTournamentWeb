@@ -11,6 +11,7 @@
     <th class="small-three-space-table-cell">SOS</th>
     <th class="small-three-space-table-cell">CP</th>
     <th class="small-three-space-table-cell">VP</th>
+    <th *ngIf="isAdmin" class="small-three-space-table-cell">Drop</th>
   </tr>
   </thead>
   <tbody *ngFor="let rank of orderedRankings$ | async; let i = index; let even = even"
@@ -34,7 +35,14 @@
     <td class="small-three-space-table-cell">{{rank.sos}}</td>
     <td class="small-three-space-table-cell">{{rank.controlPoints}}</td>
     <td class="small-three-space-table-cell">{{rank.victoryPoints}}</td>
-
+    <td *ngIf="isAdmin" class="small-three-space-table-cell">
+      <md-icon *ngIf="isDroppable(rank)" class="drop-player-action"
+               (click)="dropPlayer(rank)">
+      delete</md-icon>
+      <md-icon *ngIf="isUndoDroppable(rank)" class="undo-drop-player-action"
+               (click)="undoDropPlayer(rank)">
+        undo</md-icon>
+    </td>
   </tr>
   </tbody>
 </table>

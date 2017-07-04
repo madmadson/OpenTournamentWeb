@@ -322,7 +322,7 @@ export class TournamentService  {
   }
 
   addDummyPlayer(tournamentId: string) {
-    const dummy = new TournamentPlayer(tournamentId, '', '', '', 'DUMMY', '', '', '', '', 0, '');
+    const dummy = new TournamentPlayer(tournamentId, '', '', '', 'DUMMY', '', '', '', '', 0, '', 0);
 
     const tournamentPlayers = this.afoDatabase.list('tournament-players/' + tournamentId);
     tournamentPlayers.push(dummy);

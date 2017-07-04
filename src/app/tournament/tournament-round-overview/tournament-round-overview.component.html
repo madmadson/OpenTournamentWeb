@@ -107,6 +107,7 @@
               mdTooltip="Exit Fullscreen Mode" class="fullscreen-mode">fullscreen_exit
     </mdl-icon>
     <tournament-ranking-table
+      [isAdmin]="isAdmin"
       [actualTournamentArmyList$]="armyLists$"
       [rankingsForRound$]="rankingsForRound$"
       [userPlayerData]="userPlayerData"

@@ -60,17 +60,29 @@
 }
 
 .mdl-data-table td {
-  padding-left: 3px;
-  padding-right: 3px;
+  padding-left: $quarter_tick;
+  padding-right: $quarter_tick;
 }
 
 @media only screen and (min-width: 800px) {
   .mdl-data-table td {
-    padding-left: 6px;
-    padding-right: 6px;
+    padding-left: $halve_tick;
+    padding-right:$halve_tick;
   }
 }
 
 .mdl-data-table {
   white-space: normal;
+}
+
+.drop-player-action {
+  color: $fail_color;
+  padding-right: $halve_tick;
+  font-size: $medium-icon-size;
+}
+
+.undo-drop-player-action{
+  color: $success_color;
+  padding-right: $halve_tick;
+  font-size: $medium-icon-size;
 }

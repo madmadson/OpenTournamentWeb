@@ -2,13 +2,13 @@
   <div class="heading">Load Games... <mdl-spinner  single-color active></mdl-spinner></div>
 </ng-container>
 
-<md-input-container *ngIf="currentUserId !== actualTournament.creatorUid"
+<md-input-container *ngIf="!isAdmin"
                     class="full-width">
   <input mdInput type="text" disabled placeholder="Scenario" value="{{selectedScenario}}">
 </md-input-container>
 
 <md-select
-  *ngIf="currentUserId === actualTournament.creatorUid && !teamMatch"
+  *ngIf="isAdmin && !teamMatch"
   class="full-width-select-box"
   placeholder="Scenario"
   #scenario
@@ -43,7 +43,7 @@
         VP: {{game.playerOneVictoryPoints}}
       </div>
       <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid"
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && isAdmin"
                 (click)="clickSwapPlayerPlayerOne($event, game)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>
@@ -71,7 +71,7 @@
         VP: {{game.playerTwoVictoryPoints}}
       </div>
       <div *ngIf="game.playerTwoArmyList " class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && currentUserId === actualTournament.creatorUid"
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && isAdmin"
                 (click)="clickSwapPlayerPlayerTwo($event, game)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>

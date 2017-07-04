@@ -1,7 +1,7 @@
 <div class="action-card-container">
   <md-card
     *ngIf="(actualTournament?.actualRound === 0 &&
-            isAdmin()); else nonAdmin"
+            isAdmin); else nonAdmin"
     class="action-card">
     <div class="action-button-wrapper">
 
@@ -145,7 +145,7 @@
       <mdl-list>
         <tournament-registration-list
           [actualTournament]="actualTournament"
-          [isAdmin]="currentUserId === actualTournament?.creatorUid"
+          [isAdmin]="isAdmin"
           [userPlayerData]="userPlayerData"
           [registrations]="allRegistrations"
           [actualTournamentArmyList$]="armyLists$"
@@ -209,7 +209,7 @@
         <tournament-player-list
           [actualTournamentArmyList$]="armyLists$"
           [actualTournament]="actualTournament"
-          [isAdmin]="currentUserId === actualTournament?.creatorUid"
+          [isAdmin]="isAdmin"
           [userPlayerData]="userPlayerData"
           [tournamentPlayers]="filteredActualTournamentPlayers"
           (onAddArmyLists)="addArmyListForTournamentPlayer($event)"
@@ -238,6 +238,7 @@
       </div>
       <mdl-list>
         <tournament-team-list
+          [isAdmin]="isAdmin"
           [actualTournamentArmyList$]="actualTournamentArmyList$"
           [actualTournament]="actualTournament"
           [userPlayerData]="userPlayerData"

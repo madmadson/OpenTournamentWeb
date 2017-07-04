@@ -17,6 +17,8 @@ import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog'
 })
 export class TournamentRankingListComponent implements OnInit {
 
+  @Input() isAdmin: boolean;
+
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() rankingsForRound$: Observable<TournamentRanking[]>;
   @Input() userPlayerData: Player;
@@ -30,7 +32,7 @@ export class TournamentRankingListComponent implements OnInit {
   constructor(public dialog: MdDialog,
               private winRef: WindowRefService) {
 
-   if (this.winRef.nativeWindow.screen.width < 800) {
+    if (this.winRef.nativeWindow.screen.width < 800) {
       this.smallScreen = true;
       this.truncateMax = 20;
     } else {
@@ -56,6 +58,14 @@ export class TournamentRankingListComponent implements OnInit {
     }
   }
 
+  isDroppable(rank: TournamentRanking) {
+    return (!rank.droppedInRound || rank.droppedInRound === 0);
+  }
+
+  isUndoDroppable(rank: TournamentRanking) {
+    return (rank.droppedInRound && rank.droppedInRound != 0);
+  }
+
   showArmyList(ranking: TournamentRanking) {
 
     const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
@@ -72,5 +82,43 @@ export class TournamentRankingListComponent implements OnInit {
         armyLists: myArmyLists
       }
     });
+  }
+
+  dropPlayer(ranking: TournamentRanking) {
+
+    //   const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
+    //     if (list.tournamentPlayerId) {
+    //       return (list.tournamentPlayerId === ranking.tournamentPlayerId);
+    //     } else {
+    //       return (list.playerId === ranking.playerId);
+    //     }
+    //   });
+    //
+    //   this.dialog.open(ShowArmyListDialogComponent, {
+    //     data: {
+    //       ranking: ranking,
+    //       armyLists: myArmyLists
+    //     }
+    //   });
+    // }
+  }
+
+  undoDropPlayer(ranking: TournamentRanking) {
+
+    //   const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
+    //     if (list.tournamentPlayerId) {
+    //       return (list.tournamentPlayerId === ranking.tournamentPlayerId);
+    //     } else {
+    //       return (list.playerId === ranking.playerId);
+    //     }
+    //   });
+    //
+    //   this.dialog.open(ShowArmyListDialogComponent, {
+    //     data: {
+    //       ranking: ranking,
+    //       armyLists: myArmyLists
+    //     }
+    //   });
+    // }
   }
 }

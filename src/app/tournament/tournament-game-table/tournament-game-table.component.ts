@@ -4,12 +4,12 @@ import {TournamentGame} from '../../../../shared/model/tournament-game';
 @Component({
   selector: 'tournament-game-table',
   templateUrl: './tournament-game-table.component.html',
-  styleUrls: ['./tournament-game-table.component.css']
+  styleUrls: ['./tournament-game-table.component.scss']
 })
 export class TournamentGameTableComponent implements OnInit {
 
   @Input() games: TournamentGame[];
-
+  @Input() isAdmin: boolean;
 
   constructor() { }
 

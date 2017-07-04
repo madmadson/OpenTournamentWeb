@@ -1,4 +1,4 @@
-<div *ngIf="(currentUserId === actualTournament?.creatorUid)  &&
+<div *ngIf="(isAdmin)  &&
             (round === actualTournament.actualRound) &&
              !actualTournament.finished && !rankingsFullscreenMode && !gamesFullscreenMode && !swapPlayerMode"
      class="action-card-container">
@@ -73,6 +73,7 @@
     </mdl-textfield>
     <h4 *ngIf="allGamesFiltered?.length == 0">No Games found (Filter?)</h4>
     <tournament-team-game-list *ngIf="!gamesTableMode"
+                               [isAdmin]="isAdmin"
                                [actualTournament]="actualTournament"
                                [actualTournamentTeams$]="actualTournamentTeams$"
                                [authenticationStoreState$]="authenticationStoreState$"
@@ -100,6 +101,7 @@
               mdTooltip="Exit Fullscreen Mode" class="fullscreen-mode">fullscreen_exit
     </mdl-icon>
     <tournament-team-ranking-list
+      [isAdmin]="isAdmin"
       [actualTournamentArmyList$]="armyLists$"
       [teamRankingsForRound$]="teamRankingsForRound$"
       [playerRankingsForRound$]="playerRankingsForRound$"

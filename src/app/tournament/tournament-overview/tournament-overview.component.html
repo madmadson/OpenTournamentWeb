@@ -1,5 +1,5 @@
 <h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
-
+<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
 <ng-container *ngIf="!actualTournament">
   <div class="heading">Load Tournament...
     <mdl-spinner class="loading-spinner" single-color active></mdl-spinner>
@@ -12,6 +12,7 @@
     <mdl-tab-panel mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">
       <div class="content-cards-container">
         <tournament-preparation
+          [isAdmin]="isAdmin"
           [authenticationStoreState$]="authenticationStoreState$"
           [actualTournament]="actualTournament"
           [actualTournamentArmyList$]="actualTournamentArmyList$"
@@ -49,6 +50,7 @@
                    mdl-tab-panel-title="{{getRoundPageTitle(index +1)}}"
                    [disabled]="fullscreenMode || swapPlayerMode">
       <tournament-round-overview *ngIf="actualTournament.teamSize === 0"
+                                 [isAdmin]="isAdmin"
                                  [round]="round"
                                  [actualTournament]="actualTournament"
                                  [authenticationStoreState$]="authenticationStoreState$"
@@ -65,6 +67,7 @@
                                  (onEndTournament)="handleEndTournament($event)"
       ></tournament-round-overview>
       <tournament-team-round-overview *ngIf="actualTournament.teamSize > 0"
+                                      [isAdmin]="isAdmin"
                                       [round]="round"
                                       [actualTournamentTeams$]="actualTournamentTeams$"
                                       [actualTournament]="actualTournament"
@@ -89,6 +92,7 @@
                    *ngIf="actualTournament?.finished" mdl-tab-panel-title="Final">
       <div class="content-cards-container">
         <tournament-final-rankings *ngIf="actualTournament.teamSize === 0"
+                                   [isAdmin]="isAdmin"
                                    [actualTournament]="actualTournament"
                                    [authenticationStoreState$]="authenticationStoreState$"
                                    [actualTournamentArmyList$]="actualTournamentArmyList$"
@@ -97,6 +101,7 @@
                                    (onUploadTournament)="handleUploadTournament()">
         </tournament-final-rankings>
         <tournament-team-final-rankings *ngIf="actualTournament.teamSize > 0"
+                                        [isAdmin]="isAdmin"
                                         [actualTournament]="actualTournament"
                                         [authenticationStoreState$]="authenticationStoreState$"
                                         [actualTournamentArmyList$]="actualTournamentArmyList$"

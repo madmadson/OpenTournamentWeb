@@ -29,6 +29,7 @@ import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-mo
 })
 export class TournamentGameListComponent implements OnInit, AfterContentChecked {
 
+  @Input() isAdmin: boolean;
   @Input() actualTournament: Tournament;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
@@ -458,13 +459,13 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     if (this.myGameOrAdmin(selectedGame) && !this.actualTournament.finished) {
 
-      const admin = this.isAdmin();
+
 
       const dialogRef = this.dialog.open(GameResultDialogComponent, {
         data: {
           selectedGame: selectedGame,
           armyLists$: this.armyLists$,
-          admin: admin
+          admin: this.isAdmin
         },
       });
       const eventSubscribe = dialogRef.componentInstance.onGameResult
@@ -507,12 +508,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     if (this.userPlayerData) {
       return (droppedGame.playerOnePlayerId === this.userPlayerData.id) ||
         (droppedGame.playerTwoPlayerId === this.userPlayerData.id);
-    }
-  }
-
-  isAdmin(): boolean {
-    if (this.userPlayerData) {
-      return this.actualTournament.creatorUid === this.currentUserId;
     }
   }
 }

@@ -29,6 +29,7 @@ export class TournamentTeamListComponent implements OnInit {
   @Input() actualTournament: Tournament;
   @Input() userPlayerData: Player;
   @Input() allActualTournamentPlayers: TournamentPlayer[];
+  @Input() isAdmin: boolean;
 
   @Output() onEraseTournamentTeam = new EventEmitter<TournamentTeamEraseModel>();
   @Output() onAddTournamentPlayer = new EventEmitter<TournamentPlayer>();
@@ -101,13 +102,6 @@ export class TournamentTeamListComponent implements OnInit {
       saveEventSubscribe.unsubscribe();
       kickEventSubscribe.unsubscribe();
     });
-  }
-
-  isAdmin(): boolean {
-    if (this.actualTournament && this.userPlayerData) {
-      return this.actualTournament.creatorUid === this.userPlayerData.userUid;
-    }
-   return false;
   }
 
   eraseTeam(event: any, team: TournamentTeam) {
