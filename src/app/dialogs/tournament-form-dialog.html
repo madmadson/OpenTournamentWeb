@@ -60,6 +60,8 @@
     </md-input-container>
     <div class="full-width">
       <md-checkbox formControlName="dailyMail"
+                   [ngModel]="tournamentForm.get('dailyMail').value"
+                   name="dailyMail"
                    mdTooltip="You will receive a daily mail with all Registrations and ArmyLists"
       >DailyMail
       </md-checkbox>

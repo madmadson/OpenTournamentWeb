@@ -217,7 +217,6 @@ export class TournamentFormDialogComponent implements OnInit {
 
   prepareSaveTournament(): Tournament {
     const formModel = this.tournamentForm.value;
-
     return  {
       id: this.tournament.id ? this.tournament.id : '',
       name: formModel.name as string,
@@ -231,7 +230,7 @@ export class TournamentFormDialogComponent implements OnInit {
       teamSize: formModel.teamSize as number,
       creatorUid: this.tournament.creatorUid,
       creatorMail: this.tournament.creatorMail,
-      dailyMail: true,
+      dailyMail: formModel.dailyMail,
       finished: false,
       uploaded: false,
       payLink: formModel.payLink ? formModel.payLink as string : '',
