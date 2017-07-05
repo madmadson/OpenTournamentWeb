@@ -35,7 +35,7 @@ exports.mailForTournamentManager = functions.https.onRequest((req, res) => {
     tournaments.forEach(function (snap) {
 
       const tournament = snap.val();
-      if (tournament && !tournament.finished && tournament.creatorMail) {
+      if (tournament && !tournament.finished && tournament.creatorMail && tournament.dailyMail) {
         console.log('send mail to: ' + tournament.creatorMail);
 
         const regs = [];
