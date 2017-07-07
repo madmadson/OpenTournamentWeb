@@ -108,7 +108,8 @@ export class TournamentRankingService {
         tournamentPlayer.meta ? tournamentPlayer.meta : '',
         tournamentPlayer.country ? tournamentPlayer.country : '',
         tournamentPlayer.elo ? tournamentPlayer.elo : 0,
-        0, 0, 0, 0, 0, 1, [], 0);
+        0, 0, 0, 0, 0, 1, [],
+        tournamentPlayer.droppedInRound ? tournamentPlayer.droppedInRound : 0);
 
 
       _.each(lastRoundRankings, function (lastRoundRanking: TournamentRanking) {

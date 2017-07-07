@@ -500,6 +500,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 
       const dialogRef = this.dialog.open(TeamMatchDialogComponent, {
         data: {
+          isAdmin: this.isAdmin,
           selectedGame: selectedGame,
           actualTournament: this.actualTournament,
           authenticationStoreState$: this.authenticationStoreState$,
@@ -554,6 +555,8 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 })
 export class TeamMatchDialogComponent {
 
+  isAdmin: boolean;
+
   selectedGame: TournamentGame;
   actualTournament: Tournament;
   authenticationStoreState$: Observable<AuthenticationStoreState>;
@@ -568,6 +571,7 @@ export class TeamMatchDialogComponent {
               @Inject(MD_DIALOG_DATA) public data: any) {
 
     this.selectedGame = data.selectedGame;
+    this.isAdmin = data.isAdmin;
 
     this.actualTournament = data.actualTournament;
     this.authenticationStoreState$ = data.authenticationStoreState$;

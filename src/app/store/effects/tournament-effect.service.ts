@@ -11,7 +11,7 @@ import {
   SCENARIO_SELECTED_ACTION, TOURNAMENT_PAIR_AGAIN_TEAM_ACTION, SWAP_TEAM_ACTION, TEAM_GAME_RESULT_ENTERED_ACTION,
   SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION, END_TEAM_TOURNAMENT_ACTION, UNDO_TEAM_TOURNAMENT_END_ACTION,
   UPLOAD_TEAM_TOURNAMENT_ACTION, PLAYER_REGISTRATION_CHANGE_ACTION, ARMY_LIST_FOR_REGISTRATION_PUSH_ACTION,
-  ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION
+  ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION, DROP_PLAYER_PUSH_ACTION, UNDO_DROP_PLAYER_PUSH_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
 
@@ -104,6 +104,16 @@ export class TournamentEffectService {
     .ofType(SWAP_TEAM_ACTION)
     .debug('SWAP_TEAM_ACTION')
     .map(action => this.tournamentService.swapTeam(action.payload));
+
+  @Effect({dispatch: false}) dropPlayer = this.actions$
+    .ofType(DROP_PLAYER_PUSH_ACTION)
+    .debug('DROP_PLAYER_PUSH_ACTION')
+    .map(action => this.tournamentService.dropPlayer(action.payload));
+
+  @Effect({dispatch: false}) undoDropPlayer = this.actions$
+    .ofType(UNDO_DROP_PLAYER_PUSH_ACTION)
+    .debug('UNDO_DROP_PLAYER_PUSH_ACTION')
+    .map(action => this.tournamentService.undoDropPlayer(action.payload));
 
   @Effect({dispatch: false}) publishRound = this.actions$
     .ofType(PUBLISH_ROUND_ACTION)

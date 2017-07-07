@@ -34,7 +34,7 @@
   <mdl-list-item-secondary-content *ngIf="isAdmin && teamDeleteRequested != team.teamName && actualTournament?.actualRound === 0">
     <md-icon md-tooltip="Delete Team" class="color-negative  list-action" (click)="teamDeleteRequestedClicked($event, team)">delete</md-icon>
   </mdl-list-item-secondary-content>
-  <mdl-list-item-secondary-content *ngIf="teamDeleteRequested == team.teamName">
+  <mdl-list-item-secondary-content *ngIf="teamDeleteRequested === team.teamName">
     <button (click)="eraseTeam($event, team)"
             class="color-negative-background"
             type="button"
@@ -43,7 +43,7 @@
       Really Delete?
     </button>
   </mdl-list-item-secondary-content>
-  <mdl-list-item-secondary-content *ngIf="teamDeleteRequested == team.teamName">
+  <mdl-list-item-secondary-content *ngIf="teamDeleteRequested === team.teamName">
     <button (click)="teamDeleteDeclinedClicked($event)"
             class="color-positive-background"
             type="button"

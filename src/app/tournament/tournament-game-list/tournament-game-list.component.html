@@ -21,7 +21,7 @@
 <div *ngFor="let game of gamesForRound; let i = index; let even = even"
      [ngClass]="{'even': even,
                  'my-item':isItMyGame(game),
-                 'clickable-tournament-game': (myGameOrAdmin(game) && !dragStarted && !actualTournament.finished)
+                 'clickable-tournament-game': ((isItMyGame(game) || isAdmin) && !dragStarted && !actualTournament.finished)
                  }"
      (click)="openGameResultDialog(game)">
   <div class="table-info">Table {{game.playingField}}</div>

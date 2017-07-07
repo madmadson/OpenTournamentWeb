@@ -24,6 +24,7 @@ import {PrintRankingsDialogComponent} from '../../dialogs/print-rankings-dialog'
 import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
 import {NewRoundDialogComponent} from '../../dialogs/round-overview/new-round-dialog';
 import {FinishTournamentDialogComponent} from '../../dialogs/finish-tournament-dialog';
+import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
 
 
 @Component({
@@ -52,6 +53,9 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   @Output() onScenarioSelected = new EventEmitter<ScenarioSelectedModel>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
   @Output() onEndTournament = new EventEmitter<TournamentManagementConfiguration>();
+
+  @Output() onDropPlayer = new EventEmitter<DropPlayerPush>();
+  @Output() onUndoDropPlayer = new EventEmitter<TournamentRanking>();
 
   userPlayerData: Player;
   currentUserId: string;
@@ -172,6 +176,17 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   handleSwapPlayer(swapPlayer: SwapGames) {
 
     this.onSwapPlayer.emit(swapPlayer);
+  }
+
+  handleDropPlayer(dropPlayerPush: DropPlayerPush) {
+
+
+    this.onDropPlayer.emit(dropPlayerPush);
+  }
+
+  handleUndoDropPlayer(ranking: TournamentRanking) {
+
+    this.onUndoDropPlayer.emit(ranking);
   }
 
   publishRound() {

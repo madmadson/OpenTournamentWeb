@@ -21,10 +21,12 @@
 </div>
 <md-card class="tournament-ranking-table-card">
   <h3 class="heading">Final Rankings</h3>
-  <tournament-ranking-table
+  <tournament-ranking-list
     [isAdmin]="isAdmin"
+    [round]="actualTournament.actualRound"
+    [actualTournament]="actualTournament"
     [actualTournamentArmyList$]="armyLists"
     [rankingsForRound$]="finalPlayerRankings$"
     [userPlayerData]="userPlayerData"
-  ></tournament-ranking-table>
+  ></tournament-ranking-list>
 </md-card>

@@ -79,10 +79,21 @@
   color: $fail_color;
   padding-right: $halve_tick;
   font-size: $medium-icon-size;
+  cursor: pointer;
 }
 
 .undo-drop-player-action{
   color: $success_color;
   padding-right: $halve_tick;
   font-size: $medium-icon-size;
+  cursor: pointer;
+}
+
+.drop-confirm-button{
+  margin-bottom: $halve_tick;
+  width: 30px;
+}
+
+.drop-decline-button{
+  width: 30px;
 }

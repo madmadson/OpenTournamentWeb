@@ -5,7 +5,7 @@ import * as firebase from 'firebase';
 
 import {
   AddArmyListAction, ArmyListDeletedAction, ClearArmyListsAction,
-  ClearRegistrationAction, ClearTournamentPlayerAction,
+  ClearRegistrationAction, ClearTournamentPlayerAction, DropPlayerPushAction,
   SetActualTournamentAction, TournamentPlayerAdded, TournamentPlayerChanged, TournamentPlayerDeleted,
   TournamentRegistrationAdded,
   TournamentRegistrationChanged,
@@ -40,6 +40,7 @@ import {Tournament} from '../../../shared/model/tournament';
 import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-change';
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
+import {DropPlayerPush} from '../../../shared/dto/drop-player-push';
 
 
 @Injectable()
@@ -672,6 +673,51 @@ export class TournamentService  {
     });
 
     this.snackBar.open('Successfully update Player Registration', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  dropPlayer(dropAction: DropPlayerPush) {
+
+    const rankingRef = this.afoDatabase.object('tournament-rankings/' +
+      dropAction.ranking.tournamentId + '/' + dropAction.ranking.id);
+
+    rankingRef.update({
+      droppedInRound: dropAction.round
+    });
+
+    const tournamentPlayerRef = this.afoDatabase.object('tournament-players/' +
+      dropAction.ranking.tournamentId + '/' + dropAction.ranking.tournamentPlayerId);
+
+    tournamentPlayerRef.update({
+      droppedInRound: dropAction.round
+    });
+
+    this.snackBar.open('Successfully drop Player', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  undoDropPlayer(ranking: TournamentRanking) {
+
+    const rankingRef = this.afoDatabase.object('tournament-rankings/' +
+      ranking.tournamentId + '/' + ranking.id);
+
+    rankingRef.update({
+      droppedInRound: 0
+    });
+
+    const tournamentPlayerRef = this.afoDatabase.object('tournament-players/' +
+      ranking.tournamentId + '/' + ranking.tournamentPlayerId);
+
+    tournamentPlayerRef.update({
+      droppedInRound: 0
+    });
+
+
+    this.snackBar.open('Successfully undo drop Player', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });

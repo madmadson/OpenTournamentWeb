@@ -21,7 +21,8 @@ import {
   TeamTournamentNewRoundAction, TournamentKillTeamRoundAction, TournamentPairAgainTeamAction, ScenarioSelectedAction,
   SwapTeamAction, TeamGameResultEnteredAction, ScenarioSelectedTeamTournamentAction, EndTeamTournamentAction,
   UndoTeamTournamentEndAction, UploadTeamTournamentAction, PlayerRegistrationChangeAction,
-  ArmyListForRegistrationPushAction, ArmyListForTournamentPlayerPushAction,
+  ArmyListForRegistrationPushAction, ArmyListForTournamentPlayerPushAction, DropPlayerPushAction,
+  UndoDropPlayerPushAction,
 } from '../../store/actions/tournament-actions';
 
 
@@ -53,6 +54,7 @@ import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registra
 import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
+import {DropPlayerPush} from "../../../../shared/dto/drop-player-push";
 
 @Component({
   selector: 'tournament-overview',
@@ -341,6 +343,14 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleSwapTeam(swapTeam: SwapGames) {
     this.store.dispatch(new SwapTeamAction(swapTeam));
+  }
+
+  handleDropPlayer(dropPlayerPush: DropPlayerPush) {
+    this.store.dispatch(new DropPlayerPushAction(dropPlayerPush));
+  }
+
+  handleUndoDropPlayer(ranking: TournamentRanking) {
+    this.store.dispatch(new UndoDropPlayerPushAction(ranking));
   }
 
   handleTeamGameResult(gameResult: GameResult) {

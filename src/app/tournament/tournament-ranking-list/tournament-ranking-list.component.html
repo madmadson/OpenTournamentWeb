@@ -25,6 +25,7 @@
     </td>
     <td class="mdl-data-table__cell--non-numeric">
       <div class="player-name-table-cell">{{rank.playerName | truncate:truncateMax}}</div>
+      <div *ngIf="rank.droppedInRound" class="other-player-data-table-cell color-negative">Dropped in round {{rank.droppedInRound}}</div>
       <div class="other-player-data-table-cell">{{rank.faction}}</div>
       <div mdTooltip="Team" *ngIf="smallScreen" class="other-player-data-table-cell">{{rank.teamName}}</div>
       <div mdTooltip="Team - Locality" *ngIf="!smallScreen" class="other-player-data-table-cell">{{rank.teamName}} - {{rank.meta}} - {{rank.country}}</div>
@@ -35,13 +36,30 @@
     <td class="small-three-space-table-cell">{{rank.sos}}</td>
     <td class="small-three-space-table-cell">{{rank.controlPoints}}</td>
     <td class="small-three-space-table-cell">{{rank.victoryPoints}}</td>
-    <td *ngIf="isAdmin" class="small-three-space-table-cell">
+    <td *ngIf="isAdmin && deleteRequest !== rank.id && !actualTournament.finished" class="small-three-space-table-cell">
       <md-icon *ngIf="isDroppable(rank)" class="drop-player-action"
-               (click)="dropPlayer(rank)">
+               (click)="dropRequest($event, rank)">
       delete</md-icon>
-      <md-icon *ngIf="isUndoDroppable(rank)" class="undo-drop-player-action"
-               (click)="undoDropPlayer(rank)">
+      <md-icon *ngIf="isUndoDroppable(rank) && !actualTournament.finished" class="undo-drop-player-action"
+               (click)="undoDropPlayer($event, rank)">
         undo</md-icon>
+    </td>
+    <td *ngIf="isAdmin && deleteRequest === rank.id" class="small-three-space-table-cell">
+
+      <button (click)="dropConfirm($event, rank)"
+              class="drop-confirm-button color-negative-background"
+              type="button"
+              md-raised-button>
+        <md-icon >delete</md-icon>
+        Drop!
+      </button>
+      <button (click)="dropDeclined($event)"
+              class="drop-decline-button color-positive-background"
+              type="button"
+              md-raised-button>
+        <md-icon >not_interested</md-icon>
+        No
+      </button>
     </td>
   </tr>
   </tbody>

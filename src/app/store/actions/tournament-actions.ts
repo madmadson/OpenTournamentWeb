@@ -13,6 +13,8 @@ import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-mo
 import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
 import {ArmyListRegistrationPush} from "../../../../shared/dto/armyList-registration-push";
 import {ArmyListTournamentPlayerPush} from "../../../../shared/dto/armyList-tournamentPlayer-push";
+import {DropPlayerPush} from "../../../../shared/dto/drop-player-push";
+import {TournamentRanking} from "../../../../shared/model/tournament-ranking";
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -313,7 +315,6 @@ export class ScenarioSelectedTeamTournamentAction implements Action {
 }
 
 export const SWAP_PLAYER_ACTION = 'SWAP_PLAYER_ACTION';
-
 export class SwapPlayerAction implements Action {
 
   readonly type = 'SWAP_PLAYER_ACTION';
@@ -326,6 +327,22 @@ export class SwapTeamAction implements Action {
 
   readonly type = 'SWAP_TEAM_ACTION';
   constructor(public payload: SwapGames) {
+  }
+}
+
+export const DROP_PLAYER_PUSH_ACTION = 'DROP_PLAYER_PUSH_ACTION';
+export class DropPlayerPushAction implements Action {
+
+  readonly type = 'DROP_PLAYER_PUSH_ACTION';
+  constructor(public payload: DropPlayerPush) {
+  }
+}
+
+export const UNDO_DROP_PLAYER_PUSH_ACTION = 'UNDO_DROP_PLAYER_PUSH_ACTION';
+export class UndoDropPlayerPushAction implements Action {
+
+  readonly type = 'UNDO_DROP_PLAYER_PUSH_ACTION';
+  constructor(public payload: TournamentRanking) {
   }
 }
 

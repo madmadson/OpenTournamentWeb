@@ -70,7 +70,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   }
 
   ngOnInit() {
-
     this.armyLists$ = this.actualTournamentArmyLists$;
 
     this.authenticationStoreState$.subscribe(auth => {
@@ -457,9 +456,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   openGameResultDialog(selectedGame: TournamentGame) {
 
-    if (this.myGameOrAdmin(selectedGame) && !this.actualTournament.finished) {
-
-
+    if ((this.isItMyGame(selectedGame) || this.isAdmin) && !this.actualTournament.finished) {
 
       const dialogRef = this.dialog.open(GameResultDialogComponent, {
         data: {
@@ -496,13 +493,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     }
   }
 
-  myGameOrAdmin(selectedGame: TournamentGame) {
-    if (this.userPlayerData) {
-      return (selectedGame.playerOnePlayerId === this.userPlayerData.id && !selectedGame.finished) ||
-        (selectedGame.playerTwoPlayerId === this.userPlayerData.id && !selectedGame.finished) ||
-        this.currentUserId === this.actualTournament.creatorUid;
-    }
-  }
 
   isItMyGame(droppedGame: TournamentGame) {
     if (this.userPlayerData) {

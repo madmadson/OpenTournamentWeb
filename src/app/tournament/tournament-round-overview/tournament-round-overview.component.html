@@ -82,6 +82,7 @@
     </mdl-textfield>
     <h4 *ngIf="allGamesFiltered?.length == 0">No Games found (Filter?)</h4>
     <tournament-game-list *ngIf="!gamesTableMode"
+                          [isAdmin]="isAdmin"
                           [teamMatch]="false"
                           [actualTournament]="actualTournament"
                           [authenticationStoreState$]="authenticationStoreState$"
@@ -106,11 +107,15 @@
     <mdl-icon *ngIf="rankingsFullscreenMode" (click)="openRankingsFullScreenMode(false)"
               mdTooltip="Exit Fullscreen Mode" class="fullscreen-mode">fullscreen_exit
     </mdl-icon>
-    <tournament-ranking-table
+    <tournament-ranking-list
       [isAdmin]="isAdmin"
+      [round]="round"
+      [actualTournament]="actualTournament"
       [actualTournamentArmyList$]="armyLists$"
       [rankingsForRound$]="rankingsForRound$"
       [userPlayerData]="userPlayerData"
-    ></tournament-ranking-table>
+      (onDropPlayer)="handleDropPlayer($event)"
+      (onUndoDropPlayer)="handleUndoDropPlayer($event)"
+    ></tournament-ranking-list>
   </md-card>
 </div>
