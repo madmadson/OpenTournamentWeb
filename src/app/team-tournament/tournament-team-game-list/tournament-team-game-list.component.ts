@@ -506,7 +506,8 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
           authenticationStoreState$: this.authenticationStoreState$,
           actualTournamentArmyLists$: this.armyLists$,
           playerGamesForRound$: this.playerGamesForRound$,
-          rankingsForRound$: this.rankingsForRound$
+          rankingsForRound$: this.rankingsForRound$,
+          actualTournamentTeams$: this.actualTournamentTeams$
         },
       });
       const gameResultEvent = dialogRef.componentInstance.onGameResult
@@ -563,6 +564,7 @@ export class TeamMatchDialogComponent {
   actualTournamentArmyLists$: Observable<ArmyList[]>;
   playerGamesForTeam: TournamentGame[];
   rankingsForRound$: Observable<TournamentRanking[]>;
+  actualTournamentTeams$: Observable<TournamentTeam[]>;
 
   @Output() onGameResult = new EventEmitter<GameResult>();
   @Output() onSwapPlayer = new EventEmitter<SwapGames>();
@@ -576,6 +578,7 @@ export class TeamMatchDialogComponent {
     this.actualTournament = data.actualTournament;
     this.authenticationStoreState$ = data.authenticationStoreState$;
     this.actualTournamentArmyLists$ = data.actualTournamentArmyLists$;
+    this.actualTournamentTeams$ = data.actualTournamentTeams$;
 
     data.playerGamesForRound$.subscribe((games: TournamentGame[]) => {
       this.playerGamesForTeam = _.filter(games, function (game: TournamentGame) {
