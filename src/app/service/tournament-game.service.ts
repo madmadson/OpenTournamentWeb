@@ -101,9 +101,11 @@ export class TournamentGameService {
     const shuffledRankings = _.shuffle(newRankings);
     const sortedRankings = _.orderBy(shuffledRankings, ['score'], ['desc']);
 
+    const playerToMatchGamesFor = this.addByeIfPlayersUneven(sortedRankings);
+
     this.newGames = [];
 
-    const megaSuccess = this.matchGame(config, sortedRankings);
+    const megaSuccess = this.matchGame(config, playerToMatchGamesFor);
 
     if (!megaSuccess) {
       return false;
@@ -188,9 +190,12 @@ export class TournamentGameService {
         const ranking2: TournamentRanking = allRankingsToMatch[j];
 
         const alreadyPlayingAgainstEachOther = _.find(ranking1.opponentTournamentPlayerIds,
-          function (player1OpponentTournamentPlayerId: string) {
-            return player1OpponentTournamentPlayerId === ranking2.tournamentPlayerId;
-          });
+            function (player1OpponentTournamentPlayerId: string) {
+              return player1OpponentTournamentPlayerId === ranking2.tournamentPlayerId;
+            }) || _.find(ranking2.opponentTournamentPlayerIds,
+            function (player2OpponentTournamentPlayerId: string) {
+              return player2OpponentTournamentPlayerId === ranking1.tournamentPlayerId;
+            });
 
         let inSameTeam = false;
         if (config.teamRestriction) {
@@ -264,9 +269,12 @@ export class TournamentGameService {
         const ranking2: TournamentRanking = allRankingsToMatch[j];
 
         const alreadyPlayingAgainstEachOther = _.find(ranking1.opponentTournamentPlayerIds,
-          function (player1OpponentTournamentPlayerId: string) {
-            return player1OpponentTournamentPlayerId === ranking2.tournamentPlayerId;
-          });
+            function (player1OpponentTournamentPlayerId: string) {
+              return player1OpponentTournamentPlayerId === ranking2.tournamentPlayerId;
+            }) || _.find(ranking2.opponentTournamentPlayerIds,
+            function (player2OpponentTournamentPlayerId: string) {
+              return player2OpponentTournamentPlayerId === ranking1.tournamentPlayerId;
+            });
 
 
         if (alreadyPlayingAgainstEachOther) {
@@ -313,9 +321,12 @@ export class TournamentGameService {
         const ranking2: TournamentRanking = allRankingsToMatch[j];
 
         const alreadyPlayingAgainstEachOther = _.find(ranking1.opponentTournamentPlayerIds,
-          function (player1OpponentTournamentPlayerId: string) {
-            return player1OpponentTournamentPlayerId === ranking2.tournamentPlayerId;
-          });
+            function (player1OpponentTournamentPlayerId: string) {
+              return player1OpponentTournamentPlayerId === ranking2.tournamentPlayerId;
+            }) || _.find(ranking2.opponentTournamentPlayerIds,
+            function (player2OpponentTournamentPlayerId: string) {
+              return player2OpponentTournamentPlayerId === ranking1.tournamentPlayerId;
+            });
 
 
         if (alreadyPlayingAgainstEachOther) {
@@ -592,7 +603,7 @@ export class TournamentGameService {
         const eloDifferenceForPlayerOne = game.playerTwoElo - game.playerOneElo;
         const percentagePlayerOne = 1 / (1 + Math.pow(10, (eloDifferenceForPlayerOne / 400)));
 
-        const eloDifferenceForPlayerTwo =  game.playerOneElo - game.playerTwoElo;
+        const eloDifferenceForPlayerTwo = game.playerOneElo - game.playerTwoElo;
         const percentagePlayerTwo = 1 / ( 1 + Math.pow(10, (eloDifferenceForPlayerTwo / 400)));
 
         let newEloPlayerOne;
@@ -791,6 +802,32 @@ export class TournamentGameService {
         }
       }
     });
+  }
+
+  private addByeIfPlayersUneven(sortedRankings: TournamentRanking[]): TournamentRanking[] {
+
+    const notDroppedPlayers = _.filter(sortedRankings, function (rank: TournamentRanking) {
+      return (rank.droppedInRound === 0);
+    });
+
+    if (notDroppedPlayers.length % 2) {
+      const bye = new TournamentRanking(
+        sortedRankings[0].tournamentId,
+        'bye',
+        '',
+        'BYE',
+        '',
+        '',
+        '',
+        '',
+        '',
+        0,
+        0, 0, 0, 0, 0, 1, [], 0);
+
+      notDroppedPlayers.push(bye);
+    }
+
+    return notDroppedPlayers;
   }
 }
 
