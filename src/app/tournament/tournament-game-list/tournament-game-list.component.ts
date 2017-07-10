@@ -89,15 +89,17 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     this.allVisibleGames = this.gamesForRound;
 
-    this.actualTournamentTeams$.subscribe(teams => {
-      if (this.userPlayerData ) {
-        _.each(teams, function (team: TournamentTeam) {
-          if (team.registeredPlayerIds.indexOf(that.userPlayerData.id) !== -1) {
-            that.loggedInUserTeam = team.teamName;
-          }
-        });
-      }
-    });
+    if (this.actualTournamentTeams$) {
+      this.actualTournamentTeams$.subscribe(teams => {
+        if (this.userPlayerData) {
+          _.each(teams, function (team: TournamentTeam) {
+            if (team.registeredPlayerIds.indexOf(that.userPlayerData.id) !== -1) {
+              that.loggedInUserTeam = team.teamName;
+            }
+          });
+        }
+      });
+    }
   }
 
   ngAfterContentChecked(): void {
@@ -175,8 +177,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   }
 
   confirmSwapPlayerWithPlayerOne(event: any, droppedGame: TournamentGame,
-                    droppedTournamentPlayerId: string,
-                    droppedTournamentPlayerOpponentId: string) {
+                                 droppedTournamentPlayerId: string,
+                                 droppedTournamentPlayerOpponentId: string) {
 
     if (this.dragStarted) {
 
@@ -240,8 +242,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     if (this.teamMatch) {
       return !(this.draggedTournamentPlayerId === potentialDroppedGame.playerOneTournamentPlayerId ||
-              this.draggedTournamentPlayerId === potentialDroppedGame.playerTwoTournamentPlayerId ||
-              this.draggedGameTeamName === potentialDroppedGame.playerTwoTeamName);
+      this.draggedTournamentPlayerId === potentialDroppedGame.playerTwoTournamentPlayerId ||
+      this.draggedGameTeamName === potentialDroppedGame.playerTwoTeamName);
     } else {
       return !(this.draggedTournamentPlayerId === potentialDroppedGame.playerOneTournamentPlayerId ||
       this.draggedTournamentPlayerId === potentialDroppedGame.playerTwoTournamentPlayerId ||
@@ -442,8 +444,21 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     let playedAgainstOther = false;
 
-    _.each(this.rankingsForRound, function (rank) {
+    _.find(this.rankingsForRound, function (rank) {
 
+      if (tournamentPlayerOneId === 'bye' && rank.tournamentPlayerId === tournamentPlayerTwoId) {
+
+        const alreadyHasABye = _.includes(rank.opponentTournamentPlayerIds, 'bye');
+
+        if (alreadyHasABye) {
+          that.snackBar.open(rank.playerName + 'already has a BYE ', '', {
+            extraClasses: ['snackBar-info'],
+            duration: 5000
+          });
+          playedAgainstOther = true;
+        }
+        return;
+      }
       if (rank.tournamentPlayerId === tournamentPlayerOneId) {
         const pl = _.find(rank.opponentTournamentPlayerIds,
           function (player1OpponentTournamentPlayerId: string) {
@@ -463,6 +478,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
             });
           }
         }
+        return;
       }
     });
 

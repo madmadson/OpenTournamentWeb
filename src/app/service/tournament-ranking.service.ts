@@ -258,156 +258,162 @@ export class TournamentRankingService {
         game.playerTwoTournamentPlayerId === gameResult.gameAfter.playerTwoTournamentPlayerId));
       })[0];
 
-      let newScorePlayerOne = 0;
-      let newCPPlayerOne = 0;
-      let newVPPlayerOne = 0;
-      let newListOfOpponentsIdsPlayerOne = [];
+      if (gameResult.gameAfter.playerOneTournamentPlayerId !== 'bye') {
 
-      // if there is a round before add them
-      if (lastRoundRankingPlayerOne) {
-        newScorePlayerOne = newScorePlayerOne + lastRoundRankingPlayerOne.score;
-        newCPPlayerOne = newCPPlayerOne + lastRoundRankingPlayerOne.controlPoints;
-        newVPPlayerOne = newVPPlayerOne + lastRoundRankingPlayerOne.victoryPoints;
+        let newScorePlayerOne = 0;
+        let newCPPlayerOne = 0;
+        let newVPPlayerOne = 0;
+        let newListOfOpponentsIdsPlayerOne = [];
 
-        newListOfOpponentsIdsPlayerOne =
-          _.union(newListOfOpponentsIdsPlayerOne, lastRoundRankingPlayerOne.opponentTournamentPlayerIds);
-      }
+        // if there is a round before add them
+        if (lastRoundRankingPlayerOne) {
+          newScorePlayerOne = newScorePlayerOne + lastRoundRankingPlayerOne.score;
+          newCPPlayerOne = newCPPlayerOne + lastRoundRankingPlayerOne.controlPoints;
+          newVPPlayerOne = newVPPlayerOne + lastRoundRankingPlayerOne.victoryPoints;
 
-      if (i === gameResult.gameAfter.tournamentRound) {
+          newListOfOpponentsIdsPlayerOne =
+            _.union(newListOfOpponentsIdsPlayerOne, lastRoundRankingPlayerOne.opponentTournamentPlayerIds);
+        }
 
-        newScorePlayerOne = newScorePlayerOne + gameResult.gameAfter.playerOneScore;
-        newCPPlayerOne = newCPPlayerOne + gameResult.gameAfter.playerOneControlPoints;
-        newVPPlayerOne = newVPPlayerOne + gameResult.gameAfter.playerOneVictoryPoints;
+        if (i === gameResult.gameAfter.tournamentRound) {
 
-        newListOfOpponentsIdsPlayerOne.push(gameResult.gameAfter.playerTwoTournamentPlayerId);
-        opponentIdsTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newListOfOpponentsIdsPlayerOne;
+          newScorePlayerOne = newScorePlayerOne + gameResult.gameAfter.playerOneScore;
+          newCPPlayerOne = newCPPlayerOne + gameResult.gameAfter.playerOneControlPoints;
+          newVPPlayerOne = newVPPlayerOne + gameResult.gameAfter.playerOneVictoryPoints;
 
-        // const playerOneRankingRef = this.fireDB
-        //   .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+          newListOfOpponentsIdsPlayerOne.push(gameResult.gameAfter.playerTwoTournamentPlayerId);
+          opponentIdsTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newListOfOpponentsIdsPlayerOne;
 
-        const playerOneRankingRef = this.afoDatabase.object('/tournament-rankings/' +  gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
-        playerOneRankingRef.update(
-          {
-            score: newScorePlayerOne,
-            controlPoints: newCPPlayerOne,
-            victoryPoints: newVPPlayerOne,
-            opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
-          });
+          // const playerOneRankingRef = this.fireDB
+          //   .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
 
-        if (!gameResult.gameBefore.finished) {
-          scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newScorePlayerOne;
+          const playerOneRankingRef = this.afoDatabase.object('/tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+          playerOneRankingRef.update(
+            {
+              score: newScorePlayerOne,
+              controlPoints: newCPPlayerOne,
+              victoryPoints: newVPPlayerOne,
+              opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
+            });
 
-        } else if (gameResult.gameBefore.playerOneScore < gameResult.gameAfter.playerOneScore) {
-          scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] =
-            scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] + 1;
+          if (!gameResult.gameBefore.finished) {
+            scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newScorePlayerOne;
 
-          // for later rounds SOS
-          gameResultChangedForPlayerMap[rankingPlayerOne.tournamentPlayerId] = 1;
-        } else if (gameResult.gameBefore.playerOneScore > gameResult.gameAfter.playerOneScore) {
-          scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] =
-            scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] - 1;
+          } else if (gameResult.gameBefore.playerOneScore < gameResult.gameAfter.playerOneScore) {
+            scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] =
+              scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] + 1;
 
-          // for later rounds SOS
-          gameResultChangedForPlayerMap[rankingPlayerOne.tournamentPlayerId] = -1;
+            // for later rounds SOS
+            gameResultChangedForPlayerMap[rankingPlayerOne.tournamentPlayerId] = 1;
+          } else if (gameResult.gameBefore.playerOneScore > gameResult.gameAfter.playerOneScore) {
+            scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] =
+              scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] - 1;
+
+            // for later rounds SOS
+            gameResultChangedForPlayerMap[rankingPlayerOne.tournamentPlayerId] = -1;
+          }
+        }
+
+        // there is a round after
+        if (i > gameResult.gameAfter.tournamentRound && actualRoundGamePlayerOne) {
+          if (gameResult.gameAfter.playerOneTournamentPlayerId === actualRoundGamePlayerOne.playerOneTournamentPlayerId) {
+            newScorePlayerOne = lastRoundRankingPlayerOne.score + actualRoundGamePlayerOne.playerOneScore;
+            newCPPlayerOne = lastRoundRankingPlayerOne.controlPoints + actualRoundGamePlayerOne.playerOneControlPoints;
+            newVPPlayerOne = lastRoundRankingPlayerOne.victoryPoints + actualRoundGamePlayerOne.playerOneVictoryPoints;
+          } else {
+            newScorePlayerOne = lastRoundRankingPlayerOne.score + actualRoundGamePlayerOne.playerTwoScore;
+            newCPPlayerOne = lastRoundRankingPlayerOne.controlPoints + actualRoundGamePlayerOne.playerTwoControlPoints;
+            newVPPlayerOne = lastRoundRankingPlayerOne.victoryPoints + actualRoundGamePlayerOne.playerTwoVictoryPoints;
+          }
+
+          const playerOneRankingRef = this.afoDatabase
+            .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+
+          playerOneRankingRef.update(
+            {
+              score: newScorePlayerOne,
+              controlPoints: newCPPlayerOne,
+              victoryPoints: newVPPlayerOne,
+            });
         }
       }
 
-      // there is a round after
-      if (i > gameResult.gameAfter.tournamentRound && actualRoundGamePlayerOne) {
-        if (gameResult.gameAfter.playerOneTournamentPlayerId === actualRoundGamePlayerOne.playerOneTournamentPlayerId) {
-          newScorePlayerOne = lastRoundRankingPlayerOne.score + actualRoundGamePlayerOne.playerOneScore;
-          newCPPlayerOne = lastRoundRankingPlayerOne.controlPoints + actualRoundGamePlayerOne.playerOneControlPoints;
-          newVPPlayerOne = lastRoundRankingPlayerOne.victoryPoints + actualRoundGamePlayerOne.playerOneVictoryPoints;
-        } else {
-          newScorePlayerOne = lastRoundRankingPlayerOne.score + actualRoundGamePlayerOne.playerTwoScore;
-          newCPPlayerOne = lastRoundRankingPlayerOne.controlPoints + actualRoundGamePlayerOne.playerTwoControlPoints;
-          newVPPlayerOne = lastRoundRankingPlayerOne.victoryPoints + actualRoundGamePlayerOne.playerTwoVictoryPoints;
+      if (gameResult.gameAfter.playerTwoTournamentPlayerId !== 'bye') {
+
+        let newScorePlayerTwo = 0;
+        let newCPPlayerTwo = 0;
+        let newVPPlayerTwo = 0;
+        let newListOfOpponentsIdsPlayerTwo = [];
+
+        // if there is a round before add it
+        if (lastRoundRankingPlayerTwo) {
+          newScorePlayerTwo = newScorePlayerTwo + lastRoundRankingPlayerTwo.score;
+          newCPPlayerTwo = newCPPlayerTwo + lastRoundRankingPlayerTwo.controlPoints;
+          newVPPlayerTwo = newVPPlayerTwo + lastRoundRankingPlayerTwo.victoryPoints;
+
+          newListOfOpponentsIdsPlayerTwo =
+            _.union(newListOfOpponentsIdsPlayerTwo, lastRoundRankingPlayerTwo.opponentTournamentPlayerIds);
         }
 
-        const playerOneRankingRef = this.afoDatabase
-          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
-
-        playerOneRankingRef.update(
-          {
-            score: newScorePlayerOne,
-            controlPoints: newCPPlayerOne,
-            victoryPoints: newVPPlayerOne,
-          });
-      }
+        // the actual round where the result is entered
+        if (i === gameResult.gameAfter.tournamentRound) {
 
 
-      let newScorePlayerTwo = 0;
-      let newCPPlayerTwo = 0;
-      let newVPPlayerTwo = 0;
-      let newListOfOpponentsIdsPlayerTwo = [];
+          newScorePlayerTwo = newScorePlayerTwo + gameResult.gameAfter.playerTwoScore;
+          newCPPlayerTwo = newCPPlayerTwo + gameResult.gameAfter.playerTwoControlPoints;
+          newVPPlayerTwo = newVPPlayerTwo + gameResult.gameAfter.playerTwoVictoryPoints;
 
-      // if there is a round before add it
-      if (lastRoundRankingPlayerTwo) {
-        newScorePlayerTwo = newScorePlayerTwo + lastRoundRankingPlayerTwo.score;
-        newCPPlayerTwo = newCPPlayerTwo + lastRoundRankingPlayerTwo.controlPoints;
-        newVPPlayerTwo = newVPPlayerTwo + lastRoundRankingPlayerTwo.victoryPoints;
+          newListOfOpponentsIdsPlayerTwo.push(gameResult.gameAfter.playerOneTournamentPlayerId);
+          opponentIdsTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newListOfOpponentsIdsPlayerTwo;
 
-        newListOfOpponentsIdsPlayerTwo =
-          _.union(newListOfOpponentsIdsPlayerTwo, lastRoundRankingPlayerTwo.opponentTournamentPlayerIds);
-      }
+          const playerTwoRankingRef = this.afoDatabase
+            .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
+          playerTwoRankingRef.update(
+            {
+              score: newScorePlayerTwo,
+              controlPoints: newCPPlayerTwo,
+              victoryPoints: newVPPlayerTwo,
+              opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerTwo
+            });
 
-      // the actual round where the result is entered
-      if (i === gameResult.gameAfter.tournamentRound) {
+          if (!gameResult.gameBefore.finished) {
+            scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newScorePlayerTwo;
+          } else if (gameResult.gameBefore.playerTwoScore < gameResult.gameAfter.playerTwoScore) {
+            scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] =
+              scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] + 1;
 
-        newScorePlayerTwo = newScorePlayerTwo + gameResult.gameAfter.playerTwoScore;
-        newCPPlayerTwo = newCPPlayerTwo + gameResult.gameAfter.playerTwoControlPoints;
-        newVPPlayerTwo = newVPPlayerTwo + gameResult.gameAfter.playerTwoVictoryPoints;
+            // for later rounds SOS
+            gameResultChangedForPlayerMap[rankingPlayerTwo.tournamentPlayerId] = 1;
+          } else if (gameResult.gameBefore.playerTwoScore > gameResult.gameAfter.playerTwoScore) {
+            scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] =
+              scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] - 1;
 
-        newListOfOpponentsIdsPlayerTwo.push(gameResult.gameAfter.playerOneTournamentPlayerId);
-        opponentIdsTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newListOfOpponentsIdsPlayerTwo;
-
-        const playerTwoRankingRef = this.afoDatabase
-          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
-        playerTwoRankingRef.update(
-          {
-            score: newScorePlayerTwo,
-            controlPoints: newCPPlayerTwo,
-            victoryPoints: newVPPlayerTwo,
-            opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerTwo
-          });
-
-        if (!gameResult.gameBefore.finished) {
-          scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newScorePlayerTwo;
-        } else if (gameResult.gameBefore.playerTwoScore < gameResult.gameAfter.playerTwoScore) {
-          scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] =
-            scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] + 1;
-
-          // for later rounds SOS
-          gameResultChangedForPlayerMap[rankingPlayerTwo.tournamentPlayerId] = 1;
-        } else if (gameResult.gameBefore.playerTwoScore > gameResult.gameAfter.playerTwoScore) {
-          scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] =
-            scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] - 1;
-
-          // for later rounds SOS
-          gameResultChangedForPlayerMap[rankingPlayerTwo.tournamentPlayerId] = -1;
-        }
-      }
-
-
-      if (i > gameResult.gameAfter.tournamentRound && actualRoundGamePlayerTwo) {
-        if (gameResult.gameAfter.playerTwoTournamentPlayerId === actualRoundGamePlayerTwo.playerOneTournamentPlayerId) {
-          newScorePlayerTwo = lastRoundRankingPlayerTwo.score + actualRoundGamePlayerTwo.playerOneScore;
-          newCPPlayerTwo = lastRoundRankingPlayerTwo.controlPoints + actualRoundGamePlayerTwo.playerOneControlPoints;
-          newVPPlayerTwo = lastRoundRankingPlayerTwo.victoryPoints + actualRoundGamePlayerTwo.playerOneVictoryPoints;
-        } else {
-          newScorePlayerTwo = lastRoundRankingPlayerTwo.score + actualRoundGamePlayerTwo.playerTwoScore;
-          newCPPlayerTwo = lastRoundRankingPlayerTwo.controlPoints + actualRoundGamePlayerTwo.playerTwoControlPoints;
-          newVPPlayerTwo = lastRoundRankingPlayerTwo.victoryPoints + actualRoundGamePlayerTwo.playerTwoVictoryPoints;
+            // for later rounds SOS
+            gameResultChangedForPlayerMap[rankingPlayerTwo.tournamentPlayerId] = -1;
+          }
         }
 
-        const playerTwoRankingRef = this.afoDatabase
-          .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
-        playerTwoRankingRef.update(
-          {
-            score: newScorePlayerTwo,
-            controlPoints: newCPPlayerTwo,
-            victoryPoints: newVPPlayerTwo,
-          });
+
+        if (i > gameResult.gameAfter.tournamentRound && actualRoundGamePlayerTwo) {
+          if (gameResult.gameAfter.playerTwoTournamentPlayerId === actualRoundGamePlayerTwo.playerOneTournamentPlayerId) {
+            newScorePlayerTwo = lastRoundRankingPlayerTwo.score + actualRoundGamePlayerTwo.playerOneScore;
+            newCPPlayerTwo = lastRoundRankingPlayerTwo.controlPoints + actualRoundGamePlayerTwo.playerOneControlPoints;
+            newVPPlayerTwo = lastRoundRankingPlayerTwo.victoryPoints + actualRoundGamePlayerTwo.playerOneVictoryPoints;
+          } else {
+            newScorePlayerTwo = lastRoundRankingPlayerTwo.score + actualRoundGamePlayerTwo.playerTwoScore;
+            newCPPlayerTwo = lastRoundRankingPlayerTwo.controlPoints + actualRoundGamePlayerTwo.playerTwoControlPoints;
+            newVPPlayerTwo = lastRoundRankingPlayerTwo.victoryPoints + actualRoundGamePlayerTwo.playerTwoVictoryPoints;
+          }
+
+          const playerTwoRankingRef = this.afoDatabase
+            .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);
+          playerTwoRankingRef.update(
+            {
+              score: newScorePlayerTwo,
+              controlPoints: newCPPlayerTwo,
+              victoryPoints: newVPPlayerTwo,
+            });
+        }
       }
 
       // SOS calculation for round
@@ -416,11 +422,13 @@ export class TournamentRankingService {
         let newSos = 0;
         _.each(opponentIdsTournamentPlayerMap[rankToUpdate.tournamentPlayerId], function (opponentTournamentPlayerId: string) {
           const opponentScore: number = scoreTournamentPlayerMap[opponentTournamentPlayerId];
-          newSos = newSos + opponentScore;
+          if (opponentScore) {
+            newSos = newSos + opponentScore;
 
-          // game result changed so later rounds sos are affected
-          if (gameResultChangedForPlayerMap[opponentTournamentPlayerId] && i > gameResult.gameAfter.tournamentRound ) {
-             newSos = newSos + gameResultChangedForPlayerMap[opponentTournamentPlayerId];
+            // game result changed so later rounds sos are affected
+            if (gameResultChangedForPlayerMap[opponentTournamentPlayerId] && i > gameResult.gameAfter.tournamentRound) {
+              newSos = newSos + gameResultChangedForPlayerMap[opponentTournamentPlayerId];
+            }
           }
         });
 
@@ -499,11 +507,11 @@ export class TournamentRankingService {
           newVPTeamOne = rankingTeamOne.victoryPoints + gameResult.gameAfter.playerOneVictoryPoints;
         } else {
           newSecondScoreTeamOne = rankingTeamOne.secondScore +
-              gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore;
+            gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore;
           newCPTeamOne = rankingTeamOne.controlPoints +
             gameResult.gameAfter.playerOneControlPoints - gameResult.gameBefore.playerOneControlPoints;
           newVPTeamOne = rankingTeamOne.victoryPoints +
-              gameResult.gameAfter.playerOneVictoryPoints - gameResult.gameBefore.playerOneVictoryPoints;
+            gameResult.gameAfter.playerOneVictoryPoints - gameResult.gameBefore.playerOneVictoryPoints;
         }
 
         newListOfOpponentsIdsTeamOne.push(rankingTeamTwo.tournamentPlayerId);
@@ -577,11 +585,11 @@ export class TournamentRankingService {
           newScoreTeamTwo = newScoreTeamTwo + (teamOneScore < teamTwoScore ? 1 : 0);
         }
         if (!gameResult.gameBefore.finished) {
-          newSecondScoreTeamTwo =  rankingTeamTwo.secondScore + gameResult.gameAfter.playerTwoScore;
-          newCPTeamTwo =  rankingTeamTwo.controlPoints + gameResult.gameAfter.playerTwoControlPoints;
+          newSecondScoreTeamTwo = rankingTeamTwo.secondScore + gameResult.gameAfter.playerTwoScore;
+          newCPTeamTwo = rankingTeamTwo.controlPoints + gameResult.gameAfter.playerTwoControlPoints;
           newVPTeamTwo = newVPTeamTwo + rankingTeamTwo.victoryPoints + gameResult.gameAfter.playerTwoVictoryPoints;
         } else {
-          newSecondScoreTeamTwo =  rankingTeamTwo.secondScore +
+          newSecondScoreTeamTwo = rankingTeamTwo.secondScore +
             gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore;
           newCPTeamTwo = rankingTeamTwo.controlPoints +
             gameResult.gameAfter.playerTwoControlPoints - gameResult.gameBefore.playerTwoControlPoints;

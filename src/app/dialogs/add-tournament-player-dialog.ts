@@ -23,7 +23,7 @@ export class NewTournamentPlayerDialogComponent {
   preselectTeam: string;
 
   playerNameAlreadyInUse: boolean;
-  dummyNotAllowed: boolean;
+  byeNotAllowed: boolean;
 
   @Output() onSaveNewTournamentPlayer = new EventEmitter<TournamentPlayer>();
 
@@ -53,7 +53,7 @@ export class NewTournamentPlayerDialogComponent {
 
     const that = this;
     that.playerNameAlreadyInUse = false;
-    that.dummyNotAllowed = that.tournamentPlayerModel.playerName.toLowerCase() === 'dummy';
+    that.byeNotAllowed = that.tournamentPlayerModel.playerName.toLowerCase() === 'bye';
 
     _.each(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
 

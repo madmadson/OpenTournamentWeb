@@ -6,7 +6,6 @@
                     class="full-width">
   <input mdInput type="text" disabled placeholder="Scenario" value="{{selectedScenario}}">
 </md-input-container>
-
 <md-select
   *ngIf="isAdmin && !teamMatch"
   class="full-width-select-box"
@@ -43,7 +42,7 @@
         VP: {{game.playerOneVictoryPoints}}
       </div>
       <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && isAdmin"
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && (isAdmin || isItMyTeamGame(game))"
                 (click)="clickSwapPlayerPlayerOne($event, game)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>
@@ -71,7 +70,7 @@
         VP: {{game.playerTwoVictoryPoints}}
       </div>
       <div *ngIf="game.playerTwoArmyList " class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && isAdmin"
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && (isAdmin || isItMyTeamGame(game))"
                 (click)="clickSwapPlayerPlayerTwo($event, game)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>

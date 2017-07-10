@@ -54,7 +54,7 @@ import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registra
 import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
-import {DropPlayerPush} from "../../../../shared/dto/drop-player-push";
+import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
 
 @Component({
   selector: 'tournament-overview',
@@ -251,13 +251,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TournamentSetAction(tournament));
   }
 
-  handleAddDummyPlayer() {
-    this.store.dispatch(new AddDummyPlayerAction(this.actualTournament.id));
-  }
 
-  handleAddDummyTeam() {
-    this.store.dispatch(new AddDummyTeamAction(this.actualTournament.id));
-  }
 
   handleAddTournamentPlayer(tournamentPlayer: TournamentPlayer) {
     this.store.dispatch(new TournamentPlayerPushAction(tournamentPlayer));
@@ -326,6 +320,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleGameResult(gameResult: GameResult) {
+     console.log('gameresult: ' + JSON.stringify(gameResult));
      this.store.dispatch(new GameResultEnteredAction(gameResult));
   }
 

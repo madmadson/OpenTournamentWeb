@@ -34,13 +34,13 @@
       <md-icon>warning</md-icon>
       TeamName already in use
     </button>
-    <button *ngIf="dummyNotAllowed"
+    <button *ngIf="byeNotAllowed"
             type="button"
             class="right-align-button color-negative-background"
             md-raised-button
             [disabled]="true">
       <md-icon>warning</md-icon>
-      Dummy ist not a valid teamName
+      Bye ist not a valid teamName
     </button>
     <button *ngIf="!teamNameAlreadyInUse && !dummyNotAllowed"
             md-raised-button

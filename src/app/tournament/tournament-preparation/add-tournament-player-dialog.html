@@ -68,15 +68,15 @@
     <md-icon>warning</md-icon>
     PlayerName already in use
   </button>
-  <button *ngIf="dummyNotAllowed"
+  <button *ngIf="byeNotAllowed"
           type="button"
           class="right-align-button color-negative-background"
           md-raised-button
           [disabled]="true">
     <md-icon>warning</md-icon>
-    Dummy ist not a valid name
+    Bye ist not a valid name
   </button>
-  <button *ngIf="!playerNameAlreadyInUse && !dummyNotAllowed"
+  <button *ngIf="!playerNameAlreadyInUse && !byeNotAllowed"
           type="button"
           color="accent"
           md-raised-button

@@ -36,15 +36,15 @@
       <md-icon>warning</md-icon>
       TeamName already in use
     </button>
-    <button *ngIf="dummyNotAllowed"
+    <button *ngIf="byeNotAllowed"
             type="button"
             class="right-align-button color-negative-background"
             md-raised-button
             [disabled]="true">
       <md-icon>warning</md-icon>
-      Dummy ist not a valid teamName
+      Bye is not a valid teamName
     </button>
-    <button *ngIf="!teamNameAlreadyInUse && !dummyNotAllowed"
+    <button *ngIf="!teamNameAlreadyInUse && !byeNotAllowed"
             md-raised-button type="button" color="accent" class="right-align-button"
             (click)="onRegisterTeam()"
             [disabled]="registerTournamentForm.invalid">Create Team

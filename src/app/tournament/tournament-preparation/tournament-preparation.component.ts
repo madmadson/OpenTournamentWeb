@@ -51,8 +51,6 @@ export class TournamentPreparationComponent implements OnInit {
 
   @Output() onStartTournament = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onStartTeamTournament = new EventEmitter<TournamentManagementConfiguration>();
-  @Output() onAddDummyPlayer = new EventEmitter();
-  @Output() onAddDummyTeam = new EventEmitter();
   @Output() onSaveTournament = new EventEmitter<Tournament>();
 
   @Output() onAddTournamentPlayer = new EventEmitter<TournamentPlayer>();
@@ -187,21 +185,9 @@ export class TournamentPreparationComponent implements OnInit {
         }
       }
     });
-    const onAddDummyPlayer = dialogRef.componentInstance.onAddDummyPlayer.subscribe(() => {
 
-      this.onAddDummyPlayer.emit();
-
-    });
-    const onAddDummyTeam = dialogRef.componentInstance.onAddDummyTeam.subscribe(() => {
-
-      this.onAddDummyTeam.emit();
-
-    });
     dialogRef.afterClosed().subscribe(() => {
-
-      onAddDummyPlayer.unsubscribe();
       startTournamentSub.unsubscribe();
-      onAddDummyTeam.unsubscribe();
     });
 
   }
@@ -612,7 +598,7 @@ export class CreateTeamDialogComponent implements OnInit {
   createTournamentForm: FormGroup;
 
   teamNameAlreadyInUse: boolean;
-  dummyNotAllowed: boolean;
+  byeNotAllowed: boolean;
 
   constructor(public dialogRef: MdDialogRef<CreateTeamDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
@@ -675,7 +661,7 @@ export class CreateTeamDialogComponent implements OnInit {
     const that = this;
     that.teamNameAlreadyInUse = false;
 
-    that.dummyNotAllowed = that.createTournamentForm.get('teamName').value.toLowerCase() === 'dummy';
+    that.byeNotAllowed = that.createTournamentForm.get('teamName').value.toLowerCase() === 'bye';
 
     _.each(this.tournamentTeams, function (team: TournamentTeam) {
       if (team.teamName.toLowerCase() === that.createTournamentForm.get('teamName').value.toLowerCase()) {
@@ -709,7 +695,7 @@ export class RegisterTeamDialogComponent implements OnInit {
   registerTournamentForm: FormGroup;
 
   teamNameAlreadyInUse: boolean;
-  dummyNotAllowed: boolean;
+  byeNotAllowed: boolean;
 
   constructor(public dialogRef: MdDialogRef<RegisterTeamDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
@@ -770,7 +756,7 @@ export class RegisterTeamDialogComponent implements OnInit {
     const that = this;
     that.teamNameAlreadyInUse = false;
 
-    that.dummyNotAllowed = that.registerTournamentForm.get('teamName').value.toLowerCase() === 'dummy';
+    that.byeNotAllowed = that.registerTournamentForm.get('teamName').value.toLowerCase() === 'bye';
 
     _.each(this.tournamentTeams, function (team: TournamentTeam) {
       if (team.teamName.toLowerCase() === that.registerTournamentForm.get('teamName').value.toLowerCase()) {
@@ -799,8 +785,6 @@ export class StartTournamentDialogComponent {
   actualTournament: Tournament;
 
   @Output() onStartTournament = new EventEmitter<TournamentManagementConfiguration>();
-  @Output() onAddDummyPlayer = new EventEmitter();
-  @Output() onAddDummyTeam = new EventEmitter();
 
   teamRestriction: boolean;
   metaRestriction: boolean;
@@ -827,21 +811,6 @@ export class StartTournamentDialogComponent {
     });
   }
 
-  dummyPlayerAlreadyIn(): TournamentPlayer {
-    return _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
-      if (player.playerName === 'DUMMY') {
-        return player;
-      }
-    });
-  }
-
-  dummyTeamAlreadyIn(): TournamentTeam {
-    return _.find(this.allActualTournamentTeams, function (team: TournamentTeam) {
-      if (team.teamName === 'DUMMY') {
-        return team;
-      }
-    });
-  }
 
   checkAllTeamsAreFull(): boolean {
 
@@ -892,11 +861,5 @@ export class StartTournamentDialogComponent {
     this.dialogRef.close();
   }
 
-  addDummyPlayer() {
-    this.onAddDummyPlayer.emit();
-  }
 
-  addDummyTeam() {
-    this.onAddDummyTeam.emit();
-  }
 }
