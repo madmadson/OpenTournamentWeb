@@ -64,6 +64,7 @@
                                  (onUndoDropPlayer)="handleUndoDropPlayer($event)"
                                  (onScenarioSelected)="handleScenarioSelected($event)"
                                  (onPublishRound)="handlePublishRound($event)"
+                                 (onClearPlayerGameResult)="handleClearPlayerGameResult($event)"
                                  (onEndTournament)="handleEndTournament($event)"
       ></tournament-round-overview>
       <tournament-team-round-overview *ngIf="actualTournament.teamSize > 0"
@@ -87,6 +88,8 @@
                                       (onEndTeamTournament)="handleEndTeamTournament($event)"
                                       (onClearPlayerGameResult)="handleClearPlayerGameResult($event)"
                                       (onClearTeamGameResult)="handleClearTeamGameResult($event)"
+                                      (onDropTeam)="handleDropTeam($event)"
+                                      (onUndoDropTeam)="handleUndoDropTeam($event)"
                                       (onScenarioSelectedForTeamTournament)="handleScenarioSelectedForTeamTournament($event)"
       ></tournament-team-round-overview>
     </mdl-tab-panel>

@@ -24,6 +24,7 @@ import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-mo
 import {NewRoundDialogComponent} from '../../dialogs/round-overview/new-round-dialog';
 import {FinishTournamentDialogComponent} from 'app/dialogs/finish-tournament-dialog';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
+import {DropPlayerPush} from "../../../../shared/dto/drop-player-push";
 
 @Component({
   selector: 'tournament-team-round-overview',
@@ -61,6 +62,9 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
 
   @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
   @Output() onClearTeamGameResult = new EventEmitter<TournamentGame>();
+
+  @Output() onDropTeam = new EventEmitter<DropPlayerPush>();
+  @Output() onUndoDropTeam = new EventEmitter<TournamentRanking>();
 
   userPlayerData: Player;
   currentUserId: string;
@@ -174,6 +178,14 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   handleSwapTeam(swapTeam: SwapGames) {
 
     this.onSwapTeam.emit(swapTeam);
+  }
+
+  handleDropTeam(dropPlayerPush: DropPlayerPush) {
+    this.onDropTeam.emit(dropPlayerPush);
+  }
+
+  handleUndoDropTeam(ranking: TournamentRanking) {
+    this.onUndoDropTeam.emit(ranking);
   }
 
   publishRound() {

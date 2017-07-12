@@ -41,6 +41,28 @@
         CP: {{game.playerOneControlPoints}}
         VP: {{game.playerOneVictoryPoints}}
       </div>
+      <mdl-icon *ngIf="!swapPlayerMode && isAdmin && !requestClearGame"
+                (click)="requestClearGameResult($event, game)" mdTooltip="Reset GameResult"
+                class="clear-game-icon">clear
+      </mdl-icon>
+
+      <button *ngIf="!swapPlayerMode && isAdmin && requestClearGame === game.id"
+              (click)="clearGameResultConfirm($event, game)"
+              class="color-positive-background"
+              type="button"
+              md-raised-button>
+        <md-icon >check</md-icon>
+        Reset Result!
+      </button>
+
+      <button *ngIf="!swapPlayerMode && isAdmin && requestClearGame === game.id"
+              (click)="clearGameResultDecline($event)"
+              class="color-negative-background"
+              type="button"
+              md-raised-button>
+        <md-icon >clear</md-icon>
+        No!
+      </button>
       <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
       <mdl-icon *ngIf="!swapPlayerMode && !game.finished && (isAdmin || isItMyTeamGame(game))"
                 (click)="clickSwapPlayerPlayerOne($event, game)" mdTooltip="Swap Player Mode"

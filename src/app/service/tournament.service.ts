@@ -450,7 +450,7 @@ export class TournamentService  {
     const afoGames = this.afoDatabase.object('/tournament-games/' +  gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
     afoGames.update(gameResult.gameAfter);
 
-    this.rankingService.updateRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound);
+    this.rankingService.updateRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound, false);
 
     this.snackBar.open('Game Result Entered Successfully', '', {
       extraClasses: ['snackBar-success'],
@@ -545,13 +545,64 @@ export class TournamentService  {
 
     const game1: TournamentGame = swapPlayer.gameOne;
 
+    if (game1.playerOneTournamentPlayerId === 'bye') {
+      game1.playerTwoScore = 1;
+      game1.playerTwoControlPoints = 3;
+      game1.playerTwoVictoryPoints = 38;
+      game1.finished = true;
+    }
+
+    if (game1.playerTwoTournamentPlayerId === 'bye') {
+      game1.playerOneScore = 1;
+      game1.playerOneControlPoints = 3;
+      game1.playerOneVictoryPoints = 38;
+      game1.finished = true;
+    }
+
     const gameOneRef = this.afoDatabase.object('tournament-games/' + game1.tournamentId + '/' + game1.id);
     gameOneRef.update(game1);
 
+    const emptyGameBefore = _.cloneDeep(game1);
+
+    this.rankingService.updateRankingAfterGameResultEntered(
+      {
+        gameBefore: emptyGameBefore,
+        gameAfter: game1
+      },
+      game1.tournamentRound,
+      false
+    );
+
     const game2: TournamentGame = swapPlayer.gameTwo;
+
+    if (game2.playerOneTournamentPlayerId === 'bye') {
+      game2.playerTwoScore = 1;
+
+      game2.playerTwoControlPoints = 3;
+      game2.playerTwoVictoryPoints = 38;
+      game2.finished = true;
+    }
+
+    if (game2.playerTwoTournamentPlayerId === 'bye') {
+      game2.playerOneScore = 1;
+      game2.playerOneControlPoints = 3;
+      game2.playerOneVictoryPoints = 38;
+      game2.finished = true;
+    }
 
     const gameTwoRef = this.afoDatabase.object('tournament-games/' + game1.tournamentId + '/' + game2.id);
     gameTwoRef.update(game2);
+
+    const emptyGame2Before = _.cloneDeep(game2);
+
+    this.rankingService.updateRankingAfterGameResultEntered(
+      {
+        gameBefore: emptyGame2Before,
+        gameAfter: game2
+      },
+      game2.tournamentRound,
+      false
+    );
 
     this.snackBar.open('Successfully swap player', '', {
       extraClasses: ['snackBar-success'],
@@ -644,7 +695,7 @@ export class TournamentService  {
 
     this.tournamentGameService.updateTeamMatchAfterGameResultEntered(gameResult);
 
-    this.rankingService.updateRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound);
+    this.rankingService.updateRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound, false);
 
     this.rankingService.updateTeamRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound, false);
 
@@ -770,13 +821,64 @@ export class TournamentService  {
 
     this.tournamentGameService.clearGameForTeamMatch(teamGameToClear);
 
-    this.snackBar.open('Successfully clear TeamMatch', '', {
+    this.snackBar.open('Successfully reset TeamMatch', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });
   }
 
   clearPlayerGameResult(playerGameToClear: TournamentGame) {
+
+    this.tournamentGameService.clearGameForPlayerMatch(playerGameToClear);
+
+    this.snackBar.open('Successfully reset Match', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  dropTeam(dropAction: DropPlayerPush) {
+    const rankingRef = this.afoDatabase.object('tournament-team-rankings/' +
+      dropAction.ranking.tournamentId + '/' + dropAction.ranking.id);
+
+    rankingRef.update({
+      droppedInRound: dropAction.round
+    });
+
+    const tournamentPlayerRef = this.afoDatabase.object('tournament-teams/' +
+      dropAction.ranking.tournamentId + '/' + dropAction.ranking.tournamentPlayerId);
+
+    tournamentPlayerRef.update({
+      droppedInRound: dropAction.round
+    });
+
+    this.snackBar.open('Successfully drop Team', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  undoDropTeam(ranking: TournamentRanking) {
+
+    const rankingRef = this.afoDatabase.object('tournament-team-rankings/' +
+      ranking.tournamentId + '/' + ranking.id);
+
+    rankingRef.update({
+      droppedInRound: 0
+    });
+
+    const tournamentPlayerRef = this.afoDatabase.object('tournament-teams/' +
+      ranking.tournamentId + '/' + ranking.tournamentPlayerId);
+
+    tournamentPlayerRef.update({
+      droppedInRound: 0
+    });
+
+
+    this.snackBar.open('Successfully undo drop Team', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
 
   }
 }

@@ -165,3 +165,17 @@
   font-weight: bold;
   width: 100%;
 }
+
+.clear-game-icon {
+  position: absolute;
+  display: inline-block;
+  top: 5px;
+  left: 5px;
+  font-size: $small-icon-size;
+  color: $fail_color;
+}
+
+.clear-game-icon:hover{
+  color: blue;
+  cursor: pointer;
+}

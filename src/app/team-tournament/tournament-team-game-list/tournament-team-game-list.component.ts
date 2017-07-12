@@ -461,10 +461,20 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
           }
         });
 
+    const clearPlayerGameEvent = dialogRef.componentInstance.onClearPlayerGameResult
+      .subscribe((game: TournamentGame) => {
+
+        if (game !== undefined) {
+
+          this.onClearPlayerGameResult.emit(game);
+        }
+      });
+
       dialogRef.afterClosed().subscribe(() => {
 
         gameResultEvent.unsubscribe();
         swapPlayerEvent.unsubscribe();
+        clearPlayerGameEvent.unsubscribe();
       });
 
 
@@ -498,6 +508,8 @@ export class TeamMatchDialogComponent {
   @Output() onGameResult = new EventEmitter<GameResult>();
   @Output() onSwapPlayer = new EventEmitter<SwapGames>();
 
+  @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
+
   constructor(public dialogRef: MdDialogRef<TeamMatchDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
 
@@ -529,5 +541,10 @@ export class TeamMatchDialogComponent {
   handlePlayerSwap(swapPlayer: SwapGames) {
 
     this.onSwapPlayer.emit(swapPlayer);
+  }
+
+  handleClearPlayerGameResult(game: TournamentGame) {
+
+    this.onClearPlayerGameResult.emit(game);
   }
 }

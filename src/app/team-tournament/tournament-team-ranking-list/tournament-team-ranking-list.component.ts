@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 import {ShowTeamRankingDialogComponent} from '../../dialogs/show-team-ranking-dialog';
 import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog';
 import {Tournament} from "../../../../shared/model/tournament";
+import {DropPlayerPush} from "../../../../shared/dto/drop-player-push";
 
 @Component({
   selector: 'tournament-team-ranking-list',
@@ -27,11 +28,16 @@ export class TournamentTeamRankingListComponent implements OnInit {
   @Input() playerRankingsForRound$: Observable<TournamentRanking[]>;
   @Input() userPlayerData: Player;
 
+  @Output() onDropTeam = new EventEmitter<DropPlayerPush>();
+  @Output() onUndoDropTeam = new EventEmitter<TournamentRanking>();
+
   armyLists: ArmyList[];
   orderedTeamRankings: TournamentRanking[];
 
   smallScreen: boolean;
   truncateMax: number;
+
+  deleteRequest: string;
 
   constructor(public dialog: MdDialog,
               private winRef: WindowRefService) {
@@ -56,7 +62,9 @@ export class TournamentTeamRankingListComponent implements OnInit {
     });
   }
 
-  showTeam(team: TournamentRanking) {
+  showTeam(event: any, team: TournamentRanking) {
+
+    event.stopPropagation();
 
     this.dialog.open(ShowTeamRankingDialogComponent, {
       data: {
@@ -87,14 +95,40 @@ export class TournamentTeamRankingListComponent implements OnInit {
   }
 
   isDroppable(rank: TournamentRanking) {
-    return (!rank.droppedInRound || rank.droppedInRound === 0) && (this.actualTournament.actualRound === this.round);
+    return (!rank.droppedInRound || rank.droppedInRound === 0) &&
+            (this.actualTournament.actualRound === this.round);
   }
 
-  isUndoDroppable(rank: TournamentRanking) {
-    return (rank.droppedInRound && rank.droppedInRound === this.round)  &&
-      (this.actualTournament.actualRound === this.round);
+  dropRequest(event: any, ranking: TournamentRanking) {
+
+    event.stopPropagation();
+
+    this.deleteRequest = ranking.id;
   }
 
+  dropConfirm(event: any, ranking: TournamentRanking){
+    event.stopPropagation();
+
+    this.onDropTeam.emit({
+      ranking: ranking,
+      round: this.actualTournament.actualRound
+    });
+
+    this.deleteRequest = '';
+  }
+
+  dropDeclined(event: any) {
+    event.stopPropagation();
+
+    this.deleteRequest = '';
+  }
+
+  undoDropPlayer(event: any, ranking: TournamentRanking) {
+
+    event.stopPropagation();
+
+    this.onUndoDropTeam.emit(ranking);
+  }
 }
 
 

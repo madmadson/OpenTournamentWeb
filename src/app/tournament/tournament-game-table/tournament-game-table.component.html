@@ -14,7 +14,7 @@
   <tbody *ngFor="let game of games; let i = index; let even = even"
          [ngClass]="{'even': even} ">
   <tr class="table-row">
-    <td class="small-three-space-table-cell reg-table-cell">{{i +1}}</td>
+    <td class="small-three-space-table-cell reg-table-cell">{{game.playingField}}</td>
     <td [ngClass]="{'game-table-won': (playerOneWon(game)),
                     'game-table-lost': (playerTwoWon(game))}"
         class="mdl-data-table__cell--non-numeric">

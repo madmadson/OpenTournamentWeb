@@ -69,13 +69,10 @@ export class TournamentRankingListComponent implements OnInit {
   }
 
   isDroppable(rank: TournamentRanking) {
-    return (!rank.droppedInRound || rank.droppedInRound === 0) && (this.actualTournament.actualRound === this.round);
+    return (!rank.droppedInRound || rank.droppedInRound === 0) &&
+            (this.actualTournament.actualRound === this.round);
   }
 
-  isUndoDroppable(rank: TournamentRanking) {
-    return (rank.droppedInRound && rank.droppedInRound === this.round)  &&
-           (this.actualTournament.actualRound === this.round);
-  }
 
   showArmyList(ranking: TournamentRanking) {
 

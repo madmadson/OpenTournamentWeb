@@ -30,7 +30,7 @@
 }
 
 .team-table-row:hover{
-  background-color: deepskyblue;
+  background-color: $color_info;
 }
 
 .rank-table-cell {
@@ -52,7 +52,7 @@
 
 .army-list-icon:hover {
   cursor: pointer;
-  color: deepskyblue;
+  color: $color_info;
 }
 
 .mdl-data-table th {
@@ -90,6 +90,11 @@
   padding-right: $halve_tick;
   font-size: $medium-icon-size;
   cursor: pointer;
+}
+
+.drop-player-action:hover {
+  cursor: pointer;
+  color: $hover_color;
 }
 
 .undo-drop-player-action{

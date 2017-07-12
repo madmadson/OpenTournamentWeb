@@ -110,6 +110,8 @@
       [teamRankingsForRound$]="teamRankingsForRound$"
       [playerRankingsForRound$]="playerRankingsForRound$"
       [userPlayerData]="userPlayerData"
+      (onDropTeam)="handleDropTeam($event)"
+      (onUndoDropTeam)="handleUndoDropTeam($event)"
     ></tournament-team-ranking-list>
   </md-card>
 </div>

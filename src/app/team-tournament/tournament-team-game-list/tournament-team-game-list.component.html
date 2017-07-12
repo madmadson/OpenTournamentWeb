@@ -49,7 +49,8 @@
         VP: {{game.playerOneVictoryPoints}}
       </div>
       <mdl-icon *ngIf="!swapPlayerMode && isAdmin && !requestClearGame"
-                (click)="requestClearGameResult($event, game)" mdTooltip="Reset GameResult"
+                (click)="requestClearGameResult($event, game)"
+                mdTooltip="Reset GameResult"
                 class="clear-game-icon">clear
       </mdl-icon>
 

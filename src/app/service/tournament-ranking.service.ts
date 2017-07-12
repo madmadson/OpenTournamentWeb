@@ -156,7 +156,8 @@ export class TournamentRankingService {
         '',
         team.meta ? team.meta : '',
         team.country ? team.country : '',
-        0, 0, 0, 0, 0, 0, 1, [], 0);
+        0, 0, 0, 0, 0, 0, 1, [],
+        team.droppedInRound ? team.droppedInRound : 0);
 
       _.each(lastRoundTeamRankings, function (lastRoundRanking: TournamentRanking) {
 
@@ -207,7 +208,7 @@ export class TournamentRankingService {
     });
   }
 
-  updateRankingAfterGameResultEntered(gameResult: GameResult, round: number) {
+  updateRankingAfterGameResultEntered(gameResult: GameResult, round: number, reset: boolean) {
 
     const that = this;
     const roundOfGameResult = gameResult.gameAfter.tournamentRound;
@@ -282,11 +283,13 @@ export class TournamentRankingService {
           newCPPlayerOne = newCPPlayerOne + gameResult.gameAfter.playerOneControlPoints;
           newVPPlayerOne = newVPPlayerOne + gameResult.gameAfter.playerOneVictoryPoints;
 
-          newListOfOpponentsIdsPlayerOne.push(gameResult.gameAfter.playerTwoTournamentPlayerId);
-          opponentIdsTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newListOfOpponentsIdsPlayerOne;
-
-          // const playerOneRankingRef = this.fireDB
-          //   .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+          if (reset) {
+            const indexOfOpponentToRemove = _.findIndex(newListOfOpponentsIdsPlayerOne, gameResult.gameAfter.playerTwoTournamentPlayerId);
+            newListOfOpponentsIdsPlayerOne.splice(indexOfOpponentToRemove);
+          } else {
+            newListOfOpponentsIdsPlayerOne.push(gameResult.gameAfter.playerTwoTournamentPlayerId);
+            opponentIdsTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newListOfOpponentsIdsPlayerOne;
+          }
 
           const playerOneRankingRef = this.afoDatabase.object('/tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
           playerOneRankingRef.update(
@@ -363,8 +366,13 @@ export class TournamentRankingService {
           newCPPlayerTwo = newCPPlayerTwo + gameResult.gameAfter.playerTwoControlPoints;
           newVPPlayerTwo = newVPPlayerTwo + gameResult.gameAfter.playerTwoVictoryPoints;
 
-          newListOfOpponentsIdsPlayerTwo.push(gameResult.gameAfter.playerOneTournamentPlayerId);
-          opponentIdsTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newListOfOpponentsIdsPlayerTwo;
+          if (reset) {
+            const indexOfOpponentToRemove = _.findIndex(newListOfOpponentsIdsPlayerTwo, gameResult.gameAfter.playerOneTournamentPlayerId);
+            newListOfOpponentsIdsPlayerTwo.splice(indexOfOpponentToRemove);
+          } else {
+            newListOfOpponentsIdsPlayerTwo.push(gameResult.gameAfter.playerOneTournamentPlayerId);
+            opponentIdsTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newListOfOpponentsIdsPlayerTwo;
+          }
 
           const playerTwoRankingRef = this.afoDatabase
             .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerTwo.id);

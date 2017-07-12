@@ -22,7 +22,7 @@ import {
   SwapTeamAction, TeamGameResultEnteredAction, ScenarioSelectedTeamTournamentAction, EndTeamTournamentAction,
   UndoTeamTournamentEndAction, UploadTeamTournamentAction, PlayerRegistrationChangeAction,
   ArmyListForRegistrationPushAction, ArmyListForTournamentPlayerPushAction, DropPlayerPushAction,
-  UndoDropPlayerPushAction,
+  UndoDropPlayerPushAction, DropTeamPushAction, UndoDropTeamPushAction,
 } from '../../store/actions/tournament-actions';
 
 
@@ -328,7 +328,6 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleGameResult(gameResult: GameResult) {
-     console.log('gameresult: ' + JSON.stringify(gameResult));
      this.store.dispatch(new GameResultEnteredAction(gameResult));
   }
 
@@ -354,6 +353,14 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleUndoDropPlayer(ranking: TournamentRanking) {
     this.store.dispatch(new UndoDropPlayerPushAction(ranking));
+  }
+
+  handleDropTeam(dropPlayerPush: DropPlayerPush) {
+    this.store.dispatch(new DropTeamPushAction(dropPlayerPush));
+  }
+
+  handleUndoDropTeam(ranking: TournamentRanking) {
+    this.store.dispatch(new UndoDropTeamPushAction(ranking));
   }
 
   handleTeamGameResult(gameResult: GameResult) {

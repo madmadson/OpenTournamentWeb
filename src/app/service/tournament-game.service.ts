@@ -133,13 +133,15 @@ export class TournamentGameService {
         newGame.playerTwoScore = 1;
         newGame.playerTwoControlPoints = 3;
         newGame.playerTwoVictoryPoints = 38;
+        newGame.finished = true;
 
         that.rankingService.updateRankingAfterGameResultEntered(
           {
             gameBefore: newGame,
             gameAfter: newGame
           },
-          newGame.tournamentRound
+          newGame.tournamentRound,
+          false
         );
 
       }
@@ -148,13 +150,15 @@ export class TournamentGameService {
         newGame.playerOneScore = 1;
         newGame.playerOneControlPoints = 3;
         newGame.playerOneVictoryPoints = 38;
+        newGame.finished = true;
 
         that.rankingService.updateRankingAfterGameResultEntered(
           {
             gameBefore: newGame,
             gameAfter: newGame
           },
-          newGame.tournamentRound
+          newGame.tournamentRound,
+          false
         );
       }
 
@@ -797,7 +801,8 @@ export class TournamentGameService {
             gameBefore: emptyGameBefore,
             gameAfter: newTeamGame
           },
-          newTeamGame.tournamentRound
+          newTeamGame.tournamentRound,
+          false
         );
       });
     }
@@ -842,7 +847,8 @@ export class TournamentGameService {
             gameBefore: emptyGameBefore,
             gameAfter: newTeamGame
           },
-          newTeamGame.tournamentRound
+          newTeamGame.tournamentRound,
+          false
         );
       });
     }
@@ -1029,6 +1035,36 @@ export class TournamentGameService {
     }
 
     return notDroppedPlayers;
+  }
+
+  clearGameForPlayerMatch(playerGameToClear: TournamentGame) {
+    const that = this;
+
+    const playerGameRef = this.afoDatabase
+      .object('tournament-games/' + playerGameToClear.tournamentId + '/' + playerGameToClear.id);
+
+    const gameBefore = _.cloneDeep(playerGameToClear);
+
+    playerGameToClear.playerOneScore = 0;
+    playerGameToClear.playerOneControlPoints = 0;
+    playerGameToClear.playerOneVictoryPoints = 0;
+    playerGameToClear.playerOneArmyList = '';
+    playerGameToClear.playerTwoScore = 0;
+    playerGameToClear.playerTwoControlPoints = 0;
+    playerGameToClear.playerTwoVictoryPoints = 0;
+    playerGameToClear.playerTwoArmyList = '';
+    playerGameToClear.finished = false;
+
+    playerGameRef.update(playerGameToClear);
+
+    that.rankingService.updateRankingAfterGameResultEntered(
+      {
+        gameBefore: gameBefore,
+        gameAfter: playerGameToClear
+      },
+      playerGameToClear.tournamentRound,
+      true
+    );
   }
 }
 

@@ -57,6 +57,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   @Output() onDropPlayer = new EventEmitter<DropPlayerPush>();
   @Output() onUndoDropPlayer = new EventEmitter<TournamentRanking>();
 
+  @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
+
   userPlayerData: Player;
   currentUserId: string;
 
@@ -167,6 +169,10 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   }
 
+  handleClearPlayerGameResult(game: TournamentGame) {
+    this.onClearPlayerGameResult.emit(game);
+  }
+
   handleScenarioSelected(scenarioSelectedModel: ScenarioSelectedModel) {
 
     this.onScenarioSelected.emit(scenarioSelectedModel);
@@ -179,13 +185,10 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleDropPlayer(dropPlayerPush: DropPlayerPush) {
-
-
     this.onDropPlayer.emit(dropPlayerPush);
   }
 
   handleUndoDropPlayer(ranking: TournamentRanking) {
-
     this.onUndoDropPlayer.emit(ranking);
   }
 

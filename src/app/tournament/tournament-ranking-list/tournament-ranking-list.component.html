@@ -37,10 +37,16 @@
     <td class="small-three-space-table-cell">{{rank.controlPoints}}</td>
     <td class="small-three-space-table-cell">{{rank.victoryPoints}}</td>
     <td *ngIf="isAdmin && deleteRequest !== rank.id && !actualTournament.finished" class="small-three-space-table-cell">
-      <md-icon *ngIf="isDroppable(rank)" class="drop-player-action"
+
+      {{rank.droppedInRound}}
+      <md-icon *ngIf="isDroppable(rank)"
+               class="drop-player-action"
+               mdTooltip="Drop Player"
                (click)="dropRequest($event, rank)">
       delete</md-icon>
-      <md-icon *ngIf="isUndoDroppable(rank) && !actualTournament.finished" class="undo-drop-player-action"
+      <md-icon *ngIf="!isDroppable(rank)"
+               class="undo-drop-player-action"
+               mdTooltip="Undo Drop"
                (click)="undoDropPlayer($event, rank)">
         undo</md-icon>
     </td>

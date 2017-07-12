@@ -92,6 +92,7 @@
                           (onGameResult)="handleGameResult($event)"
                           (onSwapPlayer)="handleSwapPlayer($event)"
                           (onScenarioSelected)="handleScenarioSelected($event)"
+                          (onClearPlayerGameResult)="handleClearPlayerGameResult($event)"
     ></tournament-game-list>
 
     <tournament-game-table *ngIf="gamesTableMode"

@@ -43,6 +43,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   @Output() onSwapPlayer = new EventEmitter<SwapGames>();
   @Output() onScenarioSelected = new EventEmitter<ScenarioSelectedModel>();
 
+  @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
+
   userPlayerData: Player;
   currentUserId: string;
   armyLists$: Observable<ArmyList[]>;
@@ -63,6 +65,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   selectedScenario: string;
   loggedInUserTeam: string;
+
+  requestClearGame: string;
 
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar,
@@ -141,6 +145,25 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     });
 
     this.messageService.broadcast('swapPlayerMode', true);
+  }
+
+  requestClearGameResult(event: any, game: TournamentGame) {
+    event.stopPropagation();
+
+    this.requestClearGame = game.id;
+  }
+
+  clearGameResultConfirm(event: any, game: TournamentGame) {
+
+    event.stopPropagation();
+
+    this.requestClearGame = '';
+    this.onClearPlayerGameResult.emit(game);
+  }
+
+  clearGameResultDecline(event: any) {
+    event.stopPropagation();
+    this.requestClearGame = '';
   }
 
   clickSwapPlayerPlayerTwo(event: any, game: TournamentGame) {

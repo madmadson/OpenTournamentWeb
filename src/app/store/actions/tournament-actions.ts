@@ -346,6 +346,22 @@ export class UndoDropPlayerPushAction implements Action {
   }
 }
 
+export const DROP_TEAM_PUSH_ACTION = 'DROP_TEAM_PUSH_ACTION';
+export class DropTeamPushAction implements Action {
+
+  readonly type = 'DROP_TEAM_PUSH_ACTION';
+  constructor(public payload: DropPlayerPush) {
+  }
+}
+
+export const UNDO_DROP_TEAM_PUSH_ACTION = 'UNDO_DROP_TEAM_PUSH_ACTION';
+export class UndoDropTeamPushAction implements Action {
+
+  readonly type = 'UNDO_DROP_TEAM_PUSH_ACTION';
+  constructor(public payload: TournamentRanking) {
+  }
+}
+
 export const PUBLISH_ROUND_ACTION = 'PUBLISH_ROUND_ACTION';
 export class PublishRoundAction implements Action {
 
