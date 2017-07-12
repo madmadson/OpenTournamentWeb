@@ -592,10 +592,41 @@ export class TournamentService  {
 
     const game1: TournamentGame = swapTeam.gameOne;
 
+    if (game1.playerOneTournamentPlayerId === 'bye') {
+      game1.playerTwoScore = 1;
+      game1.playerTwoIntermediateResult = this.actualTournament.teamSize;
+      game1.playerTwoControlPoints = this.actualTournament.teamSize * 3;
+      game1.playerTwoVictoryPoints = this.actualTournament.teamSize * 38;
+      game1.finished = true;
+    }
+
+    if (game1.playerTwoTournamentPlayerId === 'bye') {
+      game1.playerOneScore = 1;
+      game1.playerOneIntermediateResult = this.actualTournament.teamSize;
+      game1.playerOneControlPoints = this.actualTournament.teamSize * 3;
+      game1.playerOneVictoryPoints = this.actualTournament.teamSize * 38;
+      game1.finished = true;
+    }
     const gameOneRef = this.afoDatabase.object('tournament-team-games/' + game1.tournamentId + '/' + game1.id);
     gameOneRef.update(game1);
 
     const game2: TournamentGame = swapTeam.gameTwo;
+
+    if (game2.playerOneTournamentPlayerId === 'bye') {
+      game2.playerTwoScore = 1;
+      game2.playerTwoIntermediateResult = this.actualTournament.teamSize;
+      game2.playerTwoControlPoints = this.actualTournament.teamSize * 3;
+      game2.playerTwoVictoryPoints = this.actualTournament.teamSize * 38;
+      game2.finished = true;
+    }
+
+    if (game2.playerTwoTournamentPlayerId === 'bye') {
+      game2.playerOneScore = 1;
+      game2.playerOneIntermediateResult = this.actualTournament.teamSize;
+      game2.playerOneControlPoints = this.actualTournament.teamSize * 3;
+      game2.playerOneVictoryPoints = this.actualTournament.teamSize * 38;
+      game2.finished = true;
+    }
 
     const gameTwoRef = this.afoDatabase.object('tournament-team-games/' + game1.tournamentId + '/' + game2.id);
     gameTwoRef.update(game2);
@@ -615,7 +646,7 @@ export class TournamentService  {
 
     this.rankingService.updateRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound);
 
-    this.rankingService.updateTeamRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound);
+    this.rankingService.updateTeamRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound, false);
 
     this.snackBar.open('Game Result Entered Successfully', '', {
       extraClasses: ['snackBar-success'],

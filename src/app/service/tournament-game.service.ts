@@ -789,6 +789,14 @@ export class TournamentGameService {
             gameBefore: emptyGameBefore,
             gameAfter: newTeamGame
           },
+          newTeamGame.tournamentRound,
+          false
+        );
+        that.rankingService.updateRankingAfterGameResultEntered(
+          {
+            gameBefore: emptyGameBefore,
+            gameAfter: newTeamGame
+          },
           newTeamGame.tournamentRound
         );
       });
@@ -821,6 +829,15 @@ export class TournamentGameService {
         emptyGameBefore.finished = false;
 
         that.rankingService.updateTeamRankingAfterGameResultEntered(
+          {
+            gameBefore: emptyGameBefore,
+            gameAfter: newTeamGame
+          },
+          newTeamGame.tournamentRound,
+          false
+        );
+
+        that.rankingService.updateRankingAfterGameResultEntered(
           {
             gameBefore: emptyGameBefore,
             gameAfter: newTeamGame
@@ -899,7 +916,8 @@ export class TournamentGameService {
           gameBefore: gameBefore,
           gameAfter: game
         },
-        game.tournamentRound
+        game.tournamentRound,
+        true
       );
 
     });

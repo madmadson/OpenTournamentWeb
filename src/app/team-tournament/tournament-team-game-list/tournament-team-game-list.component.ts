@@ -202,38 +202,6 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
     }
   }
 
-  startDrag(event: any, game: TournamentGame, dragTournamentPlayerId: string,
-            dragTournamentPlayerOpponentId: string) {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (!this.smallScreen) {
-
-      if (!game.finished && this.actualTournament.creatorUid === this.userPlayerData.userUid) {
-        const that = this;
-
-        console.log('drag started');
-
-        // firefox foo
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('text/plain', null);
-
-        this.draggedTournamentPlayerId = dragTournamentPlayerId;
-        this.draggedTournamentPlayerCurrentOpponentId = dragTournamentPlayerOpponentId;
-        this.draggedGame = game;
-        this.dragStarted = true;
-
-        _.each(this.teamRankingsForRound, function (ranking: TournamentRanking) {
-          if (ranking.tournamentPlayerId === dragTournamentPlayerId) {
-            that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
-          }
-        });
-      }
-    }
-    return true;
-  }
-
   dragEnable(tournamentPlayerId: string, opponentTournamentPlayerId: string): boolean {
 
     return !(this.draggedTournamentPlayerId === tournamentPlayerId ||
@@ -242,82 +210,6 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 
   }
 
-
-  dragOver(event: any, tournamentPlayerId: string, opponentTournamentPlayerId: string) {
-
-    event.preventDefault();
-
-    if (this.draggedGame) {
-      if (this.draggedTournamentPlayerId === tournamentPlayerId ||
-        this.draggedTournamentPlayerId === opponentTournamentPlayerId ||
-        _.includes(this.draggedTournamentPlayerOpponentIds, opponentTournamentPlayerId)) {
-        event.target.classList.add('drag-over-disable');
-      } else {
-        event.target.classList.add('drag-over-enable');
-      }
-    }
-    return true;
-  }
-
-  dragLeave(event: any) {
-    event.preventDefault();
-
-    event.target.classList.remove('drag-over-disable');
-    event.target.classList.remove('drag-over-enable');
-
-    return false;
-  }
-
-
-  endDrag(event: any) {
-
-    event.target.classList.remove('drag-over-disable');
-    event.target.classList.remove('drag-over-enable');
-
-    this.dragStarted = false;
-    if (this.smallScreen) {
-      this.renderer.removeClass(document.body, 'prevent-scrolling');
-    }
-
-    return false;
-  }
-
-  dropped(event: any, droppedGame: TournamentGame,
-          droppedTournamentPlayerId: string,
-          droppedTournamentPlayerOpponentId: string) {
-
-    if (event.preventDefault) {
-      event.preventDefault();
-    }
-    if (event.stopPropagation) {
-      event.stopPropagation();
-    }
-
-    event.target.classList.remove('drag-over-disable');
-    event.target.classList.remove('drag-over-enable');
-    if (this.smallScreen) {
-      this.renderer.removeClass(document.body, 'prevent-scrolling');
-    }
-
-    if (!droppedGame.finished && this.draggedGame) {
-
-      // Don't do anything if dropping the same column we're dragging.
-      if (droppedTournamentPlayerId !== this.draggedTournamentPlayerId &&
-        droppedGame !== this.draggedGame) {
-        if (!this.playedAgainstOthers(this.draggedTournamentPlayerId, droppedTournamentPlayerOpponentId, droppedGame) &&
-          !this.playedAgainstOthers(droppedTournamentPlayerId, this.draggedTournamentPlayerCurrentOpponentId, this.draggedGame)) {
-          this.doSwapping(droppedGame, droppedTournamentPlayerId);
-        }
-      }
-    }
-    this.dragStarted = false;
-    this.draggedTournamentPlayerId = undefined;
-    this.draggedTournamentPlayerCurrentOpponentId = undefined;
-    this.draggedGame = undefined;
-
-
-    return false;
-  }
 
   private doSwapping(droppedGame: TournamentGame, droppedTournamentPlayerId: string) {
     const newGameOne = this.createGameOne(droppedGame, droppedTournamentPlayerId);
@@ -490,8 +382,21 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 
     let playedAgainstOther = false;
 
-    _.each(this.teamRankingsForRound, function (rank) {
+    _.find(this.teamRankingsForRound, function (rank) {
 
+      if (tournamentPlayerOneId === 'bye' && rank.tournamentPlayerId === tournamentPlayerTwoId) {
+
+        const alreadyHasABye = _.includes(rank.opponentTournamentPlayerIds, 'bye');
+
+        if (alreadyHasABye) {
+          that.snackBar.open(rank.playerName + 'already has a BYE ', '', {
+            extraClasses: ['snackBar-info'],
+            duration: 5000
+          });
+          playedAgainstOther = true;
+        }
+        return;
+      }
       if (rank.tournamentPlayerId === tournamentPlayerOneId) {
         const pl = _.find(rank.opponentTournamentPlayerIds,
           function (player1OpponentTournamentPlayerId: string) {
@@ -511,6 +416,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
             });
           }
         }
+        return;
       }
     });
 
