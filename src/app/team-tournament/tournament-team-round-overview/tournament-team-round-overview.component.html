@@ -85,6 +85,8 @@
                                (onScenarioSelectedForTeamTournament)="handleScenarioSelectedForTeamTournament($event)"
                                (onSwapPlayer)="handleSwapPlayer($event)"
                                (onSwapTeam)="handleSwapTeam($event)"
+                               (onClearPlayerGameResult)="handleClearPlayerGameResult($event)"
+                               (onClearTeamGameResult)="handleClearTeamGameResult($event)"
     ></tournament-team-game-list>
 
     <tournament-game-table *ngIf="gamesTableMode"
@@ -102,6 +104,8 @@
     </mdl-icon>
     <tournament-team-ranking-list
       [isAdmin]="isAdmin"
+      [round]="actualTournament.actualRound"
+      [actualTournament]="actualTournament"
       [actualTournamentArmyList$]="armyLists$"
       [teamRankingsForRound$]="teamRankingsForRound$"
       [playerRankingsForRound$]="playerRankingsForRound$"

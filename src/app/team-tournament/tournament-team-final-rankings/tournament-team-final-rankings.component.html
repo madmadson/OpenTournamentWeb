@@ -22,6 +22,9 @@
 <md-card class="tournament-ranking-table-card">
   <h3 class="heading">Final Rankings</h3>
   <tournament-team-ranking-list
+    [isAdmin]="isAdmin"
+    [round]="actualTournament.actualRound"
+    [actualTournament]="actualTournament"
     [actualTournamentArmyList$]="armyLists$"
     [teamRankingsForRound$]="finalTeamRankings$"
     [playerRankingsForRound$]="finalPlayerRankings$"

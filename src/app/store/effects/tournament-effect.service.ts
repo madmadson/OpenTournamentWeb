@@ -14,6 +14,10 @@ import {
   ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION, DROP_PLAYER_PUSH_ACTION, UNDO_DROP_PLAYER_PUSH_ACTION
 } from '../actions/tournament-actions';
 import {TournamentService} from '../../service/tournament.service';
+import {
+  CLEAR_TEAM_GAME_RESULT_ACTION
+} from '../actions/tournament-team-games-actions';
+import {CLEAR_PLAYER_GAME_RESULT_ACTION} from 'app/store/actions/tournament-games-actions';
 
 
 @Injectable()
@@ -181,6 +185,16 @@ export class TournamentEffectService {
     .ofType(PLAYER_REGISTRATION_CHANGE_ACTION)
     .debug('PLAYER_REGISTRATION_CHANGE_ACTION')
     .map(action => this.tournamentService.playerRegistrationChangeAction(action.payload));
+
+  @Effect({dispatch: false}) clearPlayerGameResult = this.actions$
+    .ofType(CLEAR_PLAYER_GAME_RESULT_ACTION)
+    .debug('CLEAR_PLAYER_GAME_RESULT_ACTION')
+    .map(action => this.tournamentService.clearPlayerGameResult(action.payload));
+
+  @Effect({dispatch: false}) clearTeamGameResult = this.actions$
+    .ofType(CLEAR_TEAM_GAME_RESULT_ACTION)
+    .debug('CLEAR_TEAM_GAME_RESULT_ACTION')
+    .map(action => this.tournamentService.clearTeamGameResult(action.payload));
 
   constructor(
     private actions$: Actions,

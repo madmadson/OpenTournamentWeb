@@ -11,7 +11,7 @@
     <th class="small-three-space-table-cell">SOS</th>
     <th class="small-three-space-table-cell">CP</th>
     <th class="small-three-space-table-cell">VP</th>
-    <th *ngIf="isAdmin" class="small-three-space-table-cell">Drop</th>
+    <th *ngIf="isAdmin && !actualTournament.finished && actualTournament.actualRound === round" class="small-three-space-table-cell">Drop</th>
   </tr>
   </thead>
   <tbody *ngFor="let rank of orderedRankings$ | async; let i = index; let even = even"

@@ -23,7 +23,7 @@ import {PrintGamesDialogComponent} from '../../dialogs/print-games-dialog';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 import {NewRoundDialogComponent} from '../../dialogs/round-overview/new-round-dialog';
 import {FinishTournamentDialogComponent} from 'app/dialogs/finish-tournament-dialog';
-import {TournamentTeam} from "../../../../shared/model/tournament-team";
+import {TournamentTeam} from '../../../../shared/model/tournament-team';
 
 @Component({
   selector: 'tournament-team-round-overview',
@@ -58,6 +58,9 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   @Output() onSwapTeam = new EventEmitter<SwapGames>();
   @Output() onPublishRound = new EventEmitter<PublishRound>();
   @Output() onEndTeamTournament = new EventEmitter<TournamentManagementConfiguration>();
+
+  @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
+  @Output() onClearTeamGameResult = new EventEmitter<TournamentGame>();
 
   userPlayerData: Player;
   currentUserId: string;
@@ -151,6 +154,16 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
 
     this.onScenarioSelectedForTeamTournament.emit(scenarioSelect);
 
+  }
+
+  handleClearPlayerGameResult(game: TournamentGame) {
+
+    this.onClearPlayerGameResult.emit(game);
+  }
+
+  handleClearTeamGameResult(game: TournamentGame) {
+
+    this.onClearTeamGameResult.emit(game);
   }
 
   handleSwapPlayer(swapPlayer: SwapGames) {

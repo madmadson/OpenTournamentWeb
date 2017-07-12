@@ -1,10 +1,12 @@
 <h3 md-dialog-title class="heading">Info {{tournament?.name}}</h3>
 
 <md-dialog-content>
-  <pre *ngIf="!tournament?.description">No Description found for Tournament</pre>
+  <pre *ngIf="!tournament?.description">No information found for Tournament</pre>
   <pre *ngIf="tournament?.description" class="full-width">
     {{tournament?.description}}
   </pre>
+  <pre>-------------------</pre>
+  <pre>*OpenTournament is not responsible for any given information in this dialog.</pre>
 </md-dialog-content>
 <div md-dialog-actions>
   <div class="full-width">

@@ -27,9 +27,8 @@ import {
   ClearTeamRankingsAction, DeleteTournamentTeamRankingAction
 } from '../store/actions/tournament-team-rankings-actions';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
-import {TeamRegistrationChange} from "../../../shared/dto/team-registration-change";
-import {ArmyListRegistrationPush} from "../../../shared/dto/armyList-registration-push";
-import {ArmyListTeamPush} from "../../../shared/dto/team-armyList-push";
+import {TeamRegistrationChange} from '../../../shared/dto/team-registration-change';
+import {ArmyListTeamPush} from '../../../shared/dto/team-armyList-push';
 
 
 @Injectable()

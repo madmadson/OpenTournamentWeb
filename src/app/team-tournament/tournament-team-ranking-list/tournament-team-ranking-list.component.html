@@ -11,6 +11,7 @@
     <th class="small-three-space-table-cell">SGW</th>
     <th class="small-three-space-table-cell">CP</th>
     <th class="small-three-space-table-cell">VP</th>
+    <th *ngIf="isAdmin && !actualTournament.finished && actualTournament.actualRound === round" class="small-three-space-table-cell">Drop</th>
   </tr>
   </thead>
   <tbody *ngFor="let rank of orderedTeamRankings; let i = index; let even = even"
@@ -31,6 +32,31 @@
     <td class="small-three-space-table-cell">{{rank.secondScore}}</td>
     <td class="small-three-space-table-cell">{{rank.controlPoints}}</td>
     <td class="small-three-space-table-cell">{{rank.victoryPoints}}</td>
+    <td *ngIf="isAdmin && deleteRequest !== rank.id && !actualTournament.finished" class="small-three-space-table-cell">
+      <md-icon *ngIf="isDroppable(rank)" class="drop-player-action"
+               (click)="dropRequest($event, rank)">
+        delete</md-icon>
+      <md-icon *ngIf="isUndoDroppable(rank) && !actualTournament.finished" class="undo-drop-player-action"
+               (click)="undoDropPlayer($event, rank)">
+        undo</md-icon>
+    </td>
+    <td *ngIf="isAdmin && deleteRequest === rank.id" class="small-three-space-table-cell">
+
+      <button (click)="dropConfirm($event, rank)"
+              class="drop-confirm-button color-negative-background"
+              type="button"
+              md-raised-button>
+        <md-icon >delete</md-icon>
+        Drop!
+      </button>
+      <button (click)="dropDeclined($event)"
+              class="drop-decline-button color-positive-background"
+              type="button"
+              md-raised-button>
+        <md-icon >not_interested</md-icon>
+        No
+      </button>
+    </td>
   </tr>
   </tbody>
 </table>

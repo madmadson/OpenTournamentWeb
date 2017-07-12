@@ -50,11 +50,19 @@ export class TournamentService  {
   private tournamentPlayerRef: firebase.database.Reference;
   private armyListsRef: firebase.database.Reference;
 
+  actualTournament: Tournament;
+
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected rankingService: TournamentRankingService,
               protected tournamentGameService: TournamentGameService,
               protected store: Store<ApplicationState>,
-              private snackBar: MdSnackBar) {}
+              private snackBar: MdSnackBar) {
+
+    this.store.select(state => state).subscribe(state => {
+
+      this.actualTournament = state.actualTournament.actualTournament;
+    });
+  }
 
 
   subscribeOnTournament(tournamentId: string) {
@@ -364,11 +372,15 @@ export class TournamentService  {
 
   pairAgainTeamTournament(config: TournamentManagementConfiguration) {
 
-    // first delete all pairings.
+    // first delete and create new all player rankings.
     this.rankingService.eraseRankingsForRound(config);
     this.rankingService.pushRankingForRound(config);
 
+    // second delete and create new all team rankings.
+    this.rankingService.eraseTeamRankingsForRound(config);
     const newTeamRankings: TournamentRanking[] = this.rankingService.pushTeamRankingForRound(config);
+
+    // then do all pairings
     const successFullyPaired: boolean = this.tournamentGameService.createTeamGamesForRound(config, newTeamRankings);
 
     if (successFullyPaired) {
@@ -438,7 +450,7 @@ export class TournamentService  {
     const afoGames = this.afoDatabase.object('/tournament-games/' +  gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
     afoGames.update(gameResult.gameAfter);
 
-    this.rankingService.updateRankingAfterGameResultEntered(gameResult);
+    this.rankingService.updateRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound);
 
     this.snackBar.open('Game Result Entered Successfully', '', {
       extraClasses: ['snackBar-success'],
@@ -601,9 +613,9 @@ export class TournamentService  {
 
     this.tournamentGameService.updateTeamMatchAfterGameResultEntered(gameResult);
 
-    this.rankingService.updateRankingAfterGameResultEntered(gameResult);
+    this.rankingService.updateRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound);
 
-    this.rankingService.updateTeamRankingAfterGameResultEntered(gameResult);
+    this.rankingService.updateTeamRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound);
 
     this.snackBar.open('Game Result Entered Successfully', '', {
       extraClasses: ['snackBar-success'],
@@ -721,5 +733,19 @@ export class TournamentService  {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });
+  }
+
+  clearTeamGameResult(teamGameToClear: TournamentGame) {
+
+    this.tournamentGameService.clearGameForTeamMatch(teamGameToClear);
+
+    this.snackBar.open('Successfully clear TeamMatch', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  clearPlayerGameResult(playerGameToClear: TournamentGame) {
+
   }
 }

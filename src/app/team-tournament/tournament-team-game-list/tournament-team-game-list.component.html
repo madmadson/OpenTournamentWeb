@@ -18,6 +18,8 @@
   <md-option *ngFor="let scenario of scenarios" [value]="scenario">{{ scenario }}</md-option>
 </md-select>
 
+<!--{{playerGamesForRound$ | async | json}}-->
+
 <div *ngFor="let game of teamGamesForRound; let i = index; let even = even"
      [ngClass]="{'even': even,
                  'my-item':isItMyTeamGame(game),
@@ -46,6 +48,29 @@
         CP: {{game.playerOneControlPoints}}
         VP: {{game.playerOneVictoryPoints}}
       </div>
+      <mdl-icon *ngIf="!swapPlayerMode && isAdmin && !requestClearGame"
+                (click)="requestClearGameResult($event, game)" mdTooltip="Clear GameResult"
+                class="clear-game-icon">clear
+      </mdl-icon>
+
+      <button *ngIf="!swapPlayerMode && isAdmin && requestClearGame === game.id"
+              (click)="clearGameResultConfirm($event, game)"
+              class="color-positive-background"
+              type="button"
+              md-raised-button>
+        <md-icon >check</md-icon>
+        Clear!
+      </button>
+
+      <button *ngIf="!swapPlayerMode && isAdmin && requestClearGame === game.id"
+              (click)="clearGameResultDecline($event)"
+              class="color-negative-background"
+              type="button"
+              md-raised-button>
+        <md-icon >clear</md-icon>
+        No!
+      </button>
+
       <mdl-icon *ngIf="!swapPlayerMode && !game.finished && isAdmin &&
                         game.playerTwoIntermediateResult === 0 && game.playerOneIntermediateResult === 0"
                 (click)="clickSwapTeam($event,game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)" mdTooltip="Swap Player Mode"
@@ -88,6 +113,7 @@
                 (click)="endSwapPlayer($event)" mdTooltip="Exit Swap Player Mode"
                 class="swap-player-mode">cancel
       </mdl-icon>
+
     </md-card>
   </div>
 </div>

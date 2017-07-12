@@ -9,6 +9,7 @@ import {WindowRefService} from '../../service/window-ref-service';
 import * as _ from 'lodash';
 import {ShowTeamRankingDialogComponent} from '../../dialogs/show-team-ranking-dialog';
 import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog';
+import {Tournament} from "../../../../shared/model/tournament";
 
 @Component({
   selector: 'tournament-team-ranking-list',
@@ -18,6 +19,9 @@ import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog'
 export class TournamentTeamRankingListComponent implements OnInit {
 
   @Input() isAdmin: boolean;
+  @Input() actualTournament: Tournament;
+  @Input() round: number;
+
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() teamRankingsForRound$: Observable<TournamentRanking[]>;
   @Input() playerRankingsForRound$: Observable<TournamentRanking[]>;
@@ -81,6 +85,16 @@ export class TournamentTeamRankingListComponent implements OnInit {
       }
     });
   }
+
+  isDroppable(rank: TournamentRanking) {
+    return (!rank.droppedInRound || rank.droppedInRound === 0) && (this.actualTournament.actualRound === this.round);
+  }
+
+  isUndoDroppable(rank: TournamentRanking) {
+    return (rank.droppedInRound && rank.droppedInRound === this.round)  &&
+      (this.actualTournament.actualRound === this.round);
+  }
+
 }
 
 

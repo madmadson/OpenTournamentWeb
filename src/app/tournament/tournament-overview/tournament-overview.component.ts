@@ -55,6 +55,8 @@ import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tour
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
 import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
+import {ClearTeamGameResultAction} from "../../store/actions/tournament-team-games-actions";
+import {ClearPlayerGameResultAction} from "app/store/actions/tournament-games-actions";
 
 @Component({
   selector: 'tournament-overview',
@@ -251,7 +253,13 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TournamentSetAction(tournament));
   }
 
+  handleClearPlayerGameResult(game: TournamentGame) {
+    this.store.dispatch(new ClearPlayerGameResultAction(game));
+  }
 
+  handleClearTeamGameResult(game: TournamentGame) {
+    this.store.dispatch(new ClearTeamGameResultAction(game));
+  }
 
   handleAddTournamentPlayer(tournamentPlayer: TournamentPlayer) {
     this.store.dispatch(new TournamentPlayerPushAction(tournamentPlayer));
