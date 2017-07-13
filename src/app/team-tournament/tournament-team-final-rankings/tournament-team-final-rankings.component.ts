@@ -6,6 +6,10 @@ import {ArmyList} from '../../../../shared/model/armyList';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 import {Player} from '../../../../shared/model/player';
+import {PrintRankingsDialogComponent} from '../../dialogs/print-rankings-dialog';
+import {MdDialog} from '@angular/material';
+import {ShowSoloRankingsComponent} from "../../dialogs/mini-dialog/show-solo-rankings-dialog";
+import {GlobalEventService} from "../../service/global-event-service";
 
 @Component({
   selector: 'tournament-team-final-rankings',
@@ -28,9 +32,14 @@ export class TournamentTeamFinalRankingsComponent implements OnInit {
   userPlayerData: Player;
   currentUserId: string;
 
+  rankingsFullscreenMode: boolean;
+
   armyLists$: Observable<ArmyList[]>;
 
-  constructor() { }
+  constructor(public dialog: MdDialog,
+              private messageService: GlobalEventService){
+
+  }
 
   ngOnInit() {
 
@@ -57,4 +66,32 @@ export class TournamentTeamFinalRankingsComponent implements OnInit {
     });
   }
 
+  printRankings() {
+    this.dialog.open(PrintRankingsDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        rankings$: this.finalTeamRankings$,
+        round: this.actualTournament.actualRound,
+        teamMatch: true
+      }
+    });
+  }
+  openRankingsFullScreenMode(mode: boolean) {
+    this.rankingsFullscreenMode = mode;
+
+    this.messageService.broadcast('fullScreenMode', mode);
+  }
+
+  openSoloRankingForTeamTournament() {
+    this.dialog.open(ShowSoloRankingsComponent, {
+      data: {
+        isAdmin: this.isAdmin,
+        actualTournament: this.actualTournament,
+        userPlayerData: this.userPlayerData,
+        rankingsForRound$: this.finalPlayerRankings$,
+        actualTournamentArmyList$: this.actualTournamentArmyList$
+      },
+      width: '800px',
+    });
+  }
 }
