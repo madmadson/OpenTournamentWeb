@@ -143,6 +143,10 @@ button:hover{
   background-color: $success_color;
 }
 
+.color-secondary-background{
+  background-color: $color_secondary;
+}
+
 .color-negative{
   color: $fail_color;
 }
@@ -501,4 +505,8 @@ snack-bar-container.snackBar-info {
 
 .info-icon:hover{
   color: $hover_color;
+}
+
+.filter-textfield{
+  width: 300px;
 }

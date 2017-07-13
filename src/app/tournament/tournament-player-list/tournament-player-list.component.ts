@@ -27,8 +27,7 @@ export class TournamentPlayerListComponent implements OnInit {
   smallScreen: boolean;
   truncateMax: number;
 
-  constructor(
-              private winRef: WindowRefService) {
+  constructor(private winRef: WindowRefService) {
 
     if (this.winRef.nativeWindow.screen.width < 500) {
       this.smallScreen = true;

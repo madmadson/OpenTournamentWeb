@@ -73,15 +73,33 @@
     <mdl-icon *ngIf="gamesTableMode" (click)="changeToTableMode(false)" mdTooltip="Exit Table Mode" class="table-mode">
       view_list
     </mdl-icon>
+
     <mdl-textfield *ngIf="!gamesFullscreenMode"
                    type="text"
                    maxlength="50"
                    placeholder="Filter by PlayerName/TableNumber"
+                   class="filter-textfield"
                    #seachInput
                    (keyup)="search(seachInput.value)">
     </mdl-textfield>
-    <h4 *ngIf="allGamesFiltered?.length == 0">No Games found (Filter?)</h4>
+    <button *ngIf="!gamesFullscreenMode && isTournamentPlayer && !showOnlyMyGameState"
+            class="my-game-button color-secondary-background"
+            type="button"
+            md-tooltip="Show only MyGame" (click)="showOnlyMyGame()"
+            md-raised-button>
+      Show MyGame
+    </button>
+
+    <button *ngIf="!gamesFullscreenMode && isTournamentPlayer && showOnlyMyGameState"
+            class="my-game-button color-secondary-background"
+            type="button"
+            md-tooltip="Show all" (click)="showAllGames()"
+            md-raised-button>
+      Show All
+    </button>
+    <h4 *ngIf="allGamesFiltered?.length == 0" class="heading">No Games found (Filter?)</h4>
     <tournament-game-list *ngIf="!gamesTableMode"
+                          [round]="round"
                           [isAdmin]="isAdmin"
                           [teamMatch]="false"
                           [actualTournament]="actualTournament"

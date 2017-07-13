@@ -1,5 +1,5 @@
 
-<div *ngIf="isAdmin" class="action-card-container">
+<div *ngIf="isAdmin && !rankingsFullscreenMode" class="action-card-container">
   <md-card *ngIf="!actualTournament.uploaded" class="action-card" >
     <div class="action-button-wrapper">
       <button (click)="publishTeamTournament()"
@@ -21,6 +21,16 @@
 </div>
 <md-card class="tournament-ranking-table-card">
   <h3 class="heading">Final Rankings</h3>
+  <mdl-icon (click)="printRankings()" mdTooltip="Print Rankings" class="print-rankings-icon">print</mdl-icon>
+  <mdl-icon *ngIf="!rankingsFullscreenMode" (click)="openRankingsFullScreenMode(true)" mdTooltip="Fullscreen Mode"
+            class="fullscreen-mode">fullscreen
+  </mdl-icon>
+  <mdl-icon *ngIf="rankingsFullscreenMode" (click)="openRankingsFullScreenMode(false)"
+            mdTooltip="Exit Fullscreen Mode" class="fullscreen-mode">fullscreen_exit
+  </mdl-icon>
+  <mdl-icon (click)="openSoloRankingForTeamTournament()"
+            mdTooltip="Solo Rankings" class="solo-ranking-in-team">face
+  </mdl-icon>
   <tournament-team-ranking-list
     [isAdmin]="isAdmin"
     [round]="actualTournament.actualRound"

@@ -28,6 +28,8 @@ import {TournamentTeam} from '../../../../shared/model/tournament-team';
   styleUrls: ['./tournament-team-game-list.component.scss']
 })
 export class TournamentTeamGameListComponent implements OnInit, AfterContentChecked {
+
+  @Input() round: number;
   @Input() isAdmin: boolean;
   @Input() actualTournament: Tournament;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
@@ -69,7 +71,6 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar,
-              private renderer: Renderer2,
               private messageService: GlobalEventService,
               private winRef: WindowRefService) {
     this.smallScreen = this.winRef.nativeWindow.screen.width < 1024;
@@ -430,6 +431,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
       const dialogRef = this.dialog.open(TeamMatchDialogComponent, {
         data: {
           isAdmin: this.isAdmin,
+          round: this.round,
           selectedGame: selectedGame,
           actualTournament: this.actualTournament,
           authenticationStoreState$: this.authenticationStoreState$,
@@ -496,6 +498,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 export class TeamMatchDialogComponent {
 
   isAdmin: boolean;
+  round: number;
 
   selectedGame: TournamentGame;
   actualTournament: Tournament;
@@ -515,6 +518,7 @@ export class TeamMatchDialogComponent {
 
     this.selectedGame = data.selectedGame;
     this.isAdmin = data.isAdmin;
+    this.round = data.round;
 
     this.actualTournament = data.actualTournament;
     this.authenticationStoreState$ = data.authenticationStoreState$;

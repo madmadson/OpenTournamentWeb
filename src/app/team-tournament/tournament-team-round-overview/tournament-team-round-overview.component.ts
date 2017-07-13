@@ -24,7 +24,8 @@ import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-mo
 import {NewRoundDialogComponent} from '../../dialogs/round-overview/new-round-dialog';
 import {FinishTournamentDialogComponent} from 'app/dialogs/finish-tournament-dialog';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
-import {DropPlayerPush} from "../../../../shared/dto/drop-player-push";
+import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
+import {ShowSoloRankingsComponent} from "../../dialogs/mini-dialog/show-solo-rankings-dialog";
 
 @Component({
   selector: 'tournament-team-round-overview',
@@ -38,6 +39,7 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   @Input() round: number;
   @Input() isAdmin: boolean;
   @Input() actualTournament: Tournament;
+  @Input() isTournamentPlayer: boolean;
 
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
@@ -84,6 +86,9 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
   gamesTableMode: boolean;
   smallScreen: boolean;
 
+  showOnlyMyGameState: boolean;
+  loggedInUserTeam: string;
+
   constructor(public dialog: MdDialog,
               private messageService: GlobalEventService,
               private snackBar: MdSnackBar,
@@ -98,11 +103,23 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    const that = this;
+
     this.armyLists$ = this.actualTournamentArmyLists$;
 
     this.authenticationStoreState$.subscribe(auth => {
       this.userPlayerData = auth.userPlayerData;
       this.currentUserId = auth.currentUserId;
+
+      this.actualTournamentTeams$.subscribe(teams => {
+        if (this.userPlayerData ) {
+          _.each(teams, function (team: TournamentTeam) {
+            if (team.registeredPlayerIds.indexOf(that.userPlayerData.id) !== -1) {
+              that.loggedInUserTeam = team.teamName;
+            }
+          });
+        }
+      });
     });
 
     this.teamGamesForRound$.subscribe((games: TournamentGame[]) => {
@@ -146,6 +163,19 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
     this.rankingsFullscreenMode = mode;
 
     this.messageService.broadcast('fullScreenMode', mode);
+  }
+
+  openSoloRankingForTeamTournament() {
+    this.dialog.open(ShowSoloRankingsComponent, {
+      data: {
+        isAdmin: this.isAdmin,
+        actualTournament: this.actualTournament,
+        userPlayerData: this.userPlayerData,
+        rankingsForRound$: this.playerRankingsForRound$,
+        actualTournamentArmyList$: this.actualTournamentArmyLists$
+      },
+      width: '800px',
+    });
   }
 
   handleTeamGameResult(gameResult: GameResult) {
@@ -203,7 +233,25 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
         game.playerTwoPlayerName.toLowerCase().startsWith(searchString.toLowerCase()) ||
         game.playingField.toString() === searchString;
     });
+  }
 
+  showOnlyMyGame() {
+
+    const that = this;
+
+    this.showOnlyMyGameState = true;
+
+    this.allGamesFiltered = _.filter(this.allGames, function (game) {
+      return game.playerOnePlayerName === that.loggedInUserTeam ||
+        game.playerTwoPlayerName === that.loggedInUserTeam;
+    });
+  }
+
+  showAllGames() {
+
+    this.showOnlyMyGameState = false;
+
+    this.allGamesFiltered = this.allGames;
   }
 
   openNewTeamRoundDialog() {

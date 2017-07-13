@@ -39,6 +39,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   @Input() round: number;
   @Input() actualTournament: Tournament;
   @Input() isAdmin: boolean;
+  @Input() isTournamentPlayer: boolean;
 
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
@@ -76,6 +77,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   gamesTableMode: boolean;
   smallScreen: boolean;
+
+  showOnlyMyGameState: boolean;
 
   constructor(public dialog: MdDialog,
               private messageService: GlobalEventService,
@@ -210,6 +213,25 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         game.playingField.toString() === searchString;
     });
 
+  }
+
+  showOnlyMyGame() {
+
+    const that = this;
+
+    this.showOnlyMyGameState = true;
+
+    this.allGamesFiltered = _.filter(this.allGames, function (game) {
+      return game.playerOnePlayerId === that.userPlayerData.id ||
+        game.playerTwoPlayerId === that.userPlayerData.id;
+    });
+  }
+
+  showAllGames() {
+
+    this.showOnlyMyGameState = false;
+
+    this.allGamesFiltered = this.allGames;
   }
 
   openKillRoundDialog() {

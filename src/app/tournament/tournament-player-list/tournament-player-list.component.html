@@ -6,7 +6,6 @@
   <mdl-list-item-primary-content>
     <mdl-icon mdl-list-item-avatar mdl-badge="{{i +1}}" mdl-badge-overlap>person</mdl-icon>
     <span class="player-name">{{tournamentPlayer.playerName  | truncate:truncateMax}}</span>
-
     <mdl-list-item-text-body>
       <div>{{tournamentPlayer.faction}}</div>
       <div mdTooltip="Team" *ngIf="smallScreen">{{tournamentPlayer.teamName }}</div>

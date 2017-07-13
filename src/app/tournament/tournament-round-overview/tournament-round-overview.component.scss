@@ -1,6 +1,5 @@
 @import "../../../styles";
 
-
 .fullscreen-mode{
   position: absolute;
   display: inline-block;
@@ -24,6 +23,7 @@
   color: $hover_color;
   cursor: pointer;
 }
+
 
 
 .table-mode{
@@ -87,4 +87,8 @@
     width: 600px;
     align-items: center;
   }
+}
+
+.my-game-button {
+ margin: $main_tick;
 }

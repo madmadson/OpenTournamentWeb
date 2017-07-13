@@ -30,6 +30,7 @@ import {TournamentTeam} from '../../../../shared/model/tournament-team';
 })
 export class TournamentGameListComponent implements OnInit, AfterContentChecked {
 
+  @Input() round: number;
   @Input() isAdmin: boolean;
   @Input() actualTournament: Tournament;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;

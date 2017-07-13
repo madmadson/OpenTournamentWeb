@@ -1,11 +1,11 @@
 <h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
 <h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="!fullscreenMode && detmerineIsTournamentPlayer()" class="sub-heading">Hello Player</h4>
 <ng-container *ngIf="!actualTournament">
   <div class="heading">Load Tournament...
     <mdl-spinner class="loading-spinner" single-color active></mdl-spinner>
   </div>
 </ng-container>
-
 
 <div class="tab-container">
   <mdl-tabs *ngIf="actualTournament" mdl-ripple [mdl-tab-active-index]="selectedIndex">
@@ -49,6 +49,7 @@
                    [disabled]="fullscreenMode || swapPlayerMode">
       <tournament-round-overview *ngIf="actualTournament.teamSize === 0"
                                  [isAdmin]="isAdmin"
+                                 [isTournamentPlayer]="isTournamentPlayer"
                                  [round]="round"
                                  [actualTournament]="actualTournament"
                                  [authenticationStoreState$]="authenticationStoreState$"
@@ -69,6 +70,7 @@
       ></tournament-round-overview>
       <tournament-team-round-overview *ngIf="actualTournament.teamSize > 0"
                                       [isAdmin]="isAdmin"
+                                      [isTournamentPlayer]="isTournamentPlayer"
                                       [round]="round"
                                       [actualTournamentTeams$]="actualTournamentTeams$"
                                       [actualTournament]="actualTournament"

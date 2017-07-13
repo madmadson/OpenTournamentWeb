@@ -68,11 +68,28 @@
                    type="text"
                    maxlength="50"
                    placeholder="Filter by Team/TableNumber"
+                   class="filter-textfield"
                    #seachInput
                    (keyup)="search(seachInput.value)">
     </mdl-textfield>
-    <h4 *ngIf="allGamesFiltered?.length == 0">No Games found (Filter?)</h4>
+    <button *ngIf="!gamesFullscreenMode && isTournamentPlayer && !showOnlyMyGameState"
+            class="my-game-button color-secondary-background"
+            type="button"
+            md-tooltip="Show only MyGame" (click)="showOnlyMyGame()"
+            md-raised-button>
+      Show MyGame
+    </button>
+
+    <button *ngIf="!gamesFullscreenMode && isTournamentPlayer && showOnlyMyGameState"
+            class="my-game-button color-secondary-background"
+            type="button"
+            md-tooltip="Show all" (click)="showAllGames()"
+            md-raised-button>
+      Show All
+    </button>
+    <h4 *ngIf="allGamesFiltered?.length == 0" class="heading">No Games found (Filter?)</h4>
     <tournament-team-game-list *ngIf="!gamesTableMode"
+                               [round]="round"
                                [isAdmin]="isAdmin"
                                [actualTournament]="actualTournament"
                                [actualTournamentTeams$]="actualTournamentTeams$"
@@ -102,9 +119,12 @@
     <mdl-icon *ngIf="rankingsFullscreenMode" (click)="openRankingsFullScreenMode(false)"
               mdTooltip="Exit Fullscreen Mode" class="fullscreen-mode">fullscreen_exit
     </mdl-icon>
+    <mdl-icon (click)="openSoloRankingForTeamTournament()"
+              mdTooltip="Solo Rankings" class="solo-ranking-in-team">face
+    </mdl-icon>
     <tournament-team-ranking-list
       [isAdmin]="isAdmin"
-      [round]="actualTournament.actualRound"
+      [round]="round"
       [actualTournament]="actualTournament"
       [actualTournamentArmyList$]="armyLists$"
       [teamRankingsForRound$]="teamRankingsForRound$"

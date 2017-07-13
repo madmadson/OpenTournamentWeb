@@ -1,7 +1,3 @@
-<ng-container *ngIf="gamesForRound?.length === 0" >
-  <div class="heading">Load Games... <mdl-spinner  single-color active></mdl-spinner></div>
-</ng-container>
-
 <md-input-container *ngIf="!isAdmin"
                     class="full-width">
   <input mdInput type="text" disabled placeholder="Scenario" value="{{selectedScenario}}">
@@ -41,12 +37,12 @@
         CP: {{game.playerOneControlPoints}}
         VP: {{game.playerOneVictoryPoints}}
       </div>
-      <mdl-icon *ngIf="!swapPlayerMode && isAdmin && !requestClearGame"
+      <mdl-icon *ngIf="!swapPlayerMode && isAdmin && !requestClearGame && actualTournament.actualRound === round"
                 (click)="requestClearGameResult($event, game)" mdTooltip="Reset GameResult"
                 class="clear-game-icon">clear
       </mdl-icon>
 
-      <button *ngIf="!swapPlayerMode && isAdmin && requestClearGame === game.id"
+      <button *ngIf="!swapPlayerMode && isAdmin && requestClearGame === game.id "
               (click)="clearGameResultConfirm($event, game)"
               class="color-positive-background"
               type="button"

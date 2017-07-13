@@ -37,6 +37,16 @@
   cursor: pointer;
 }
 
+.solo-ranking-in-team{
+  position: absolute;
+  display: inline-block;
+  top: $halve_tick;
+  right: 100px;
+}
+.solo-ranking-in-team:hover{
+  color: $hover_color;
+  cursor: pointer;
+}
 
 .table-mode{
   position: absolute;

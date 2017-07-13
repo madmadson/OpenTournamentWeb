@@ -138,6 +138,7 @@ import {
   PlayerRegistrationInfoDialogComponent
 } from './dialogs/tournament-preparation/player-registration-info-dialog';
 import {ShowSingleArmyListDialogComponent} from './dialogs/mini-dialog/show-single-army-list-dialog';
+import {ShowSoloRankingsComponent} from "app/dialogs/mini-dialog/show-solo-rankings-dialog";
 
 
 const reducers = {
@@ -285,7 +286,8 @@ export const firebaseConfDev = {
     TournamentInfoDialogComponent,
     AddPlayerRegistrationDialogComponent,
     PlayerRegistrationInfoDialogComponent,
-    ShowSingleArmyListDialogComponent
+    ShowSingleArmyListDialogComponent,
+    ShowSoloRankingsComponent
   ],
   providers: [
     LoginService,
@@ -324,7 +326,8 @@ export const firebaseConfDev = {
     TournamentInfoDialogComponent,
     AddPlayerRegistrationDialogComponent,
     PlayerRegistrationInfoDialogComponent,
-    ShowSingleArmyListDialogComponent
+    ShowSingleArmyListDialogComponent,
+    ShowSoloRankingsComponent
   ],
   bootstrap: [AppComponent]
 })
