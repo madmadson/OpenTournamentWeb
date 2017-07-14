@@ -58,7 +58,7 @@ a:hover {
 
 .heading{
   text-align: center;
-  font-size: 1.2em;
+  font-size: 1.6em;
   margin: $main_tick !important;;
   width: 100%;
 }
@@ -108,8 +108,9 @@ button:hover{
 
 @media only screen and (max-width: 500px) {
   .list-item {
-    padding: 6px !important;
-    font-size: 1em;
+    padding: $main_tick !important;
+    font-size: 0.8em;
+    height: 100px !important;
   }
 }
 
@@ -450,9 +451,18 @@ md-card {
 
 .team-capacity{
   font-weight: bold;
-  font-size: 1.4em;
+  font-size: 1.0em;
   margin-top: 12px;
-  margin-right: 50px;
+  margin-right: 20px;
+}
+
+@media only screen and (min-width: 800px) {
+  .team-capacity{
+    font-weight: bold;
+    font-size: 1.4em;
+    margin-top: 12px;
+    margin-right: 50px;
+  }
 }
 
 .loading-spinner{

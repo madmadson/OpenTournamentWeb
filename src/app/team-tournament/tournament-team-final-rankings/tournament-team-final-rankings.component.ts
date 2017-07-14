@@ -8,8 +8,8 @@ import {TournamentManagementConfiguration} from '../../../../shared/dto/tourname
 import {Player} from '../../../../shared/model/player';
 import {PrintRankingsDialogComponent} from '../../dialogs/print-rankings-dialog';
 import {MdDialog} from '@angular/material';
-import {ShowSoloRankingsComponent} from "../../dialogs/mini-dialog/show-solo-rankings-dialog";
-import {GlobalEventService} from "../../service/global-event-service";
+import {ShowSoloRankingsComponent} from '../../dialogs/mini-dialog/show-solo-rankings-dialog';
+import {GlobalEventService} from '../../service/global-event-service';
 
 @Component({
   selector: 'tournament-team-final-rankings',

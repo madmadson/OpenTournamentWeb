@@ -42,11 +42,11 @@ export class AddArmyListsDialogComponent {
 
       this.armyListModel = new ArmyList(this.registration.tournamentId, '',
         this.registration.id, this.registration.playerId, this.registration.playerName,
-        this.registration.teamName, 'New List', 'PAST HERE');
+        this.registration.teamName, this.listOfCasterFaction[0], 'PAST HERE');
 
       data.armyLists.subscribe(armyLists => {
         this.armyLists = _.filter(armyLists, function (armyList: ArmyList) {
-          if (that.registration !== undefined) {
+          if (that.registration) {
             return armyList.playerId === that.registration.playerId;
           }
         });
@@ -57,11 +57,11 @@ export class AddArmyListsDialogComponent {
 
       this.armyListModel = new ArmyList(this.tournamentPlayer.tournamentId,
         '', this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
-        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName, 'New List', 'PAST HERE');
+        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName,  this.listOfCasterFaction[0], 'PAST HERE');
 
       data.armyLists.subscribe(armyLists => {
         this.armyLists = _.filter(armyLists, function (armyList: ArmyList) {
-          if (that.tournamentPlayer !== undefined) {
+          if (that.tournamentPlayer) {
             if (that.tournamentPlayer.playerId) {
               return armyList.tournamentPlayerId === that.tournamentPlayer.id
                 || armyList.playerId === that.tournamentPlayer.playerId;
@@ -89,7 +89,7 @@ export class AddArmyListsDialogComponent {
 
       this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.id,
         '', this.registration.playerId, this.registration.playerName,
-        this.registration.teamName, 'New List', 'PAST HERE');
+        this.registration.teamName,  this.listOfCasterFaction[0], 'PAST HERE');
     } else {
       this.onSaveArmyListForTournamentPlayer.emit({
         armyList: this.armyListModel,
@@ -98,7 +98,7 @@ export class AddArmyListsDialogComponent {
 
       this.armyListModel = new ArmyList(this.tournamentPlayer.tournamentId, '',
         this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
-        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName, 'New List', 'PAST HERE');
+        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName,  this.listOfCasterFaction[0], 'PAST HERE');
     }
   };
 

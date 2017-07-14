@@ -10,7 +10,6 @@
 <div class="tab-container">
   <mdl-tabs *ngIf="actualTournament" mdl-ripple [mdl-tab-active-index]="selectedIndex">
     <mdl-tab-panel mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">
-      <div class="content-cards-container">
         <tournament-preparation
           [isAdmin]="isAdmin"
           [authenticationStoreState$]="authenticationStoreState$"
@@ -41,7 +40,7 @@
           (onPlayerRegChangeEventSubscribe)="handlePlayerRegChange($event)"
           (onTeamChangeEventSubscribe)="handleTeamChange($event)"
         ></tournament-preparation>
-      </div>
+
     </mdl-tab-panel>
 
     <mdl-tab-panel *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
@@ -97,7 +96,6 @@
     </mdl-tab-panel>
     <mdl-tab-panel [disabled]="fullscreenMode || swapPlayerMode"
                    *ngIf="actualTournament?.finished" mdl-tab-panel-title="Final">
-      <div class="content-cards-container">
         <tournament-final-rankings *ngIf="actualTournament.teamSize === 0"
                                    [isAdmin]="isAdmin"
                                    [actualTournament]="actualTournament"
@@ -117,7 +115,6 @@
                                         (onUndoTeamTournamentEnd)="handleUndoTeamTournamentEnd($event)"
                                         (onUploadTeamTournament)="handleUploadTeamTournament()">
         </tournament-team-final-rankings>
-      </div>
     </mdl-tab-panel>
   </mdl-tabs>
 </div>

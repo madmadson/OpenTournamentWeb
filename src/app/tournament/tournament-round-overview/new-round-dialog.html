@@ -11,7 +11,7 @@
           <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
             info
           </md-icon>
-          Team Restriction
+          Team Restriction*
         </mdl-switch>
       </div>
       <div class="full-width">
@@ -19,7 +19,7 @@
           <md-icon class="align-fix" mdTooltip="Player in same Locality don't play against each other">
             info
           </md-icon>
-          Locality Restriction
+          Locality Restriction*
         </mdl-switch>
       </div>
       <div class="full-width">
@@ -27,8 +27,12 @@
           <md-icon class="align-fix" mdTooltip="Player in same Country don't play against each other">
             info
           </md-icon>
-          Country Restriction
+          Country Restriction*
         </mdl-switch>
+      </div>
+      <div class="full-width small-text">
+        * The pairing algorithm first try to prevent any restricted matches.
+        If no pairing is possible, restriction will be ignored
       </div>
     </mdl-card-supporting-text>
     <mdl-card-actions mdl-card-border>

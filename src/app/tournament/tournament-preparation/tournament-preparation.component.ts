@@ -229,6 +229,10 @@ export class TournamentPreparationComponent implements OnInit {
 
   openTournamentFormDialog() {
 
+    if (!this.actualTournament.creatorMail) {
+      this.actualTournament.creatorMail = '';
+    }
+
     const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
       data: {
         tournament: this.actualTournament,
