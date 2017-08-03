@@ -68,6 +68,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
   selectedScenario: string;
 
   loggedInUserTeam: string;
+  dragRequestTeamName: string;
 
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar,
@@ -131,6 +132,8 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 
     event.stopPropagation();
 
+    this.dragRequestTeamName = dragTournamentPlayerId;
+
     const that = this;
 
     this.swapPlayerMode = true;
@@ -170,6 +173,8 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
   endSwapPlayer(event: any) {
     event.preventDefault();
     event.stopPropagation();
+
+    this.dragRequestTeamName = '';
 
     this.swapPlayerMode = false;
     this.dragStarted = false;

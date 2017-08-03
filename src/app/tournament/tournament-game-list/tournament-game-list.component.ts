@@ -69,6 +69,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   requestClearGame: string;
 
+  dragRequestTournamentPlayerId: string;
+
   constructor(public dialog: MdDialog,
               private snackBar: MdSnackBar,
               private messageService: GlobalEventService,
@@ -129,6 +131,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     event.stopPropagation();
 
+    this.dragRequestTournamentPlayerId = game.playerOneTournamentPlayerId;
+
     const that = this;
 
     this.swapPlayerMode = true;
@@ -171,6 +175,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
     event.stopPropagation();
 
+    this.dragRequestTournamentPlayerId = game.playerTwoTournamentPlayerId;
+
     const that = this;
 
     this.swapPlayerMode = true;
@@ -193,6 +199,8 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   endSwapPlayer(event: any) {
     event.preventDefault();
     event.stopPropagation();
+
+    this.dragRequestTournamentPlayerId = '';
 
     this.swapPlayerMode = false;
     this.dragStarted = false;

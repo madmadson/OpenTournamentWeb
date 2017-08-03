@@ -14,3 +14,52 @@
 .game-table-lost {
   color: #ff4e3d;
 }
+
+
+.games-table-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+@media only screen and (min-width: 500px) {
+  .games-table-container{
+    min-width: 450px;
+
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .games-table-container{
+    min-width: 600px;
+
+  }
+}
+
+
+.mat-table {
+  overflow: auto;
+}
+
+.mat-row {
+ height: 40px;
+}
+
+.mat-header-cell .mat-sort-header-sorted {
+  color: black;
+
+}
+
+.playing-field-column{
+  flex: 1;
+}
+
+.player-column{
+  flex: 4;
+}
+
+.player-score-column{
+  flex: 2;
+}
+
+

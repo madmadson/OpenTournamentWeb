@@ -113,6 +113,7 @@
     ></tournament-game-list>
 
     <tournament-game-table *ngIf="gamesTableMode"
+                           [actualTournament]="actualTournament"
                            [games]="allGamesFiltered"
     ></tournament-game-table>
   </md-card>

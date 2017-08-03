@@ -23,10 +23,10 @@
   <div class="table-info">Tables {{game.playingField}}</div>
   <div class="game-cards-container">
     <md-card
-      draggable="true"
       (click)="confirmSwapTeam($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       class="game-card"
-      [ngClass]="{  'move-able:': !game.finished && game.playerTwoIntermediateResult == 0 &&  game.playerOneIntermediateResult == 0,
+      [ngClass]="{  'start-drag': dragRequestTeamName == game.playerOneTournamentPlayerId,
+      'move-able:': !game.finished && game.playerTwoIntermediateResult == 0 &&  game.playerOneIntermediateResult == 0,
                     'drop-enable': dragStarted && !game.finished && dragEnable(game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId),
                     'drop-disable': dragStarted && !game.finished && !dragEnable(game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId),
                     'card-won': (game.playerOneScore == 1 && game.finished),
@@ -35,7 +35,7 @@
                                   game.playerTwoIntermediateResult != 0 && game.playerOneIntermediateResult != 0),
                     'card-behind': (game.playerOneIntermediateResult < game.playerTwoIntermediateResult && !game.finished),
                     'card-not-won': (game.playerOneScore == 0 && game.finished)} ">
-      <div class="game-card-line game-card-line-playerName">{{game.playerOnePlayerName | truncate:40}}</div>
+      <div class="game-card-line game-card-line-playerName">{{game.playerOnePlayerName}}</div>
       <div class="game-card-line game-card-line-playerName"> SGW: {{game.playerOneIntermediateResult}}</div>
       <div class="game-card-line">
         Score: {{game.playerOneScore}}
@@ -80,10 +80,10 @@
       VS
     </div>
     <md-card
-      draggable="true"
       (click)="confirmSwapTeam($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
       class="game-card"
-      [ngClass]="{  'move-able:': !game.finished &&  game.playerTwoIntermediateResult == 0 &&  game.playerOneIntermediateResult == 0,
+      [ngClass]="{  'start-drag': dragRequestTeamName == game.playerTwoTournamentPlayerId,
+                    'move-able:': !game.finished &&  game.playerTwoIntermediateResult == 0 &&  game.playerOneIntermediateResult == 0,
                     'drop-enable': dragStarted && !game.finished && dragEnable(game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId),
                     'drop-disable': dragStarted && !game.finished && !dragEnable(game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId),
                     'card-won': (game.playerTwoScore == 1 && game.finished),

@@ -22,10 +22,10 @@
   <div class="table-info">Table {{game.playingField}}</div>
   <div class="game-cards-container">
     <md-card
-      draggable="true"
       (click)="confirmSwapPlayerWithPlayerOne($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)"
       class="game-card"
-      [ngClass]="{  'move-able:': !game.finished,
+      [ngClass]="{  'start-drag': dragRequestTournamentPlayerId == game.playerOneTournamentPlayerId,
+                    'move-able:': !game.finished,
                     'drop-enable': dragStarted && !game.finished && dragEnableForPlayerOne(game),
                     'drop-disable': dragStarted && !game.finished && !dragEnableForPlayerOne(game),
                     'card-won': (game.playerOneScore == 1 && game.finished),
@@ -72,10 +72,10 @@
       VS
     </div>
     <md-card
-      draggable="true"
       (click)="confirmSwapPlayerWithPlayerTwo($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)"
       class="game-card"
-      [ngClass]="{  'move-able:': !game.finished,
+      [ngClass]="{  'start-drag': dragRequestTournamentPlayerId == game.playerTwoTournamentPlayerId,
+                    'move-able:': !game.finished,
                     'drop-enable': dragStarted && !game.finished && dragEnableForPlayerTwo(game),
                     'drop-disable': dragStarted && !game.finished && !dragEnableForPlayerTwo(game),
                     'card-won': (game.playerTwoScore == 1 && game.finished),

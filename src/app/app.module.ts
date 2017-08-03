@@ -68,7 +68,7 @@ import {TournamentGameReducer} from './store/reducers/tournamentGameReducer';
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule,
   MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdListModule, MdTooltip,
-  MdTooltipModule,
+  MdTooltipModule, MdSort, MdSortModule, MdTableModule, MdPaginatorModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
@@ -139,6 +139,8 @@ import {
 } from './dialogs/tournament-preparation/player-registration-info-dialog';
 import {ShowSingleArmyListDialogComponent} from './dialogs/mini-dialog/show-single-army-list-dialog';
 import {ShowSoloRankingsComponent} from "app/dialogs/mini-dialog/show-solo-rankings-dialog";
+import {CdkTableModule} from "@angular/cdk";
+import {Ng2PageScrollModule} from "ng2-page-scroll";
 
 
 const reducers = {
@@ -217,16 +219,19 @@ export const firebaseConfDev = {
     MomentModule,
     AppRoutingModule,
     CustomFormsModule,
+    CdkTableModule,
     BrowserAnimationsModule,
     MdlModule,
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
-    MdListModule, MdDialogModule, MdTooltipModule,
+    MdListModule, MdDialogModule, MdTooltipModule, MdSortModule, MdTableModule,
+    MdPaginatorModule,
     DateTimePickerModule,
     MdlExpansionPanelModule,
     MdlSelectModule,
     AngularFireOfflineModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    Ng2PageScrollModule
   ],
   declarations: [
     AppComponent,
@@ -244,7 +249,6 @@ export const firebaseConfDev = {
     RegisterPageComponent,
     PasswordForgetComponent,
     TournamentRegistrationListComponent,
-
     TournamentPlayerListComponent,
     AddArmyListsDialogComponent,
     NewTournamentPlayerDialogComponent,
