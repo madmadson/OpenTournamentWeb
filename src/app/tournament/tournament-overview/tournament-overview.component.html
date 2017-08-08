@@ -1,6 +1,7 @@
 <h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
 <h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
-<h4 *ngIf="!fullscreenMode && detmerineIsTournamentPlayer()" class="sub-heading">Hello Player</h4>
+<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="!fullscreenMode && determineIsTournamentPlayer()" class="sub-heading">Hello Player</h4>
 <ng-container *ngIf="!actualTournament">
   <div class="heading">Load Tournament...
     <mdl-spinner class="loading-spinner" single-color active></mdl-spinner>
@@ -12,6 +13,7 @@
     <mdl-tab-panel mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">
         <tournament-preparation
           [isAdmin]="isAdmin"
+          [isCoOrganizer]="isCoOrganizer"
           [authenticationStoreState$]="authenticationStoreState$"
           [actualTournament]="actualTournament"
           [actualTournamentArmyList$]="actualTournamentArmyList$"
@@ -39,6 +41,8 @@
           (onEraseTeamRegistration)="handleEraseTeamRegistration($event)"
           (onPlayerRegChangeEventSubscribe)="handlePlayerRegChange($event)"
           (onTeamChangeEventSubscribe)="handleTeamChange($event)"
+          (onAddCoOrganizator)="handleAddCoOrganizator($event)"
+          (onDeleteCoOrganizator)="handleDeleteCoOrganizator($event)"
         ></tournament-preparation>
 
     </mdl-tab-panel>
@@ -48,6 +52,7 @@
                    [disabled]="fullscreenMode || swapPlayerMode">
       <tournament-round-overview *ngIf="actualTournament.teamSize === 0"
                                  [isAdmin]="isAdmin"
+                                 [isCoOrganizer]="isCoOrganizer"
                                  [isTournamentPlayer]="isTournamentPlayer"
                                  [round]="round"
                                  [actualTournament]="actualTournament"
@@ -69,6 +74,7 @@
       ></tournament-round-overview>
       <tournament-team-round-overview *ngIf="actualTournament.teamSize > 0"
                                       [isAdmin]="isAdmin"
+                                      [isCoOrganizer]="isCoOrganizer"
                                       [isTournamentPlayer]="isTournamentPlayer"
                                       [round]="round"
                                       [actualTournamentTeams$]="actualTournamentTeams$"
@@ -98,6 +104,7 @@
                    *ngIf="actualTournament?.finished" mdl-tab-panel-title="Final">
         <tournament-final-rankings *ngIf="actualTournament.teamSize === 0"
                                    [isAdmin]="isAdmin"
+                                   [isCoOrganizer]="isCoOrganizer"
                                    [actualTournament]="actualTournament"
                                    [authenticationStoreState$]="authenticationStoreState$"
                                    [actualTournamentArmyList$]="actualTournamentArmyList$"
@@ -107,6 +114,7 @@
         </tournament-final-rankings>
         <tournament-team-final-rankings *ngIf="actualTournament.teamSize > 0"
                                         [isAdmin]="isAdmin"
+                                        [isCoOrganizer]="isCoOrganizer"
                                         [actualTournament]="actualTournament"
                                         [authenticationStoreState$]="authenticationStoreState$"
                                         [actualTournamentArmyList$]="actualTournamentArmyList$"

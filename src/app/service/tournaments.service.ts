@@ -12,6 +12,9 @@ import {
 import {Tournament} from '../../../shared/model/tournament';
 import {MdSnackBar} from '@angular/material';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
+
+import * as _ from 'lodash';
 
 @Injectable()
 export class TournamentsService  {
@@ -77,6 +80,43 @@ export class TournamentsService  {
     tournamentRef.set(tournament);
 
     this.snackBar.open('Tournament edited successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  addCoOrganizer(coOrganizer: CoOrganizatorPush) {
+
+    const tournamentRef = this.afoDatabase.object('tournaments/' + coOrganizer.tournament.id);
+
+    if (coOrganizer.tournament.coOrganizators) {
+      coOrganizer.tournament.coOrganizators.push(coOrganizer.coOrganizatorEmail);
+    } else {
+      coOrganizer.tournament.coOrganizators = [coOrganizer.coOrganizatorEmail];
+    }
+
+    tournamentRef.set(coOrganizer.tournament);
+
+    this.snackBar.open('Co-Organizer added successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+
+  }
+
+  deleteCoOrganizer(coOrganizer: CoOrganizatorPush) {
+
+    const tournamentRef = this.afoDatabase.object('tournaments/' + coOrganizer.tournament.id);
+
+    if (coOrganizer.tournament.coOrganizators) {
+      const indexOfSearchedEmail = _.findIndex(coOrganizer.tournament.coOrganizators, function (email) {
+        return email === coOrganizer.coOrganizatorEmail;
+      });
+      coOrganizer.tournament.coOrganizators.splice(indexOfSearchedEmail, 1);
+    }
+
+    tournamentRef.set(coOrganizer.tournament);
+    this.snackBar.open('Co-Organizer deleted successfully', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });

@@ -68,7 +68,7 @@ import {TournamentGameReducer} from './store/reducers/tournamentGameReducer';
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule,
   MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdListModule, MdTooltip,
-  MdTooltipModule, MdSort, MdSortModule, MdTableModule, MdPaginatorModule,
+  MdTooltipModule, MdSort, MdSortModule, MdTableModule, MdPaginatorModule, MdSlideToggleModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
@@ -141,6 +141,7 @@ import {ShowSingleArmyListDialogComponent} from './dialogs/mini-dialog/show-sing
 import {ShowSoloRankingsComponent} from "app/dialogs/mini-dialog/show-solo-rankings-dialog";
 import {CdkTableModule} from "@angular/cdk";
 import {Ng2PageScrollModule} from "ng2-page-scroll";
+import {AddCoOrganizatorDialogComponent} from "./dialogs/add-co-organizator-dialog";
 
 
 const reducers = {
@@ -206,6 +207,7 @@ export function storeReducer(state: any, action: any) {
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule, MdTooltipModule, MdSortModule, MdTableModule,
+    MdSlideToggleModule,
     MdPaginatorModule,
     DateTimePickerModule,
     MdlExpansionPanelModule,
@@ -272,7 +274,8 @@ export function storeReducer(state: any, action: any) {
     AddPlayerRegistrationDialogComponent,
     PlayerRegistrationInfoDialogComponent,
     ShowSingleArmyListDialogComponent,
-    ShowSoloRankingsComponent
+    ShowSoloRankingsComponent,
+    AddCoOrganizatorDialogComponent
   ],
   providers: [
     LoginService,
@@ -312,7 +315,8 @@ export function storeReducer(state: any, action: any) {
     AddPlayerRegistrationDialogComponent,
     PlayerRegistrationInfoDialogComponent,
     ShowSingleArmyListDialogComponent,
-    ShowSoloRankingsComponent
+    ShowSoloRankingsComponent,
+    AddCoOrganizatorDialogComponent
   ],
   bootstrap: [AppComponent]
 })

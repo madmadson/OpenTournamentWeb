@@ -29,7 +29,6 @@ export class TournamentTeamListComponent implements OnInit {
   @Input() actualTournament: Tournament;
   @Input() userPlayerData: Player;
   @Input() allActualTournamentPlayers: TournamentPlayer[];
-  @Input() isAdmin: boolean;
 
   @Output() onEraseTournamentTeam = new EventEmitter<TournamentTeamEraseModel>();
   @Output() onAddTournamentPlayer = new EventEmitter<TournamentPlayer>();

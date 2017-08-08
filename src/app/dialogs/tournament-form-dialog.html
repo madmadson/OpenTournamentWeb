@@ -67,6 +67,17 @@
       </md-checkbox>
     </div>
 
+    <div class="full-width" *ngIf="tournament.name !== ''">
+      Found {{tournament.coOrganizators ? tournament.coOrganizators.length : '0'}} Co-Organizators.
+      <button type="button"
+              class="color-positive-background"
+              md-raised-button
+              (click)="openCoOrganizatorDialog()">
+        <md-icon>group</md-icon>
+        Manage Co-Organizators
+      </button>
+    </div>
+
     <div class="full-width">
       <md-checkbox
         formControlName="teamTournament"

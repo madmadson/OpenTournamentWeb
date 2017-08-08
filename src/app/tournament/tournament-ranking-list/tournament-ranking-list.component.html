@@ -12,7 +12,7 @@
         class="small-three-space-table-cell">SOS</th>
     <th class="small-three-space-table-cell">CP</th>
     <th class="small-three-space-table-cell">VP</th>
-    <th *ngIf="isAdmin && !actualTournament.finished &&
+    <th *ngIf="(isAdmin || isCoOrganizer)  && !actualTournament.finished &&
                 actualTournament.actualRound === round &&
                 actualTournament.teamSize === 0"
         class="small-three-space-table-cell">Drop</th>
@@ -41,7 +41,7 @@
         class="small-three-space-table-cell">{{rank.sos}}</td>
     <td class="small-three-space-table-cell">{{rank.controlPoints}}</td>
     <td class="small-three-space-table-cell">{{rank.victoryPoints}}</td>
-    <td *ngIf="isAdmin && deleteRequest !== rank.id &&
+    <td *ngIf="(isAdmin || isCoOrganizer)  && deleteRequest !== rank.id &&
                !actualTournament.finished &&
                actualTournament.actualRound === round &&
                actualTournament.teamSize === 0"
@@ -57,7 +57,7 @@
                (click)="undoDropPlayer($event, rank)">
         undo</md-icon>
     </td>
-    <td *ngIf="isAdmin && deleteRequest === rank.id" class="small-three-space-table-cell">
+    <td *ngIf="(isAdmin || isCoOrganizer)  && deleteRequest === rank.id" class="small-three-space-table-cell">
 
       <button (click)="dropConfirm($event, rank)"
               class="drop-confirm-button color-negative-background"

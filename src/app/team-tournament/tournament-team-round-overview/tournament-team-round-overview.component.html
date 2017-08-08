@@ -1,4 +1,4 @@
-<div *ngIf="(isAdmin)  &&
+<div *ngIf="(isAdmin || isCoOrganizer)  &&
             (round === actualTournament.actualRound) &&
              !actualTournament.finished && !rankingsFullscreenMode && !gamesFullscreenMode && !swapPlayerMode"
      class="action-card-container">
@@ -91,6 +91,7 @@
     <tournament-team-game-list *ngIf="!gamesTableMode"
                                [round]="round"
                                [isAdmin]="isAdmin"
+                               [isCoOrganizer]="isCoOrganizer"
                                [actualTournament]="actualTournament"
                                [actualTournamentTeams$]="actualTournamentTeams$"
                                [authenticationStoreState$]="authenticationStoreState$"
@@ -125,6 +126,7 @@
     </mdl-icon>
     <tournament-team-ranking-list
       [isAdmin]="isAdmin"
+      [isCoOrganizer]="isCoOrganizer"
       [round]="round"
       [actualTournament]="actualTournament"
       [actualTournamentArmyList$]="armyLists$"

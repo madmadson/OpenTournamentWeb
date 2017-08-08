@@ -11,7 +11,7 @@
     <th class="small-three-space-table-cell">SGW</th>
     <th class="small-three-space-table-cell">CP</th>
     <th class="small-three-space-table-cell">VP</th>
-    <th *ngIf="isAdmin && !actualTournament.finished && actualTournament.actualRound === round" class="small-three-space-table-cell">Drop</th>
+    <th *ngIf="(isAdmin || isCoOrganizer)  && !actualTournament.finished && actualTournament.actualRound === round" class="small-three-space-table-cell">Drop</th>
   </tr>
   </thead>
   <tbody *ngFor="let rank of orderedTeamRankings; let i = index; let even = even"
@@ -46,7 +46,7 @@
                (click)="undoDropPlayer($event, rank)">
         undo</md-icon>
     </td>
-    <td *ngIf="isAdmin && deleteRequest === rank.id" class="small-three-space-table-cell">
+    <td *ngIf="(isAdmin || isCoOrganizer)  && deleteRequest === rank.id" class="small-three-space-table-cell">
 
       <button (click)="dropConfirm($event, rank)"
               class="drop-confirm-button color-negative-background"

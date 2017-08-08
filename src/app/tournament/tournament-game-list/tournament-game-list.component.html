@@ -1,9 +1,9 @@
-<md-input-container *ngIf="!isAdmin"
+<md-input-container *ngIf="!isAdmin && !isCoOrganizer"
                     class="full-width">
-  <input mdInput type="text" disabled placeholder="Scenario" value="{{selectedScenario}}">
+  <input mdInput disabled placeholder="Scenario" value="{{selectedScenario}}">
 </md-input-container>
 <md-select
-  *ngIf="isAdmin && !teamMatch"
+  *ngIf="(isAdmin || isCoOrganizer) && !teamMatch"
   class="full-width-select-box"
   placeholder="Scenario"
   #scenario
@@ -16,7 +16,7 @@
 <div *ngFor="let game of gamesForRound; let i = index; let even = even"
      [ngClass]="{'even': even,
                  'my-item':isItMyGame(game),
-                 'clickable-tournament-game': ((isItMyGame(game) || isAdmin) && !dragStarted && !actualTournament.finished)
+                 'clickable-tournament-game': ((isItMyGame(game) || isAdmin || isCoOrganizer) && !dragStarted && !actualTournament.finished)
                  }"
      (click)="openGameResultDialog(game)">
   <div class="table-info">Table {{game.playingField}}</div>
@@ -60,7 +60,7 @@
         No!
       </button>
       <div *ngIf="game.playerOneArmyList" class="game-card-line">Played List: {{game.playerOneArmyList}}</div>
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && (isAdmin || isItMyTeamGame(game))"
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && (isAdmin || isCoOrganizer || isItMyTeamGame(game))"
                 (click)="clickSwapPlayerPlayerOne($event, game)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>
@@ -88,7 +88,7 @@
         VP: {{game.playerTwoVictoryPoints}}
       </div>
       <div *ngIf="game.playerTwoArmyList " class="game-card-line">Played List: {{game.playerTwoArmyList}}</div>
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && (isAdmin || isItMyTeamGame(game))"
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && (isAdmin || isCoOrganizer ||  isItMyTeamGame(game))"
                 (click)="clickSwapPlayerPlayerTwo($event, game)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
       </mdl-icon>

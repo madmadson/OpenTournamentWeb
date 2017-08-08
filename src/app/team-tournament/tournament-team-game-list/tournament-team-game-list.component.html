@@ -1,10 +1,10 @@
-<md-input-container *ngIf="!isAdmin"
+<md-input-container *ngIf="!isAdmin && ! isCoOrganizer"
                     class="full-width">
-  <input mdInput type="text" disabled placeholder="Scenario" value="{{selectedScenario}}">
+  <input mdInput  disabled placeholder="Scenario" value="{{selectedScenario}}">
 </md-input-container>
 
 <md-select
-  *ngIf="isAdmin"
+  *ngIf="isAdmin || isCoOrganizer"
   class="full-width-select-box"
   placeholder="Scenario"
   #scenario
@@ -42,13 +42,13 @@
         CP: {{game.playerOneControlPoints}}
         VP: {{game.playerOneVictoryPoints}}
       </div>
-      <mdl-icon *ngIf="!swapPlayerMode && isAdmin && !requestClearGame && actualTournament.actualRound === round"
+      <mdl-icon *ngIf="!swapPlayerMode && (isAdmin || isCoOrganizer) && !requestClearGame && actualTournament.actualRound === round"
                 (click)="requestClearGameResult($event, game)"
                 mdTooltip="Reset GameResult"
                 class="clear-game-icon">clear
       </mdl-icon>
 
-      <button *ngIf="!swapPlayerMode && isAdmin && requestClearGame === game.id"
+      <button *ngIf="!swapPlayerMode && (isAdmin || isCoOrganizer) && requestClearGame === game.id"
               (click)="clearGameResultConfirm($event, game)"
               class="color-positive-background"
               type="button"
@@ -57,7 +57,7 @@
         Reset Result!
       </button>
 
-      <button *ngIf="!swapPlayerMode && isAdmin && requestClearGame === game.id"
+      <button *ngIf="!swapPlayerMode && (isAdmin || isCoOrganizer) && requestClearGame === game.id"
               (click)="clearGameResultDecline($event)"
               class="color-negative-background"
               type="button"
@@ -66,7 +66,7 @@
         No!
       </button>
 
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && isAdmin &&
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && (isAdmin || isCoOrganizer) &&
                         game.playerTwoIntermediateResult === 0 && game.playerOneIntermediateResult === 0"
                 (click)="clickSwapTeam($event,game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz
@@ -99,7 +99,7 @@
         CP: {{game.playerTwoControlPoints}}
         VP: {{game.playerTwoVictoryPoints}}
       </div>
-      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && isAdmin &&
+      <mdl-icon *ngIf="!swapPlayerMode && !game.finished && (isAdmin || isCoOrganizer) &&
                         game.playerTwoIntermediateResult == 0 && game.playerOneIntermediateResult == 0"
                 (click)="clickSwapTeam($event,game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)" mdTooltip="Swap Player Mode"
                 class="swap-player-mode">swap_horiz

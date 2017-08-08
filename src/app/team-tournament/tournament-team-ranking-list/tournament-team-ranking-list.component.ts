@@ -20,6 +20,7 @@ import {DropPlayerPush} from "../../../../shared/dto/drop-player-push";
 export class TournamentTeamRankingListComponent implements OnInit {
 
   @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
   @Input() actualTournament: Tournament;
   @Input() round: number;
 

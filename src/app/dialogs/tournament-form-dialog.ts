@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 
-import {MD_DIALOG_DATA, MdDialogRef, MdSnackBar} from '@angular/material';
+import {MD_DIALOG_DATA, MdDialogRef, MdSnackBar, MdDialog} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
 
 import * as moment from 'moment';
@@ -10,6 +10,8 @@ import {StartTournamentDialogComponent} from '../tournament/tournament-preparati
 import {Tournament} from '../../../shared/model/tournament';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {Registration} from '../../../shared/model/registration';
+import {AddCoOrganizatorDialogComponent} from './add-co-organizator-dialog';
+import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
 
 
 @Component({
@@ -20,6 +22,9 @@ import {Registration} from '../../../shared/model/registration';
 export class TournamentFormDialogComponent implements OnInit {
 
   @Output() onSaveTournament = new EventEmitter<Tournament>();
+
+  @Output() onAddCoOrganizator = new EventEmitter<CoOrganizatorPush>();
+  @Output() onDeleteCoOrganizator = new EventEmitter<CoOrganizatorPush>();
 
   tournament: Tournament;
   allActualTournamentPlayers: TournamentPlayer[];
@@ -56,7 +61,8 @@ export class TournamentFormDialogComponent implements OnInit {
 
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
-              protected snackBar: MdSnackBar) {
+              protected snackBar: MdSnackBar,
+              public dialog: MdDialog) {
 
     this.tournament = data.tournament;
     this.allActualTournamentPlayers = data.allActualTournamentPlayers;
@@ -235,11 +241,41 @@ export class TournamentFormDialogComponent implements OnInit {
       uploaded: false,
       payLink: formModel.payLink ? formModel.payLink as string : '',
       description:  formModel.description ? formModel.description as string : '',
+      coOrganizators: this.tournament.coOrganizators ? this.tournament.coOrganizators : []
     };
   }
 
   saveTournament() {
     const tournament = this.prepareSaveTournament();
     this.onSaveTournament.emit(tournament);
+  }
+
+  openCoOrganizatorDialog() {
+    const dialogRef = this.dialog.open(AddCoOrganizatorDialogComponent, {
+      data: {
+        tournament: this.tournament,
+        emails: this.tournament.coOrganizators
+      },
+      width: '800px'
+    });
+
+    const saveCoOperatorSubscribe = dialogRef.componentInstance.onAddCoOrganizator
+      .subscribe(coOrganizatorPush => {
+        if (coOrganizatorPush) {
+          this.onAddCoOrganizator.emit(coOrganizatorPush);
+        }
+      });
+
+    const deleteCoOperatorSubscribe = dialogRef.componentInstance.onDeleteCoOrganizator
+      .subscribe(coOrganizatorPush => {
+        if (coOrganizatorPush) {
+          this.onDeleteCoOrganizator.emit(coOrganizatorPush);
+        }
+      });
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveCoOperatorSubscribe.unsubscribe();
+      deleteCoOperatorSubscribe.unsubscribe();
+    });
   }
 }

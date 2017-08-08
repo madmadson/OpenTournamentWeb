@@ -8,15 +8,19 @@
     </mdl-card-title>
     <mdl-card-supporting-text>
       <div class="full-width" *ngIf="!teamMatch">
+        NO
         <mdl-switch [(ngModel)]="teamRestriction" mdl-ripple>
+          <span class="small-text margin-right">{{teamRestriction ? '(YES)' : '(NO)'}}</span>
           <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
             info
           </md-icon>
           Team Restriction*
         </mdl-switch>
+        YES
       </div>
       <div class="full-width">
         <mdl-switch [(ngModel)]="metaRestriction" mdl-ripple>
+          <span class="small-text margin-right">{{metaRestriction ? '(YES)' : '(NO)'}}</span>
           <md-icon class="align-fix" mdTooltip="Player in same Locality don't play against each other">
             info
           </md-icon>
@@ -25,6 +29,7 @@
       </div>
       <div class="full-width">
         <mdl-switch [(ngModel)]="countryRestriction" mdl-ripple>
+          <span class="small-text margin-right">{{countryRestriction ? '(YES)' : '(NO)'}}</span>
           <md-icon class="align-fix" mdTooltip="Player in same Country don't play against each other">
             info
           </md-icon>

@@ -1,11 +1,11 @@
-<h3 class="heading" *ngIf="(currentUserId != actualTournament?.creatorUid) &&
+<h3 class="heading" *ngIf="(!isAdmin && !isCoOrganizer) &&
             (actualTournament.actualRound > actualTournament.visibleRound) &&
             (round === actualTournament.actualRound)">
   Tournament Organizer is pairing.
   Page will reload when he publish the new round.
 </h3>
 
-<div *ngIf="(currentUserId === actualTournament?.creatorUid)  &&
+<div *ngIf="(isAdmin || isCoOrganizer)  &&
             (round === actualTournament.actualRound) &&
              !actualTournament.finished && !rankingsFullscreenMode && !gamesFullscreenMode && !swapPlayerMode"
      class="action-card-container">
@@ -56,9 +56,8 @@
     </div>
   </md-card>
 </div>
-<div class="content-cards-container" *ngIf="(currentUserId == actualTournament?.creatorUid) ||
-            ((currentUserId != actualTournament?.creatorUid) &&
-            (round <= actualTournament.visibleRound))">
+<div class="content-cards-container" *ngIf="(isAdmin) ||
+            (!isAdmin && !isCoOrganizer && (round <= actualTournament.visibleRound))">
   <md-card *ngIf="!rankingsFullscreenMode" class="games-for-round-card">
     <h3 class="heading">Games Round {{round}}</h3>
     <mdl-icon (click)="printGames()" mdTooltip="Print Games" class="print-games-icon">print</mdl-icon>
@@ -100,6 +99,7 @@
     <tournament-game-list *ngIf="!gamesTableMode"
                           [round]="round"
                           [isAdmin]="isAdmin"
+                          [isCoOrganizer]="isCoOrganizer"
                           [teamMatch]="false"
                           [actualTournament]="actualTournament"
                           [authenticationStoreState$]="authenticationStoreState$"
@@ -128,6 +128,7 @@
     </mdl-icon>
     <tournament-ranking-list
       [isAdmin]="isAdmin"
+      [isCoOrganizer]="isCoOrganizer"
       [round]="round"
       [actualTournament]="actualTournament"
       [actualTournamentArmyList$]="armyLists$"

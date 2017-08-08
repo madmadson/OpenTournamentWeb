@@ -32,6 +32,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   @Input() round: number;
   @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
   @Input() actualTournament: Tournament;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
@@ -520,13 +521,14 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   openGameResultDialog(selectedGame: TournamentGame) {
 
-    if ((this.isItMyGame(selectedGame) || this.isAdmin) && !this.actualTournament.finished) {
+    if ((this.isItMyGame(selectedGame) || this.isAdmin || this.isCoOrganizer) && !this.actualTournament.finished) {
 
       const dialogRef = this.dialog.open(GameResultDialogComponent, {
         data: {
           selectedGame: selectedGame,
           armyLists$: this.armyLists$,
-          admin: this.isAdmin
+          isAdmin: this.isAdmin,
+          isCoOrganizer: this.isCoOrganizer
         },
       });
       const eventSubscribe = dialogRef.componentInstance.onGameResult
@@ -594,7 +596,8 @@ export class GameResultDialogComponent {
   sureButton: boolean;
   isConnected: Observable<boolean>;
 
-  admin: boolean;
+  isAdmin: boolean;
+  isCoOrganizer: boolean;
 
   constructor(public dialogRef: MdDialogRef<GameResultDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
@@ -606,7 +609,8 @@ export class GameResultDialogComponent {
     this.gameConfig = getWarmachineConfig();
 
     this.givenGame = data.selectedGame;
-    this.admin = data.admin;
+    this.isAdmin = data.isAdmin;
+    this.isCoOrganizer = data.isCoOrganizer;
 
     this.gameModel = TournamentGame.fromJson(this.givenGame);
 

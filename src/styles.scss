@@ -8,6 +8,7 @@ $hover_color: #1e05ff;
 $color_dark_primary: #512DA8;
 $color_secondary: #FFC107;
 
+$double_tick: 24px;
 $main_tick: 12px;
 $halve_tick: 6px;
 $quarter_tick: 3px;
@@ -40,7 +41,10 @@ a:hover {
   color: blue;
 }
 
-
+.clickable-icon:hover {
+  cursor: pointer;
+  color: deepskyblue;
+}
 
 .dark-primary-color    {
   background: #512DA8;
@@ -198,6 +202,16 @@ md-card {
   width: 100%;
   padding-top: 6px;
   padding-bottom: 6px;
+}
+
+.margin-right{
+  margin-right: $double_tick;
+}
+
+.restriction-section{
+  display: flex;
+  align-content: center;
+  align-items: center;
 }
 
 .big-text {

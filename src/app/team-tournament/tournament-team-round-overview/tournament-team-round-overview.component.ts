@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {Tournament} from '../../../../shared/model/tournament';
 import {Observable} from 'rxjs/Observable';
@@ -25,7 +25,7 @@ import {NewRoundDialogComponent} from '../../dialogs/round-overview/new-round-di
 import {FinishTournamentDialogComponent} from 'app/dialogs/finish-tournament-dialog';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
 import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
-import {ShowSoloRankingsComponent} from "../../dialogs/mini-dialog/show-solo-rankings-dialog";
+import {ShowSoloRankingsComponent} from '../../dialogs/mini-dialog/show-solo-rankings-dialog';
 
 @Component({
   selector: 'tournament-team-round-overview',
@@ -38,6 +38,8 @@ export class TournamentTeamRoundOverviewComponent implements OnInit, OnDestroy {
 
   @Input() round: number;
   @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
+
   @Input() actualTournament: Tournament;
   @Input() isTournamentPlayer: boolean;
 

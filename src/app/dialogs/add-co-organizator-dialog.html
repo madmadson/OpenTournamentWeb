@@ -1,0 +1,39 @@
+<div class="heading">List of Co-Organizators</div>
+<md-dialog-content>
+  <div class="full-width">
+    <md-input-container style="width: 60%">
+      <input mdInput
+             placeholder="add co-organizer email"
+             [formControl]="coOrganizatorEmailFormControl"
+             #newEmail>
+      <md-error *ngIf="coOrganizatorEmailFormControl.hasError('pattern')">
+        Please enter a valid email address
+      </md-error>
+    </md-input-container>
+    <button *ngIf="coOrganizatorEmailFormControl.dirty &&
+                   !coOrganizatorEmailFormControl.pristine &&
+                   !coOrganizatorEmailFormControl.hasError('pattern')"
+            type="button"
+            color="accent"
+            md-raised-button
+            (click)="addCoOrganizator()">
+      <md-icon>add</md-icon>
+      Add co-organizer email
+    </button>
+  </div>
+  <div class="full-width" *ngIf="!emails">
+    No Co-Organizator found yet.
+  </div>
+  <md-list dense>
+
+    <md-list-item *ngFor="let email of emails">
+      <md-icon md-list-icon class="color-negative clickable-icon"
+               (click)="deleteCoOrganizator(email)">delete</md-icon>
+      <h3 md-line> {{email}} </h3>
+    </md-list-item>
+
+  </md-list>
+</md-dialog-content>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

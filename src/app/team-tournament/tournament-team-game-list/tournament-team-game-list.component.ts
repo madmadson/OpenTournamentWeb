@@ -31,6 +31,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 
   @Input() round: number;
   @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
   @Input() actualTournament: Tournament;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
@@ -436,6 +437,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
       const dialogRef = this.dialog.open(TeamMatchDialogComponent, {
         data: {
           isAdmin: this.isAdmin,
+          isCoOrganizer: this.isCoOrganizer,
           round: this.round,
           selectedGame: selectedGame,
           actualTournament: this.actualTournament,
@@ -503,6 +505,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
 export class TeamMatchDialogComponent {
 
   isAdmin: boolean;
+  isCoOrganizer: boolean;
   round: number;
 
   selectedGame: TournamentGame;
@@ -523,6 +526,7 @@ export class TeamMatchDialogComponent {
 
     this.selectedGame = data.selectedGame;
     this.isAdmin = data.isAdmin;
+    this.isCoOrganizer = data.isCoOrganizer;
     this.round = data.round;
 
     this.actualTournament = data.actualTournament;

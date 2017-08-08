@@ -1,10 +1,10 @@
 import {Component, Inject} from '@angular/core';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
-import {TournamentRanking} from "../../../../shared/model/tournament-ranking";
-import {Observable} from "rxjs/Observable";
-import {Tournament} from "../../../../shared/model/tournament";
-import {Player} from "../../../../shared/model/player";
+import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
+import {Observable} from 'rxjs/Observable';
+import {Tournament} from '../../../../shared/model/tournament';
+import {Player} from '../../../../shared/model/player';
 
 
 @Component({

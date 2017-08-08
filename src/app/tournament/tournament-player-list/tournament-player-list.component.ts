@@ -18,7 +18,6 @@ export class TournamentPlayerListComponent implements OnInit {
   @Input() actualTournament: Tournament;
   @Input() tournamentPlayers: TournamentPlayer[];
   @Input() userPlayerData: Player;
-  @Input() isAdmin: boolean;
 
   @Output() onDeleteTournamentPlayer = new EventEmitter<TournamentPlayer>();
   @Output() onAddArmyLists = new EventEmitter<TournamentPlayer>();

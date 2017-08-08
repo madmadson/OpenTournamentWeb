@@ -32,6 +32,7 @@ import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registra
 import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
+import {CoOrganizatorPush} from "../../../../shared/dto/co-organizator-push";
 
 @Component({
   selector: 'tournament-preparation',
@@ -42,6 +43,7 @@ export class TournamentPreparationComponent implements OnInit {
 
   @Input() actualTournament: Tournament;
   @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() actualTournamentRegisteredPlayers$: Observable<Registration[]>;
@@ -71,6 +73,9 @@ export class TournamentPreparationComponent implements OnInit {
   @Output() onEraseTournamentTeam = new EventEmitter<TournamentTeamEraseModel>();
   @Output() onPlayerRegChangeEventSubscribe = new EventEmitter<PlayerRegistrationChange>();
   @Output() onTeamChangeEventSubscribe = new EventEmitter<TeamRegistrationChange>();
+
+  @Output() onAddCoOrganizator = new EventEmitter<CoOrganizatorPush>();
+  @Output() onDeleteCoOrganizator = new EventEmitter<CoOrganizatorPush>();
 
   allRegistrations: Registration[];
   userPlayerData: Player;
@@ -249,9 +254,25 @@ export class TournamentPreparationComponent implements OnInit {
       }
       dialogRef.close();
     });
+    const saveCoOperatorSubscribe = dialogRef.componentInstance.onAddCoOrganizator
+      .subscribe(coOrganizatorPush => {
+        if (coOrganizatorPush) {
+          this.onAddCoOrganizator.emit(coOrganizatorPush);
+        }
+      });
+
+    const deleteCoOperatorSubscribe = dialogRef.componentInstance.onDeleteCoOrganizator
+      .subscribe(coOrganizatorPush => {
+        if (coOrganizatorPush) {
+          this.onDeleteCoOrganizator.emit(coOrganizatorPush);
+        }
+      });
+
     dialogRef.afterClosed().subscribe(() => {
 
       saveEventSubscribe.unsubscribe();
+      saveCoOperatorSubscribe.unsubscribe();
+      deleteCoOperatorSubscribe.unsubscribe();
     });
   }
 

@@ -33,6 +33,9 @@ export class TournamentTeamRegistrationListComponent {
   @Input() userPlayerData: Player;
   @Input() myTeam: TournamentTeam;
 
+  @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
+
   @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
   @Output() onKickPlayer = new EventEmitter<Registration>();
   @Output() onAcceptTeamRegistration = new EventEmitter<TeamRegistrationPush>();
@@ -58,12 +61,6 @@ export class TournamentTeamRegistrationListComponent {
     }
   }
 
-  isAdmin(): boolean {
-    if (this.actualTournament && this.userPlayerData) {
-      return this.actualTournament.creatorUid === this.userPlayerData.userUid;
-    }
-    return false;
-  }
 
   joinTeam(event: any, team: TournamentTeam) {
 
@@ -142,8 +139,6 @@ export class TournamentTeamRegistrationListComponent {
 
   showTeamDialog(team: TournamentTeam) {
 
-    const isAdmin = this.isAdmin();
-
     const dialogRef = this.dialog.open(ShowTeamRegistrationDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
@@ -151,7 +146,7 @@ export class TournamentTeamRegistrationListComponent {
         team: team,
         allRegistrations: this.allRegistrations,
         myTeam: this.myTeam,
-        isAdmin: isAdmin
+        isAdmin: this.isAdmin
       }
     });
 

@@ -21,6 +21,7 @@ export class TournamentRegistrationListComponent implements OnInit {
   @Input() registrations: Registration[];
   @Input() userPlayerData: Player;
   @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
 
   @Output() onAcceptRegistration = new EventEmitter<Registration>();

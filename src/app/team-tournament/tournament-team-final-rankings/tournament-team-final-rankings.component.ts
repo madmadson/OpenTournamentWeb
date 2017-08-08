@@ -20,6 +20,7 @@ export class TournamentTeamFinalRankingsComponent implements OnInit {
 
   @Input() actualTournament: Tournament;
   @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
 
   @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;

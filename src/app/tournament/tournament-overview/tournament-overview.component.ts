@@ -31,6 +31,7 @@ import {AuthenticationStoreState} from 'app/store/authentication-state';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
 import {
+  CoOrganizatorAddAction, CoOrganizatorDeleteAction,
   TournamentSetAction
 } from '../../store/actions/tournaments-actions';
 import {SwapGames} from '../../../../shared/dto/swap-player';
@@ -58,6 +59,7 @@ import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
 import {ClearTeamGameResultAction} from '../../store/actions/tournament-team-games-actions';
 import {ClearPlayerGameResultAction} from 'app/store/actions/tournament-games-actions';
 import {Player} from '../../../../shared/model/player';
+import {CoOrganizatorPush} from "../../../../shared/dto/co-organizator-push";
 
 @Component({
   selector: 'tournament-overview',
@@ -94,6 +96,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   onlyHamburgerMenu: boolean;
 
   isAdmin: boolean;
+  isCoOrganizer: boolean;
   isTournamentPlayer: boolean;
   allActualTournamentPlayers: TournamentPlayer[];
 
@@ -165,6 +168,8 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
           this.userPlayerData = state.authenticationStoreState.userPlayerData;
 
           this.isAdmin = this.checkIfAdmin();
+
+          this.isCoOrganizer = this.checkIfCoOrganizer();
         }
       });
 
@@ -190,6 +195,22 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   checkIfAdmin(): boolean {
     if (this.actualTournament && this.currentUserId) {
       return (this.currentUserId === this.actualTournament.creatorUid);
+    } else {
+      return false;
+    }
+  }
+
+  checkIfCoOrganizer(): boolean {
+
+    const that = this;
+
+    if (this.actualTournament && this.userPlayerData) {
+      const isCoOrganizer =  _.findIndex(this.actualTournament.coOrganizators, function (coOrganizerEmail: string) {
+
+        return that.userPlayerData.userEmail === coOrganizerEmail;
+        }
+      );
+      return !!isCoOrganizer;
     } else {
       return false;
     }
@@ -262,6 +283,14 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleEditTournament(tournament: Tournament) {
     this.store.dispatch(new TournamentSetAction(tournament));
+  }
+
+  handleAddCoOrganizator(coOrganizer: CoOrganizatorPush) {
+    this.store.dispatch(new CoOrganizatorAddAction(coOrganizer));
+  }
+
+  handleDeleteCoOrganizator(coOrganizer: CoOrganizatorPush) {
+    this.store.dispatch(new CoOrganizatorDeleteAction(coOrganizer));
   }
 
   handleClearPlayerGameResult(game: TournamentGame) {
@@ -435,7 +464,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TournamentTeamEraseAction(eraseModel));
   }
 
-  detmerineIsTournamentPlayer(): boolean {
+  determineIsTournamentPlayer(): boolean {
     const that = this;
 
     const foundPlayer = _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
@@ -450,4 +479,6 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+
+
 }

@@ -28,10 +28,10 @@
     </button>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content
-    *ngIf="isAdmin && teamDeleteRequested != team.teamName">
+    *ngIf="teamDeleteRequested != team.teamName">
     <md-icon class="list-action" (click)="showArmyList($event, team)">list</md-icon>
   </mdl-list-item-secondary-content>
-  <mdl-list-item-secondary-content *ngIf="isAdmin && teamDeleteRequested != team.teamName && actualTournament?.actualRound === 0">
+  <mdl-list-item-secondary-content *ngIf="teamDeleteRequested != team.teamName && actualTournament?.actualRound === 0">
     <md-icon md-tooltip="Delete Team" class="color-negative  list-action" (click)="teamDeleteRequestedClicked($event, team)">delete</md-icon>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="teamDeleteRequested === team.teamName">

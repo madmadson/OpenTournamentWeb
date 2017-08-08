@@ -20,6 +20,7 @@ import {Tournament} from '../../../../shared/model/tournament';
 export class TournamentRankingListComponent implements OnInit {
 
   @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
   @Input() actualTournament: Tournament;
   @Input() round: number;
 

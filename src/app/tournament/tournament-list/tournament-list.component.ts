@@ -3,8 +3,8 @@ import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
 import {Tournament} from '../../../../shared/model/tournament';
 import {WindowRefService} from '../../service/window-ref-service';
-import {TournamentInfoDialogComponent} from "../../dialogs/tournament-overview/tournament-info-dialog";
-import {MdDialog} from "@angular/material";
+import {TournamentInfoDialogComponent} from '../../dialogs/tournament-overview/tournament-info-dialog';
+import {MdDialog} from '@angular/material';
 
 @Component({
   selector: 'tournament-list',
