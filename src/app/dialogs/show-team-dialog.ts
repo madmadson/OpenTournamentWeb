@@ -24,9 +24,15 @@ export class ShowTeamDialogComponent {
   userPlayerData: Player;
   myTeam: TournamentTeam;
 
+  isAdmin: boolean;
+  isCoOrganizer: boolean;
+
   constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
 
+
+    this.isAdmin = data.isAdmin;
+    this.isCoOrganizer = data.isCoOrganizer;
     this.tournament = data.actualTournament;
     this.team = data.team;
     this.allActualTournamentPlayers = data.allActualTournamentPlayers;
@@ -49,10 +55,7 @@ export class ShowTeamDialogComponent {
     this.onKickTournamentPlayer.emit(reg);
   }
 
-  isAdmin(): boolean {
 
-    return (this.tournament.creatorUid === this.userPlayerData.userUid);
-  }
 
   addArmyLists(event: any, tournamentPlayer: TournamentPlayer) {
 

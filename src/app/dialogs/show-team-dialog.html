@@ -40,10 +40,10 @@
       </mdl-list-item-secondary-info>
       <span >{{player.elo}}</span>
     </mdl-list-item-secondary-content>
-    <mdl-list-item-secondary-content *ngIf="isAdmin()">
+    <mdl-list-item-secondary-content *ngIf="isAdmin || isCoOrganizer">
       <md-icon class="color-positive  list-action" (click)="addArmyLists($event, player)">playlist_add</md-icon>
     </mdl-list-item-secondary-content>
-    <mdl-list-item-secondary-content *ngIf="isAdmin() ">
+    <mdl-list-item-secondary-content *ngIf="isAdmin || isCoOrganizer">
       <md-icon md-tooltip="Kick Player" class="color-negative  list-action" (click)="kickPlayer(player)">delete</md-icon>
     </mdl-list-item-secondary-content>
   </mdl-list-item>

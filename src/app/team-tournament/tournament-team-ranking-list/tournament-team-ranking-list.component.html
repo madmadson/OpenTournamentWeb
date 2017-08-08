@@ -33,7 +33,7 @@
     <td class="small-three-space-table-cell">{{rank.secondScore}}</td>
     <td class="small-three-space-table-cell">{{rank.controlPoints}}</td>
     <td class="small-three-space-table-cell">{{rank.victoryPoints}}</td>
-    <td *ngIf="isAdmin && deleteRequest !== rank.id && !actualTournament.finished && actualTournament.actualRound === round" class="small-three-space-table-cell">
+    <td *ngIf="(isAdmin || isCoOrganizer) && deleteRequest !== rank.id && !actualTournament.finished && actualTournament.actualRound === round" class="small-three-space-table-cell">
 
       <md-icon *ngIf="isDroppable(rank)"
                class="drop-player-action"

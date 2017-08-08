@@ -24,6 +24,9 @@ import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog'
 })
 export class TournamentTeamListComponent implements OnInit {
 
+  @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
+
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() actualTournamentTeams$: Observable<TournamentTeam[]>;
   @Input() actualTournament: Tournament;
@@ -75,6 +78,8 @@ export class TournamentTeamListComponent implements OnInit {
 
     const dialogRef = this.dialog.open(ShowTeamDialogComponent, {
       data: {
+        isAdmin: this.isAdmin,
+        isCoOrganizer: this.isCoOrganizer,
         actualTournament: this.actualTournament,
         userPlayerData: this.userPlayerData,
         allActualTournamentPlayers: this.allActualTournamentPlayers,

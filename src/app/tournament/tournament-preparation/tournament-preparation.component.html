@@ -239,6 +239,8 @@
       </div>
       <mdl-list>
         <tournament-team-list
+          [isAdmin]="isAdmin"
+          [isCoOrganizer]="isCoOrganizer"
           [actualTournamentArmyList$]="actualTournamentArmyList$"
           [actualTournament]="actualTournament"
           [userPlayerData]="userPlayerData"
