@@ -10,7 +10,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "precache": "sw-precache --root=dist --verbose --static-file-globs='dist/**.html'",
-    "deploy": "./deploy.sh"
+    "deploy": "./deploy.sh",
+    "deploy-prod": "./deploy-prod.sh"
   },
   "private": true,
   "dependencies": {

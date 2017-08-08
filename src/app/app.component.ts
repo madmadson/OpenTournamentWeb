@@ -11,6 +11,8 @@ import {MdSidenav} from '@angular/material';
 import {WindowRefService} from './service/window-ref-service';
 import {Observable} from 'rxjs/Observable';
 
+import { isDevMode } from '@angular/core';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -35,10 +37,14 @@ export class AppComponent implements OnDestroy {
 
   smallScreen: boolean;
 
+  isDevMode: boolean;
+
   constructor(private router: Router,
               private store: Store<ApplicationState>,
               private messageService: GlobalEventService,
               private winRef: WindowRefService) {
+
+    this.isDevMode = isDevMode();
 
     this.fullScreenModeSub = messageService.subscribe('fullScreenMode', (payload: boolean) => {
       this.fullscreenMode = payload;

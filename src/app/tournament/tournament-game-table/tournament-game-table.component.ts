@@ -134,7 +134,8 @@ export class GamesDatabase {
 
   constructor(games: TournamentGame[]) {
 
-   //  const threeTimesGames = _.concat(games, games, games);
+    // const threeTimesGames = _.concat(games, games, games);
+    // const copiedData = _.cloneDeep(threeTimesGames);
 
     const copiedData = _.cloneDeep(games);
     this.dataChange.next(copiedData);

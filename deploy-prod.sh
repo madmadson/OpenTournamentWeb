@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -o errexit # Exit on error
 
-ng build --aot
+ng build --prod --aot
 npm run precache
 
-firebase use devopentournament
+firebase use madson-org-opentournament
 firebase deploy

@@ -27,7 +27,7 @@
         <md-icon class="nav-icon">casino</md-icon>
         <a class="nav-link" (click)="closeIfSmallDevice()" routerLink="/games">Games</a>
       </div>
-      <div class="version-tag">OpenTournament 0.4.0 Beta</div>
+      <div class="version-tag">OpenTournament 0.4.1</div>
       <div class="nav-about">
         <md-icon class="nav-icon">attachment</md-icon>
         <a class="nav-link" (click)="closeIfSmallDevice()" routerLink="/about">About</a>
@@ -40,7 +40,7 @@
         <i class="material-icons  app-toolbar-menu">menu</i>
       </button>
     </div>
-    <span class="app-name-label">OpenTournament BETA</span>
+    <span class="app-name-label">OpenTournament {{isDevMode ? 'TEST': ''}}</span>
     <span class="spacer"></span>
     <span>
       <md-icon class="online_icon"
