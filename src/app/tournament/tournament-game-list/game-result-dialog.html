@@ -186,7 +186,7 @@
       <md-icon>check</md-icon>
       Really no winner?
     </button>
-    <button *ngIf="!sureButton  && ((isConnected | async) || admin)"
+    <button *ngIf="!sureButton  && ((isConnected | async) || isAdmin || isCoOrganizer)"
             (click)="enterGameResultSubmitted()"
             class="right-align-button big-button"
             type="button"

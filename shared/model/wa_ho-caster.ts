@@ -127,7 +127,7 @@ export function getWMHOCaster(faction: string): string[] {
       'Ravyn1 (Ravyn, Eternal Light)',
       'Thyron1 (Thyron, Sword of Truth)',
       'Vyros1 (Dawnlord Vyros)',
-      'Vyros1 (Vyros, Incissar of the Dawnguard)',
+      'Vyros2 (Vyros, Incissar of the Dawnguard)',
     ];
   } else if (faction === 'Circle') {
     return [

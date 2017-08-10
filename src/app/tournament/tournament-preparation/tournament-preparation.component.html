@@ -245,12 +245,13 @@
           [actualTournament]="actualTournament"
           [userPlayerData]="userPlayerData"
           [allActualTournamentPlayers]="allActualTournamentPlayers"
-          [actualTournamentTeams$]="actualTournamentTeams$"
+          [actualTournamentTeams]="actualTournamentTeams"
           (onEraseTournamentTeam)="handleEraseTournamentTeam($event)"
           (onAddTournamentPlayer)="handleAddTournamentPlayer($event)"
           (onKickTournamentPlayer)="handleKickTournamentPlayer($event)"
-          (onAddArmyLists)="addArmyListForTournamentPlayer($event)">
-        </tournament-team-list>
+          (onAddArmyLists)="addArmyListForTournamentPlayer($event)"
+          (onUpdateTeam)="handleUpdateTeam($event)"
+        ></tournament-team-list>
       </mdl-list>
     </md-card>
   </div>

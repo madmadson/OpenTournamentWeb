@@ -1,6 +1,6 @@
 <mdl-list-item lines="3"
                class="list-item"
-               *ngFor="let team of actualTournamentTeams$ | async; let i = index; let even = even;"
+               *ngFor="let team of actualTournamentTeams; let i = index; let even = even;"
                (click)="showTeam(team)"
                [ngClass]="{'even': even} ">
 

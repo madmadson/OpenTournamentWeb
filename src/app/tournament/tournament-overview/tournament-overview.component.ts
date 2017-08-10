@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, OnDestroy, OnInit, AfterViewInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Tournament} from '../../../../shared/model/tournament';
 import {Registration} from '../../../../shared/model/registration';
 import {ArmyList} from '../../../../shared/model/armyList';
@@ -43,8 +43,9 @@ import {
   TournamentTeamEraseAction,
   TournamentTeamPushAction, TournamentTeamRegistrationAcceptAction,
   TournamentTeamRegistrationPushAction,
-  TournamentTeamRegistrationEraseAction, AddDummyTeamAction, TeamRegistrationChangeAction,
+  TournamentTeamRegistrationEraseAction, TeamRegistrationChangeAction,
   ArmyListForTeamRegistrationPushAction,
+  UpdateTeamAction,
 } from '../../store/actions/tournament-teams-actions';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
@@ -59,7 +60,8 @@ import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
 import {ClearTeamGameResultAction} from '../../store/actions/tournament-team-games-actions';
 import {ClearPlayerGameResultAction} from 'app/store/actions/tournament-games-actions';
 import {Player} from '../../../../shared/model/player';
-import {CoOrganizatorPush} from "../../../../shared/dto/co-organizator-push";
+import {CoOrganizatorPush} from '../../../../shared/dto/co-organizator-push';
+import {TeamUpdate} from "../../../../shared/dto/team-update";
 
 @Component({
   selector: 'tournament-overview',
@@ -210,7 +212,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
         return that.userPlayerData.userEmail === coOrganizerEmail;
         }
       );
-      return !!isCoOrganizer;
+      return isCoOrganizer !== -1;
     } else {
       return false;
     }
@@ -291,6 +293,10 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleDeleteCoOrganizator(coOrganizer: CoOrganizatorPush) {
     this.store.dispatch(new CoOrganizatorDeleteAction(coOrganizer));
+  }
+
+  handleUpdateTeam(team: TeamUpdate) {
+    this.store.dispatch(new UpdateTeamAction(team));
   }
 
   handleClearPlayerGameResult(game: TournamentGame) {

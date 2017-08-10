@@ -7,7 +7,7 @@ import {
   TOURNAMENT_TEAM_PUSH_ACTION, TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION, TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION,
   TOURNAMENT_TEAM_REGISTRATION_PUSH_ACTION,
   TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION,
-  TOURNAMENT_TEAMS_SUBSCRIBE_ACTION
+  TOURNAMENT_TEAMS_SUBSCRIBE_ACTION, UPDATE_TEAM_ACTION
 } from '../actions/tournament-teams-actions';
 import {TournamentTeamService} from '../../service/tournament-team.service';
 import {TOURNAMENT_TEAM_GAMES_SUBSCRIBE_ACTION} from '../actions/tournament-team-games-actions';
@@ -77,6 +77,11 @@ export class TournamentTeamEffectService {
     .ofType(ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION)
     .debug('ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION')
     .map(action => this.tournamentTeamService.armyListForTeamRegistration(action.payload));
+
+  @Effect({dispatch: false}) updateTeamAction = this.actions$
+    .ofType(UPDATE_TEAM_ACTION)
+    .debug('UPDATE_TEAM_ACTION')
+    .map(action => this.tournamentTeamService.updateTeam(action.payload));
 
 
   constructor(

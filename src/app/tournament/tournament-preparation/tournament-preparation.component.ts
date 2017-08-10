@@ -33,6 +33,7 @@ import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tour
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
 import {CoOrganizatorPush} from "../../../../shared/dto/co-organizator-push";
+import {TeamUpdate} from "../../../../shared/dto/team-update";
 
 @Component({
   selector: 'tournament-preparation',
@@ -77,6 +78,8 @@ export class TournamentPreparationComponent implements OnInit {
   @Output() onAddCoOrganizator = new EventEmitter<CoOrganizatorPush>();
   @Output() onDeleteCoOrganizator = new EventEmitter<CoOrganizatorPush>();
 
+  @Output() onUpdateTeam = new EventEmitter<TeamUpdate>();
+
   allRegistrations: Registration[];
   userPlayerData: Player;
   myRegistration: Registration;
@@ -92,6 +95,7 @@ export class TournamentPreparationComponent implements OnInit {
 
   tournamentTeamRegistrations: number;
   tournamentTeams: number;
+  actualTournamentTeams: TournamentTeam[];
 
   armyLists$: Observable<ArmyList[]>;
 
@@ -136,6 +140,7 @@ export class TournamentPreparationComponent implements OnInit {
 
       this.actualTournamentTeams$.subscribe(teams => {
 
+        this.actualTournamentTeams = teams;
         this.tournamentTeams = teams.length;
       });
 
@@ -417,6 +422,10 @@ export class TournamentPreparationComponent implements OnInit {
         tournament: this.actualTournament
       });
     }
+  }
+
+  handleUpdateTeam(team: TeamUpdate) {
+    this.onUpdateTeam.emit(team);
   }
 
   addArmyListForTournamentPlayer(tournamentPlayer: TournamentPlayer) {

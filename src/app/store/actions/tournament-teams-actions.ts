@@ -4,6 +4,7 @@ import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-pus
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from "../../../../shared/dto/team-armyList-push";
+import {TeamUpdate} from "../../../../shared/dto/team-update";
 
 
 export const TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION = 'TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION';
@@ -147,5 +148,13 @@ export class ArmyListForTeamRegistrationPushAction implements Action {
 
   readonly type = 'ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION';
   constructor(public payload: ArmyListTeamPush) {
+  }
+}
+
+export const UPDATE_TEAM_ACTION = 'UPDATE_TEAM_ACTION';
+export class UpdateTeamAction implements Action {
+
+  readonly type = 'UPDATE_TEAM_ACTION';
+  constructor(public payload: TeamUpdate) {
   }
 }

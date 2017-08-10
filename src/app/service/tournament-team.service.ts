@@ -29,6 +29,7 @@ import {
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {TeamRegistrationChange} from '../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../shared/dto/team-armyList-push';
+import {TeamUpdate} from "../../../shared/dto/team-update";
 
 
 @Injectable()
@@ -323,6 +324,26 @@ export class TournamentTeamService {
     this.snackBar.open('ArmyList for Team-Registration saved successfully', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
+    });
+  }
+
+  updateTeam(teamUpdate: TeamUpdate) {
+
+    const that = this;
+
+    const teamRef = this.afoDatabase.object('tournament-teams/' + teamUpdate.team.tournamentId + '/' + teamUpdate.team.id);
+    teamRef.set(teamUpdate.team);
+
+    this.snackBar.open('Team successfully updated', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+
+    _.each(teamUpdate.tournamentPlayers, function (player: TournamentPlayer) {
+      const playerRef = that.afoDatabase.object('tournament-players/' + teamUpdate.team.tournamentId + '/'+ player.id);
+      playerRef.update({
+        teamName: teamUpdate.team.teamName
+      });
     });
   }
 }

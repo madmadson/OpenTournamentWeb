@@ -3,7 +3,7 @@ import {Component, EventEmitter, Inject, Output} from '@angular/core';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 import {FormControl, Validators} from '@angular/forms';
 import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
-import {Tournament} from "../../../shared/model/tournament";
+import {Tournament} from '../../../shared/model/tournament';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 

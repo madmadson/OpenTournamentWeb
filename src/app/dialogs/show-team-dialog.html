@@ -1,55 +1,80 @@
 <h3 class="heading">Team {{team.teamName}}</h3>
 <h6 *ngIf="allTournamentPlayerForTeam.length === 0">
-  No  Player found for Team
+  No Player found for Team
 </h6>
+<md-dialog-content>
+  <md-input-container class="full-width ">
+    <input mdInput
+           placeholder="TeamLeader"
+           readonly
+           disabled
+           value="{{team.leaderName}}">
+  </md-input-container>
 
-<md-input-container class="full-width ">
-  <input mdInput
-         placeholder="TeamLeader"
-         readonly
-         disabled
-         value=" {{team.leaderName}}">
-</md-input-container>
+  <md-input-container
+    class="full-width">
+    <input mdInput
+           (blur)="checkTeamName()"
+           placeholder="Team Name"
+           [formControl]="teamNameFormControl"
+           maxlength="50"
+           required>
+    <md-hint *ngIf="teamNameAlreadyInUse" align="start" class="color-negative">
+      There is already a Team with that name
+    </md-hint>
+    <md-hint align="end">{{teamNameFormControl.value.length}} / 50</md-hint>
+  </md-input-container>
+  <md-input-container
+    class="full-width">
+    <input mdInput
+           placeholder="Locality"
+           maxlength="50"
+           [formControl]="metaFormControl">
+    <md-hint align="end">{{metaFormControl.value.length}} / 50</md-hint>
+  </md-input-container>
 
-<md-input-container class="full-width ">
-  <input mdInput
-         placeholder="Locality"
-         readonly
-         disabled
-         value=" {{team.meta}}">
-</md-input-container>
+  <mdl-list>
+    <mdl-list-item lines="3"
+                   class="list-item"
+                   *ngFor="let player of allTournamentPlayerForTeam; let i = index; let even = even;"
+                   [ngClass]="{'even': even, 'my-item':isItMe(player.playerId)} ">
+      <mdl-list-item-primary-content>
+        <mdl-icon mdl-list-item-avatar mdl-badge="{{i +1}}" mdl-badge-overlap>person</mdl-icon>
+        <span class="player-name">{{player.playerName | truncate:30}}</span>
 
-<mdl-list>
-  <mdl-list-item lines="3"
-                 class="list-item"
-                 *ngFor="let player of allTournamentPlayerForTeam; let i = index; let even = even;"
-                 [ngClass]="{'even': even, 'my-item':isItMe(player.playerId)} ">
-    <mdl-list-item-primary-content>
-      <mdl-icon mdl-list-item-avatar mdl-badge="{{i +1}}" mdl-badge-overlap>person</mdl-icon>
-      <span class="player-name">{{player.playerName | truncate:30}}</span>
-
-      <mdl-list-item-text-body>
-        <div>{{player.faction}}</div>
-      </mdl-list-item-text-body>
-    </mdl-list-item-primary-content>
+        <mdl-list-item-text-body>
+          <div>{{player.faction}}</div>
+        </mdl-list-item-text-body>
+      </mdl-list-item-primary-content>
 
 
-    <mdl-list-item-secondary-content *ngIf="player.elo">
-      <mdl-list-item-secondary-info class="align-fix elo-info">ELO<img class="padding-fix-icon"
-                                                                       src="../../assets/my_crown_small.png">
-      </mdl-list-item-secondary-info>
-      <span >{{player.elo}}</span>
-    </mdl-list-item-secondary-content>
-    <mdl-list-item-secondary-content *ngIf="isAdmin || isCoOrganizer">
-      <md-icon class="color-positive  list-action" (click)="addArmyLists($event, player)">playlist_add</md-icon>
-    </mdl-list-item-secondary-content>
-    <mdl-list-item-secondary-content *ngIf="isAdmin || isCoOrganizer">
-      <md-icon md-tooltip="Kick Player" class="color-negative  list-action" (click)="kickPlayer(player)">delete</md-icon>
-    </mdl-list-item-secondary-content>
-  </mdl-list-item>
-</mdl-list>
-
+      <mdl-list-item-secondary-content *ngIf="player.elo">
+        <mdl-list-item-secondary-info class="align-fix elo-info">ELO<img class="padding-fix-icon"
+                                                                         src="../../assets/my_crown_small.png">
+        </mdl-list-item-secondary-info>
+        <span>{{player.elo}}</span>
+      </mdl-list-item-secondary-content>
+      <mdl-list-item-secondary-content *ngIf="isAdmin || isCoOrganizer">
+        <md-icon class="color-positive  list-action" (click)="addArmyLists($event, player)">playlist_add</md-icon>
+      </mdl-list-item-secondary-content>
+      <mdl-list-item-secondary-content *ngIf="isAdmin || isCoOrganizer">
+        <md-icon md-tooltip="Kick Player" class="color-negative  list-action" (click)="kickPlayer(player)">delete
+        </md-icon>
+      </mdl-list-item-secondary-content>
+    </mdl-list-item>
+  </mdl-list>
+</md-dialog-content>
 
 <div md-dialog-actions>
-  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+  <div class="full-width">
+    <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+    <button *ngIf="!teamNameAlreadyInUse && !byeNotAllowed"
+            class="right-align-button"
+            md-raised-button
+            color="accent"
+            (click)="saveTeam()">
+      <md-icon>add</md-icon>
+      Update Team
+    </button>
+  </div>
 </div>

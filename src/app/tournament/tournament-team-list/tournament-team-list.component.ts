@@ -15,6 +15,7 @@ import {ShowTeamDialogComponent} from '../../dialogs/show-team-dialog';
 import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-player-dialog';
 
 import {ShowArmyListDialogComponent} from '../../dialogs/show-army-lists-dialog';
+import {TeamUpdate} from '../../../../shared/dto/team-update';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class TournamentTeamListComponent implements OnInit {
   @Input() isCoOrganizer: boolean;
 
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
-  @Input() actualTournamentTeams$: Observable<TournamentTeam[]>;
+  @Input() actualTournamentTeams: TournamentTeam[];
   @Input() actualTournament: Tournament;
   @Input() userPlayerData: Player;
   @Input() allActualTournamentPlayers: TournamentPlayer[];
@@ -37,6 +38,7 @@ export class TournamentTeamListComponent implements OnInit {
   @Output() onAddTournamentPlayer = new EventEmitter<TournamentPlayer>();
   @Output() onKickTournamentPlayer = new EventEmitter<TournamentPlayer>();
   @Output() onAddArmyLists = new EventEmitter<TournamentPlayer>();
+  @Output() onUpdateTeam = new EventEmitter<TeamUpdate>();
 
   truncateMax: number;
   smallScreen: boolean;
@@ -84,7 +86,16 @@ export class TournamentTeamListComponent implements OnInit {
         userPlayerData: this.userPlayerData,
         allActualTournamentPlayers: this.allActualTournamentPlayers,
         team: team,
+        tournamentTeams: this.actualTournamentTeams,
       }
+    });
+
+    const updateTeamEventSubscribe = dialogRef.componentInstance.onUpdateTeam.subscribe((updatedTeam: TeamUpdate) => {
+
+      if (updatedTeam !== undefined) {
+        this.onUpdateTeam.emit(updatedTeam);
+      }
+      dialogRef.close();
     });
 
     const saveEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(tournamentPlayer => {
@@ -105,6 +116,7 @@ export class TournamentTeamListComponent implements OnInit {
 
       saveEventSubscribe.unsubscribe();
       kickEventSubscribe.unsubscribe();
+      updateTeamEventSubscribe.unsubscribe();
     });
   }
 
