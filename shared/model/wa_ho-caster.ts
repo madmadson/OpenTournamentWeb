@@ -11,6 +11,7 @@ export function getWMHOCaster(faction: string): string[] {
       'Haley2 (Major Victoria Haley)',
       'Haley3 (Major Prime Victoria Haley)',
       'Kraye1 (Captain Jeremiah Kraye)',
+      'Maddox1 (Major Beth Maddox)',
       'Nemo1 (Commander Adept Sebastian Nemo)',
       'Nemo2 (General Adept Sebastian Nemo)',
       'Nemo3 (Artificer General Nemo)',
@@ -210,7 +211,7 @@ export function getWMHOCaster(faction: string): string[] {
       'Zaal1 (Supreme Aptimus Zaal & Kovaas)',
       'Zaal2 (Zaal, the Ancestral Advocate)',
     ];
-  } else if (faction === 'Troolbloods') {
+  } else if (faction === 'Trollbloods') {
     return [
       'Borka1 (Borka Kegslayer & Keg Carrier)',
       'Borka2 (Borka, Vengeance of the Rimeshaws)',
@@ -224,7 +225,7 @@ export function getWMHOCaster(faction: string): string[] {
       'Grim1 (Grim Angus)',
       'Grim2 (Hunters Grim)',
       'Grissel1 (Grissel Bloodsong, Fell Caller)',
-      'Grisse2 (Grissel Bloodsong, Marshal of the Kriels)',
+      'Grissel2 (Grissel Bloodsong, Marshal of the Kriels)',
       'Madrak1 (Madrak Ironhide, Thornwood Chieftain)',
       'Madrak2 (Madrak Ironhide, World Ender)',
       'Madrak3 (Madrak, Great Chieftain)',
