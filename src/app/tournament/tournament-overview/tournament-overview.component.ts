@@ -61,7 +61,7 @@ import {ClearTeamGameResultAction} from '../../store/actions/tournament-team-gam
 import {ClearPlayerGameResultAction} from 'app/store/actions/tournament-games-actions';
 import {Player} from '../../../../shared/model/player';
 import {CoOrganizatorPush} from '../../../../shared/dto/co-organizator-push';
-import {TeamUpdate} from "../../../../shared/dto/team-update";
+import {TeamUpdate} from '../../../../shared/dto/team-update';
 
 @Component({
   selector: 'tournament-overview',

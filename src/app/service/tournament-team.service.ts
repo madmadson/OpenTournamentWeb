@@ -26,10 +26,10 @@ import {
   AddTournamentTeamRankingAction, ChangeTournamentTeamRankingAction,
   ClearTeamRankingsAction, DeleteTournamentTeamRankingAction
 } from '../store/actions/tournament-team-rankings-actions';
-import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import {TeamRegistrationChange} from '../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../shared/dto/team-armyList-push';
-import {TeamUpdate} from "../../../shared/dto/team-update";
+import {TeamUpdate} from '../../../shared/dto/team-update';
 
 
 @Injectable()
@@ -340,7 +340,7 @@ export class TournamentTeamService {
     });
 
     _.each(teamUpdate.tournamentPlayers, function (player: TournamentPlayer) {
-      const playerRef = that.afoDatabase.object('tournament-players/' + teamUpdate.team.tournamentId + '/'+ player.id);
+      const playerRef = that.afoDatabase.object('tournament-players/' + teamUpdate.team.tournamentId + '/' + player.id);
       playerRef.update({
         teamName: teamUpdate.team.teamName
       });

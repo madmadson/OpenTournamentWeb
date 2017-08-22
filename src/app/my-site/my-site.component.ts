@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs/Observable';
-import {TournamentListVM} from '../tournament/tournamentList.vm';
+
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 
@@ -9,13 +9,16 @@ import {TournamentFormDialogComponent} from '../dialogs/tournament-form-dialog';
 import {MdDialog} from '@angular/material';
 
 import {Tournament} from '../../../shared/model/tournament';
-import {CoOrganizatorAddAction, TournamentPushAction} from '../store/actions/tournaments-actions';
-import {Component} from '@angular/core';
+import {TournamentPushAction} from '../store/actions/tournaments-actions';
+import {Component, OnDestroy} from '@angular/core';
 import {MySiteSubscribeAction} from '../store/actions/my-site-actions';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {WindowRefService} from '../service/window-ref-service';
 import {Player} from '../../../shared/model/player';
+
+import {TournamentListVM} from '../../../shared/view-model/tournamentList.vm';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Component({
@@ -23,9 +26,9 @@ import {Player} from '../../../shared/model/player';
   templateUrl: './my-site.component.html',
   styleUrls: ['./my-site.component.scss']
 })
-export class MySiteComponent {
-  groupedTournaments$: Observable<TournamentListVM[]>;
-  allTournaments$: Observable<Tournament[]>;
+export class MySiteComponent implements OnDestroy {
+  groupedTournaments$;
+  allMyTournaments$: Observable<Tournament[]>;
 
   creatorId: string;
   creatorMail: string;
@@ -38,13 +41,17 @@ export class MySiteComponent {
 
   userPlayerData: Player;
 
+  private authSubscription: Subscription;
+  private myRegistrationsSubscription: Subscription;
+  private myGamesSubscription: Subscription;
+
   constructor(private store: Store<ApplicationState>,
               public dialog: MdDialog,
               private winRef: WindowRefService) {
 
     this.smallScreen = this.winRef.nativeWindow.screen.width < 400;
 
-    this.store.select(state => state.authenticationStoreState).subscribe(
+    this.authSubscription = this.store.select(state => state.authenticationStoreState).subscribe(
       authenticationStoreState => {
         this.creatorId = authenticationStoreState.currentUserId;
         this.creatorMail = authenticationStoreState.currentUserEmail;
@@ -55,13 +62,13 @@ export class MySiteComponent {
         this.userPlayerData = authenticationStoreState.userPlayerData;
       });
 
-    this.allTournaments$ = store.select(state => {
+    this.allMyTournaments$ = store.select(state => {
       return _.filter(state.tournaments.tournaments, function (tournament) {
         return tournament.creatorUid === state.authenticationStoreState.currentUserId;
       });
     });
 
-    this.groupedTournaments$ = store.select(
+    this.groupedTournaments$ = this.store.select(
       state => {
 
         return _.chain(state.tournaments.tournaments).sortBy(function (value) {
@@ -80,14 +87,21 @@ export class MySiteComponent {
           .value();
       });
 
-    this.store.select(state => state.mySiteSoreData.myRegistrations).subscribe((registrations: Registration[]) => {
+    this.myRegistrationsSubscription = this.store.select(state => state.mySiteSoreData.myRegistrations).subscribe((registrations: Registration[]) => {
         this.myRegistrations = _.chain(registrations).sortBy(function (reg: Registration) {
           return new Date(reg.tournamentDate);
         }).reverse().value();
     });
-     this.store.select(state => state.mySiteSoreData.myGames).subscribe((games: TournamentGame[]) => {
+    this.myGamesSubscription = this.store.select(state => state.mySiteSoreData.myGames).subscribe((games: TournamentGame[]) => {
        this.myGames = games;
     });
+  }
+
+  ngOnDestroy(): void {
+
+    this.authSubscription.unsubscribe();
+    this.myRegistrationsSubscription.unsubscribe();
+    this.myGamesSubscription.unsubscribe();
   }
 
   getMyTournamentsTitle(): string {

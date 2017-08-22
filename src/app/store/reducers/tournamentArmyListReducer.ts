@@ -19,7 +19,7 @@ const INITIAL_STATE: ActualTournamentArmyListsStoreData = {
 
 
 export function TournamentArmyListReducer(
-  state: ActualTournamentArmyListsStoreData = INITIAL_STATE, action: Action): ActualTournamentArmyListsStoreData {
+  state: ActualTournamentArmyListsStoreData = INITIAL_STATE, action): ActualTournamentArmyListsStoreData {
 
 
   switch (action.type) {
@@ -46,7 +46,7 @@ export function TournamentArmyListReducer(
 
 
 function handleArmyListAddedAction(
-  state: ActualTournamentArmyListsStoreData, action: Action): ActualTournamentArmyListsStoreData {
+  state: ActualTournamentArmyListsStoreData, action): ActualTournamentArmyListsStoreData {
 
   const newTournamentData: ActualTournamentArmyListsStoreData = _.cloneDeep(state);
 
@@ -61,7 +61,7 @@ function handleArmyListAddedAction(
 
 
 function handleArmyListDeletedAction(
-  state: ActualTournamentArmyListsStoreData, action: Action): ActualTournamentArmyListsStoreData {
+  state: ActualTournamentArmyListsStoreData, action): ActualTournamentArmyListsStoreData {
 
   const newStoreState: ActualTournamentArmyListsStoreData = _.cloneDeep(state);
 
@@ -74,7 +74,7 @@ function handleArmyListDeletedAction(
 }
 
 function handleClearArmyListsAction(
-  state: ActualTournamentArmyListsStoreData, action: Action): ActualTournamentArmyListsStoreData {
+  state: ActualTournamentArmyListsStoreData, action): ActualTournamentArmyListsStoreData {
 
   const newTournamentData: ActualTournamentArmyListsStoreData = _.cloneDeep(state);
 

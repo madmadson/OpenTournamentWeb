@@ -18,7 +18,7 @@ const INITIAL_STATE: PlayerStoreData = {
 };
 
 
-export function PlayersReducer(state: PlayerStoreData = INITIAL_STATE, action: Action): PlayerStoreData {
+export function PlayersReducer(state: PlayerStoreData = INITIAL_STATE, action): PlayerStoreData {
 
 
   switch (action.type) {
@@ -46,7 +46,7 @@ export function PlayersReducer(state: PlayerStoreData = INITIAL_STATE, action: A
 }
 
 function handlePlayersClearAction(
-  state: PlayerStoreData, action: Action): PlayerStoreData {
+  state: PlayerStoreData, action): PlayerStoreData {
 
   const playersStoreData: PlayerStoreData = _.cloneDeep(state);
 
@@ -55,7 +55,7 @@ function handlePlayersClearAction(
   return playersStoreData;
 }
 
-function handlePlayerAddedData(state: PlayerStoreData, action: Action): PlayerStoreData {
+function handlePlayerAddedData(state: PlayerStoreData, action): PlayerStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -65,7 +65,7 @@ function handlePlayerAddedData(state: PlayerStoreData, action: Action): PlayerSt
   return newStoreState;
 }
 
-function handlePlayerChangedData(state: PlayerStoreData, action: Action): PlayerStoreData {
+function handlePlayerChangedData(state: PlayerStoreData, action): PlayerStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -76,7 +76,7 @@ function handlePlayerChangedData(state: PlayerStoreData, action: Action): Player
   return newStoreState;
 }
 
-function handlePlayerDeletedData(state: PlayerStoreData, action: Action): PlayerStoreData {
+function handlePlayerDeletedData(state: PlayerStoreData, action): PlayerStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {

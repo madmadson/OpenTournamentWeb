@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 
 import {TournamentGameService} from '../../service/tournament-game.service';
-import {TOURNAMENT_GAMES_SUBSCRIBE_ACTION} from '../actions/tournament-games-actions';
+import {SubscribeTournamentGamesAction, TOURNAMENT_GAMES_SUBSCRIBE_ACTION} from '../actions/tournament-games-actions';
 
 
 @Injectable()
@@ -11,7 +11,7 @@ export class TournamentGameEffectService {
   @Effect({dispatch: false}) subscribe = this.actions$
     .ofType(TOURNAMENT_GAMES_SUBSCRIBE_ACTION)
     .debug('TOURNAMENT_GAMES_SUBSCRIBE_ACTION')
-    .map(action => this.gameService.subscribeOnTournamentGames(action.payload));
+    .map((action: SubscribeTournamentGamesAction) => this.gameService.subscribeOnTournamentGames(action.payload));
 
 
   constructor(

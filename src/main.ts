@@ -1,10 +1,10 @@
-import {enableProdMode} from '@angular/core';
+import {enableProdMode, isDevMode} from '@angular/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {AppModule} from './app/app.module';
-import {environment} from './environments/environment';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
 
-const debuggerOn = true;
+
+const debuggerOn = false;
 
 Observable.prototype.debug = function (message: string){
 
@@ -34,8 +34,10 @@ declare module 'rxjs/Observable' {
 }
 
 
-if (environment.production) {
+if (!isDevMode) {
+  console.log('prodMode');
   enableProdMode();
 }
+
 
 platformBrowserDynamic().bootstrapModule(AppModule);

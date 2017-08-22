@@ -9,7 +9,7 @@
   <ng-container *ngIf="filteredGames?.length == 0" >
     <div class="heading">Load Games... <mdl-spinner  single-color active></mdl-spinner></div>
   </ng-container>
-  <mdl-list>
+  <mdl-list *ngIf="filteredGames?.length > 0">
     <games-list [games]="filteredGames"></games-list>
   </mdl-list>
 </md-card>

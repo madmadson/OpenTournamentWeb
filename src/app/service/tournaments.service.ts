@@ -11,7 +11,7 @@ import {
 } from '../store/actions/tournaments-actions';
 import {Tournament} from '../../../shared/model/tournament';
 import {MdSnackBar} from '@angular/material';
-import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
 
 import * as _ from 'lodash';

@@ -26,7 +26,7 @@ const INITIAL_STATE: ActualTournamentTeamsStoreData = {
 
 export function TournamentTeamReducer(
   state: ActualTournamentTeamsStoreData = INITIAL_STATE,
-  action: Action): ActualTournamentTeamsStoreData {
+  action): ActualTournamentTeamsStoreData {
 
 
   switch (action.type) {
@@ -69,7 +69,7 @@ export function TournamentTeamReducer(
   }
 }
 
-function handleTournamentTeamClearAction(state: ActualTournamentTeamsStoreData, action: Action): ActualTournamentTeamsStoreData {
+function handleTournamentTeamClearAction(state: ActualTournamentTeamsStoreData, action): ActualTournamentTeamsStoreData {
   const newStoreState = _.cloneDeep(state);
 
   newStoreState.teams = [];
@@ -77,7 +77,7 @@ function handleTournamentTeamClearAction(state: ActualTournamentTeamsStoreData, 
   return newStoreState;
 }
 
-function handleTournamentTeamAddedAction(state: ActualTournamentTeamsStoreData, action: Action): ActualTournamentTeamsStoreData {
+function handleTournamentTeamAddedAction(state: ActualTournamentTeamsStoreData, action): ActualTournamentTeamsStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -87,7 +87,7 @@ function handleTournamentTeamAddedAction(state: ActualTournamentTeamsStoreData, 
   return newStoreState;
 }
 
-function handleTournamentTeamChangedData(state: ActualTournamentTeamsStoreData, action: Action): ActualTournamentTeamsStoreData {
+function handleTournamentTeamChangedData(state: ActualTournamentTeamsStoreData, action): ActualTournamentTeamsStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -98,7 +98,7 @@ function handleTournamentTeamChangedData(state: ActualTournamentTeamsStoreData, 
   return newStoreState;
 }
 
-function handleTournamentTeamDeletedAction(state: ActualTournamentTeamsStoreData, action: Action): ActualTournamentTeamsStoreData {
+function handleTournamentTeamDeletedAction(state: ActualTournamentTeamsStoreData, action): ActualTournamentTeamsStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -111,7 +111,7 @@ function handleTournamentTeamDeletedAction(state: ActualTournamentTeamsStoreData
 
 
 function handleTournamentTeamRegistrationClearAction(
-  state: ActualTournamentTeamsStoreData, action: Action): ActualTournamentTeamsStoreData {
+  state: ActualTournamentTeamsStoreData, action): ActualTournamentTeamsStoreData {
   const newStoreState = _.cloneDeep(state);
 
   newStoreState.registeredTeams = [];
@@ -120,7 +120,7 @@ function handleTournamentTeamRegistrationClearAction(
 }
 
 function handleTournamentTeamRegistrationAddedAction(
-  state: ActualTournamentTeamsStoreData, action: Action): ActualTournamentTeamsStoreData {
+  state: ActualTournamentTeamsStoreData, action): ActualTournamentTeamsStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -131,7 +131,7 @@ function handleTournamentTeamRegistrationAddedAction(
 }
 
 function handleTournamentTeamRegistrationChangedData(
-  state: ActualTournamentTeamsStoreData, action: Action): ActualTournamentTeamsStoreData {
+  state: ActualTournamentTeamsStoreData, action): ActualTournamentTeamsStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -143,7 +143,7 @@ function handleTournamentTeamRegistrationChangedData(
 }
 
 function handleTournamentTeamRegistrationDeletedAction(
-  state: ActualTournamentTeamsStoreData, action: Action): ActualTournamentTeamsStoreData {
+  state: ActualTournamentTeamsStoreData, action): ActualTournamentTeamsStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {

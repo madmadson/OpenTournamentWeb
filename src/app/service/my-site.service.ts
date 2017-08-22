@@ -1,10 +1,10 @@
-import { Injectable} from '@angular/core';
+
+import {Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 
 import {
   MyGameAddedAction, MyGameChangedAction, MyGameDeletedAction,
-
   MyGamesClearAction,
   MyRegistrationAddedAction, MyRegistrationChangedAction, MyRegistrationDeletedAction,
   MyRegistrationsClearAction
@@ -14,7 +14,8 @@ import {TournamentGame} from '../../../shared/model/tournament-game';
 import * as firebase from 'firebase';
 
 @Injectable()
-export class MySiteService {
+export class MySiteService  implements OnDestroy {
+
 
   private myRegistrationsRef: firebase.database.Reference;
   private myGamesRef: firebase.database.Reference;
@@ -22,6 +23,19 @@ export class MySiteService {
 
   constructor(protected store: Store<ApplicationState>) {
 
+  }
+
+  ngOnDestroy(): void {
+
+    if (this.myRegistrationsRef) {
+      this.myRegistrationsRef.off();
+    }
+    if (this.myGamesRef) {
+      this.myGamesRef.off();
+    }
+    if (this.myGamesRef) {
+      this.myGamesRef.off();
+    }
   }
 
   subscribeOnMySite(playerId: string) {

@@ -1,4 +1,4 @@
-import {Tournament} from '../../../shared/model/tournament';
+import {Tournament} from '../model/tournament';
 
 export interface TournamentListVM {
 

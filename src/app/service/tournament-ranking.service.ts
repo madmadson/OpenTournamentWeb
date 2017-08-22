@@ -17,7 +17,7 @@ import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {GameResult} from '../../../shared/dto/game-result';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
-import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 
 
 @Injectable()

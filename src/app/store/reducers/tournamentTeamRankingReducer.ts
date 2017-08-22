@@ -22,7 +22,7 @@ const INITIAL_STATE: ActualTournamentTeamRankingsStoreData = {
 
 
 export function TournamentTeamRankingReducer(
-  state: ActualTournamentTeamRankingsStoreData = INITIAL_STATE, action: Action): ActualTournamentTeamRankingsStoreData {
+  state: ActualTournamentTeamRankingsStoreData = INITIAL_STATE, action): ActualTournamentTeamRankingsStoreData {
 
 
   switch (action.type) {
@@ -52,7 +52,7 @@ export function TournamentTeamRankingReducer(
 }
 
 function handleTournamentTeamRankingClearAction(
-  state: ActualTournamentTeamRankingsStoreData, action: Action): ActualTournamentTeamRankingsStoreData {
+  state: ActualTournamentTeamRankingsStoreData, action): ActualTournamentTeamRankingsStoreData {
 
   const gamesStoreData: ActualTournamentTeamRankingsStoreData = _.cloneDeep(state);
 
@@ -64,7 +64,7 @@ function handleTournamentTeamRankingClearAction(
 
 
 function handleTournamentTeamRankingAddedAction(
-  state: ActualTournamentTeamRankingsStoreData, action: Action): ActualTournamentTeamRankingsStoreData {
+  state: ActualTournamentTeamRankingsStoreData, action): ActualTournamentTeamRankingsStoreData {
 
 
   const newTournamentData: ActualTournamentTeamRankingsStoreData = _.cloneDeep(state);
@@ -80,7 +80,7 @@ function handleTournamentTeamRankingAddedAction(
 
 
 function handleTournamentTeamRankingDeletedAction(
-  state: ActualTournamentTeamRankingsStoreData, action: Action): ActualTournamentTeamRankingsStoreData {
+  state: ActualTournamentTeamRankingsStoreData, action): ActualTournamentTeamRankingsStoreData {
   const newStoreState: ActualTournamentTeamRankingsStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -93,7 +93,7 @@ function handleTournamentTeamRankingDeletedAction(
 
 
 function handleTournamentTeamRankingChangedData(
-  state: ActualTournamentTeamRankingsStoreData, action: Action): ActualTournamentTeamRankingsStoreData {
+  state: ActualTournamentTeamRankingsStoreData, action): ActualTournamentTeamRankingsStoreData {
   const newStoreState: ActualTournamentTeamRankingsStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {

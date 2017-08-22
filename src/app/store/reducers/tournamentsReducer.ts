@@ -18,7 +18,7 @@ const INITIAL_STATE: TournamentStoreData = {
   tournaments: []
 };
 
-export function TournamentsReducer(state: TournamentStoreData = INITIAL_STATE, action: Action): TournamentStoreData {
+export function TournamentsReducer(state: TournamentStoreData = INITIAL_STATE, action): TournamentStoreData {
 
 
   switch (action.type) {
@@ -46,7 +46,7 @@ export function TournamentsReducer(state: TournamentStoreData = INITIAL_STATE, a
 }
 
 
-function handleTournamentClearData(state: TournamentStoreData, action: Action): TournamentStoreData {
+function handleTournamentClearData(state: TournamentStoreData, action): TournamentStoreData {
   const newStoreState = _.cloneDeep(state);
 
   newStoreState.tournaments = [];
@@ -54,7 +54,7 @@ function handleTournamentClearData(state: TournamentStoreData, action: Action): 
   return newStoreState;
 }
 
-function handleTournamentAddedData(state: TournamentStoreData, action: Action): TournamentStoreData {
+function handleTournamentAddedData(state: TournamentStoreData, action): TournamentStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -64,7 +64,7 @@ function handleTournamentAddedData(state: TournamentStoreData, action: Action): 
   return newStoreState;
 }
 
-function handleTournamentChangedData(state: TournamentStoreData, action: Action): TournamentStoreData {
+function handleTournamentChangedData(state: TournamentStoreData, action): TournamentStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -75,7 +75,7 @@ function handleTournamentChangedData(state: TournamentStoreData, action: Action)
   return newStoreState;
 }
 
-function handleTournamentDeletedData(state: TournamentStoreData, action: Action): TournamentStoreData {
+function handleTournamentDeletedData(state: TournamentStoreData, action): TournamentStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {

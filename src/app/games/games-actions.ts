@@ -1,0 +1,2 @@
+export const ADD_GAME_ACTION = 'ADD_GAME_ACTION';
+export const CLEAR_GAMES_ACTION = 'CLEAR_GAMES_ACTION';

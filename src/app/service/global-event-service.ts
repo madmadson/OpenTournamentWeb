@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
+
 
 interface Message {
   type: string;
@@ -12,8 +13,18 @@ interface Message {
 type MessageCallback = (payload: any) => void;
 
 @Injectable()
-export class GlobalEventService {
-  private handler = new Subject<Message>();
+export class GlobalEventService implements OnDestroy {
+  handler: Subject<Message>;
+
+  constructor() {
+
+    this.handler = new Subject<Message>();
+  }
+
+  ngOnDestroy(): void {
+    this.handler.unsubscribe();
+  }
+
 
   broadcast(type: string, payload: any) {
     this.handler.next({ type, payload });

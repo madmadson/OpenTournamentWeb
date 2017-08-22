@@ -1,8 +1,18 @@
 <h1 class="heading">Welcome to OpenTournament!</h1>
 
-<md-card *ngIf="!userPlayerData">
+<md-card *ngIf="!loggedIn">
   <md-card-header>
-    <md-card-title>Are you a Player?</md-card-title>
+    <md-card-title>First Login/Register</md-card-title>
+    <md-card-subtitle>It's for free</md-card-subtitle>
+  </md-card-header>
+  <button  type="button" color="primary" md-raised-button routerLink="/login">Login/Register
+  </button>
+
+</md-card>
+
+<md-card *ngIf="!userPlayerData && loggedIn">
+  <md-card-header>
+    <md-card-title>Are you a Player or Organizer?</md-card-title>
     <md-card-subtitle>No Problem just create your Player-Profile</md-card-subtitle>
   </md-card-header>
   <md-card-content>
@@ -11,9 +21,7 @@
       to add you easily to the tournament you just registered for.
     </p>
   </md-card-content>
-  <button *ngIf="!loggedIn" type="button" color="primary" md-raised-button routerLink="/login">First Login/Register
-  </button>
-  <button *ngIf="loggedIn" type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player
+  <button  type="button" color="primary" md-raised-button routerLink="/player-profile">Create Player
     Profile
   </button>
 </md-card>

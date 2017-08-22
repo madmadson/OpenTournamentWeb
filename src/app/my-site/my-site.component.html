@@ -28,7 +28,7 @@
         <h4 class="heading big-heading" *ngIf="(groupedTournaments$ | async).length == 0">It's time to organize a
           Tournament!</h4>
         <h4 class="heading" *ngIf="(groupedTournaments$ | async).length > 0">My organized Tournaments
-          ({{(allTournaments$| async) ?.length}})</h4>
+          ({{(allMyTournaments$| async) ?.length}})</h4>
         <button md-fab class="create-action" (click)="openCreateTournamentDialog()">
           <md-icon>add</md-icon>
         </button>

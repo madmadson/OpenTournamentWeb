@@ -3,26 +3,26 @@ import {ActivatedRouteSnapshot, CanActivate, CanLoad, Route, Router, RouterState
 import {ApplicationState} from '../store/application-state';
 import {Store} from '@ngrx/store';
 import {AddRedirectUrlAction} from '../store/actions/auth-actions';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Injectable()
-export class AuthGuard implements OnInit, OnDestroy, CanActivate, CanLoad {
+export class AuthGuard implements OnDestroy, CanActivate, CanLoad {
 
-
-  loggedIn: boolean;
+  private loggedInSubscription: Subscription;
+  private loggedIn: boolean;
 
   constructor(private store: Store<ApplicationState>, private router: Router) {
-    this.store.select(state => state.authenticationStoreState.loggedIn).subscribe(loggedIn => {
+    this.loggedInSubscription = this.store.select(state => state.authenticationStoreState.loggedIn).subscribe(loggedIn => {
 
         this.loggedIn = loggedIn;
       }
     );
   }
 
-  ngOnInit() {
-  }
 
   ngOnDestroy(): void {
+    this.loggedInSubscription.unsubscribe();
   }
 
   canActivate(route: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot): boolean {

@@ -4,28 +4,29 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {AppComponent} from './app.component';
-import {TournamentListComponent} from './tournament/tournament-list/tournament-list.component';
+import {TournamentListComponent} from './tournaments/tournament-list/tournament-list.component';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import {GameEditComponent} from './game-edit/game-edit.component';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {HomePageComponent} from './home-page/home-page.component';
-import {ActionReducer, combineReducers, StoreModule} from '@ngrx/store';
+import {ActionReducer, combineReducers, StoreModule, ActionReducerMap} from '@ngrx/store';
 import 'rxjs/Rx';
 import {ApplicationState} from './store/application-state';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {compose} from '@ngrx/core/compose';
+
 import {environment} from '../environments/environment';
 
-import {storeFreeze} from 'ngrx-store-freeze';
 import {EffectsModule} from '@ngrx/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+
 import {AuthEffectService} from './store/effects/auth-effect.service';
 import {TournamentsEffectService} from './store/effects/tournaments-effect.service';
 import {LoginService} from './service/auth.service';
 import {TournamentsService} from './service/tournaments.service';
-import {routerReducer, RouterStoreModule} from '@ngrx/router-store';
+import {routerReducer} from '@ngrx/router-store';
 import {MomentModule} from 'angular2-moment';
-import {TournamentListOverviewComponent} from './tournament/tournament-list-overview/tournament-list-overview.component';
+import {TournamentListOverviewComponent} from './tournaments/tournament-list-overview/tournament-list-overview.component';
 
 import {MySiteComponent} from './my-site/my-site.component';
 import {PageNotFoundComponent} from './not-found.component';
@@ -55,16 +56,9 @@ import {
 } from './tournament/tournament-player-list/tournament-player-list.component';
 import {TournamentRankingService} from './service/tournament-ranking.service';
 
-import {AuthenticationReducer} from './store/reducers/authenticationReducer';
-import {TournamentsReducer} from './store/reducers/tournamentsReducer';
-import {PlayersReducer} from './store/reducers/playersReducer';
-import {TournamentReducer} from './store/reducers/tournamentReducer';
-import {TournamentRegistrationReducer} from './store/reducers/tournamentRegistrationReducer';
-import {TournamentRankingReducer} from './store/reducers/tournamentRankingReducer';
-import {TournamentPlayerReducer} from './store/reducers/tournamentPlayerReducer';
-import {TournamentArmyListReducer} from './store/reducers/tournamentArmyListReducer';
+
 import {TournamentGameService} from './service/tournament-game.service';
-import {TournamentGameReducer} from './store/reducers/tournamentGameReducer';
+
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule,
   MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdListModule, MdTooltip,
@@ -129,52 +123,22 @@ import { TournamentTeamFinalRankingsComponent } from './team-tournament/tourname
 import {AngularFireModule} from 'angularfire2';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { GameListOverviewComponent } from './games/game-list-overview/game-list-overview.component';
-import {GamesReducer} from './store/reducers/gamesReducer';
-import {GamesEffectService} from './store/effects/games-effect.service';
-import {GamesService} from './service/games.service';
+
 import {TournamentInfoDialogComponent} from './dialogs/tournament-overview/tournament-info-dialog';
 import {AddPlayerRegistrationDialogComponent} from './dialogs/tournament-preparation/add-player-registration-dialog';
 import {
   PlayerRegistrationInfoDialogComponent
 } from './dialogs/tournament-preparation/player-registration-info-dialog';
 import {ShowSingleArmyListDialogComponent} from './dialogs/mini-dialog/show-single-army-list-dialog';
-import {ShowSoloRankingsComponent} from "app/dialogs/mini-dialog/show-solo-rankings-dialog";
-import {CdkTableModule} from "@angular/cdk";
-import {Ng2PageScrollModule} from "ng2-page-scroll";
-import {AddCoOrganizatorDialogComponent} from "./dialogs/add-co-organizator-dialog";
+import {ShowSoloRankingsComponent} from 'app/dialogs/mini-dialog/show-solo-rankings-dialog';
+import {CdkTableModule} from '@angular/cdk';
+import {Ng2PageScrollModule} from 'ng2-page-scroll';
+import {AddCoOrganizatorDialogComponent} from './dialogs/add-co-organizator-dialog';
 
 
-const reducers = {
-  routerState: routerReducer,
-  tournaments: TournamentsReducer,
-  players: PlayersReducer,
-  games: GamesReducer,
-  authenticationStoreState: AuthenticationReducer,
-  mySiteSoreData: MySiteReducer,
+import {GamesService} from './games/games.service';
+import {reducers} from "./store/reducers/index";
 
-  actualTournament: TournamentReducer,
-  actualTournamentRegistrations: TournamentRegistrationReducer,
-  actualTournamentRankings: TournamentRankingReducer,
-  actualTournamentTeamRankings: TournamentTeamRankingReducer,
-  actualTournamentGames: TournamentGameReducer,
-  actualTournamentTeamGames: TournamentTeamGameReducer,
-  actualTournamentPlayers: TournamentPlayerReducer,
-  actualTournamentArmyLists: TournamentArmyListReducer,
-  actualTournamentTeams: TournamentTeamReducer,
-
-};
-
-// const developmentReducer: ActionReducer<ApplicationState> = compose(storeFreeze, combineReducers)(reducers);
-const developmentReducer: ActionReducer<ApplicationState> = combineReducers(reducers);
-const productionReducer: ActionReducer<ApplicationState> = combineReducers(reducers);
-
-export function storeReducer(state: any, action: any) {
-  if (environment.production) {
-    return productionReducer(state, action);
-  } else {
-    return developmentReducer(state, action);
-  }
-}
 
 
 @NgModule({
@@ -186,18 +150,18 @@ export function storeReducer(state: any, action: any) {
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    EffectsModule.run(AuthEffectService),
-    EffectsModule.run(TournamentEffectService),
-    EffectsModule.run(TournamentsEffectService),
-    EffectsModule.run(PlayersEffectService),
-    EffectsModule.run(GamesEffectService),
-    EffectsModule.run(RankingEffectService),
-    EffectsModule.run(TournamentGameEffectService),
-    EffectsModule.run(MySiteEffectService),
-    EffectsModule.run(TournamentTeamEffectService),
-    StoreModule.provideStore(storeReducer),
-    RouterStoreModule.connectRouter(),
-    StoreDevtoolsModule.instrumentOnlyWithExtension(),
+    EffectsModule.forRoot([
+      AuthEffectService,
+      TournamentEffectService,
+      TournamentsEffectService,
+      PlayersEffectService,
+      RankingEffectService,
+      TournamentGameEffectService,
+      MySiteEffectService,
+      TournamentTeamEffectService]),
+    StoreModule.forRoot(reducers),
+    StoreRouterConnectingModule,
+    !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 50 }) : [],
     MomentModule,
     AppRoutingModule,
     CustomFormsModule,

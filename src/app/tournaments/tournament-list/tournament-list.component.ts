@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 import {Router} from '@angular/router';
 import {Tournament} from '../../../../shared/model/tournament';
@@ -9,7 +9,8 @@ import {MdDialog} from '@angular/material';
 @Component({
   selector: 'tournament-list',
   templateUrl: 'tournament-list.component.html',
-  styleUrls: ['tournament-list.component.scss']
+  styleUrls: ['tournament-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TournamentListComponent  {
 

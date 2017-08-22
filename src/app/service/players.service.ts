@@ -1,4 +1,4 @@
-import { Injectable} from '@angular/core';
+import { Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 import {
@@ -10,12 +10,12 @@ import {
 import {Player} from '../../../shared/model/player';
 import {MdSnackBar} from '@angular/material';
 import {Router} from '@angular/router';
-import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import * as firebase from 'firebase';
 
 
 @Injectable()
-export class PlayersService  {
+export class PlayersService  implements OnDestroy {
 
   private playersRef: firebase.database.Reference;
 
@@ -23,8 +23,15 @@ export class PlayersService  {
               protected store: Store<ApplicationState>,
               private  router: Router,
               private snackBar: MdSnackBar) {
-
   }
+
+  ngOnDestroy(): void {
+
+    if (this.playersRef) {
+      this.playersRef.off();
+    }
+  }
+
 
 
   subscribeOnPlayers() {

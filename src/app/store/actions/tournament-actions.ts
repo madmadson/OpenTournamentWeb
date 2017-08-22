@@ -11,10 +11,10 @@ import {RegistrationPush} from '../../../../shared/dto/registration-push';
 import {SwapGames} from '../../../../shared/dto/swap-player';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
-import {ArmyListRegistrationPush} from "../../../../shared/dto/armyList-registration-push";
-import {ArmyListTournamentPlayerPush} from "../../../../shared/dto/armyList-tournamentPlayer-push";
-import {DropPlayerPush} from "../../../../shared/dto/drop-player-push";
-import {TournamentRanking} from "../../../../shared/model/tournament-ranking";
+import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
+import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
+import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
+import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 
 
 export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
@@ -128,7 +128,6 @@ export class RegistrationAcceptAction implements Action {
   constructor(public payload: Registration) {
   }
 }
-
 
 export const TOURNAMENT_PLAYER_PUSH_ACTION = 'TOURNAMENT_PLAYER_PUSH_ACTION';
 export class TournamentPlayerPushAction implements Action {
@@ -270,14 +269,6 @@ export const UPLOAD_TEAM_TOURNAMENT_ACTION = 'UPLOAD_TEAM_TOURNAMENT_ACTION';
 export class UploadTeamTournamentAction implements Action {
 
   readonly type = 'UPLOAD_TEAM_TOURNAMENT_ACTION';
-  constructor(public payload: string) {
-  }
-}
-
-export const ADD_DUMMY_PLAYER_ACTION = 'ADD_DUMMY_PLAYER_ACTION';
-export class AddDummyPlayerAction implements Action {
-
-  readonly type = 'ADD_DUMMY_PLAYER_ACTION';
   constructor(public payload: string) {
   }
 }

@@ -21,7 +21,7 @@ const INITIAL_STATE: ActualTournamentPlayersStoreData = {
 
 
 export function TournamentPlayerReducer(
-  state: ActualTournamentPlayersStoreData = INITIAL_STATE, action: Action): ActualTournamentPlayersStoreData {
+  state: ActualTournamentPlayersStoreData = INITIAL_STATE, action): ActualTournamentPlayersStoreData {
 
 
   switch (action.type) {
@@ -52,7 +52,7 @@ export function TournamentPlayerReducer(
 
 
 function handleTournamentPlayerAddedAction(
-  state: ActualTournamentPlayersStoreData, action: Action): ActualTournamentPlayersStoreData {
+  state: ActualTournamentPlayersStoreData, action): ActualTournamentPlayersStoreData {
 
 
   const newTournamentData: ActualTournamentPlayersStoreData = _.cloneDeep(state);
@@ -67,7 +67,7 @@ function handleTournamentPlayerAddedAction(
 }
 
 function handleTournamentPlayerDeletedAction(
-  state: ActualTournamentPlayersStoreData, action: Action): ActualTournamentPlayersStoreData {
+  state: ActualTournamentPlayersStoreData, action): ActualTournamentPlayersStoreData {
   const newStoreState: ActualTournamentPlayersStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -80,7 +80,7 @@ function handleTournamentPlayerDeletedAction(
 
 
 function handleTournamentPlayerChangedData(
-  state: ActualTournamentPlayersStoreData, action: Action): ActualTournamentPlayersStoreData {
+  state: ActualTournamentPlayersStoreData, action): ActualTournamentPlayersStoreData {
   const newStoreState: ActualTournamentPlayersStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -93,7 +93,7 @@ function handleTournamentPlayerChangedData(
 }
 
 function handleClearTournamentPlayerAction(
-  state: ActualTournamentPlayersStoreData, action: Action): ActualTournamentPlayersStoreData {
+  state: ActualTournamentPlayersStoreData, action): ActualTournamentPlayersStoreData {
 
   const newTournamentData: ActualTournamentPlayersStoreData = _.cloneDeep(state);
 

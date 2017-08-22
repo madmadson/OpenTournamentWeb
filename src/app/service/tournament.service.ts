@@ -1,4 +1,4 @@
-import { Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 import * as firebase from 'firebase';
@@ -41,36 +41,56 @@ import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-c
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
 import {DropPlayerPush} from '../../../shared/dto/drop-player-push';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Injectable()
-export class TournamentService  {
+export class TournamentService implements OnDestroy {
+
 
   private tournamentRegistrationsRef: firebase.database.Reference;
   private tournamentPlayerRef: firebase.database.Reference;
   private armyListsRef: firebase.database.Reference;
 
-  actualTournament: Tournament;
+  private actualTournament: Tournament;
+  private tournamentSub: Subscription;
 
-  constructor(private afoDatabase: AngularFireOfflineDatabase,
+  constructor(protected afoDatabase: AngularFireOfflineDatabase,
               protected rankingService: TournamentRankingService,
               protected tournamentGameService: TournamentGameService,
               protected store: Store<ApplicationState>,
               private snackBar: MdSnackBar) {
 
-    this.store.select(state => state).subscribe(state => {
+    this.tournamentSub =  this.store.select(state => state).subscribe(state => {
 
       this.actualTournament = state.actualTournament.actualTournament;
     });
   }
 
+  ngOnDestroy(): void {
+
+    console.log('ngOnDestroy');
+
+    this.tournamentSub.unsubscribe();
+
+    if (this.tournamentRegistrationsRef) {
+      this.tournamentRegistrationsRef.off();
+    }
+    if (this.tournamentPlayerRef) {
+      this.tournamentPlayerRef.off();
+    }
+    if (this.armyListsRef) {
+      this.armyListsRef.off();
+    }
+  }
 
   subscribeOnTournament(tournamentId: string) {
 
-    console.log('subscribeOnTournament');
-
     this.afoDatabase.object('tournaments/' + tournamentId).subscribe(
       tournament => {
+
+        console.log('subscribeOnTournament');
+
         tournament.id = tournamentId;
         this.store.dispatch(new SetActualTournamentAction(tournament));
 
@@ -627,6 +647,7 @@ export class TournamentService  {
 
   scenarioSelectedAction(scenarioSelected: ScenarioSelectedModel) {
     const query = this.afoDatabase.list('tournament-games/' + scenarioSelected.tournamentId).take(1);
+
     query.subscribe((gamesRef: any) => {
       gamesRef.forEach((game) => {
         if (game.tournamentRound === scenarioSelected.round) {
@@ -690,8 +711,8 @@ export class TournamentService  {
 
   teamGameResultEntered(gameResult: GameResult) {
 
-    const afoGames = this.afoDatabase.object('/tournament-games/' +  gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
-    afoGames.update(gameResult.gameAfter);
+    const afoGame = this.afoDatabase.object('/tournament-games/' +  gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
+    afoGame.update(gameResult.gameAfter);
 
     this.tournamentGameService.updateTeamMatchAfterGameResultEntered(gameResult);
 

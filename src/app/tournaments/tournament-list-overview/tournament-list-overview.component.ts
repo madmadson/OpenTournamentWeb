@@ -1,21 +1,22 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {ApplicationState} from '../../store/application-state';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
-import {TournamentListVM} from '../tournamentList.vm';
 import {Tournament} from '../../../../shared/model/tournament';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import {Subscription} from 'rxjs/Subscription';
+import {TournamentListVM} from '../../../../shared/view-model/tournamentList.vm';
 
 @Component({
   selector: 'tournament-list-overview',
   templateUrl: 'tournament-list-overview.component.html',
   styleUrls: ['tournament-list-overview.component.scss']
 })
-export class TournamentListOverviewComponent {
+export class TournamentListOverviewComponent implements OnDestroy {
 
-  allTournaments$: Observable<Tournament[]>;
+
+  allTournamentsSubscription: Subscription;
 
   orderedGroupedTournaments: TournamentListVM[];
   filteredOrderedGroupedTournaments: TournamentListVM[];
@@ -26,9 +27,7 @@ export class TournamentListOverviewComponent {
 
     this.selectedFilterState = 'Upcoming';
 
-    this.allTournaments$ = store.select(state => state.tournaments.tournaments);
-
-    store.select(
+    this.allTournamentsSubscription = this.store.select(
       state => {
         return _.chain(state.tournaments.tournaments).sortBy(function (value) {
           return new Date(value.beginDate);
@@ -47,6 +46,10 @@ export class TournamentListOverviewComponent {
       this.changeFilter();
     });
 
+  }
+  ngOnDestroy(): void {
+
+    this.allTournamentsSubscription.unsubscribe();
   }
 
   search(searchString: string) {

@@ -1,6 +1,6 @@
 
 
-import {RouterState} from '@ngrx/router-store';
+import * as fromRouter from '@ngrx/router-store';
 
 import {TournamentStoreData} from './reducers/tournamentsReducer';
 
@@ -15,16 +15,15 @@ import {AuthenticationStoreState} from './authentication-state';
 import {MySiteStoreData} from './reducers/mySiteReducer';
 import {ActualTournamentTeamsStoreData} from './reducers/tournamentTeamReducer';
 import {ActualTournamentTeamGamesStoreData} from './reducers/tournamentTeamGameReducer';
-import {ActualTournamentTeamRankingsStoreData} from "./reducers/tournamentTeamRankingReducer";
-import {GamesStoreData} from "./reducers/gamesReducer";
+import {ActualTournamentTeamRankingsStoreData} from './reducers/tournamentTeamRankingReducer';
+
 
 
 export interface ApplicationState {
 
-  routerState: RouterState;
+  routerState: fromRouter.RouterReducerState;
   tournaments: TournamentStoreData;
   players: PlayerStoreData;
-  games: GamesStoreData;
   authenticationStoreState: AuthenticationStoreState;
   mySiteSoreData: MySiteStoreData;
 

@@ -8,7 +8,8 @@ import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {
   TOURNAMENT_TEAM_GAME_ADDED_ACTION,
   TOURNAMENT_TEAM_GAME_CHANGED_ACTION,
-  TOURNAMENT_TEAM_GAME_DELETED_ACTION, TOURNAMENT_TEAM_GAMES_CLEAR_ACTION
+  TOURNAMENT_TEAM_GAME_DELETED_ACTION,
+  TOURNAMENT_TEAM_GAMES_CLEAR_ACTION
 } from '../actions/tournament-team-games-actions';
 
 
@@ -23,7 +24,7 @@ const INITIAL_STATE: ActualTournamentTeamGamesStoreData = {
 
 
 export function TournamentTeamGameReducer(
-  state: ActualTournamentTeamGamesStoreData = INITIAL_STATE, action: Action): ActualTournamentTeamGamesStoreData {
+  state: ActualTournamentTeamGamesStoreData = INITIAL_STATE, action): ActualTournamentTeamGamesStoreData {
 
 
   switch (action.type) {
@@ -53,7 +54,7 @@ export function TournamentTeamGameReducer(
 }
 
 function handleTournamentTeamGameClearAction(
-  state: ActualTournamentTeamGamesStoreData, action: Action): ActualTournamentTeamGamesStoreData {
+  state: ActualTournamentTeamGamesStoreData, action): ActualTournamentTeamGamesStoreData {
 
   const gamesStoreData: ActualTournamentTeamGamesStoreData = _.cloneDeep(state);
 
@@ -65,7 +66,7 @@ function handleTournamentTeamGameClearAction(
 
 
 function handleTournamentTeamGameAddedAction(
-  state: ActualTournamentTeamGamesStoreData, action: Action): ActualTournamentTeamGamesStoreData {
+  state: ActualTournamentTeamGamesStoreData, action): ActualTournamentTeamGamesStoreData {
 
 
   const newTournamentData: ActualTournamentTeamGamesStoreData = _.cloneDeep(state);
@@ -81,7 +82,7 @@ function handleTournamentTeamGameAddedAction(
 
 
 function handleTournamentTeamGameDeletedAction(
-  state: ActualTournamentTeamGamesStoreData, action: Action): ActualTournamentTeamGamesStoreData {
+  state: ActualTournamentTeamGamesStoreData, action): ActualTournamentTeamGamesStoreData {
   const newStoreState: ActualTournamentTeamGamesStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -94,7 +95,7 @@ function handleTournamentTeamGameDeletedAction(
 
 
 function handleTournamentTeamGameChangedData(
-  state: ActualTournamentTeamGamesStoreData, action: Action): ActualTournamentTeamGamesStoreData {
+  state: ActualTournamentTeamGamesStoreData, action): ActualTournamentTeamGamesStoreData {
   const newStoreState: ActualTournamentTeamGamesStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {

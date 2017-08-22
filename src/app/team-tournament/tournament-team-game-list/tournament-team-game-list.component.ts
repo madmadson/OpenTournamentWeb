@@ -194,6 +194,7 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
       if (!droppedGame.finished && this.draggedGame) {
         this.swapPlayerMode = false;
         this.dragStarted = false;
+        this.dragRequestTeamName = '';
         this.messageService.broadcast('swapPlayerMode', false);
 
         // Don't do anything if dropping the same column we're dragging.

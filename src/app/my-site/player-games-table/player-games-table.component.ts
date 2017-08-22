@@ -1,15 +1,15 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
-import {Router} from "@angular/router";
-import {WindowRefService} from "../../service/window-ref-service";
+import {Router} from '@angular/router';
+import {WindowRefService} from '../../service/window-ref-service';
 
 @Component({
   selector: 'player-games-table',
   templateUrl: './player-games-table.component.html',
-  styleUrls: ['./player-games-table.component.scss']
+  styleUrls: ['./player-games-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PlayerGamesTableComponent implements OnInit {
+export class PlayerGamesTableComponent {
 
   @Input() myGames: TournamentGame[];
   smallScreen: boolean;
@@ -27,9 +27,6 @@ export class PlayerGamesTableComponent implements OnInit {
       this.smallScreen = false;
       this.truncateMax = 40;
     }
-  }
-
-  ngOnInit() {
   }
 
   playerOneWon(game: TournamentGame): boolean {

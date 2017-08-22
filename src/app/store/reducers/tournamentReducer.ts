@@ -16,7 +16,7 @@ const INITIAL_STATE: ActualTournamentStoreData = {
 };
 
 
-export function TournamentReducer(state: ActualTournamentStoreData = INITIAL_STATE, action: Action): ActualTournamentStoreData {
+export function TournamentReducer(state: ActualTournamentStoreData = INITIAL_STATE, action): ActualTournamentStoreData {
 
 
   switch (action.type) {
@@ -34,7 +34,7 @@ export function TournamentReducer(state: ActualTournamentStoreData = INITIAL_STA
 }
 
 
-function handleSetTournament(state: ActualTournamentStoreData, action: Action): ActualTournamentStoreData {
+function handleSetTournament(state: ActualTournamentStoreData, action): ActualTournamentStoreData {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {

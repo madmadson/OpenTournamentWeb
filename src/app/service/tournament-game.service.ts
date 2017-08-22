@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ApplicationState} from '../store/application-state';
 import * as firebase from 'firebase';
@@ -16,7 +16,7 @@ import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-
 import {Tournament} from '../../../shared/model/tournament';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
-import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import {SwapGames} from '../../../shared/dto/swap-player';
 import {GameResult} from '../../../shared/dto/game-result';
 import {getEloFactorForPlayer} from '../../../shared/model/player';

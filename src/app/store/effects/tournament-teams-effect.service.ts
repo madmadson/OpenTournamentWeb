@@ -2,86 +2,97 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 
 import {
-  ADD_DUMMY_TEAM_ACTION, ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION, TEAM_REGISTRATION_CHANGE_ACTION,
+  ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION,
+  ArmyListForTeamRegistrationPushAction,
+  SubscribeTournamentTeamRegistrationsAction,
+  SubscribeTournamentTeamsAction,
+  TEAM_REGISTRATION_CHANGE_ACTION, TeamRegistrationChangeAction,
   TOURNAMENT_TEAM_ERASE_ACTION,
   TOURNAMENT_TEAM_PUSH_ACTION, TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION, TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION,
   TOURNAMENT_TEAM_REGISTRATION_PUSH_ACTION,
   TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION,
-  TOURNAMENT_TEAMS_SUBSCRIBE_ACTION, UPDATE_TEAM_ACTION
+  TOURNAMENT_TEAMS_SUBSCRIBE_ACTION, TournamentTeamEraseAction, TournamentTeamPushAction,
+  TournamentTeamRegistrationAcceptAction,
+  TournamentTeamRegistrationEraseAction,
+  TournamentTeamRegistrationPushAction,
+  UPDATE_TEAM_ACTION, UpdateTeamAction
 } from '../actions/tournament-teams-actions';
 import {TournamentTeamService} from '../../service/tournament-team.service';
-import {TOURNAMENT_TEAM_GAMES_SUBSCRIBE_ACTION} from '../actions/tournament-team-games-actions';
-import {TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION} from '../actions/tournament-team-rankings-actions';
+import {
+  SubscribeTournamentTeamGamesAction,
+  TOURNAMENT_TEAM_GAMES_SUBSCRIBE_ACTION
+} from '../actions/tournament-team-games-actions';
+import {
+  SubscribeTournamentTeamRankingsAction,
+  TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION
+} from '../actions/tournament-team-rankings-actions';
+import {Observable} from 'rxjs/Observable';
 
 
 
 @Injectable()
 export class TournamentTeamEffectService {
 
-  @Effect({dispatch: false}) subscribeReg = this.actions$
+  @Effect({dispatch: false}) subscribeTeamReg: Observable<void> = this.actions$
     .ofType(TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION)
     .debug('TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION')
-    .map(action => this.tournamentTeamService.subscribeOnTournamentTeamRegistrations(action.payload));
+    .map((action: SubscribeTournamentTeamRegistrationsAction) => this.tournamentTeamService.subscribeOnTournamentTeamRegistrations(action.payload));
 
-  @Effect({dispatch: false}) pushReg = this.actions$
+  @Effect({dispatch: false}) pushReg: Observable<void> = this.actions$
     .ofType(TOURNAMENT_TEAM_REGISTRATION_PUSH_ACTION)
     .debug('TOURNAMENT_TEAM_REGISTRATION_PUSH_ACTION')
-    .map(action => this.tournamentTeamService.pushTournamentTeamRegistration(action.payload));
+    .map((action: TournamentTeamRegistrationPushAction) => this.tournamentTeamService.pushTournamentTeamRegistration(action.payload));
 
-  @Effect({dispatch: false}) acceptTeamReg = this.actions$
+  @Effect({dispatch: false}) acceptTeamReg: Observable<void> = this.actions$
     .ofType(TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION)
     .debug('TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION')
-    .map(action => this.tournamentTeamService.acceptTournamentTeamRegistration(action.payload));
+    .map((action: TournamentTeamRegistrationAcceptAction) => this.tournamentTeamService.acceptTournamentTeamRegistration(action.payload));
 
-  @Effect({dispatch: false}) eraseTeamReg = this.actions$
+  @Effect({dispatch: false}) eraseTeamReg: Observable<void> = this.actions$
     .ofType(TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION)
     .debug('TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION')
-    .map(action => this.tournamentTeamService.eraseTournamentTeamRegistration(action.payload));
+    .map((action: TournamentTeamRegistrationEraseAction) => this.tournamentTeamService.eraseTournamentTeamRegistration(action.payload));
 
-  @Effect({dispatch: false}) addDummyTeam = this.actions$
-    .ofType(ADD_DUMMY_TEAM_ACTION)
-    .debug('ADD_DUMMY_TEAM_ACTION')
-    .map(action => this.tournamentTeamService.addDummyTeam(action.payload));
 
-  @Effect({dispatch: false}) subscribe = this.actions$
+  @Effect({dispatch: false}) subscribeTournamentTeams: Observable<void> = this.actions$
     .ofType(TOURNAMENT_TEAMS_SUBSCRIBE_ACTION)
     .debug('TOURNAMENT_TEAMS_SUBSCRIBE_ACTION')
-    .map(action => this.tournamentTeamService.subscribeOnTournamentTeams(action.payload));
+    .map((action: SubscribeTournamentTeamsAction) => this.tournamentTeamService.subscribeOnTournamentTeams(action.payload));
 
-  @Effect({dispatch: false}) subscribeTeamGames = this.actions$
+  @Effect({dispatch: false}) subscribeTeamGames: Observable<void> = this.actions$
     .ofType(TOURNAMENT_TEAM_GAMES_SUBSCRIBE_ACTION)
     .debug('TOURNAMENT_TEAM_GAMES_SUBSCRIBE_ACTION')
-    .map(action => this.tournamentTeamService.subscribeOnTournamentTeamGames(action.payload));
+    .map((action: SubscribeTournamentTeamGamesAction) => this.tournamentTeamService.subscribeOnTournamentTeamGames(action.payload));
 
   @Effect({dispatch: false}) subscribeTeamRankings = this.actions$
     .ofType(TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION)
     .debug('TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION')
-    .map(action => this.tournamentTeamService.subscribeOnTournamentTeamRankings(action.payload));
+    .map((action: SubscribeTournamentTeamRankingsAction) => this.tournamentTeamService.subscribeOnTournamentTeamRankings(action.payload));
 
-  @Effect({dispatch: false}) push = this.actions$
+  @Effect({dispatch: false}) pushTeam: Observable<void> = this.actions$
     .ofType(TOURNAMENT_TEAM_PUSH_ACTION)
     .debug('TOURNAMENT_TEAM_PUSH_ACTION')
-    .map(action => this.tournamentTeamService.pushTournamentTeam(action.payload));
+    .map((action: TournamentTeamPushAction) => this.tournamentTeamService.pushTournamentTeam(action.payload));
 
   @Effect({dispatch: false}) erase = this.actions$
     .ofType(TOURNAMENT_TEAM_ERASE_ACTION)
     .debug('TOURNAMENT_TEAM_ERASE_ACTION')
-    .map(action => this.tournamentTeamService.eraseTournamentTeam(action.payload));
+    .map((action: TournamentTeamEraseAction) => this.tournamentTeamService.eraseTournamentTeam(action.payload));
 
-  @Effect({dispatch: false}) changeRegistration = this.actions$
+  @Effect({dispatch: false}) changeRegistration: Observable<void> = this.actions$
     .ofType(TEAM_REGISTRATION_CHANGE_ACTION)
     .debug('TEAM_REGISTRATION_CHANGE_ACTION')
-    .map(action => this.tournamentTeamService.teamRegistrationChange(action.payload));
+    .map((action: TeamRegistrationChangeAction) => this.tournamentTeamService.teamRegistrationChange(action.payload));
 
   @Effect({dispatch: false}) armyListForTeamRegistration = this.actions$
     .ofType(ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION)
     .debug('ARMY_LIST_FOR_TEAM_REGISTRATION_PUSH_ACTION')
-    .map(action => this.tournamentTeamService.armyListForTeamRegistration(action.payload));
+    .map((action: ArmyListForTeamRegistrationPushAction) => this.tournamentTeamService.armyListForTeamRegistration(action.payload));
 
-  @Effect({dispatch: false}) updateTeamAction = this.actions$
+  @Effect({dispatch: false}) updateTeamAction: Observable<void> = this.actions$
     .ofType(UPDATE_TEAM_ACTION)
     .debug('UPDATE_TEAM_ACTION')
-    .map(action => this.tournamentTeamService.updateTeam(action.payload));
+    .map((action: UpdateTeamAction) => this.tournamentTeamService.updateTeam(action.payload));
 
 
   constructor(

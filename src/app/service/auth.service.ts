@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
+
 import {
   DeleteUserPlayerDataAction, SaveUserDataAction,
   SaveUserPlayerDataAction
@@ -13,39 +13,41 @@ import {Player} from '../../../shared/model/player';
 import * as firebase from 'firebase';
 import {AngularFireAuth} from 'angularfire2/auth';
 import {Observable} from 'rxjs/Observable';
+import {AppState} from "../store/reducers/index";
 
 @Injectable()
-export class LoginService implements OnInit, OnDestroy {
+export class LoginService implements OnDestroy {
 
   private authSubscription: Subscription;
+  private redirectUrlSubscription: Subscription;
   private query: any;
   private redirectUrl: string;
 
-  user: Observable<firebase.User>;
+  user$: Observable<firebase.User>;
 
   constructor(public afAuth: AngularFireAuth,
-              private store: Store<ApplicationState>,
+              private store: Store<AppState>,
               private router: Router,
               private snackBar: MdSnackBar) {
 
-    this.user = afAuth.authState;
-  }
+    this.user$ = afAuth.authState;
 
-  ngOnInit(): void {
-    this.store.select(state => state.authenticationStoreState.redirectUrl).subscribe(redirectUrl => {
+    this.redirectUrlSubscription = this.store.select(state => state.authentication.redirectUrl).subscribe(redirectUrl => {
       this.redirectUrl = redirectUrl;
     });
   }
 
+
   ngOnDestroy(): void {
 
     this.authSubscription.unsubscribe();
+    this.redirectUrlSubscription.unsubscribe();
   }
 
   subscribeOnAuthentication() {
 
 
-    this.authSubscription = this.user.subscribe(
+    this.authSubscription = this.user$.subscribe(
       (auth) => {
 
         if (auth != null) {

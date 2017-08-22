@@ -19,7 +19,7 @@ const INITIAL_STATE: ActualTournamentRankingsStoreData = {
 
 
 export function TournamentRankingReducer(
-  state: ActualTournamentRankingsStoreData = INITIAL_STATE, action: Action): ActualTournamentRankingsStoreData {
+  state: ActualTournamentRankingsStoreData = INITIAL_STATE, action): ActualTournamentRankingsStoreData {
 
 
   switch (action.type) {
@@ -48,7 +48,7 @@ export function TournamentRankingReducer(
   }
 }
 function handleTournamentRankingClearAction(
-  state: ActualTournamentRankingsStoreData, action: Action): ActualTournamentRankingsStoreData {
+  state: ActualTournamentRankingsStoreData, action): ActualTournamentRankingsStoreData {
 
   const rankingData: ActualTournamentRankingsStoreData = _.cloneDeep(state);
 
@@ -60,7 +60,7 @@ function handleTournamentRankingClearAction(
 
 
 function handleTournamentRankingAddedAction(
-  state: ActualTournamentRankingsStoreData, action: Action): ActualTournamentRankingsStoreData {
+  state: ActualTournamentRankingsStoreData, action): ActualTournamentRankingsStoreData {
 
 
   const rankingsStoreData: ActualTournamentRankingsStoreData = _.cloneDeep(state);
@@ -76,7 +76,7 @@ function handleTournamentRankingAddedAction(
 
 
 function handleTournamentRankingDeletedAction(
-  state: ActualTournamentRankingsStoreData, action: Action): ActualTournamentRankingsStoreData {
+  state: ActualTournamentRankingsStoreData, action): ActualTournamentRankingsStoreData {
   const newStoreState: ActualTournamentRankingsStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -89,7 +89,7 @@ function handleTournamentRankingDeletedAction(
 
 
 function handleTournamentRankingChangedData(
-  state: ActualTournamentRankingsStoreData, action: Action): ActualTournamentRankingsStoreData {
+  state: ActualTournamentRankingsStoreData, action): ActualTournamentRankingsStoreData {
   const newStoreState: ActualTournamentRankingsStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {

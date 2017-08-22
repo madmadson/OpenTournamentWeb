@@ -31,14 +31,6 @@ export class TournamentTeamRegistrationAcceptAction implements Action {
   }
 }
 
-export const ADD_DUMMY_TEAM_ACTION = 'ADD_DUMMY_TEAM_ACTION';
-export class AddDummyTeamAction implements Action {
-
-  readonly type = 'ADD_DUMMY_TEAM_ACTION';
-  constructor(public payload: string) {
-  }
-}
-
 export const TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION = 'TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION';
 export class TournamentTeamRegistrationEraseAction implements Action {
 

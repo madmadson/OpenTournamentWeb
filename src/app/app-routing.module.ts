@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {GameEditComponent} from './game-edit/game-edit.component';
-import {TournamentListOverviewComponent} from './tournament/tournament-list-overview/tournament-list-overview.component';
+import {TournamentListOverviewComponent} from './tournaments/tournament-list-overview/tournament-list-overview.component';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {HomePageComponent} from './home-page/home-page.component';
 import {PageNotFoundComponent} from './not-found.component';

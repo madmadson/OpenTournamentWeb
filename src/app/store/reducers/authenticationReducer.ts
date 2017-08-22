@@ -8,8 +8,23 @@ import {
 import * as _ from 'lodash';
 
 import {AuthenticationStoreState} from '../authentication-state';
+import {UserData} from '../../../../shared/model/user-data';
+import {Player} from '../../../../shared/model/player';
 
- const INITIAL_STATE: AuthenticationStoreState = {
+
+export interface AuthenticationState {
+  currentUserId: string;
+  currentUserName: string;
+  currentUserImage: string;
+  currentUserEmail: string;
+  loggedIn: boolean;
+  redirectUrl: string;
+
+  userData:  UserData;
+  userPlayerData: Player;
+}
+
+const initialState: AuthenticationState = {
 
   currentUserId: undefined,
   currentUserName: undefined,
@@ -22,7 +37,7 @@ import {AuthenticationStoreState} from '../authentication-state';
   userPlayerData: undefined
 };
 
-export function AuthenticationReducer(state: AuthenticationStoreState = INITIAL_STATE, action: Action): AuthenticationStoreState {
+export function authenticationReducer(state = initialState, action): AuthenticationState {
 
   switch (action.type) {
 
@@ -32,7 +47,7 @@ export function AuthenticationReducer(state: AuthenticationStoreState = INITIAL_
 
     case LOGOUT_ACTION:
 
-      return handleLogout(state, action);
+      return handleLogout(state);
 
     case ADD_REDIRECT_LOGIN_ACTION:
 
@@ -44,7 +59,7 @@ export function AuthenticationReducer(state: AuthenticationStoreState = INITIAL_
 
     case DELETE_USER_PLAYER_DATA_ACTION:
 
-      return handleDeleteUserPlayerData(state, action);
+      return handleDeleteUserPlayerData(state);
 
     default:
       return state;
@@ -52,7 +67,7 @@ export function AuthenticationReducer(state: AuthenticationStoreState = INITIAL_
   }
 }
 
-function handleSaveUserData(state: AuthenticationStoreState, action: Action): AuthenticationStoreState {
+function handleSaveUserData(state: AuthenticationState, action): AuthenticationState {
   const newState = Object.assign({}, state);
 
   newState.currentUserName = action.payload.displayName;
@@ -65,7 +80,7 @@ function handleSaveUserData(state: AuthenticationStoreState, action: Action): Au
 }
 
 
-function handleLogout(state: AuthenticationStoreState, action: Action): AuthenticationStoreState{
+function handleLogout(state: AuthenticationStoreState): AuthenticationState{
 
   const newState = Object.assign({}, state);
 
@@ -82,7 +97,7 @@ function handleLogout(state: AuthenticationStoreState, action: Action): Authenti
   return newState;
 }
 
-function handleAddRedirectLoginAction(state: AuthenticationStoreState, action: Action): AuthenticationStoreState{
+function handleAddRedirectLoginAction(state: AuthenticationState, action): AuthenticationState{
 
   const newState = Object.assign({}, state);
 
@@ -91,7 +106,7 @@ function handleAddRedirectLoginAction(state: AuthenticationStoreState, action: A
   return newState;
 }
 
-function handleSaveUserPlayerData(state: AuthenticationStoreState, action: Action): AuthenticationStoreState {
+function handleSaveUserPlayerData(state: AuthenticationState, action): AuthenticationState {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -102,7 +117,7 @@ function handleSaveUserPlayerData(state: AuthenticationStoreState, action: Actio
   return newStoreState;
 }
 
-function handleDeleteUserPlayerData(state: AuthenticationStoreState, action: Action): AuthenticationStoreState {
+function handleDeleteUserPlayerData(state: AuthenticationState): AuthenticationState {
   const newStoreState = _.cloneDeep(state);
 
   newStoreState.userPlayerData = undefined;
