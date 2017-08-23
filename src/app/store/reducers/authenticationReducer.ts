@@ -1,4 +1,4 @@
-import {Action} from '@ngrx/store';
+
 import {
   ADD_REDIRECT_LOGIN_ACTION, DELETE_USER_PLAYER_DATA_ACTION, LOGOUT_ACTION,
   SAVE_USER_PLAYER_DATA_ACTION,
@@ -7,7 +7,7 @@ import {
 
 import * as _ from 'lodash';
 
-import {AuthenticationStoreState} from '../authentication-state';
+
 import {UserData} from '../../../../shared/model/user-data';
 import {Player} from '../../../../shared/model/player';
 
@@ -80,7 +80,7 @@ function handleSaveUserData(state: AuthenticationState, action): AuthenticationS
 }
 
 
-function handleLogout(state: AuthenticationStoreState): AuthenticationState{
+function handleLogout(state: AuthenticationState): AuthenticationState{
 
   const newState = Object.assign({}, state);
 

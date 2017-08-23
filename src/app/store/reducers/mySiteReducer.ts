@@ -1,4 +1,3 @@
-import {Action} from '@ngrx/store';
 
 import * as _ from 'lodash';
 import {Registration} from '../../../../shared/model/registration';
@@ -10,20 +9,19 @@ import {
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 
 
-export interface MySiteStoreData {
+export interface MySiteState {
   myRegistrations: Registration[];
   myGames: TournamentGame[];
 }
 
-const INITIAL_STATE: MySiteStoreData = {
+const initialState: MySiteState = {
 
   myRegistrations: [],
   myGames: []
 };
 
 
-export function MySiteReducer(
-  state: MySiteStoreData = INITIAL_STATE, action: Action): MySiteStoreData {
+export function mySiteReducer(state = initialState, action): MySiteState {
 
 
   switch (action.type) {
@@ -69,7 +67,7 @@ export function MySiteReducer(
 }
 
 function handleMyRegistrationAddedAction(
-  state: MySiteStoreData, action): MySiteStoreData {
+  state: MySiteState, action): MySiteState {
 
 
   const newMySiteStoreData = _.cloneDeep(state);
@@ -84,7 +82,7 @@ function handleMyRegistrationAddedAction(
 }
 
 function handleMyRegistrationDeletedAction(
-  state: MySiteStoreData, action): MySiteStoreData {
+  state: MySiteState, action): MySiteState {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -97,7 +95,7 @@ function handleMyRegistrationDeletedAction(
 
 
 function handleMyRegistrationChangedData(
-  state: MySiteStoreData, action): MySiteStoreData {
+  state: MySiteState, action): MySiteState {
   const mySiteStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -110,7 +108,7 @@ function handleMyRegistrationChangedData(
 }
 
 function handleMyRegistrationClearAction(
-  state: MySiteStoreData, action): MySiteStoreData {
+  state: MySiteState, action): MySiteState {
 
   const mySiteStoreData = _.cloneDeep(state);
 
@@ -121,7 +119,7 @@ function handleMyRegistrationClearAction(
 
 
 function handleMyGameAddedAction(
-  state: MySiteStoreData, action): MySiteStoreData {
+  state: MySiteState, action): MySiteState {
 
 
   const newMySiteStoreData = _.cloneDeep(state);
@@ -136,7 +134,7 @@ function handleMyGameAddedAction(
 }
 
 function handleMyGameDeletedAction(
-  state: MySiteStoreData, action): MySiteStoreData {
+  state: MySiteState, action): MySiteState {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -149,7 +147,7 @@ function handleMyGameDeletedAction(
 
 
 function handleMyGameChangedData(
-  state: MySiteStoreData, action): MySiteStoreData {
+  state: MySiteState, action): MySiteState {
   const mySiteStoreData = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -162,7 +160,7 @@ function handleMyGameChangedData(
 }
 
 function handleMyGameClearAction(
-  state: MySiteStoreData, action): MySiteStoreData {
+  state: MySiteState, action): MySiteState {
 
   const mySiteStoreData = _.cloneDeep(state);
 

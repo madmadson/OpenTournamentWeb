@@ -1,6 +1,6 @@
 import { Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
+
 import * as firebase from 'firebase';
 
 import {
@@ -15,6 +15,7 @@ import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
 
 import * as _ from 'lodash';
+import {AppState} from '../store/reducers/index';
 
 @Injectable()
 export class TournamentsService  {
@@ -22,7 +23,7 @@ export class TournamentsService  {
   private tournamentsReference: firebase.database.Reference;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected store: Store<ApplicationState>,
+              protected store: Store<AppState>,
               private snackBar: MdSnackBar) {
   }
 

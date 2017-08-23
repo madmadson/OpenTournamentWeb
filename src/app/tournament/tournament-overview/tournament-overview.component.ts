@@ -7,7 +7,7 @@ import {TournamentPlayer} from '../../../../shared/model/tournament-player';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../../store/application-state';
+
 import {ActivatedRoute} from '@angular/router';
 
 import * as _ from 'lodash';
@@ -27,7 +27,6 @@ import {
 
 
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
-import {AuthenticationStoreState} from 'app/store/authentication-state';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
 import {
@@ -62,6 +61,7 @@ import {ClearPlayerGameResultAction} from 'app/store/actions/tournament-games-ac
 import {Player} from '../../../../shared/model/player';
 import {CoOrganizatorPush} from '../../../../shared/dto/co-organizator-push';
 import {TeamUpdate} from '../../../../shared/dto/team-update';
+import {AppState} from '../../store/reducers/index';
 
 @Component({
   selector: 'tournament-overview',
@@ -87,7 +87,6 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   actualTournamentGames$: Observable<TournamentGame[]>;
   actualTournamentTeamGames$: Observable<TournamentGame[]>;
 
-  authenticationStoreState$: Observable<AuthenticationStoreState>;
 
   selectedIndex: number;
 
@@ -102,7 +101,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   isTournamentPlayer: boolean;
   allActualTournamentPlayers: TournamentPlayer[];
 
-  constructor(private store: Store<ApplicationState>,
+  constructor(private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
               private messageService: GlobalEventService,
               private winRef: WindowRefService) {
@@ -124,34 +123,34 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.actualTournamentArmyList$ = this.store.select(state => state.actualTournamentArmyLists.actualTournamentArmyLists);
+    this.actualTournamentArmyList$ = this.store.select(state => state.actualTournament.actualTournamentArmyLists);
     this.actualTournamentRegisteredPlayers$ = this.store.select(
-      state => state.actualTournamentRegistrations.actualTournamentRegisteredPlayers);
-    this.authenticationStoreState$ = this.store.select(state => state.authenticationStoreState);
+      state => state.actualTournament.actualTournamentRegisteredPlayers);
+    this.store.select(state => state.authentication);
     this.allActualTournamentPlayers$ = this.store.select(
-      state => state.actualTournamentPlayers.actualTournamentPlayers);
+      state => state.actualTournament.actualTournamentPlayers);
 
     this.allActualTournamentPlayers$.subscribe(players => {
         this.allActualTournamentPlayers = players;
     });
 
     this.actualTournamentRankings$ = this.store.select(
-      state => state.actualTournamentRankings.actualTournamentRankings);
+      state => state.actualTournament.actualTournamentRankings);
 
     this.actualTournamentTeamRankings$ = this.store.select(
-      state => state.actualTournamentTeamRankings.actualTournamentTeamRankings);
+      state => state.actualTournament.actualTournamentTeamRankings);
 
     this.actualTournamentGames$ = this.store.select(
-      state => state.actualTournamentGames.actualTournamentGames);
+      state => state.actualTournament.actualTournamentGames);
 
     this.actualTournamentTeamGames$ = this.store.select(
-      state => state.actualTournamentTeamGames.actualTournamentTeamGames);
+      state => state.actualTournament.actualTournamentTeamGames);
 
     this.actualTournamentTeams$ = this.store.select(
-      state => state.actualTournamentTeams.teams);
+      state => state.actualTournament.actualTournamentTeams);
 
     this.actualTournamentTeamRegistrations$ = this.store.select(
-      state => state.actualTournamentTeams.registeredTeams);
+      state => state.actualTournament.actualTournamentRegisteredTeams);
 
     this.store.select(state => state)
       .subscribe(state => {
@@ -165,9 +164,9 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
           }
         }
 
-        if (state.authenticationStoreState) {
-          this.currentUserId = state.authenticationStoreState.currentUserId;
-          this.userPlayerData = state.authenticationStoreState.userPlayerData;
+        if (state.authentication) {
+          this.currentUserId = state.authentication.currentUserId;
+          this.userPlayerData = state.authentication.userPlayerData;
 
           this.isAdmin = this.checkIfAdmin();
 

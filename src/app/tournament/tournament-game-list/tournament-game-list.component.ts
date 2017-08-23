@@ -10,7 +10,6 @@ import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/materi
 import {ArmyList} from '../../../../shared/model/armyList';
 import {GameConfig, getWarmachineConfig} from '../../../../shared/dto/game-config';
 import {GameResult} from '../../../../shared/dto/game-result';
-import {AuthenticationStoreState} from '../../store/authentication-state';
 import {Tournament} from '../../../../shared/model/tournament';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 
@@ -34,7 +33,9 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   @Input() isAdmin: boolean;
   @Input() isCoOrganizer: boolean;
   @Input() actualTournament: Tournament;
-  @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
+
+  // TODO get current user over input
+
   @Input() actualTournamentArmyLists$: Observable<ArmyList[]>;
   @Input() gamesForRound: TournamentGame[];
   @Input() rankingsForRound$: Observable<TournamentRanking[]>;
@@ -85,11 +86,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     const that = this;
 
     this.armyLists$ = this.actualTournamentArmyLists$;
-
-    this.authenticationStoreState$.subscribe(auth => {
-      this.userPlayerData = auth.userPlayerData;
-      this.currentUserId = auth.currentUserId;
-    });
 
     this.rankingsForRound$.subscribe(rankings => {
       this.rankingsForRound = rankings;

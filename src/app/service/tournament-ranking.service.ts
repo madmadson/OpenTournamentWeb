@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
+
 import * as firebase from 'firebase';
 
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
@@ -18,6 +18,7 @@ import {TournamentGame} from '../../../shared/model/tournament-game';
 import {GameResult} from '../../../shared/dto/game-result';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
+import {AppState} from '../store/reducers/index';
 
 
 @Injectable()
@@ -34,15 +35,15 @@ export class TournamentRankingService {
   actualTournament: Tournament;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected store: Store<ApplicationState>) {
+              protected store: Store<AppState>) {
 
     this.store.select(state => state).subscribe(state => {
-      this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
-      this.allTeams = state.actualTournamentTeams.teams;
-      this.allPlayerRankings = state.actualTournamentRankings.actualTournamentRankings;
-      this.allTeamRankings = state.actualTournamentTeamRankings.actualTournamentTeamRankings;
-      this.allGames = state.actualTournamentGames.actualTournamentGames;
-      this.allTeamGames = state.actualTournamentTeamGames.actualTournamentTeamGames;
+      this.allPlayers = state.actualTournament.actualTournamentPlayers;
+      this.allTeams = state.actualTournament.actualTournamentTeams;
+      this.allPlayerRankings = state.actualTournament.actualTournamentRankings;
+      this.allTeamRankings = state.actualTournament.actualTournamentTeamRankings;
+      this.allGames = state.actualTournament.actualTournamentGames;
+      this.allTeamGames = state.actualTournament.actualTournamentTeamGames;
       this.actualTournament = state.actualTournament.actualTournament;
     });
 

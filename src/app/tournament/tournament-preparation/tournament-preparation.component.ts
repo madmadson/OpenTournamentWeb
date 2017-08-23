@@ -15,7 +15,7 @@ import {getAllCountries} from '../../../../shared/model/countries';
 import {Tournament} from '../../../../shared/model/tournament';
 
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
-import {AuthenticationStoreState} from '../../store/authentication-state';
+
 import {TournamentFormDialogComponent} from '../../dialogs/tournament-form-dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
@@ -32,8 +32,8 @@ import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registra
 import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
 import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
-import {CoOrganizatorPush} from "../../../../shared/dto/co-organizator-push";
-import {TeamUpdate} from "../../../../shared/dto/team-update";
+import {CoOrganizatorPush} from '../../../../shared/dto/co-organizator-push';
+import {TeamUpdate} from '../../../../shared/dto/team-update';
 
 @Component({
   selector: 'tournament-preparation',
@@ -45,7 +45,8 @@ export class TournamentPreparationComponent implements OnInit {
   @Input() actualTournament: Tournament;
   @Input() isAdmin: boolean;
   @Input() isCoOrganizer: boolean;
-  @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
+  @Input() userPlayerData: Player;
+
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() actualTournamentRegisteredPlayers$: Observable<Registration[]>;
   @Input() allActualTournamentPlayers$: Observable<TournamentPlayer[]>;
@@ -81,7 +82,6 @@ export class TournamentPreparationComponent implements OnInit {
   @Output() onUpdateTeam = new EventEmitter<TeamUpdate>();
 
   allRegistrations: Registration[];
-  userPlayerData: Player;
   myRegistration: Registration;
   teamCreator: TournamentTeam;
   myTeam: TournamentTeam;
@@ -108,43 +108,39 @@ export class TournamentPreparationComponent implements OnInit {
 
     this.armyLists$ = this.actualTournamentArmyList$;
 
-    this.authenticationStoreState$.subscribe(auth => {
-      this.userPlayerData = auth.userPlayerData;
-      this.loggedIn = auth.loggedIn;
-      this.currentUserId = auth.currentUserId;
 
-      this.actualTournamentRegisteredPlayers$.subscribe(allRegistrations => {
-        this.allRegistrations = allRegistrations;
-        this.myRegistration = _.find(allRegistrations,
-          function (reg) {
-            if (that.userPlayerData !== undefined) {
-              return reg.playerId === that.userPlayerData.id;
-            }
-          });
-      });
-      this.actualTournamentTeamRegistrations$.subscribe(teams => {
-        this.teamCreator = _.find(teams, function (team) {
+    this.actualTournamentRegisteredPlayers$.subscribe(allRegistrations => {
+      this.allRegistrations = allRegistrations;
+      this.myRegistration = _.find(allRegistrations,
+        function (reg) {
           if (that.userPlayerData !== undefined) {
-            return team.creatorUid === that.userPlayerData.userUid;
+            return reg.playerId === that.userPlayerData.id;
           }
         });
-        this.myTeam = _.find(teams, function (team) {
-          if (that.userPlayerData && team.registeredPlayerIds) {
-            if (team.registeredPlayerIds.indexOf(that.userPlayerData.id) !== -1) {
-              return team;
-            }
-          }
-        });
-        this.tournamentTeamRegistrations = teams.length;
-      });
-
-      this.actualTournamentTeams$.subscribe(teams => {
-
-        this.actualTournamentTeams = teams;
-        this.tournamentTeams = teams.length;
-      });
-
     });
+    this.actualTournamentTeamRegistrations$.subscribe(teams => {
+      this.teamCreator = _.find(teams, function (team) {
+        if (that.userPlayerData !== undefined) {
+          return team.creatorUid === that.userPlayerData.userUid;
+        }
+      });
+      this.myTeam = _.find(teams, function (team) {
+        if (that.userPlayerData && team.registeredPlayerIds) {
+          if (team.registeredPlayerIds.indexOf(that.userPlayerData.id) !== -1) {
+            return team;
+          }
+        }
+      });
+      this.tournamentTeamRegistrations = teams.length;
+    });
+
+    this.actualTournamentTeams$.subscribe(teams => {
+
+      this.actualTournamentTeams = teams;
+      this.tournamentTeams = teams.length;
+    });
+
+
     this.allActualTournamentPlayers$.subscribe(players => {
       this.allActualTournamentPlayers = players;
 
@@ -164,14 +160,6 @@ export class TournamentPreparationComponent implements OnInit {
 
   }
 
-  // isAdmin(): boolean {
-  //   if (this.actualTournament && this.currentUserId) {
-  //     return (this.currentUserId === this.actualTournament.creatorUid);
-  //   } else {
-  //     return false;
-  //   }
-  //
-  // }
 
   openStartTournamentDialog() {
 
@@ -282,7 +270,7 @@ export class TournamentPreparationComponent implements OnInit {
   }
 
   openPrintArmyListDialog() {
-     this.dialog.open(PrintArmyListsDialogComponent, {
+    this.dialog.open(PrintArmyListsDialogComponent, {
       data: {
         tournament: this.actualTournament,
         armyLists$: this.armyLists$
@@ -303,8 +291,8 @@ export class TournamentPreparationComponent implements OnInit {
 
       if (registrationPush !== undefined) {
         this.onAddTournamentRegistration.emit({
-            registration: registrationPush.registration,
-            tournament: this.actualTournament,
+          registration: registrationPush.registration,
+          tournament: this.actualTournament,
         });
       }
     });
@@ -383,10 +371,10 @@ export class TournamentPreparationComponent implements OnInit {
 
       if (registration !== undefined) {
         this.onDeleteRegistration.emit({
-           registration: registration,
-           tournament: this.actualTournament,
-           tournamentTeam: this.myTeam
-          });
+          registration: registration,
+          tournament: this.actualTournament,
+          tournamentTeam: this.myTeam
+        });
         dialogRef.close();
       }
     });
@@ -472,10 +460,10 @@ export class TournamentPreparationComponent implements OnInit {
       const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
         armyListRegistrationPush => {
 
-        if (armyListRegistrationPush !== undefined) {
-          this.onAddArmyListForRegistration.emit(armyListRegistrationPush);
-        }
-      });
+          if (armyListRegistrationPush !== undefined) {
+            this.onAddArmyListForRegistration.emit(armyListRegistrationPush);
+          }
+        });
       const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
 
         if (armyList !== undefined) {
@@ -614,7 +602,6 @@ export class TournamentPreparationComponent implements OnInit {
 }
 
 
-
 @Component({
   selector: 'create-team-dialog',
   templateUrl: './create-team-dialog.html'
@@ -685,7 +672,7 @@ export class CreateTeamDialogComponent implements OnInit {
       armyListsChecked: false,
       paymentChecked: false,
       playerMarkedPayment: false,
-      playerUploadedArmyLists:  false,
+      playerUploadedArmyLists: false,
       droppedInRound: 0
     };
   }
@@ -780,7 +767,7 @@ export class RegisterTeamDialogComponent implements OnInit {
       armyListsChecked: false,
       paymentChecked: false,
       playerMarkedPayment: false,
-      playerUploadedArmyLists:  false,
+      playerUploadedArmyLists: false,
       droppedInRound: 0
     };
   }

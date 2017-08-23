@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
+
 import {
   PlayerAddedAction,
   PlayerChangedAction,
@@ -12,7 +12,7 @@ import {MdSnackBar} from '@angular/material';
 import {Router} from '@angular/router';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import * as firebase from 'firebase';
-
+import {AppState} from '../store/reducers/index';
 
 @Injectable()
 export class PlayersService  implements OnDestroy {
@@ -20,7 +20,7 @@ export class PlayersService  implements OnDestroy {
   private playersRef: firebase.database.Reference;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected store: Store<ApplicationState>,
+              protected store: Store<AppState>,
               private  router: Router,
               private snackBar: MdSnackBar) {
   }

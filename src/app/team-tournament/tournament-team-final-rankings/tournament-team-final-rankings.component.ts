@@ -22,16 +22,13 @@ export class TournamentTeamFinalRankingsComponent implements OnInit {
   @Input() isAdmin: boolean;
   @Input() isCoOrganizer: boolean;
 
-  @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
+  @Input() userPlayerData: Player;
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() finalPlayerRankings$: Observable<TournamentRanking[]>;
   @Input() finalTeamRankings$: Observable<TournamentRanking[]>;
 
   @Output() onUndoTeamTournamentEnd = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onUploadTeamTournament = new EventEmitter();
-
-  userPlayerData: Player;
-  currentUserId: string;
 
   rankingsFullscreenMode: boolean;
 
@@ -45,11 +42,6 @@ export class TournamentTeamFinalRankingsComponent implements OnInit {
   ngOnInit() {
 
     this.armyLists$ = this.actualTournamentArmyList$;
-
-    this.authenticationStoreState$.subscribe(auth => {
-      this.userPlayerData = auth.userPlayerData;
-      this.currentUserId = auth.currentUserId;
-    });
   }
 
   publishTeamTournament() {

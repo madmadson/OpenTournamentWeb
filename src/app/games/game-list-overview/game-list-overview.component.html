@@ -1,16 +1,16 @@
-<h2 class="heading">Online Games ({{filteredGames?.length}}/{{orderedGames?.length}})</h2>
+<h2 class="heading">Online Games ({{(allGames$ | async)?.length}})</h2>
 <md-card>
   <mdl-textfield type="text"
                  maxlength="50"
                  placeholder="Filter by PlayerNames"
                  #seachInput
-                 (keyup)="search(seachInput.value)">
+                 (keyup)="filterGames(seachInput.value)">
   </mdl-textfield>
-  <ng-container *ngIf="filteredGames?.length == 0" >
+  <ng-container *ngIf="(allGames$ | async)?.length == 0" >
     <div class="heading">Load Games... <mdl-spinner  single-color active></mdl-spinner></div>
   </ng-container>
-  <mdl-list *ngIf="filteredGames?.length > 0">
-    <games-list [games]="filteredGames"></games-list>
+  <mdl-list *ngIf="(allGames$ | async)?.length > 0">
+    <games-list [games]="(allGames$ | async)"></games-list>
   </mdl-list>
 </md-card>
 

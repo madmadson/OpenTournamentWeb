@@ -1,11 +1,11 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
+
 import * as firebase from 'firebase';
 
 import {
   AddArmyListAction, ArmyListDeletedAction, ClearArmyListsAction,
-  ClearRegistrationAction, ClearTournamentPlayerAction, DropPlayerPushAction,
+  ClearRegistrationAction, ClearTournamentPlayerAction,
   SetActualTournamentAction, TournamentPlayerAdded, TournamentPlayerChanged, TournamentPlayerDeleted,
   TournamentRegistrationAdded,
   TournamentRegistrationChanged,
@@ -42,6 +42,7 @@ import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registratio
 import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
 import {DropPlayerPush} from '../../../shared/dto/drop-player-push';
 import {Subscription} from 'rxjs/Subscription';
+import {AppState} from '../store/reducers/index';
 
 
 @Injectable()
@@ -58,7 +59,7 @@ export class TournamentService implements OnDestroy {
   constructor(protected afoDatabase: AngularFireOfflineDatabase,
               protected rankingService: TournamentRankingService,
               protected tournamentGameService: TournamentGameService,
-              protected store: Store<ApplicationState>,
+              protected store: Store<AppState>,
               private snackBar: MdSnackBar) {
 
     this.tournamentSub =  this.store.select(state => state).subscribe(state => {

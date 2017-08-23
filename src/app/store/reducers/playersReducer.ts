@@ -1,6 +1,3 @@
-import {Action} from '@ngrx/store';
-
-
 import * as _ from 'lodash';
 import {
   PLAYER_ADDED_ACTION, PLAYER_CHANGED_ACTION, PLAYER_DELETED_ACTION,
@@ -8,17 +5,17 @@ import {
 } from '../actions/players-actions';
 import {Player} from '../../../../shared/model/player';
 
-export interface PlayerStoreData {
+export interface PlayersState {
   players: Player[];
 }
 
-const INITIAL_STATE: PlayerStoreData = {
+const initialState: PlayersState = {
 
   players: []
 };
 
 
-export function PlayersReducer(state: PlayerStoreData = INITIAL_STATE, action): PlayerStoreData {
+export function playersReducer(state = initialState, action): PlayersState {
 
 
   switch (action.type) {
@@ -46,16 +43,16 @@ export function PlayersReducer(state: PlayerStoreData = INITIAL_STATE, action): 
 }
 
 function handlePlayersClearAction(
-  state: PlayerStoreData, action): PlayerStoreData {
+  state: PlayersState, action): PlayersState {
 
-  const playersStoreData: PlayerStoreData = _.cloneDeep(state);
+  const playersStoreData: PlayersState = _.cloneDeep(state);
 
   playersStoreData.players = [];
 
   return playersStoreData;
 }
 
-function handlePlayerAddedData(state: PlayerStoreData, action): PlayerStoreData {
+function handlePlayerAddedData(state: PlayersState, action): PlayersState {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -65,7 +62,7 @@ function handlePlayerAddedData(state: PlayerStoreData, action): PlayerStoreData 
   return newStoreState;
 }
 
-function handlePlayerChangedData(state: PlayerStoreData, action): PlayerStoreData {
+function handlePlayerChangedData(state: PlayersState, action): PlayersState {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -76,7 +73,7 @@ function handlePlayerChangedData(state: PlayerStoreData, action): PlayerStoreDat
   return newStoreState;
 }
 
-function handlePlayerDeletedData(state: PlayerStoreData, action): PlayerStoreData {
+function handlePlayerDeletedData(state: PlayersState, action): PlayersState {
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {

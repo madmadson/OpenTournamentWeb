@@ -1,5 +1,5 @@
 import {Component, OnDestroy} from '@angular/core';
-import {ApplicationState} from '../../store/application-state';
+
 import {Store} from '@ngrx/store';
 import {Tournament} from '../../../../shared/model/tournament';
 
@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import {Subscription} from 'rxjs/Subscription';
 import {TournamentListVM} from '../../../../shared/view-model/tournamentList.vm';
+import {AppState} from '../../store/reducers/index';
 
 @Component({
   selector: 'tournament-list-overview',
@@ -23,7 +24,7 @@ export class TournamentListOverviewComponent implements OnDestroy {
 
   selectedFilterState: string;
 
-  constructor(private store: Store<ApplicationState>) {
+  constructor(private store: Store<AppState>) {
 
     this.selectedFilterState = 'Upcoming';
 

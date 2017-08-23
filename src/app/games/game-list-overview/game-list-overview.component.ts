@@ -1,55 +1,38 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
-import {TournamentGame} from '../../../../shared/model/tournament-game';
+import {Component, OnDestroy} from '@angular/core';
 
-
-import * as _ from 'lodash';
 import {GamesService} from '../games.service';
-import {Store} from "@ngrx/store";
+
+import {Observable} from 'rxjs/Observable';
+import {AppState} from '../../store/reducers/index';
+import {TournamentGame} from '../../../../shared/model/tournament-game';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'game-list-overview',
   templateUrl: './game-list-overview.component.html',
   styleUrls: ['./game-list-overview.component.scss']
 })
-export class GameListOverviewComponent implements OnInit, OnDestroy {
+export class GameListOverviewComponent implements OnDestroy {
 
-  gamesSub: Subscription;
-  filteredGames;
+  allGames$: Observable<TournamentGame[]>;
 
-  constructor(private gamesService: GamesService, private store: Store<any>) {
+  constructor(private gamesService: GamesService, private store: Store<AppState>) {
 
     this.gamesService.subscribeOnFirebaseGames();
 
-    this.store.select('games');
-  }
-
-  ngOnInit() {
-    this.gamesSub = this.store.select(state => state.games.games).map(games => {
-      return _.orderBy(games, ['id'], ['desc']);
-    }).subscribe(orderedGames => {
-      this.filteredGames = orderedGames;
-    });
+      this.allGames$ =  this.store.select(state => state.games.allGames);
 
   }
 
 
   ngOnDestroy() {
     this.gamesService.unsubscribeOnFirebaseGames();
-    this.gamesSub.unsubscribe();
+
   }
 
 
-  search(searchString: string) {
+  filterGames(filterString: string) {
 
-    // if (searchString === '') {
-    //   this.filteredGames = this.orderedGames;
-    // }
-    //
-    // this.filteredGames = _.filter(this.orderedGames, function (game: TournamentGame) {
-    //   return game.playerOnePlayerName.toLowerCase().startsWith(searchString.toLowerCase()) ||
-    //     game.playerTwoPlayerName.toLowerCase().startsWith(searchString.toLowerCase());
-    // });
 
   }
 

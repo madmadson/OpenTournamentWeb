@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../../store/application-state';
+
 import {LoginAction, LoginWithProviderAction} from '../../store/actions/auth-actions';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AppState} from '../../store/reducers/index';
 
 @Component({
   selector: 'login-page',
@@ -18,11 +19,11 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
-              private store: Store<ApplicationState>,
+              private store: Store<AppState>,
               private router: Router) {
     this.createForm();
 
-    this.subscription = store.select(state => state.authenticationStoreState).subscribe(authenticationStoreState => {
+    this.subscription = store.select(state => state.authentication).subscribe(authenticationStoreState => {
       if (authenticationStoreState.loggedIn !== false) {
         this.router.navigate([authenticationStoreState.redirectUrl ? authenticationStoreState.redirectUrl : '/home']);
       }

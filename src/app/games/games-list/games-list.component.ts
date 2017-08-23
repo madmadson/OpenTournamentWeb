@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {Router} from '@angular/router';
 import {WindowRefService} from '../../service/window-ref-service';
@@ -12,7 +12,7 @@ import {GamesDatabase, GamesDataSource} from '../../../../shared/table-model/gam
   styleUrls: ['./games-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GamesListComponent implements OnInit {
+export class GamesListComponent implements OnInit, OnChanges {
 
   @Input() games: TournamentGame[];
 
@@ -36,6 +36,22 @@ export class GamesListComponent implements OnInit {
       this.smallScreen = false;
       this.truncateMax = 40;
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    for (const propName in changes) {
+      if (changes.hasOwnProperty(propName)) {
+        const change = changes[propName];
+        const curVal = JSON.stringify(change.currentValue);
+        const prevVal = JSON.stringify(change.previousValue);
+
+        if (this.gamesDb) {
+          this.gamesDb.resetDatabase(change.currentValue);
+        }
+
+      }
+    }
+
   }
 
   ngOnInit() {

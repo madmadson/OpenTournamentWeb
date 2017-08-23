@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from './store/application-state';
+
 
 import {AuthSubscribeAction, LogoutAction} from './store/actions/auth-actions';
 import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from './store/actions/tournaments-actions';
@@ -12,6 +12,7 @@ import {WindowRefService} from './service/window-ref-service';
 import {Observable} from 'rxjs/Observable';
 
 import { isDevMode } from '@angular/core';
+import {AppState} from './store/reducers/index';
 
 @Component({
   selector: 'app-root',
@@ -40,7 +41,7 @@ export class AppComponent implements OnDestroy {
   isDevMode: boolean;
 
   constructor(private router: Router,
-              private store: Store<ApplicationState>,
+              private store: Store<AppState>,
               private messageService: GlobalEventService,
               private winRef: WindowRefService) {
 
@@ -51,7 +52,7 @@ export class AppComponent implements OnDestroy {
       this.sidenav.close();
     });
 
-    this.store.select(state => state.authenticationStoreState).subscribe(authenticationStoreState => {
+    this.store.select(state => state.authentication).subscribe(authenticationStoreState => {
         this.currentUserName = authenticationStoreState.currentUserName;
         this.loggedIn = authenticationStoreState.loggedIn;
         this.currentUserEmail = authenticationStoreState.currentUserEmail;
@@ -60,7 +61,7 @@ export class AppComponent implements OnDestroy {
     );
 
     this.store.dispatch(new AuthSubscribeAction());
-    this.store.dispatch(new TournamentsSubscribeAction());
+    // this.store.dispatch(new TournamentsSubscribeAction());
 
     this.sideNavOpen = this.winRef.nativeWindow.screen.width >= 800;
 

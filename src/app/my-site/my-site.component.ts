@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs/Observable';
 
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
+
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -19,6 +19,7 @@ import {Player} from '../../../shared/model/player';
 
 import {TournamentListVM} from '../../../shared/view-model/tournamentList.vm';
 import {Subscription} from 'rxjs/Subscription';
+import {AppState} from "../store/reducers/index";
 
 
 @Component({
@@ -45,13 +46,13 @@ export class MySiteComponent implements OnDestroy {
   private myRegistrationsSubscription: Subscription;
   private myGamesSubscription: Subscription;
 
-  constructor(private store: Store<ApplicationState>,
+  constructor(private store: Store<AppState>,
               public dialog: MdDialog,
               private winRef: WindowRefService) {
 
     this.smallScreen = this.winRef.nativeWindow.screen.width < 400;
 
-    this.authSubscription = this.store.select(state => state.authenticationStoreState).subscribe(
+    this.authSubscription = this.store.select(state => state.authentication).subscribe(
       authenticationStoreState => {
         this.creatorId = authenticationStoreState.currentUserId;
         this.creatorMail = authenticationStoreState.currentUserEmail;
@@ -64,7 +65,7 @@ export class MySiteComponent implements OnDestroy {
 
     this.allMyTournaments$ = store.select(state => {
       return _.filter(state.tournaments.tournaments, function (tournament) {
-        return tournament.creatorUid === state.authenticationStoreState.currentUserId;
+        return tournament.creatorUid === state.authentication.currentUserId;
       });
     });
 
@@ -75,7 +76,7 @@ export class MySiteComponent implements OnDestroy {
           return new Date(value.beginDate);
         })
           .filter(function (tournament) {
-            return tournament.creatorUid === state.authenticationStoreState.currentUserId;
+            return tournament.creatorUid === state.authentication.currentUserId;
           })
           .groupBy(function (tournament) {
             return moment(tournament.beginDate).format('MMMM YYYY');
@@ -87,12 +88,12 @@ export class MySiteComponent implements OnDestroy {
           .value();
       });
 
-    this.myRegistrationsSubscription = this.store.select(state => state.mySiteSoreData.myRegistrations).subscribe((registrations: Registration[]) => {
+    this.myRegistrationsSubscription = this.store.select(state => state.mySite.myRegistrations).subscribe((registrations: Registration[]) => {
         this.myRegistrations = _.chain(registrations).sortBy(function (reg: Registration) {
           return new Date(reg.tournamentDate);
         }).reverse().value();
     });
-    this.myGamesSubscription = this.store.select(state => state.mySiteSoreData.myGames).subscribe((games: TournamentGame[]) => {
+    this.myGamesSubscription = this.store.select(state => state.mySite.myGames).subscribe((games: TournamentGame[]) => {
        this.myGames = games;
     });
   }

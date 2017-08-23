@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
+
 import * as firebase from 'firebase';
 
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
@@ -21,6 +21,7 @@ import {SwapGames} from '../../../shared/dto/swap-player';
 import {GameResult} from '../../../shared/dto/game-result';
 import {getEloFactorForPlayer} from '../../../shared/model/player';
 import {TournamentRankingService} from './tournament-ranking.service';
+import {AppState} from '../store/reducers/index';
 
 
 @Injectable()
@@ -40,19 +41,19 @@ export class TournamentGameService {
   private newTeamGames: TournamentGame[];
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected store: Store<ApplicationState>,
+              protected store: Store<AppState>,
               protected rankingService: TournamentRankingService) {
 
     this.store.select(state => state).subscribe(state => {
 
       this.actualTournament = state.actualTournament.actualTournament;
-      this.allRankings = state.actualTournamentRankings.actualTournamentRankings;
-      this.allTeamRankings = state.actualTournamentTeamRankings.actualTournamentTeamRankings;
-      this.allTeamGames = state.actualTournamentTeamGames.actualTournamentTeamGames;
-      this.allPlayers = state.actualTournamentPlayers.actualTournamentPlayers;
-      this.allTeams = state.actualTournamentTeams.teams;
-      this.allGames = state.actualTournamentGames.actualTournamentGames;
-      this.allRegistrations = state.actualTournamentRegistrations.actualTournamentRegisteredPlayers;
+      this.allRankings = state.actualTournament.actualTournamentRankings;
+      this.allTeamRankings = state.actualTournament.actualTournamentTeamRankings;
+      this.allTeamGames = state.actualTournament.actualTournamentTeamGames;
+      this.allPlayers = state.actualTournament.actualTournamentPlayers;
+      this.allTeams = state.actualTournament.actualTournamentTeams;
+      this.allGames = state.actualTournament.actualTournamentGames;
+      this.allRegistrations = state.actualTournament.actualTournamentRegisteredPlayers;
 
     });
   }

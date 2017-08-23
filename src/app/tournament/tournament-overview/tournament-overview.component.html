@@ -12,9 +12,9 @@
   <mdl-tabs *ngIf="actualTournament" mdl-ripple [mdl-tab-active-index]="selectedIndex">
     <mdl-tab-panel mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">
         <tournament-preparation
+          [userPlayerData]="userPlayerData"
           [isAdmin]="isAdmin"
           [isCoOrganizer]="isCoOrganizer"
-          [authenticationStoreState$]="authenticationStoreState$"
           [actualTournament]="actualTournament"
           [actualTournamentArmyList$]="actualTournamentArmyList$"
           [allActualTournamentPlayers$]="allActualTournamentPlayers$"
@@ -107,7 +107,7 @@
                                    [isAdmin]="isAdmin"
                                    [isCoOrganizer]="isCoOrganizer"
                                    [actualTournament]="actualTournament"
-                                   [authenticationStoreState$]="authenticationStoreState$"
+                                   [userPlayerData]="userPlayerData"
                                    [actualTournamentArmyList$]="actualTournamentArmyList$"
                                    [finalPlayerRankings$]="getFinalPlayerRankings()"
                                    (onUndoTournamentEnd)="handleUndoTournamentEnd($event)"
@@ -117,7 +117,7 @@
                                         [isAdmin]="isAdmin"
                                         [isCoOrganizer]="isCoOrganizer"
                                         [actualTournament]="actualTournament"
-                                        [authenticationStoreState$]="authenticationStoreState$"
+                                        [userPlayerData]="userPlayerData"
                                         [actualTournamentArmyList$]="actualTournamentArmyList$"
                                         [finalPlayerRankings$]="getFinalPlayerRankings(round)"
                                         [finalTeamRankings$]="getFinalTeamRankings(round)"

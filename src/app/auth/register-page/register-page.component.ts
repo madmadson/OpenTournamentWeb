@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CustomValidators} from 'ng2-validation';
-import {ApplicationState} from '../../store/application-state';
+
 import {Store} from '@ngrx/store';
 import {CreateAccountAction} from '../../store/actions/auth-actions';
+import {AppState} from '../../store/reducers/index';
 
 @Component({
   selector: 'register-page',
@@ -22,7 +23,7 @@ export class RegisterPageComponent implements OnInit {
   };
 
   constructor(private formBuilder: FormBuilder,
-              private store: Store<ApplicationState>) {
+              private store: Store<AppState>) {
 
   }
 

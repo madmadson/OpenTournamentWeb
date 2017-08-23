@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
+
 import * as firebase from 'firebase';
 
 import {
@@ -30,6 +30,8 @@ import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import {TeamRegistrationChange} from '../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../shared/dto/team-armyList-push';
 import {TeamUpdate} from '../../../shared/dto/team-update';
+import {AppState} from '../store/reducers/index';
+
 
 
 @Injectable()
@@ -41,7 +43,7 @@ export class TournamentTeamService {
   tournamentTeamRankingsRef: firebase.database.Reference;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected store: Store<ApplicationState>,
+              protected store: Store<AppState>,
               private snackBar: MdSnackBar) {
   }
 

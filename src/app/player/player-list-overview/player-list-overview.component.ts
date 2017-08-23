@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../../store/application-state';
+
 import {PlayersSubscribeAction} from '../../store/actions/players-actions';
 
 import * as _ from 'lodash';
 import {Player} from '../../../../shared/model/player';
 import {Subscription} from 'rxjs/Subscription';
+import {AppState} from '../../store/reducers/index';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class PlayerListOverviewComponent implements OnInit, OnDestroy {
   orderedPlayers: Player[];
   filteredPlayers: Player[];
 
-  constructor(private store: Store<ApplicationState>) {
+  constructor(private store: Store<AppState>) {
     this.store.dispatch(new PlayersSubscribeAction());
   }
 

@@ -10,9 +10,8 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import {GameEditComponent} from './game-edit/game-edit.component';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
 import {HomePageComponent} from './home-page/home-page.component';
-import {ActionReducer, combineReducers, StoreModule, ActionReducerMap} from '@ngrx/store';
+import { StoreModule} from '@ngrx/store';
 import 'rxjs/Rx';
-import {ApplicationState} from './store/application-state';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
 import {environment} from '../environments/environment';
@@ -24,7 +23,7 @@ import {AuthEffectService} from './store/effects/auth-effect.service';
 import {TournamentsEffectService} from './store/effects/tournaments-effect.service';
 import {LoginService} from './service/auth.service';
 import {TournamentsService} from './service/tournaments.service';
-import {routerReducer} from '@ngrx/router-store';
+
 import {MomentModule} from 'angular2-moment';
 import {TournamentListOverviewComponent} from './tournaments/tournament-list-overview/tournament-list-overview.component';
 
@@ -83,13 +82,13 @@ import {DateTimePickerModule} from 'ng-pick-datetime';
 import { AboutComponent } from './about/about.component';
 import {MySiteService} from './service/my-site.service';
 import {MySiteEffectService} from './store/effects/my-registrations-effect.service';
-import {MySiteReducer} from './store/reducers/mySiteReducer';
+
 import { PlayerRegistrationsTableComponent } from './my-site/player-registrations-table/player-registrations-table.component';
 import { PlayerGamesTableComponent } from './my-site/player-games-table/player-games-table.component';
 import {GlobalEventService} from './service/global-event-service';
 import { TournamentGameTableComponent } from './tournament/tournament-game-table/tournament-game-table.component';
 import {WindowRefService} from './service/window-ref-service';
-import {TournamentTeamReducer} from './store/reducers/tournamentTeamReducer';
+
 import {TournamentTeamService} from './service/tournament-team.service';
 import {TournamentTeamEffectService} from './store/effects/tournament-teams-effect.service';
 import { TournamentTeamListComponent } from './tournament/tournament-team-list/tournament-team-list.component';
@@ -101,10 +100,10 @@ import {NewTournamentPlayerDialogComponent} from './dialogs/add-tournament-playe
 import { GamesListComponent } from './games/games-list/games-list.component';
 import {PrintArmyListsDialogComponent} from './dialogs/print-army-lists-dialog';
 import { TournamentTeamRoundOverviewComponent } from './team-tournament/tournament-team-round-overview/tournament-team-round-overview.component';
-import {TournamentTeamGameReducer} from './store/reducers/tournamentTeamGameReducer';
+
 import {KillRoundDialogComponent} from './dialogs/round-overview/kill-round-dialog';
 import {PairAgainDialogComponent} from './dialogs/round-overview/pair-again-dialog';
-import {TournamentTeamRankingReducer} from './store/reducers/tournamentTeamRankingReducer';
+
 import {AddArmyListsDialogComponent} from './dialogs/add-army-lists-dialog';
 import {PrintRankingsDialogComponent} from './dialogs/print-rankings-dialog';
 import {PrintGamesDialogComponent} from './dialogs/print-games-dialog';
@@ -137,7 +136,7 @@ import {AddCoOrganizatorDialogComponent} from './dialogs/add-co-organizator-dial
 
 
 import {GamesService} from './games/games.service';
-import {reducers} from "./store/reducers/index";
+import {reducers} from './store/reducers/index';
 
 
 

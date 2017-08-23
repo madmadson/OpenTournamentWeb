@@ -1,7 +1,6 @@
 
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../store/application-state';
 
 import {
   MyGameAddedAction, MyGameChangedAction, MyGameDeletedAction,
@@ -12,30 +11,18 @@ import {
 import {Registration} from '../../../shared/model/registration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import * as firebase from 'firebase';
+import {AppState} from '../store/reducers/index';
 
 @Injectable()
-export class MySiteService  implements OnDestroy {
+export class MySiteService {
 
 
   private myRegistrationsRef: firebase.database.Reference;
   private myGamesRef: firebase.database.Reference;
 
 
-  constructor(protected store: Store<ApplicationState>) {
+  constructor(protected store: Store<AppState>) {
 
-  }
-
-  ngOnDestroy(): void {
-
-    if (this.myRegistrationsRef) {
-      this.myRegistrationsRef.off();
-    }
-    if (this.myGamesRef) {
-      this.myGamesRef.off();
-    }
-    if (this.myGamesRef) {
-      this.myGamesRef.off();
-    }
   }
 
   subscribeOnMySite(playerId: string) {
@@ -44,14 +31,26 @@ export class MySiteService  implements OnDestroy {
     this.subscribeOnMyGames(playerId);
   }
 
-  private subscribeOnMyRegistrations(playerId: string) {
+  unSubscribeOnMySite() {
 
-    const that = this;
-    this.store.dispatch(new MyRegistrationsClearAction());
 
     if (this.myRegistrationsRef) {
       this.myRegistrationsRef.off();
     }
+    if (this.myGamesRef) {
+      this.myGamesRef.off();
+    }
+    if (this.myGamesRef) {
+      this.myGamesRef.off();
+    }
+
+    this.store.dispatch(new MyRegistrationsClearAction());
+  }
+
+  private subscribeOnMyRegistrations(playerId: string) {
+
+    const that = this;
+
 
     this.myRegistrationsRef = firebase.database().ref('players-registrations/' + playerId);
 

@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {ArmyList} from '../../../../shared/model/armyList';
-import {AuthenticationStoreState} from '../../store/authentication-state';
+
 import {Tournament} from '../../../../shared/model/tournament';
 import {Player} from '../../../../shared/model/player';
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
@@ -16,16 +16,13 @@ export class TournamentFinalRankingsComponent implements OnInit {
   @Input() actualTournament: Tournament;
   @Input() isAdmin: boolean;
   @Input() isCoOrganizer: boolean;
-
-  @Input() authenticationStoreState$: Observable<AuthenticationStoreState>;
+  @Input() userPlayerData: Player;
   @Input() actualTournamentArmyList$: Observable<ArmyList[]>;
   @Input() finalPlayerRankings$: Observable<TournamentRanking[]>;
 
   @Output() onUndoTournamentEnd = new EventEmitter<TournamentManagementConfiguration>();
   @Output() onUploadTournament = new EventEmitter();
 
-  userPlayerData: Player;
-  currentUserId: string;
 
   armyLists: Observable<ArmyList[]>;
 
@@ -35,10 +32,6 @@ export class TournamentFinalRankingsComponent implements OnInit {
 
     this.armyLists = this.actualTournamentArmyList$;
 
-    this.authenticationStoreState$.subscribe(auth => {
-      this.userPlayerData = auth.userPlayerData;
-      this.currentUserId = auth.currentUserId;
-    });
   }
 
   publishTournament() {

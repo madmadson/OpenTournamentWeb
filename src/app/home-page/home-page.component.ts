@@ -1,8 +1,9 @@
 import {Component, OnDestroy} from '@angular/core';
-import {ApplicationState} from '../store/application-state';
+
 import {Store} from '@ngrx/store';
 import {Player} from '../../../shared/model/player';
 import {Subscription} from 'rxjs/Subscription';
+import {AppState} from '../store/reducers/index';
 
 
 @Component({
@@ -17,13 +18,13 @@ export class HomePageComponent implements OnDestroy {
 
   private authSubscription: Subscription;
 
-  constructor(private store: Store<ApplicationState>) {
+  constructor(private store: Store<AppState>) {
 
-    this.authSubscription = store.select(state => state.authenticationStoreState).subscribe(
+    this.authSubscription = store.select(state => state.authentication).subscribe(
 
-      authenticationStoreState => {
-        this.userPlayerData = authenticationStoreState.userPlayerData;
-        this.loggedIn = authenticationStoreState.loggedIn;
+      authentication => {
+        this.userPlayerData = authentication.userPlayerData;
+        this.loggedIn = authentication.loggedIn;
       }
     );
   }

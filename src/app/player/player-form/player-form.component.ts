@@ -1,11 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
-import {ApplicationState} from '../../store/application-state';
+
 import {Player} from '../../../../shared/model/player';
 
 import {PlayerPushAction} from '../../store/actions/players-actions';
 import {getAllCountries} from '../../../../shared/model/countries';
+import {AppState} from "../../store/reducers/index";
 
 @Component({
   selector: 'player-form',
@@ -25,11 +26,11 @@ export class PlayerFormComponent implements OnInit {
   currentUserEmail: string;
 
   constructor(protected formBuilder: FormBuilder,
-              protected store: Store<ApplicationState>) {
+              protected store: Store<AppState>) {
 
     this.countries = getAllCountries();
 
-    this.store.select(state => state.authenticationStoreState).subscribe(authenticationState => {
+    this.store.select(state => state.authentication).subscribe(authenticationState => {
       this.currentUserId = authenticationState.currentUserId;
       this.currentUserEmail = authenticationState.currentUserEmail;
     });
