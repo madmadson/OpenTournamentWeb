@@ -1,21 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
-import {TournamentsService} from '../../service/tournaments.service';
+import {TournamentsService} from '../../tournaments/tournaments.service';
 import {
   CO_ORGANIZER_ADD_ACTION,
   CO_ORGANIZER_DELETE_ACTION, CoOrganizatorAddAction, CoOrganizatorDeleteAction,
-  TOURNAMENT_PUSH_ACTION, TOURNAMENT_SET_ACTION, TournamentPushAction,
-  TOURNAMENTS_SUBSCRIBE_ACTION, TournamentSetAction, TournamentsSubscribeAction
+  TOURNAMENT_PUSH_ACTION, TOURNAMENT_SET_ACTION, TournamentPushAction, TournamentSetAction
 } from '../actions/tournaments-actions';
 
 @Injectable()
 export class TournamentsEffectService {
 
-
-  @Effect({dispatch: false}) subscribe = this.actions$
-    .ofType(TOURNAMENTS_SUBSCRIBE_ACTION)
-    .debug('TOURNAMENTS_SUBSCRIBE_ACTION')
-    .map((action: TournamentsSubscribeAction) => this.tournamentService.subscribeOnTournaments());
 
   @Effect({dispatch: false}) pushTournament = this.actions$
     .ofType(TOURNAMENT_PUSH_ACTION)

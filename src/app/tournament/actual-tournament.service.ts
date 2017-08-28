@@ -1,22 +1,20 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import * as firebase from 'firebase';
 
 import {
   AddArmyListAction, ArmyListDeletedAction, ClearArmyListsAction,
-  ClearRegistrationAction, ClearTournamentPlayerAction,
-  SetActualTournamentAction, TournamentPlayerAdded, TournamentPlayerChanged, TournamentPlayerDeleted,
-  TournamentRegistrationAdded,
-  TournamentRegistrationChanged,
-  TournamentRegistrationDeleted
-} from '../store/actions/tournament-actions';
+  ClearTournamentPlayerAction,
+  TournamentPlayerAdded, TournamentPlayerChanged, TournamentPlayerDeleted,
+  SET_ACTUAL_TOURNAMENT_ACTION, UNSET_ACTUAL_TOURNAMENT_ACTION
+} from './tournament-actions';
 import {Registration} from '../../../shared/model/registration';
 import {MdSnackBar} from '@angular/material';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyList} from '../../../shared/model/armyList';
-import {TournamentRankingService} from './tournament-ranking.service';
-import {TournamentGameService} from './tournament-game.service';
+import {TournamentRankingService} from '../service/tournament-ranking.service';
+import {TournamentGameService} from '../service/tournament-game.service';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {SubscribeTournamentRankingsAction} from '../store/actions/tournament-rankings-actions';
@@ -46,10 +44,9 @@ import {AppState} from '../store/reducers/index';
 
 
 @Injectable()
-export class TournamentService implements OnDestroy {
+export class TournamentService  {
 
 
-  private tournamentRegistrationsRef: firebase.database.Reference;
   private tournamentPlayerRef: firebase.database.Reference;
   private armyListsRef: firebase.database.Reference;
 
@@ -68,15 +65,14 @@ export class TournamentService implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
 
-    console.log('ngOnDestroy');
-
+  unsubscribeOnFirebaseTournament() {
     this.tournamentSub.unsubscribe();
 
-    if (this.tournamentRegistrationsRef) {
-      this.tournamentRegistrationsRef.off();
-    }
+    this.store.dispatch({type: UNSET_ACTUAL_TOURNAMENT_ACTION});
+
+
+
     if (this.tournamentPlayerRef) {
       this.tournamentPlayerRef.off();
     }
@@ -85,66 +81,29 @@ export class TournamentService implements OnDestroy {
     }
   }
 
-  subscribeOnTournament(tournamentId: string) {
+  subscribeOnFirebaseTournament(tournamentId: string) {
 
-    this.afoDatabase.object('tournaments/' + tournamentId).subscribe(
+
+    this.tournamentSub = this.afoDatabase.object('tournaments/' + tournamentId).subscribe(
       tournament => {
 
-        console.log('subscribeOnTournament');
-
         tournament.id = tournamentId;
-        this.store.dispatch(new SetActualTournamentAction(tournament));
+        this.store.dispatch({type: SET_ACTUAL_TOURNAMENT_ACTION, payload: tournament});
 
       }
     );
 
-    this.subscribeOnTournamentRegistrations(tournamentId);
-    this.subscribeOnTournamentPlayers(tournamentId);
-    this.subscribeOnArmyLists(tournamentId);
-    this.store.dispatch(new SubscribeTournamentTeamsAction(tournamentId));
-    this.store.dispatch(new SubscribeTournamentTeamRegistrationsAction(tournamentId));
-    this.store.dispatch(new SubscribeTournamentRankingsAction(tournamentId));
-    this.store.dispatch(new SubscribeTournamentTeamRankingsAction(tournamentId));
-    this.store.dispatch(new SubscribeTournamentGamesAction(tournamentId));
-    this.store.dispatch(new SubscribeTournamentTeamGamesAction(tournamentId));
+    // this.subscribeOnTournamentPlayers(tournamentId);
+    // this.subscribeOnArmyLists(tournamentId);
+    // this.store.dispatch(new SubscribeTournamentTeamsAction(tournamentId));
+    // this.store.dispatch(new SubscribeTournamentTeamRegistrationsAction(tournamentId));
+    // this.store.dispatch(new SubscribeTournamentRankingsAction(tournamentId));
+    // this.store.dispatch(new SubscribeTournamentTeamRankingsAction(tournamentId));
+    // this.store.dispatch(new SubscribeTournamentGamesAction(tournamentId));
+    // this.store.dispatch(new SubscribeTournamentTeamGamesAction(tournamentId));
   }
 
-  private subscribeOnTournamentRegistrations(tournamentId: string) {
 
-    const that = this;
-
-    this.store.dispatch(new ClearRegistrationAction());
-
-    if (this.tournamentRegistrationsRef) {
-      this.tournamentRegistrationsRef.off();
-    }
-
-    this.tournamentRegistrationsRef = firebase.database().ref('tournament-registrations/' + tournamentId);
-
-    this.tournamentRegistrationsRef.on('child_added', function (snapshot) {
-
-      const registration: Registration = Registration.fromJson(snapshot.val());
-      registration.id = snapshot.key;
-
-      that.store.dispatch(new TournamentRegistrationAdded(registration));
-
-    });
-
-    this.tournamentRegistrationsRef.on('child_changed', function (snapshot) {
-
-      const registration: Registration = Registration.fromJson(snapshot.val());
-      registration.id = snapshot.key;
-
-      that.store.dispatch(new TournamentRegistrationChanged(registration));
-
-    });
-
-    this.tournamentRegistrationsRef.on('child_removed', function (snapshot) {
-
-      that.store.dispatch(new TournamentRegistrationDeleted(snapshot.key));
-
-    });
-  }
 
   private subscribeOnTournamentPlayers(tournamentId: string) {
     const that = this;

@@ -1,54 +1,41 @@
-<ng-container *ngIf="!tournaments">
-  <div class="heading">Load Tournaments...
-    <mdl-spinner single-color active></mdl-spinner>
+<md-list-item class="list-item"
+              *ngFor="let tournament of tournaments; let even = even;"
+              [ngClass]="{'even': even}"
+              (click)="onSelect(tournament)">
+
+  <md-icon mdTooltip="Solo Tournament"
+           *ngIf="tournament.teamSize <= 0"
+           md-list-avatar
+           mdl-badge="1" mdl-badge-overlap>
+    person_outline
+  </md-icon>
+  <md-icon mdTooltip="Team Tournament!"
+           *ngIf="tournament.teamSize > 0"
+           md-list-avatar
+           mdl-badge="{{tournament.teamSize}}" mdl-badge-overlap>
+    group_outline
+  </md-icon>
+  <span md-line>{{tournament.name | truncate:truncateMax}}</span>
+
+  <div md-line *ngIf="(tournament.beginDate | date:'MM/d/yy') === (tournament.endDate | date:'MM/d/yy')">
+    {{tournament.beginDate | date:'EEE, d'}}
+    <ng-container *ngIf="!verySmallDevice">
+      / {{tournament.beginDate | date:'HH:mm'}}-{{tournament.endDate | date:'HH:mm'}}
+    </ng-container>
   </div>
-</ng-container>
-
-<mdl-list-item lines="3"
-               class="list-item"
-               *ngFor="let tournament of tournaments; let even = even;"
-               [ngClass]="{'even': even}"
-               (click)="onSelect(tournament)">
-  <mdl-list-item-primary-content>
-    <mdl-icon mdTooltip="Solo Tournament"
-              *ngIf="tournament.teamSize == ''"
-              mdl-list-item-avatar
-              mdl-badge="1" mdl-badge-overlap>
-      person_outline
-    </mdl-icon>
-    <mdl-icon mdTooltip="Team Tournament!"
-              *ngIf="tournament.teamSize > 0"
-              mdl-list-item-avatar
-              mdl-badge="{{tournament.teamSize}}" mdl-badge-overlap>
-      group_outline
-    </mdl-icon>
-    <span>{{tournament.name | truncate:truncateMax}}</span>
-    <mdl-list-item-text-body>
-      <div
-           *ngIf="(tournament.beginDate | date:'MM/d/yy') === (tournament.endDate | date:'MM/d/yy')">
-        {{tournament.beginDate | date:'EEE, d'}}
-        <ng-container *ngIf="!verySmallDevice">
-          / {{tournament.beginDate | date:'HH:mm'}}-{{tournament.endDate | date:'HH:mm'}}
-        </ng-container>
-      </div>
-      <div *ngIf="(tournament.beginDate | date:'MM/d/yy') !== (tournament.endDate | date:'MM/d/yy')">
-        {{tournament.beginDate | date:'EEE, d'}} - {{tournament.endDate | date:'EEE, d'}}
-        <ng-container *ngIf="!verySmallDevice">
-          / {{tournament.beginDate | date:'HH:mm'}}-{{tournament.endDate | date:'HH:mm'}}
-        </ng-container>
-      </div>
-      <div>{{tournament.location | truncate:truncateMax}}</div>
-    </mdl-list-item-text-body>
-  </mdl-list-item-primary-content>
-  <mdl-list-item-secondary-content *ngIf="!verySmallDevice">
-    <div class="participants-info">{{tournament.actualParticipants}}/{{tournament.maxParticipants}}</div>
-  </mdl-list-item-secondary-content>
-
-  <mdl-list-item-secondary-content>
-    <mdl-icon class="tournament-info-icon list-action"
-              mdTooltip="Info to Tournament"
-              (click)="openInfoDialog($event, tournament)">
-      info
-    </mdl-icon>
-  </mdl-list-item-secondary-content>
-</mdl-list-item>
+  <div md-line *ngIf="(tournament.beginDate | date:'MM/d/yy') !== (tournament.endDate | date:'MM/d/yy')">
+    {{tournament.beginDate | date:'EEE, d'}} - {{tournament.endDate | date:'EEE, d'}}
+    <ng-container *ngIf="!verySmallDevice">
+      / {{tournament.beginDate | date:'HH:mm'}}-{{tournament.endDate | date:'HH:mm'}}
+    </ng-container>
+  </div>
+  <div md-line>{{tournament.location | truncate:truncateMax}}</div>
+  <div *ngIf="!verySmallDevice" class="participants-info">
+    {{tournament.actualParticipants}}/{{tournament.maxParticipants}}
+  </div>
+  <md-icon class="tournament-info-icon list-action"
+           mdTooltip="Tournament info"
+           (click)="openInfoDialog($event, tournament)">
+    info
+  </md-icon>
+</md-list-item>

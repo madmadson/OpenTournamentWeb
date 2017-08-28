@@ -9,8 +9,8 @@ import * as fromGames from '../../games/games-reducer';
 import * as fromAuthentication from '../reducers/authenticationReducer';
 import * as fromMySite from '../reducers/mySiteReducer';
 import * as fromPlayers from '../reducers/playersReducer';
-import * as fromActualTournament from '../reducers/actualTournamentReducer';
-import * as fromTournaments from '../reducers/tournamentsReducer';
+import * as fromActualTournament from '../../tournament/actual-tournament-reducer';
+import * as fromTournaments from '../../tournaments/tournaments-reducer';
 
 
 

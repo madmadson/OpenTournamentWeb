@@ -1,5 +1,14 @@
 @import '../../../styles';
 
+
+.games-table-header {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  font-size: 20px;
+}
+
 .player-name-table-cell{
   font-size: 1.2em;
   margin-bottom: 6px;
@@ -42,10 +51,6 @@
   cursor: pointer;
 }
 
-.centered{
-  text-align: center;
-}
-
 
 @media only screen and (min-width: 500px) {
   .games-table-container{
@@ -59,4 +64,17 @@
     min-width: 600px;
 
   }
+}
+
+
+.player-column{
+  flex: 4;
+}
+
+.faction-column{
+  flex: 2;
+}
+
+.player-score-column{
+  flex: 1;
 }

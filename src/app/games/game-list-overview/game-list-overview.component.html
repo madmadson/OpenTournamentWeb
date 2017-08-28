@@ -1,16 +1,11 @@
 <h2 class="heading">Online Games ({{(allGames$ | async)?.length}})</h2>
-<md-card>
-  <mdl-textfield type="text"
-                 maxlength="50"
-                 placeholder="Filter by PlayerNames"
-                 #seachInput
-                 (keyup)="filterGames(seachInput.value)">
-  </mdl-textfield>
-  <ng-container *ngIf="(allGames$ | async)?.length == 0" >
-    <div class="heading">Load Games... <mdl-spinner  single-color active></mdl-spinner></div>
-  </ng-container>
-  <mdl-list *ngIf="(allGames$ | async)?.length > 0">
-    <games-list [games]="(allGames$ | async)"></games-list>
-  </mdl-list>
-</md-card>
+
+<ng-container *ngIf="(allGames$ | async)?.length == 0">
+  <div class="heading">Load Games...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+<games-list *ngIf="(allGames$ | async)?.length > 0" [games]="(allGames$ | async)"></games-list>
+
 

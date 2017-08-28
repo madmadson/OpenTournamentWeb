@@ -13,8 +13,7 @@ import {ActivatedRoute} from '@angular/router';
 import * as _ from 'lodash';
 
 import {
-  TournamentPlayerPushAction, TournamentSubscribeAction,
-  TournamentUnsubscribeAction, TournamentPlayerEraseAction, RegistrationEraseAction,
+  TournamentPlayerPushAction, TournamentPlayerEraseAction, RegistrationEraseAction,
   ArmyListEraseAction, RegistrationPushAction, TournamentPairAgainAction, GameResultEnteredAction,
   TournamentNewRoundAction, PublishRoundAction, TournamentKillRoundAction,
   RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction,
@@ -23,7 +22,7 @@ import {
   UndoTeamTournamentEndAction, UploadTeamTournamentAction, PlayerRegistrationChangeAction,
   ArmyListForRegistrationPushAction, ArmyListForTournamentPlayerPushAction, DropPlayerPushAction,
   UndoDropPlayerPushAction, DropTeamPushAction, UndoDropTeamPushAction,
-} from '../../store/actions/tournament-actions';
+} from '../tournament-actions';
 
 
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
@@ -62,6 +61,8 @@ import {Player} from '../../../../shared/model/player';
 import {CoOrganizatorPush} from '../../../../shared/dto/co-organizator-push';
 import {TeamUpdate} from '../../../../shared/dto/team-update';
 import {AppState} from '../../store/reducers/index';
+import {TournamentService} from '../actual-tournament.service';
+import {ActualTournamentRegistrationService} from "../actual-tournament-registration.service";
 
 @Component({
   selector: 'tournament-overview',
@@ -73,9 +74,15 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   private fullScreenModeSub: Subscription;
   private swapPlayerModeSub: Subscription;
 
-  currentUserId: string;
-  userPlayerData: Player;
+
+  actualTournament$: Observable<Tournament>;
   actualTournament: Tournament;
+
+  userPlayerData$: Observable<Player>;
+  userPlayerData: Player;
+
+  allActualTournamentPlayers: TournamentPlayer[];
+
   actualTournamentRegisteredPlayers$: Observable<Registration[]>;
   actualTournamentArmyList$: Observable<ArmyList[]>;
   allActualTournamentPlayers$: Observable<TournamentPlayer[]>;
@@ -88,8 +95,6 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   actualTournamentTeamGames$: Observable<TournamentGame[]>;
 
 
-  selectedIndex: number;
-
   fullscreenMode: boolean;
   swapPlayerMode: boolean;
 
@@ -99,9 +104,11 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   isAdmin: boolean;
   isCoOrganizer: boolean;
   isTournamentPlayer: boolean;
-  allActualTournamentPlayers: TournamentPlayer[];
 
-  constructor(private store: Store<AppState>,
+
+  constructor(private tournamentService: TournamentService,
+              private registrationService: ActualTournamentRegistrationService,
+              private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
               private messageService: GlobalEventService,
               private winRef: WindowRefService) {
@@ -116,63 +123,84 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
     this.activeRouter.params.subscribe(
       params => {
-        this.store.dispatch(new TournamentSubscribeAction(params['id']));
+        this.tournamentService.subscribeOnFirebaseTournament(params['id']);
+        this.registrationService.subscribeOnFirebase(params['id']);
       }
     );
+
+    this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
+    this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
+
+
+      // this.store.select(state => state)
+      // .subscribe(state => {
+      //   this.actualTournament = state.actualTournament.actualTournament;
+      //   if (state.actualTournament.actualTournament) {
+      //
+      //     if (state.actualTournament.actualTournament.finished) {
+      //       this.selectedIndex = state.actualTournament.actualTournament.actualRound + 1;
+      //     } else {
+      //       this.selectedIndex = state.actualTournament.actualTournament.actualRound;
+      //     }
+      //   }
+      //
+      //   if (state.authentication) {
+      //     this.currentUserId = state.authentication.currentUserId;
+      //     this.userPlayerData = state.authentication.userPlayerData;
+      //
+      //     this.isAdmin = this.checkIfAdmin();
+      //
+      //     this.isCoOrganizer = this.checkIfCoOrganizer();
+      //   }
+      // });
   }
 
   ngOnInit() {
 
-    this.actualTournamentArmyList$ = this.store.select(state => state.actualTournament.actualTournamentArmyLists);
-    this.actualTournamentRegisteredPlayers$ = this.store.select(
-      state => state.actualTournament.actualTournamentRegisteredPlayers);
-    this.store.select(state => state.authentication);
-    this.allActualTournamentPlayers$ = this.store.select(
-      state => state.actualTournament.actualTournamentPlayers);
-
-    this.allActualTournamentPlayers$.subscribe(players => {
-        this.allActualTournamentPlayers = players;
+    this.actualTournament$.subscribe((actualTournament: Tournament) => {
+      this.actualTournament = actualTournament;
+      this.setIsAdmin();
+      this.setIsCoAdmin();
+      this.setIsTournamentPlayer();
+    });
+    this.userPlayerData$.subscribe((player: Player) => {
+      this.userPlayerData = player;
+      this.setIsCoAdmin();
+      this.setIsTournamentPlayer();
     });
 
-    this.actualTournamentRankings$ = this.store.select(
-      state => state.actualTournament.actualTournamentRankings);
 
-    this.actualTournamentTeamRankings$ = this.store.select(
-      state => state.actualTournament.actualTournamentTeamRankings);
 
-    this.actualTournamentGames$ = this.store.select(
-      state => state.actualTournament.actualTournamentGames);
+    // this.actualTournamentArmyList$ = this.store.select(state => state.actualTournament.actualTournamentArmyLists);
+    // this.actualTournamentRegisteredPlayers$ = this.store.select(
+    //   state => state.actualTournament.actualTournamentRegisteredPlayers);
+    // this.store.select(state => state.authentication);
+    // this.allActualTournamentPlayers$ = this.store.select(
+    //   state => state.actualTournament.actualTournamentPlayers);
+    //
+    // this.allActualTournamentPlayers$.subscribe(players => {
+    //     this.allActualTournamentPlayers = players;
+    // });
+    //
+    // this.actualTournamentRankings$ = this.store.select(
+    //   state => state.actualTournament.actualTournamentRankings);
+    //
+    // this.actualTournamentTeamRankings$ = this.store.select(
+    //   state => state.actualTournament.actualTournamentTeamRankings);
+    //
+    // this.actualTournamentGames$ = this.store.select(
+    //   state => state.actualTournament.actualTournamentGames);
+    //
+    // this.actualTournamentTeamGames$ = this.store.select(
+    //   state => state.actualTournament.actualTournamentTeamGames);
+    //
+    // this.actualTournamentTeams$ = this.store.select(
+    //   state => state.actualTournament.actualTournamentTeams);
+    //
+    // this.actualTournamentTeamRegistrations$ = this.store.select(
+    //   state => state.actualTournament.actualTournamentRegisteredTeams);
 
-    this.actualTournamentTeamGames$ = this.store.select(
-      state => state.actualTournament.actualTournamentTeamGames);
 
-    this.actualTournamentTeams$ = this.store.select(
-      state => state.actualTournament.actualTournamentTeams);
-
-    this.actualTournamentTeamRegistrations$ = this.store.select(
-      state => state.actualTournament.actualTournamentRegisteredTeams);
-
-    this.store.select(state => state)
-      .subscribe(state => {
-        this.actualTournament = state.actualTournament.actualTournament;
-        if (state.actualTournament.actualTournament) {
-
-          if (state.actualTournament.actualTournament.finished) {
-            this.selectedIndex = state.actualTournament.actualTournament.actualRound + 1;
-          } else {
-            this.selectedIndex = state.actualTournament.actualTournament.actualRound;
-          }
-        }
-
-        if (state.authentication) {
-          this.currentUserId = state.authentication.currentUserId;
-          this.userPlayerData = state.authentication.userPlayerData;
-
-          this.isAdmin = this.checkIfAdmin();
-
-          this.isCoOrganizer = this.checkIfCoOrganizer();
-        }
-      });
 
     if (this.winRef.nativeWindow.screen.width < 500) {
       this.smallScreen = true;
@@ -188,20 +216,21 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.store.dispatch(new TournamentUnsubscribeAction());
+    this.tournamentService.unsubscribeOnFirebaseTournament();
+    this.registrationService.unsubscribeOnFirebase();
     this.fullScreenModeSub.unsubscribe();
     this.swapPlayerModeSub.unsubscribe();
   }
 
-  checkIfAdmin(): boolean {
-    if (this.actualTournament && this.currentUserId) {
-      return (this.currentUserId === this.actualTournament.creatorUid);
+  setIsAdmin(): void {
+    if (this.actualTournament && this.userPlayerData) {
+      this.isAdmin  = this.userPlayerData.userUid === this.actualTournament.creatorUid;
     } else {
-      return false;
+      this.isAdmin = false;
     }
   }
 
-  checkIfCoOrganizer(): boolean {
+  setIsCoAdmin(): boolean {
 
     const that = this;
 
@@ -215,6 +244,22 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     } else {
       return false;
     }
+  }
+
+  setIsTournamentPlayer(): boolean {
+    const that = this;
+
+    const foundPlayer = _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      if (that.userPlayerData) {
+        return that.userPlayerData.id === player.playerId;
+      }
+    });
+
+    if (foundPlayer) {
+      this.isTournamentPlayer = true;
+      return true;
+    }
+    return false;
   }
 
   getRoundPageTitle(index: number): string {
@@ -469,21 +514,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TournamentTeamEraseAction(eraseModel));
   }
 
-  determineIsTournamentPlayer(): boolean {
-    const that = this;
 
-    const foundPlayer = _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
-      if (that.userPlayerData) {
-        return that.userPlayerData.id === player.playerId;
-      }
-    });
-
-    if (foundPlayer) {
-      this.isTournamentPlayer = true;
-      return true;
-    }
-    return false;
-  }
 
 
 }

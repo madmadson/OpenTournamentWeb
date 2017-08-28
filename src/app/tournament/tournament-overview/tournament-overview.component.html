@@ -1,130 +1,160 @@
-<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
-<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
-<h4 *ngIf="!fullscreenMode && determineIsTournamentPlayer()" class="sub-heading">Hello Player</h4>
-<ng-container *ngIf="!actualTournament">
-  <div class="heading">Load Tournament...
-    <mdl-spinner class="loading-spinner" single-color active></mdl-spinner>
+
+<ng-container *ngIf="!(actualTournament$ | async)">
+  <div class="heading">Load Tournament...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
   </div>
 </ng-container>
 
-<div class="tab-container">
-  <mdl-tabs *ngIf="actualTournament" mdl-ripple [mdl-tab-active-index]="selectedIndex">
-    <mdl-tab-panel mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">
-        <tournament-preparation
-          [userPlayerData]="userPlayerData"
-          [isAdmin]="isAdmin"
-          [isCoOrganizer]="isCoOrganizer"
-          [actualTournament]="actualTournament"
-          [actualTournamentArmyList$]="actualTournamentArmyList$"
-          [allActualTournamentPlayers$]="allActualTournamentPlayers$"
-          [actualTournamentRegisteredPlayers$]="actualTournamentRegisteredPlayers$"
-          [actualTournamentTeams$]="actualTournamentTeams$"
-          [actualTournamentTeamRegistrations$]="actualTournamentTeamRegistrations$"
-          (onStartTournament)="handleStartTournament($event)"
-          (onStartTeamTournament)="handleStartTeamTournament($event)"
-          (onSaveTournament)="handleEditTournament($event)"
-          (onAddTournamentPlayer)="handleAddTournamentPlayer($event)"
-          (onAcceptRegistration)="handleAcceptRegistration($event)"
-          (onAddTournamentRegistration)="handleAddTournamentRegistration($event)"
-          (onAddArmyListForRegistration)="handleAddArmyListForRegistration($event)"
-          (onAddArmyListForTournamentPlayer)="handleAddArmyListForTournamentPlayer($event)"
-          (onAddArmyListForTeamRegistration)="handleAddArmyListForTeamRegistration($event)"
-          (onAddArmyListForTeamTournamentPlayer)="handleAddArmyListForTeamTournamentPlayer($event)"
-          (onDeleteArmyList)="handleDeleteArmyList($event)"
-          (onDeleteTournamentPlayer)="handleDeleteTournamentPlayer($event)"
-          (onDeleteRegistration)="handleDeleteRegistration($event)"
-          (onEraseTournamentTeam)="handleEraseTeam($event)"
-          (onCreateTeamForTeamTournament)="handleCreateTeamForTeamTournament($event)"
-          (onRegisterTeamForTeamTournament)="handleRegisterTeamForTeamTournament($event)"
-          (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)"
-          (onEraseTeamRegistration)="handleEraseTeamRegistration($event)"
-          (onPlayerRegChangeEventSubscribe)="handlePlayerRegChange($event)"
-          (onTeamChangeEventSubscribe)="handleTeamChange($event)"
-          (onAddCoOrganizator)="handleAddCoOrganizator($event)"
-          (onDeleteCoOrganizator)="handleDeleteCoOrganizator($event)"
-          (onUpdateTeam)="handleUpdateTeam($event)"
-        ></tournament-preparation>
+<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
+<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="!fullscreenMode && isTournamentPlayer" class="sub-heading">Hello Player</h4>
 
-    </mdl-tab-panel>
+Round: {{actualTournament?.actualRound}}
 
-    <mdl-tab-panel *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
-                   mdl-tab-panel-title="{{getRoundPageTitle(index +1)}}"
-                   [disabled]="fullscreenMode || swapPlayerMode">
-      <tournament-round-overview *ngIf="actualTournament.teamSize === 0"
-                                 [isAdmin]="isAdmin"
-                                 [isCoOrganizer]="isCoOrganizer"
-                                 [isTournamentPlayer]="isTournamentPlayer"
-                                 [round]="round"
-                                 [actualTournament]="actualTournament"
-                                 [authenticationStoreState$]="authenticationStoreState$"
-                                 [actualTournamentArmyLists$]="actualTournamentArmyList$"
-                                 [gamesForRound$]="getGamesForRound(round)"
-                                 [rankingsForRound$]="getRankingsForRound(round)"
-                                 (onPairAgain)="handlePairAgain($event)"
-                                 (onNewRound)="handleNewRound($event)"
-                                 (onKillRound)="handleKillRound($event)"
-                                 (onSwapPlayer)="handleSwapPlayer($event)"
-                                 (onGameResult)="handleGameResult($event)"
-                                 (onDropPlayer)="handleDropPlayer($event)"
-                                 (onUndoDropPlayer)="handleUndoDropPlayer($event)"
-                                 (onScenarioSelected)="handleScenarioSelected($event)"
-                                 (onPublishRound)="handlePublishRound($event)"
-                                 (onClearPlayerGameResult)="handleClearPlayerGameResult($event)"
-                                 (onEndTournament)="handleEndTournament($event)"
-      ></tournament-round-overview>
-      <tournament-team-round-overview *ngIf="actualTournament.teamSize > 0"
-                                      [isAdmin]="isAdmin"
-                                      [isCoOrganizer]="isCoOrganizer"
-                                      [isTournamentPlayer]="isTournamentPlayer"
-                                      [round]="round"
-                                      [actualTournamentTeams$]="actualTournamentTeams$"
-                                      [actualTournament]="actualTournament"
-                                      [authenticationStoreState$]="authenticationStoreState$"
-                                      [actualTournamentArmyLists$]="actualTournamentArmyList$"
-                                      [playerGamesForRound$]="getGamesForRound(round)"
-                                      [teamGamesForRound$]="getTeamGamesForRound(round)"
-                                      [playerRankingsForRound$]="getRankingsForRound(round)"
-                                      [teamRankingsForRound$]="getTeamRankingsForRound(round)"
-                                      (onKillTeamMatchRound)="handleKillRound($event)"
-                                      (onPairTeamMatchAgain)="handlePairAgain($event)"
-                                      (onNewRoundTeamMatch)="handleNewRoundTeamMatch($event)"
-                                      (onSwapPlayer)="handleSwapPlayer($event)"
-                                      (onSwapTeam)="handleSwapTeam($event)"
-                                      (onTeamGameResult)="handleTeamGameResult($event)"
-                                      (onPublishRound)="handlePublishRound($event)"
-                                      (onEndTeamTournament)="handleEndTeamTournament($event)"
-                                      (onClearPlayerGameResult)="handleClearPlayerGameResult($event)"
-                                      (onClearTeamGameResult)="handleClearTeamGameResult($event)"
-                                      (onDropTeam)="handleDropTeam($event)"
-                                      (onUndoDropTeam)="handleUndoDropTeam($event)"
-                                      (onScenarioSelectedForTeamTournament)="handleScenarioSelectedForTeamTournament($event)"
-      ></tournament-team-round-overview>
-    </mdl-tab-panel>
-    <mdl-tab-panel [disabled]="fullscreenMode || swapPlayerMode"
-                   *ngIf="actualTournament?.finished" mdl-tab-panel-title="Final">
-        <tournament-final-rankings *ngIf="actualTournament.teamSize === 0"
-                                   [isAdmin]="isAdmin"
-                                   [isCoOrganizer]="isCoOrganizer"
-                                   [actualTournament]="actualTournament"
-                                   [userPlayerData]="userPlayerData"
-                                   [actualTournamentArmyList$]="actualTournamentArmyList$"
-                                   [finalPlayerRankings$]="getFinalPlayerRankings()"
-                                   (onUndoTournamentEnd)="handleUndoTournamentEnd($event)"
-                                   (onUploadTournament)="handleUploadTournament()">
-        </tournament-final-rankings>
-        <tournament-team-final-rankings *ngIf="actualTournament.teamSize > 0"
-                                        [isAdmin]="isAdmin"
-                                        [isCoOrganizer]="isCoOrganizer"
-                                        [actualTournament]="actualTournament"
-                                        [userPlayerData]="userPlayerData"
-                                        [actualTournamentArmyList$]="actualTournamentArmyList$"
-                                        [finalPlayerRankings$]="getFinalPlayerRankings(round)"
-                                        [finalTeamRankings$]="getFinalTeamRankings(round)"
-                                        (onUndoTeamTournamentEnd)="handleUndoTeamTournamentEnd($event)"
-                                        (onUploadTeamTournament)="handleUploadTeamTournament()">
-        </tournament-team-final-rankings>
-    </mdl-tab-panel>
-  </mdl-tabs>
+<div *ngIf="(actualTournament$ | async)" *ngclass="flex-container">
+  <md-card>
+    <div>Registered Players: {{actualTournament}}</div>
+  </md-card>
 </div>
+
+<button *ngIf="!fullscreenMode" md-button [mdMenuTriggerFor]="menu">
+  <md-icon>more_vert</md-icon>
+  Tournament Overview
+</button>
+<md-menu #menu="mdMenu">
+  <button *ngIf="isAdmin || isCoOrganizer" md-menu-item>Tournament Setup</button>
+  <button *ngIf="!(isAdmin || isCoOrganizer)" md-menu-item>Registration List</button>
+
+  <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
+          md-menu-item>Round {{index +1}}</button>
+</md-menu>
+
+
+<!--<ng-container *ngIf="!actualTournament">-->
+  <!--<div class="heading">Load Tournament...-->
+    <!--<mdl-spinner class="loading-spinner" single-color active></mdl-spinner>-->
+  <!--</div>-->
+<!--</ng-container>-->
+
+<!--<div class="tab-container">-->
+  <!--<mdl-tabs *ngIf="actualTournament" mdl-ripple [mdl-tab-active-index]="selectedIndex">-->
+    <!--<mdl-tab-panel mdl-tab-panel-title="{{getPrepPageTitle()}}" [disabled]="fullscreenMode || swapPlayerMode">-->
+        <!--<tournament-preparation-->
+          <!--[userPlayerData]="userPlayerData"-->
+          <!--[isAdmin]="isAdmin"-->
+          <!--[isCoOrganizer]="isCoOrganizer"-->
+          <!--[actualTournament]="actualTournament"-->
+          <!--[actualTournamentArmyList$]="actualTournamentArmyList$"-->
+          <!--[allActualTournamentPlayers$]="allActualTournamentPlayers$"-->
+          <!--[actualTournamentRegisteredPlayers$]="actualTournamentRegisteredPlayers$"-->
+          <!--[actualTournamentTeams$]="actualTournamentTeams$"-->
+          <!--[actualTournamentTeamRegistrations$]="actualTournamentTeamRegistrations$"-->
+          <!--(onStartTournament)="handleStartTournament($event)"-->
+          <!--(onStartTeamTournament)="handleStartTeamTournament($event)"-->
+          <!--(onSaveTournament)="handleEditTournament($event)"-->
+          <!--(onAddTournamentPlayer)="handleAddTournamentPlayer($event)"-->
+          <!--(onAcceptRegistration)="handleAcceptRegistration($event)"-->
+          <!--(onAddTournamentRegistration)="handleAddTournamentRegistration($event)"-->
+          <!--(onAddArmyListForRegistration)="handleAddArmyListForRegistration($event)"-->
+          <!--(onAddArmyListForTournamentPlayer)="handleAddArmyListForTournamentPlayer($event)"-->
+          <!--(onAddArmyListForTeamRegistration)="handleAddArmyListForTeamRegistration($event)"-->
+          <!--(onAddArmyListForTeamTournamentPlayer)="handleAddArmyListForTeamTournamentPlayer($event)"-->
+          <!--(onDeleteArmyList)="handleDeleteArmyList($event)"-->
+          <!--(onDeleteTournamentPlayer)="handleDeleteTournamentPlayer($event)"-->
+          <!--(onDeleteRegistration)="handleDeleteRegistration($event)"-->
+          <!--(onEraseTournamentTeam)="handleEraseTeam($event)"-->
+          <!--(onCreateTeamForTeamTournament)="handleCreateTeamForTeamTournament($event)"-->
+          <!--(onRegisterTeamForTeamTournament)="handleRegisterTeamForTeamTournament($event)"-->
+          <!--(onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)"-->
+          <!--(onEraseTeamRegistration)="handleEraseTeamRegistration($event)"-->
+          <!--(onPlayerRegChangeEventSubscribe)="handlePlayerRegChange($event)"-->
+          <!--(onTeamChangeEventSubscribe)="handleTeamChange($event)"-->
+          <!--(onAddCoOrganizator)="handleAddCoOrganizator($event)"-->
+          <!--(onDeleteCoOrganizator)="handleDeleteCoOrganizator($event)"-->
+          <!--(onUpdateTeam)="handleUpdateTeam($event)"-->
+        <!--&gt;</tournament-preparation>-->
+
+    <!--</mdl-tab-panel>-->
+
+    <!--<mdl-tab-panel *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"-->
+                   <!--mdl-tab-panel-title="{{getRoundPageTitle(index +1)}}"-->
+                   <!--[disabled]="fullscreenMode || swapPlayerMode">-->
+      <!--<tournament-round-overview *ngIf="actualTournament.teamSize === 0"-->
+                                 <!--[isAdmin]="isAdmin"-->
+                                 <!--[isCoOrganizer]="isCoOrganizer"-->
+                                 <!--[isTournamentPlayer]="isTournamentPlayer"-->
+                                 <!--[round]="round"-->
+                                 <!--[actualTournament]="actualTournament"-->
+                                 <!--[authenticationStoreState$]="authenticationStoreState$"-->
+                                 <!--[actualTournamentArmyLists$]="actualTournamentArmyList$"-->
+                                 <!--[gamesForRound$]="getGamesForRound(round)"-->
+                                 <!--[rankingsForRound$]="getRankingsForRound(round)"-->
+                                 <!--(onPairAgain)="handlePairAgain($event)"-->
+                                 <!--(onNewRound)="handleNewRound($event)"-->
+                                 <!--(onKillRound)="handleKillRound($event)"-->
+                                 <!--(onSwapPlayer)="handleSwapPlayer($event)"-->
+                                 <!--(onGameResult)="handleGameResult($event)"-->
+                                 <!--(onDropPlayer)="handleDropPlayer($event)"-->
+                                 <!--(onUndoDropPlayer)="handleUndoDropPlayer($event)"-->
+                                 <!--(onScenarioSelected)="handleScenarioSelected($event)"-->
+                                 <!--(onPublishRound)="handlePublishRound($event)"-->
+                                 <!--(onClearPlayerGameResult)="handleClearPlayerGameResult($event)"-->
+                                 <!--(onEndTournament)="handleEndTournament($event)"-->
+      <!--&gt;</tournament-round-overview>-->
+      <!--<tournament-team-round-overview *ngIf="actualTournament.teamSize > 0"-->
+                                      <!--[isAdmin]="isAdmin"-->
+                                      <!--[isCoOrganizer]="isCoOrganizer"-->
+                                      <!--[isTournamentPlayer]="isTournamentPlayer"-->
+                                      <!--[round]="round"-->
+                                      <!--[actualTournamentTeams$]="actualTournamentTeams$"-->
+                                      <!--[actualTournament]="actualTournament"-->
+                                      <!--[authenticationStoreState$]="authenticationStoreState$"-->
+                                      <!--[actualTournamentArmyLists$]="actualTournamentArmyList$"-->
+                                      <!--[playerGamesForRound$]="getGamesForRound(round)"-->
+                                      <!--[teamGamesForRound$]="getTeamGamesForRound(round)"-->
+                                      <!--[playerRankingsForRound$]="getRankingsForRound(round)"-->
+                                      <!--[teamRankingsForRound$]="getTeamRankingsForRound(round)"-->
+                                      <!--(onKillTeamMatchRound)="handleKillRound($event)"-->
+                                      <!--(onPairTeamMatchAgain)="handlePairAgain($event)"-->
+                                      <!--(onNewRoundTeamMatch)="handleNewRoundTeamMatch($event)"-->
+                                      <!--(onSwapPlayer)="handleSwapPlayer($event)"-->
+                                      <!--(onSwapTeam)="handleSwapTeam($event)"-->
+                                      <!--(onTeamGameResult)="handleTeamGameResult($event)"-->
+                                      <!--(onPublishRound)="handlePublishRound($event)"-->
+                                      <!--(onEndTeamTournament)="handleEndTeamTournament($event)"-->
+                                      <!--(onClearPlayerGameResult)="handleClearPlayerGameResult($event)"-->
+                                      <!--(onClearTeamGameResult)="handleClearTeamGameResult($event)"-->
+                                      <!--(onDropTeam)="handleDropTeam($event)"-->
+                                      <!--(onUndoDropTeam)="handleUndoDropTeam($event)"-->
+                                      <!--(onScenarioSelectedForTeamTournament)="handleScenarioSelectedForTeamTournament($event)"-->
+      <!--&gt;</tournament-team-round-overview>-->
+    <!--</mdl-tab-panel>-->
+    <!--<mdl-tab-panel [disabled]="fullscreenMode || swapPlayerMode"-->
+                   <!--*ngIf="actualTournament?.finished" mdl-tab-panel-title="Final">-->
+        <!--<tournament-final-rankings *ngIf="actualTournament.teamSize === 0"-->
+                                   <!--[isAdmin]="isAdmin"-->
+                                   <!--[isCoOrganizer]="isCoOrganizer"-->
+                                   <!--[actualTournament]="actualTournament"-->
+                                   <!--[userPlayerData]="userPlayerData"-->
+                                   <!--[actualTournamentArmyList$]="actualTournamentArmyList$"-->
+                                   <!--[finalPlayerRankings$]="getFinalPlayerRankings()"-->
+                                   <!--(onUndoTournamentEnd)="handleUndoTournamentEnd($event)"-->
+                                   <!--(onUploadTournament)="handleUploadTournament()">-->
+        <!--</tournament-final-rankings>-->
+        <!--<tournament-team-final-rankings *ngIf="actualTournament.teamSize > 0"-->
+                                        <!--[isAdmin]="isAdmin"-->
+                                        <!--[isCoOrganizer]="isCoOrganizer"-->
+                                        <!--[actualTournament]="actualTournament"-->
+                                        <!--[userPlayerData]="userPlayerData"-->
+                                        <!--[actualTournamentArmyList$]="actualTournamentArmyList$"-->
+                                        <!--[finalPlayerRankings$]="getFinalPlayerRankings(round)"-->
+                                        <!--[finalTeamRankings$]="getFinalTeamRankings(round)"-->
+                                        <!--(onUndoTeamTournamentEnd)="handleUndoTeamTournamentEnd($event)"-->
+                                        <!--(onUploadTeamTournament)="handleUploadTeamTournament()">-->
+        <!--</tournament-team-final-rankings>-->
+    <!--</mdl-tab-panel>-->
+  <!--</mdl-tabs>-->
+<!--</div>-->
 

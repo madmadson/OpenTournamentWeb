@@ -1,28 +1,29 @@
-import {SET_ACTUAL_TOURNAMENT_ACTION} from '../actions/tournament-actions';
+import {
+  ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION,
+  CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION,
+  SET_ACTUAL_TOURNAMENT_ACTION
+} from './tournament-actions';
 import {
   ARMY_LIST_ADDED_ACTION, ARMY_LIST_DELETED_ACTION,
   CLEAR_ARMY_LISTS_ACTION,
 
-} from '../actions/tournament-actions';
-import {Tournament} from '../../../../shared/model/tournament';
+} from './tournament-actions';
+import {Tournament} from '../../../shared/model/tournament';
 import {
   TOURNAMENT_GAME_ADDED_ACTION, TOURNAMENT_GAME_CHANGED_ACTION,
   TOURNAMENT_GAME_DELETED_ACTION, TOURNAMENT_GAMES_CLEAR_ACTION
-} from '../actions/tournament-games-actions';
+} from '../store/actions/tournament-games-actions';
 import {
 
   CLEAR_TOURNAMENT_PLAYER_ACTION,
   TOURNAMENT_PLAYER_ADDED, TOURNAMENT_PLAYER_CHANGED, TOURNAMENT_PLAYER_DELETED,
 
-} from '../actions/tournament-actions';
+} from './tournament-actions';
 import {
   TOURNAMENT_RANKING_ADDED_ACTION, TOURNAMENT_RANKING_CHANGED_ACTION,
   TOURNAMENT_RANKING_DELETED_ACTION, TOURNAMENT_RANKINGS_CLEAR_ACTION
-} from '../actions/tournament-rankings-actions';
-import {
-  CLEAR_TOURNAMENT_REGISTRATION_ACTION, TOURNAMENT_REGISTRATION_ADDED, TOURNAMENT_REGISTRATION_CHANGED,
-  TOURNAMENT_REGISTRATION_DELETED
-} from '../actions/tournament-actions';
+} from '../store/actions/tournament-rankings-actions';
+
 
 import {
   TOURNAMENT_TEAM_ADDED_ACTION, TOURNAMENT_TEAM_CHANGED_ACTION, TOURNAMENT_TEAM_DELETED_ACTION,
@@ -30,30 +31,34 @@ import {
   TOURNAMENT_TEAM_REGISTRATION_DELETED_ACTION,
   TOURNAMENT_TEAM_REGISTRATIONS_CLEAR_ACTION,
   TOURNAMENT_TEAMS_CLEAR_ACTION
-} from '../actions/tournament-teams-actions';
+} from '../store/actions/tournament-teams-actions';
 
 import {
   TOURNAMENT_TEAM_GAME_ADDED_ACTION,
   TOURNAMENT_TEAM_GAME_CHANGED_ACTION,
   TOURNAMENT_TEAM_GAME_DELETED_ACTION,
   TOURNAMENT_TEAM_GAMES_CLEAR_ACTION
-} from '../actions/tournament-team-games-actions';
+} from '../store/actions/tournament-team-games-actions';
 
 import {
   TOURNAMENT_TEAM_RANKING_ADDED_ACTION,
   TOURNAMENT_TEAM_RANKING_CHANGED_ACTION,
   TOURNAMENT_TEAM_RANKING_DELETED_ACTION,
   TOURNAMENT_TEAM_RANKINGS_CLEAR_ACTION
-} from '../actions/tournament-team-rankings-actions';
+} from '../store/actions/tournament-team-rankings-actions';
 
 
 import * as _ from 'lodash';
-import {ArmyList} from '../../../../shared/model/armyList';
-import {TournamentPlayer} from '../../../../shared/model/tournament-player';
-import {TournamentGame} from '../../../../shared/model/tournament-game';
-import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
-import {Registration} from '../../../../shared/model/registration';
-import {TournamentTeam} from '../../../../shared/model/tournament-team';
+import {ArmyList} from '../../../shared/model/armyList';
+import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {TournamentGame} from '../../../shared/model/tournament-game';
+import {TournamentRanking} from '../../../shared/model/tournament-ranking';
+import {Registration} from '../../../shared/model/registration';
+import {TournamentTeam} from '../../../shared/model/tournament-team';
+import {UNSET_ACTUAL_TOURNAMENT_ACTION,
+  CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION,
+  REMOVE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION,
+  ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION} from './tournament-actions';
 
 export interface ActualTournamentState {
   actualTournament: Tournament;
@@ -92,6 +97,22 @@ export function actualTournamentReducer(state = initialState, action): ActualTou
 
     case SET_ACTUAL_TOURNAMENT_ACTION:
       return handleSetTournament(state, action);
+
+    case UNSET_ACTUAL_TOURNAMENT_ACTION:
+      return handleUnsetTournament(state);
+
+    // Registrations
+    case ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
+      return handleAddTournamentRegistrationAction(state, action);
+    case CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
+      return handleChangeTournamentRegistrationAction(state, action);
+    case REMOVE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
+      return handleRemoveTournamentRegistrationAction(state, action);
+    case CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION:
+      return handleClearTournamentRegistrationAction(state);
+    case ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION:
+      return handleAddAllTournamentRegistrationAction(state, action);
+
 
     case ARMY_LIST_ADDED_ACTION:
       return handleArmyListAddedAction(state, action);
@@ -138,17 +159,7 @@ export function actualTournamentReducer(state = initialState, action): ActualTou
     case TOURNAMENT_RANKING_CHANGED_ACTION:
       return handleTournamentRankingChangedData(state, action);
 
-    case TOURNAMENT_REGISTRATION_ADDED:
-      return handleTournamentRegistrationAddedAction(state, action);
 
-    case TOURNAMENT_REGISTRATION_DELETED:
-      return handleTournamentRegistrationDeletedAction(state, action);
-
-    case TOURNAMENT_REGISTRATION_CHANGED:
-      return handleRegistrationChangedData(state, action);
-
-    case CLEAR_TOURNAMENT_REGISTRATION_ACTION:
-      return handleClearRegistrationAction(state);
 
     case TOURNAMENT_TEAMS_CLEAR_ACTION:
       return handleTournamentTeamsClearAction(state);
@@ -214,6 +225,77 @@ function handleSetTournament(state, action): ActualTournamentState {
   }
   return newState;
 }
+
+function handleUnsetTournament(state): ActualTournamentState {
+  const newState: ActualTournamentState = _.cloneDeep(state);
+
+  newState.actualTournament = undefined;
+
+  return newState;
+}
+
+// TournamentPlayerRegistration
+
+function handleAddTournamentRegistrationAction(
+  state: ActualTournamentState, action): ActualTournamentState {
+
+  const newTournamentData: ActualTournamentState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+    newTournamentData.actualTournamentRegisteredPlayers.push(action.payload);
+  }
+  return newTournamentData;
+}
+
+function handleChangeTournamentRegistrationAction(
+  state: ActualTournamentState, action): ActualTournamentState {
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload.id]);
+
+    newStoreState.actualTournamentRegisteredPlayers[indexOfSearchedRegistration] = action.payload;
+  }
+  return newStoreState;
+}
+
+function handleRemoveTournamentRegistrationAction(
+  state: ActualTournamentState, action): ActualTournamentState {
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload]);
+    newStoreState.actualTournamentRegisteredPlayers.splice(indexOfSearchedRegistration, 1);
+  }
+  return newStoreState;
+}
+
+
+function handleClearTournamentRegistrationAction(
+  state: ActualTournamentState): ActualTournamentState {
+
+  const newTournamentData: ActualTournamentState = _.cloneDeep(state);
+
+  newTournamentData.actualTournamentRegisteredPlayers = [];
+
+  return newTournamentData;
+}
+
+function handleAddAllTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
+
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    newStoreState.actualTournamentRegisteredPlayers = action.payload;
+
+  }
+  return newStoreState;
+}
+
+
 
 // ArmyLists
 
@@ -416,58 +498,7 @@ function handleTournamentRankingChangedData(
   return newStoreState;
 }
 
-// TournamentPlayerRegistration
 
-function handleTournamentRegistrationAddedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
-
-
-  const newTournamentData: ActualTournamentState = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-    if (newTournamentData.actualTournamentRegisteredPlayers === undefined) {
-      newTournamentData.actualTournamentRegisteredPlayers = [];
-    }
-    newTournamentData.actualTournamentRegisteredPlayers.push(action.payload);
-  }
-  return newTournamentData;
-}
-
-function handleTournamentRegistrationDeletedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
-  const newStoreState: ActualTournamentState = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-
-    const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload]);
-    newStoreState.actualTournamentRegisteredPlayers.splice(indexOfSearchedRegistration, 1);
-  }
-  return newStoreState;
-}
-
-
-function handleRegistrationChangedData(
-  state: ActualTournamentState, action): ActualTournamentState {
-  const newStoreState: ActualTournamentState = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-
-    const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload.id]);
-
-    newStoreState.actualTournamentRegisteredPlayers[indexOfSearchedRegistration] = action.payload;
-  }
-  return newStoreState;
-}
-
-function handleClearRegistrationAction(
-  state: ActualTournamentState): ActualTournamentState {
-
-  const newTournamentData: ActualTournamentState = _.cloneDeep(state);
-
-  newTournamentData.actualTournamentRegisteredPlayers = [];
-
-  return newTournamentData;
-}
 
 // TournamentTeam
 

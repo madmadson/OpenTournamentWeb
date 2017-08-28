@@ -3,15 +3,15 @@
     <nav>
       <img src="./assets/logo3.png" alt="logo" class="nav-img-logo">
       <hr>
-      <div class="nav-welcome" *ngIf="(loggedIn)">Welcome</div>
-      <div class="nav-user-welcome" *ngIf="(loggedIn)">
-        {{currentUserName ? currentUserName : currentUserEmail}}
+      <div class="nav-welcome" *ngIf="(auth$ | async).loggedIn">Welcome</div>
+      <div class="nav-user-welcome" *ngIf="(auth$ | async).loggedIn">
+        {{(auth$ | async).currentUserName ? (auth$ | async).currentUserName : (auth$ | async).currentUserEmail}}
       </div>
       <div class="nav-container">
         <md-icon class="nav-icon" >home</md-icon>
         <a class="nav-link" (click)="closeIfSmallDevice()" routerLink="/home">Home</a>
       </div>
-      <div *ngIf="(loggedIn)" class="nav-container">
+      <div *ngIf="((auth$ | async).loggedIn)" class="nav-container">
         <img src="../assets/my_crown_small.png" class="nav-icon">
         <a class="nav-link" (click)="closeIfSmallDevice()" routerLink="/my-site">My Site</a>
       </div>
@@ -45,20 +45,20 @@
     <span>
       <md-icon class="online_icon"
                mdTooltip="Connected"
-               *ngIf="(isConnected | async)">
+               *ngIf="(isConnected$ | async)">
         network_wifi
       </md-icon>
       <md-icon class="offline_icon"
                mdTooltip="No Connection"
-               *ngIf="!(isConnected | async)">
+               *ngIf="!(isConnected$ | async)">
         signal_wifi_off
       </md-icon>
     </span>
-    <span *ngIf="(currentUserName)" class="user-welcome-panel">{{currentUserName}}</span>
-    <img *ngIf="(currentUserImage)" class="avatar" src="{{currentUserImage}}">
-    <img *ngIf="(!currentUserImage)" class="avatar" src="../assets/icon_final_48.png">
-    <a *ngIf="(loggedIn)" class="auth-anchor" (click)="logout()">Logout</a>
-    <a *ngIf="(!loggedIn)" class="auth-anchor" (click)="login()">Login</a>
+    <span *ngIf="((auth$ | async).currentUserName)" class="user-welcome-panel">{{(auth$ | async).currentUserName}}</span>
+    <img *ngIf="((auth$ | async).currentUserImage)" class="avatar" src="{{(auth$ | async).currentUserImage}}">
+    <img *ngIf="(!(auth$ | async).currentUserImage)" class="avatar" src="../assets/icon_final_48.png">
+    <a *ngIf="((auth$ | async).loggedIn)" class="auth-anchor" (click)="logout()">Logout</a>
+    <a *ngIf="(!(auth$ | async).loggedIn)" class="auth-anchor" (click)="login()">Login</a>
   </md-toolbar>
 
   <div class="app-content">

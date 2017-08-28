@@ -4,8 +4,7 @@ import {Actions, Effect} from '@ngrx/effects';
 import {
   ARMY_LIST_ERASE_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION, REGISTRATION_ERASE_ACTION,
   REGISTRATION_PUSH_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, REGISTRATION_ACCEPT_ACTION,
-  TOURNAMENT_SUBSCRIBE_ACTION, TOURNAMENT_PAIR_AGAIN_ACTION,
-  GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION, PUBLISH_ROUND_ACTION,
+  TOURNAMENT_PAIR_AGAIN_ACTION, GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION, PUBLISH_ROUND_ACTION,
   TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION, UNDO_TOURNAMENT_END_ACTION, SWAP_PLAYER_ACTION,
   UPLOAD_TOURNAMENT_ACTION, TEAM_TOURNAMENT_NEW_ROUND_ACTION, TOURNAMENT_KILL_TEAM_ROUND_ACTION,
   SCENARIO_SELECTED_ACTION, TOURNAMENT_PAIR_AGAIN_TEAM_ACTION, SWAP_TEAM_ACTION, TEAM_GAME_RESULT_ENTERED_ACTION,
@@ -18,11 +17,11 @@ import {
   GameResultEnteredAction, TeamGameResultEnteredAction, ScenarioSelectedAction, ScenarioSelectedTeamTournamentAction,
   SwapPlayerAction, SwapTeamAction, DropPlayerPushAction, UndoDropPlayerPushAction, DropTeamPushAction,
   UndoDropTeamPushAction, PublishRoundAction, TournamentPairAgainAction, TournamentPairAgainTeamAction,
-  TournamentSubscribeAction, RegistrationPushAction, RegistrationEraseAction, RegistrationAcceptAction,
+  RegistrationPushAction, RegistrationEraseAction, RegistrationAcceptAction,
   TournamentPlayerEraseAction, ArmyListForRegistrationPushAction, ArmyListForTournamentPlayerPushAction,
   ArmyListEraseAction, TournamentPlayerPushAction, PlayerRegistrationChangeAction
-} from '../actions/tournament-actions';
-import {TournamentService} from '../../service/tournament.service';
+} from '../../tournament/tournament-actions';
+import {TournamentService} from '../../tournament/actual-tournament.service';
 import {
   CLEAR_TEAM_GAME_RESULT_ACTION, ClearTeamGameResultAction
 } from '../actions/tournament-team-games-actions';
@@ -146,12 +145,6 @@ export class TournamentEffectService {
     .ofType(TOURNAMENT_PAIR_AGAIN_TEAM_ACTION)
     .debug('TOURNAMENT_PAIR_AGAIN_TEAM_ACTION')
     .map((action: TournamentPairAgainTeamAction) => this.tournamentService.pairAgainTeamTournament(action.payload));
-
-
-  @Effect({dispatch: false}) subscribe = this.actions$
-    .ofType(TOURNAMENT_SUBSCRIBE_ACTION)
-    .debug('TOURNAMENT_SUBSCRIBE_ACTION')
-    .map((action: TournamentSubscribeAction) => this.tournamentService.subscribeOnTournament(action.payload));
 
 
   @Effect({dispatch: false}) pushRegistration = this.actions$

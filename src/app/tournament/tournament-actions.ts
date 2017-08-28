@@ -1,69 +1,28 @@
 import {Action} from '@ngrx/store';
-import {Tournament} from '../../../../shared/model/tournament';
-import {Registration} from '../../../../shared/model/registration';
-import {TournamentPlayer} from '../../../../shared/model/tournament-player';
-import {ArmyList} from '../../../../shared/model/armyList';
-import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
-
-import {GameResult} from '../../../../shared/dto/game-result';
-import {PublishRound} from '../../../../shared/dto/publish-round';
-import {RegistrationPush} from '../../../../shared/dto/registration-push';
-import {SwapGames} from '../../../../shared/dto/swap-player';
-import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
-import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
-import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
-import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
-import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
-import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
-
-
-export const TOURNAMENT_SUBSCRIBE_ACTION = 'TOURNAMENT_SUBSCRIBE_ACTION';
-export class TournamentSubscribeAction implements Action {
-
-  readonly type = 'TOURNAMENT_SUBSCRIBE_ACTION';
-  constructor(public payload: string) {
-  }
-}
-
-export const TOURNAMENT_UNSUBSCRIBE_ACTION = 'TOURNAMENT_UNSUBSCRIBE_ACTION';
-export class TournamentUnsubscribeAction implements Action {
-
-  readonly type = 'TOURNAMENT_UNSUBSCRIBE_ACTION';
-  constructor() {
-  }
-}
+import {Registration} from '../../../shared/model/registration';
+import {RegistrationPush} from '../../../shared/dto/registration-push';
+import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
+import {ArmyList} from '../../../shared/model/armyList';
+import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
+import {ScenarioSelectedModel} from '../../../shared/dto/scenario-selected-model';
+import {GameResult} from '../../../shared/dto/game-result';
+import {SwapGames} from '../../../shared/dto/swap-player';
+import {DropPlayerPush} from '../../../shared/dto/drop-player-push';
+import {TournamentRanking} from '../../../shared/model/tournament-ranking';
+import {PublishRound} from '../../../shared/dto/publish-round';
+import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-change';
+import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
 
 export const SET_ACTUAL_TOURNAMENT_ACTION = 'SET_ACTUAL_TOURNAMENT_ACTION';
-export class SetActualTournamentAction implements Action {
+export const UNSET_ACTUAL_TOURNAMENT_ACTION = 'UNSET_ACTUAL_TOURNAMENT_ACTION';
 
-  readonly type = 'SET_ACTUAL_TOURNAMENT_ACTION';
-  constructor(public payload: Tournament) {
-  }
-}
+export const ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION = 'ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION';
+export const CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION = 'CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION';
+export const REMOVE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION = 'REMOVE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION';
+export const CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION = 'CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION';
+export const ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION = 'ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATION_ACTION';
 
-export const TOURNAMENT_REGISTRATION_ADDED = 'TOURNAMENT_REGISTRATION_ADDED';
-export class TournamentRegistrationAdded implements Action {
-
-  readonly type = 'TOURNAMENT_REGISTRATION_ADDED';
-  constructor(public payload: Registration) {
-  }
-}
-
-export const TOURNAMENT_REGISTRATION_CHANGED = 'TOURNAMENT_REGISTRATION_CHANGED';
-export class TournamentRegistrationChanged implements Action {
-
-  readonly type = 'TOURNAMENT_REGISTRATION_CHANGED';
-  constructor(public payload: Registration) {
-  }
-}
-
-export const TOURNAMENT_REGISTRATION_DELETED = 'TOURNAMENT_REGISTRATION_DELETED';
-export class TournamentRegistrationDeleted implements Action {
-
-  readonly type = 'TOURNAMENT_REGISTRATION_DELETED';
-  constructor(public payload: string) {
-  }
-}
 
 export const REGISTRATION_PUSH_ACTION = 'REGISTRATION_PUSH_ACTION';
 export class RegistrationPushAction implements Action {
@@ -81,13 +40,7 @@ export class RegistrationEraseAction implements Action {
   }
 }
 
-export const CLEAR_TOURNAMENT_REGISTRATION_ACTION = 'CLEAR_TOURNAMENT_REGISTRATION_ACTION';
-export class ClearRegistrationAction implements Action {
 
-  readonly type = 'CLEAR_TOURNAMENT_REGISTRATION_ACTION';
-  constructor() {
-  }
-}
 
 export const TOURNAMENT_PLAYER_ADDED = 'TOURNAMENT_PLAYER_ADDED';
 export class TournamentPlayerAdded implements Action {

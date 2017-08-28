@@ -21,8 +21,8 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 import {AuthEffectService} from './store/effects/auth-effect.service';
 import {TournamentsEffectService} from './store/effects/tournaments-effect.service';
-import {LoginService} from './service/auth.service';
-import {TournamentsService} from './service/tournaments.service';
+import {AuthService} from './service/auth.service';
+import {TournamentsService} from './tournaments/tournaments.service';
 
 import {MomentModule} from 'angular2-moment';
 import {TournamentListOverviewComponent} from './tournaments/tournament-list-overview/tournament-list-overview.component';
@@ -41,7 +41,7 @@ import {
 
 } from './tournament/tournament-preparation/tournament-preparation.component';
 import {TournamentEffectService} from './store/effects/tournament-effect.service';
-import {TournamentService} from './service/tournament.service';
+import {TournamentService} from './tournament/actual-tournament.service';
 import {PlayerListOverviewComponent} from './player/player-list-overview/player-list-overview.component';
 import {PlayersEffectService} from './store/effects/players-effect.service';
 import {PlayersService} from './service/players.service';
@@ -61,7 +61,8 @@ import {TournamentGameService} from './service/tournament-game.service';
 import {
   MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule,
   MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdListModule, MdTooltip,
-  MdTooltipModule, MdSort, MdSortModule, MdTableModule, MdPaginatorModule, MdSlideToggleModule,
+  MdTooltipModule, MdSort, MdSortModule, MdTableModule, MdPaginatorModule, MdSlideToggleModule, MdProgressSpinner,
+  MdProgressSpinnerModule, MdMenu, MdMenuModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
@@ -137,6 +138,7 @@ import {AddCoOrganizatorDialogComponent} from './dialogs/add-co-organizator-dial
 
 import {GamesService} from './games/games.service';
 import {reducers} from './store/reducers/index';
+import {ActualTournamentRegistrationService} from "./tournament/actual-tournament-registration.service";
 
 
 
@@ -170,6 +172,8 @@ import {reducers} from './store/reducers/index';
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule, MdTooltipModule, MdSortModule, MdTableModule,
+    MdMenuModule,
+    MdProgressSpinnerModule,
     MdSlideToggleModule,
     MdPaginatorModule,
     DateTimePickerModule,
@@ -241,10 +245,11 @@ import {reducers} from './store/reducers/index';
     AddCoOrganizatorDialogComponent
   ],
   providers: [
-    LoginService,
+    AuthService,
     TournamentsService,
     AuthGuard,
     TournamentService,
+    ActualTournamentRegistrationService,
     PlayersService,
     GamesService,
     TournamentRankingService,

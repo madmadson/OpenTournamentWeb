@@ -71,9 +71,9 @@ export class GamesService  {
 
     this.gamesRef.once('value', function (snapshot) {
 
-      snapshot.forEach(function (tournamentSnapshot) {
+      snapshot.forEach(function (gamesForPlayerSnapshot) {
 
-        tournamentSnapshot.forEach(function (gameSnapshot) {
+        gamesForPlayerSnapshot.forEach(function (gameSnapshot) {
 
           const game: TournamentGame = TournamentGame.fromJson(gameSnapshot.val());
           game.id = gameSnapshot.key;

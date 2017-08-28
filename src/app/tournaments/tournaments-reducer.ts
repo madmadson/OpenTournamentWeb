@@ -1,11 +1,11 @@
-import {Action} from '@ngrx/store';
 
 import * as _ from 'lodash';
+
 import {
-  TOURNAMENT_ADDED_ACTION, TOURNAMENT_CHANGED_ACTION, TOURNAMENT_DELETED_ACTION,
-  TOURNAMENTS_CLEAR_ACTION
-} from '../actions/tournaments-actions';
-import {Tournament} from '../../../../shared/model/tournament';
+  ADD_ALL_TOURNAMENTS_ACTION, ADD_TOURNAMENT_ACTION, CHANGE_TOURNAMENT_ACTION,
+  CLEAR_ALL_TOURNAMENTS_ACTION, REMOVE_TOURNAMENT_ACTION
+} from './tournaments-actions';
+import {Tournament} from '../../../shared/model/tournament';
 
 
 
@@ -22,16 +22,19 @@ export function tournamentsReducer(state: TournamentsState = initialState, actio
 
   switch (action.type) {
 
-    case TOURNAMENTS_CLEAR_ACTION:
-      return handleTournamentClearData(state, action);
+    case ADD_ALL_TOURNAMENTS_ACTION:
+      return addAllTournaments(state, action);
 
-    case TOURNAMENT_ADDED_ACTION:
+    case CLEAR_ALL_TOURNAMENTS_ACTION:
+      return handleTournamentClearData(state);
+
+    case ADD_TOURNAMENT_ACTION:
       return handleTournamentAddedData(state, action);
 
-    case TOURNAMENT_CHANGED_ACTION:
+    case CHANGE_TOURNAMENT_ACTION:
       return handleTournamentChangedData(state, action);
 
-    case TOURNAMENT_DELETED_ACTION:
+    case REMOVE_TOURNAMENT_ACTION:
       return handleTournamentDeletedData(state, action);
 
     default:
@@ -40,8 +43,20 @@ export function tournamentsReducer(state: TournamentsState = initialState, actio
   }
 }
 
+function addAllTournaments(state: TournamentsState, action): TournamentsState {
 
-function handleTournamentClearData(state: TournamentsState, action): TournamentsState {
+  const newStoreState: TournamentsState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    newStoreState.tournaments = action.payload;
+
+  }
+  return newStoreState;
+}
+
+
+function handleTournamentClearData(state: TournamentsState): TournamentsState {
   const newStoreState = _.cloneDeep(state);
 
   newStoreState.tournaments = [];

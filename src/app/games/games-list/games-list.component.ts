@@ -1,10 +1,11 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ElementRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {Router} from '@angular/router';
 import {WindowRefService} from '../../service/window-ref-service';
 
 import {MdPaginator, MdSort} from '@angular/material';
 import {GamesDatabase, GamesDataSource} from '../../../../shared/table-model/game';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'games-list',
@@ -16,12 +17,19 @@ export class GamesListComponent implements OnInit, OnChanges {
 
   @Input() games: TournamentGame[];
 
-  displayedColumns = ['playerOnePlayerName', 'playerOneScore', 'playerTwoPlayerName', 'playerTwoScore'];
+  displayedColumns = [
+    'playerOnePlayerName',
+    'playerOneFaction',
+    'playerOneScore',
+    'playerTwoPlayerName',
+    'playerTwoFaction',
+    'playerTwoScore'];
   gamesDb: GamesDatabase;
   dataSource: GamesDataSource | null;
 
   @ViewChild(MdSort) sort: MdSort;
   @ViewChild(MdPaginator) paginator: MdPaginator;
+  @ViewChild('filter') filter: ElementRef;
 
   smallScreen: boolean;
   truncateMax: number;
@@ -42,10 +50,7 @@ export class GamesListComponent implements OnInit, OnChanges {
     for (const propName in changes) {
       if (changes.hasOwnProperty(propName)) {
         const change = changes[propName];
-        const curVal = JSON.stringify(change.currentValue);
-        const prevVal = JSON.stringify(change.previousValue);
-
-        if (this.gamesDb) {
+        if (this.gamesDb && propName === 'games') {
           this.gamesDb.resetDatabase(change.currentValue);
         }
 
@@ -56,8 +61,14 @@ export class GamesListComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.gamesDb = new GamesDatabase(this.games);
-
     this.dataSource = new GamesDataSource(this.gamesDb, this.sort, this.paginator);
+    Observable.fromEvent(this.filter.nativeElement, 'keyup')
+      .debounceTime(150)
+      .distinctUntilChanged()
+      .subscribe(() => {
+        if (!this.dataSource) { return; }
+        this.dataSource.filter = this.filter.nativeElement.value;
+      });
   }
 
 

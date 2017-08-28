@@ -23,7 +23,7 @@ body {
   background-color: grey;
 }
 
-.offline_icon{
+.offline_icon {
   color: $fail_color;
   margin-right: $main_tick;
 }
@@ -46,26 +46,58 @@ a:hover {
   color: deepskyblue;
 }
 
-.dark-primary-color    {
+.dark-primary-color {
   background: #512DA8;
   color: #FFFFFF;
 }
 
-.default-primary-color { background: #673AB7; color: #FFFFFF;}
-.light-primary-color   { background: #D1C4E9; }
-.my-item-color         { background: #FFC107; }
-.text-primary-color    { color: #FFFFFF; }
-.accent-color          { background: #FFC107; }
-.primary-text-color    { color: #212121; }
-.secondary-text-color  { color: #757575; }
-.divider-color         { border-color: #BDBDBD; }
+.default-primary-color {
+  background: #673AB7;
+  color: #FFFFFF;
+}
 
-.heading{
+.light-primary-color {
+  background: #D1C4E9;
+}
+
+.my-item-color {
+  background: #FFC107;
+}
+
+.text-primary-color {
+  color: #FFFFFF;
+}
+
+.accent-color {
+  background: #FFC107;
+}
+
+.primary-text-color {
+  color: #212121;
+}
+
+.secondary-text-color {
+  color: #757575;
+}
+
+.divider-color {
+  border-color: #BDBDBD;
+}
+
+.heading {
   text-align: center;
   font-size: 1.6em;
   margin: $main_tick !important;;
   width: 100%;
 }
+
+.loading-spinner-container {
+
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
 @media only screen and (min-width: 500px) {
   .heading {
     text-align: center;
@@ -75,13 +107,14 @@ a:hover {
   }
 }
 
-.sub-heading{
+.sub-heading {
   text-align: center;
   font-weight: bold;
   font-size: 0.8em;
   margin: $halve_tick !important;;
   width: 100%;
 }
+
 @media only screen and (min-width: 500px) {
   .sub-heading {
     text-align: center;
@@ -94,20 +127,21 @@ a:hover {
 
 /*md-changes watch for improvement in lib*/
 
-button:focus{
-  box-shadow: 0 0 0 2px deepskyblue;
+button:focus {
+  box-shadow: inset 0 0 10px $color_info;
 }
-button:hover{
-  box-shadow: 0 0 0 2px deepskyblue;
+
+button:hover {
+  box-shadow: inset 0 0 10px $color_info;
 }
 
 .my-item {
-  box-shadow: inset 0 0 10px #FFC107;
+  box-shadow: inset 0 0 10px $color_secondary;
 }
 
-.list-item:hover{
+.list-item:hover {
   cursor: pointer;
-  background-color: deepskyblue;
+  background-color: $color_info;
 }
 
 @media only screen and (max-width: 500px) {
@@ -118,59 +152,61 @@ button:hover{
   }
 }
 
-.list-icon{
+.list-icon {
   padding-left: 3px;
   padding-right: 3px;
-  font-size:36px;
+  font-size: 36px;
 }
 
-.list-action{
+.list-action {
   padding-left: 3px;
   padding-right: 3px;
-  font-size:36px;
+  font-size: 36px;
 }
-
 
 .list-action:hover {
   cursor: pointer;
   color: $hover_color !important;
 }
 
-.mdl-list__item .mdl-list__item-secondary-content{
+.mdl-list__item .mdl-list__item-secondary-content {
   margin-left: 3px;
 }
 
-.color-negative-background{
+.color-negative-background {
   background-color: $fail_color;
 }
 
-.color-positive-background{
+.color-positive-background {
   background-color: $success_color;
 }
 
-.color-secondary-background{
+.color-secondary-background {
   background-color: $color_secondary;
 }
 
-
-.color-negative{
+.color-negative {
   color: $fail_color;
 }
 
-.color-positive{
+.color-positive {
   color: $success_color;
 }
 
-.color-secondary{
+.color-secondary {
   color: $color_secondary;
 }
 
-.color-info{
+.color-info {
   color: $color_info;
 }
 
-.small-text{
+.small-text {
   font-size: 0.7em;
+}
+
+.zero-line-height {
+  line-height: 100%;
 }
 
 md-card {
@@ -189,26 +225,26 @@ md-card {
   }
 }
 
-.full-width-button{
+.full-width-button {
   width: 100%;
   height: 50px;
 }
 
-.full-width-only{
+.full-width-only {
   width: 100%;
 }
 
-.full-width{
+.full-width {
   width: 100%;
   padding-top: 6px;
   padding-bottom: 6px;
 }
 
-.margin-right{
+.margin-right {
   margin-right: $double_tick;
 }
 
-.restriction-section{
+.restriction-section {
   display: flex;
   align-content: center;
   align-items: center;
@@ -218,7 +254,7 @@ md-card {
   font-size: 1.8em;
 }
 
-.full-width-select-box{
+.full-width-select-box {
   width: 100%;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -230,7 +266,7 @@ md-card {
   margin-top: 6px !important;
 }
 
-.big-button{
+.big-button {
   height: 54px;
   padding: 3px !important;
 }
@@ -241,7 +277,7 @@ md-card {
   }
 }
 
-.right-align-button{
+.right-align-button {
   float: right;
 }
 
@@ -250,7 +286,7 @@ md-card {
   max-height: 120px;
 }
 
-.fix-height{
+.fix-height {
   height: 120px;
 }
 
@@ -261,7 +297,7 @@ md-card {
     max-height: 220px;
   }
 
-  .fix-height{
+  .fix-height {
     height: 230px;
   }
 }
@@ -272,42 +308,44 @@ md-card {
     max-height: 370px;
   }
 
-  .fix-height{
+  .fix-height {
     height: 370px;
   }
 }
 
-.even{
+.even {
   background-color: #f7eff7;
 }
 
-.search-field{
+.search-field {
   margin-left: 12px
 }
 
-.action-card-container{
+.action-card-container {
   display: flex;
-  flex-flow:column;
+  flex-flow: column;
   align-items: center;
   justify-content: center;
 }
 
-.action-card{
+.action-card {
   width: 300px;
   padding: 0;
 }
+
 @media only screen and (min-width: 500px) {
-  .action-card{
+  .action-card {
     width: 400px;
   }
 }
+
 @media only screen and (min-width: 800px) {
-  .action-card{
+  .action-card {
     width: 700px;
   }
 }
 
-.action-button-wrapper{
+.action-button-wrapper {
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -316,7 +354,7 @@ md-card {
 }
 
 @media only screen and (min-width: 800px) {
-  .action-button-wrapper{
+  .action-button-wrapper {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
@@ -329,9 +367,9 @@ md-card {
   width: 160px !important;
 }
 
-.pairing-options-card-wide{
+.pairing-options-card-wide {
   width: 400px;
-  margin-right:1rem;
+  margin-right: 1rem;
 }
 
 .full-width-input {
@@ -348,46 +386,45 @@ md-card {
   padding-left: 6px;
 }
 
-
-.content-cards-container{
+.content-cards-container {
   display: flex;
-  flex-flow:row wrap;
+  flex-flow: row wrap;
   justify-content: center;
 }
 
 @media only screen and (min-width: 1200px) {
-  .content-cards-container{
+  .content-cards-container {
     display: flex;
-    flex-flow:row wrap;
+    flex-flow: row wrap;
     align-items: flex-start;
   }
 }
 
 .single-list-card {
-  width:300px;
+  width: 300px;
 }
 
 @media only screen and (min-width: 500px) {
   .single-list-card {
-    width:400px;
+    width: 400px;
   }
 }
 
 @media only screen and (min-width: 600px) {
   .single-list-card {
-    width:500px;
+    width: 500px;
   }
 }
 
 @media only screen and (min-width: 1000px) {
   .single-list-card {
-    width:800px;
+    width: 800px;
   }
 }
 
 @media only screen and (min-width: 1200px) {
   .single-list-card {
-    width:1000px;
+    width: 1000px;
   }
 }
 
@@ -400,7 +437,6 @@ md-card {
   -khtml-user-drag: element;
   -webkit-user-drag: element;
 }
-
 
 .drop-enable {
   opacity: 0.7;
@@ -432,17 +468,16 @@ md-card {
   pointer-events: none;
 }
 
-.move-able{
+.move-able {
   cursor: move;
 }
-
 
 .mdl-tabs__tab.disabled {
   cursor: not-allowed !important;
   opacity: 0.2 !important;
 }
 
-.player-name{
+.player-name {
   letter-spacing: 0;
   font-weight: bold;
   font-size: 12px;
@@ -464,7 +499,7 @@ md-card {
   width: 54px;
 }
 
-.team-capacity{
+.team-capacity {
   font-weight: bold;
   font-size: 1.0em;
   margin-top: 12px;
@@ -472,7 +507,7 @@ md-card {
 }
 
 @media only screen and (min-width: 800px) {
-  .team-capacity{
+  .team-capacity {
     font-weight: bold;
     font-size: 1.4em;
     margin-top: 12px;
@@ -480,11 +515,11 @@ md-card {
   }
 }
 
-.loading-spinner{
+.loading-spinner {
   margin: 10px;
 }
 
-.flex-container{
+.flex-container {
   display: flex;
   justify-content: center;
 }
@@ -498,7 +533,6 @@ md-card {
     padding: 0 24px !important;
   }
 }
-
 
 .print-area {
   max-height: 300px;
@@ -516,22 +550,22 @@ snack-bar-container.snackBar-info {
   background-color: $color_info;
 }
 
-.mat-dialog-container{
+.mat-dialog-container {
   max-width: 100vw !important;
 }
 
-.mdl-list__item-primary-content{
+.mdl-list__item-primary-content {
   line-height: 16px !important;
 }
 
-.info-icon{
+.info-icon {
   color: $color_info;
 }
 
-.info-icon:hover{
+.info-icon:hover {
   color: $hover_color;
 }
 
-.filter-textfield{
+.filter-textfield {
   width: 300px;
 }

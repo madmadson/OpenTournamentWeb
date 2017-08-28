@@ -3,12 +3,6 @@ import {Store} from '@ngrx/store';
 
 import * as firebase from 'firebase';
 
-import {
-  TournamentAddedAction,
-  TournamentChangedAction,
-  TournamentDeletedAction,
-  TournamentsClearAction
-} from '../store/actions/tournaments-actions';
 import {Tournament} from '../../../shared/model/tournament';
 import {MdSnackBar} from '@angular/material';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
@@ -16,53 +10,86 @@ import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
 
 import * as _ from 'lodash';
 import {AppState} from '../store/reducers/index';
+import {
+  ADD_ALL_TOURNAMENTS_ACTION, ADD_TOURNAMENT_ACTION, CHANGE_TOURNAMENT_ACTION,
+  CLEAR_ALL_TOURNAMENTS_ACTION, REMOVE_TOURNAMENT_ACTION
+} from './tournaments-actions';
 
 @Injectable()
 export class TournamentsService  {
 
-  private tournamentsReference: firebase.database.Reference;
+  private tournamentsRef: firebase.database.Reference;
+
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<AppState>,
               private snackBar: MdSnackBar) {
   }
 
+  unsubscribeOnFirebaseTournaments(): void {
+    if (this.tournamentsRef) {
+      this.tournamentsRef.off();
+    }
+    this.store.dispatch({type: CLEAR_ALL_TOURNAMENTS_ACTION});
+  }
 
-  subscribeOnTournaments() {
 
-
-    this.store.dispatch(new TournamentsClearAction());
+  subscribeOnFirebaseTournaments() {
 
     const that = this;
+    const allTournaments: Tournament[] = [];
+    let newItems = false;
 
-    if (this.tournamentsReference) {
-      this.tournamentsReference.off();
-    }
+    this.tournamentsRef = firebase.database().ref('tournaments');
 
-    this.tournamentsReference = firebase.database().ref('tournaments');
+    this.tournamentsRef.on('child_added', function (snapshot) {
 
-    this.tournamentsReference.on('child_added', function (snapshot) {
-
-      const tournament: Tournament = Tournament.fromJson(snapshot.val());
-      tournament.id = snapshot.key;
-
-      that.store.dispatch(new TournamentAddedAction(tournament));
-
-    });
-
-    this.tournamentsReference.on('child_changed', function (snapshot) {
+      if (!newItems) {
+        return;
+      }
 
       const tournament: Tournament = Tournament.fromJson(snapshot.val());
       tournament.id = snapshot.key;
 
-      that.store.dispatch(new TournamentChangedAction(tournament));
+      that.store.dispatch({type: ADD_TOURNAMENT_ACTION, payload: tournament});
+
     });
 
-    this.tournamentsReference.on('child_removed', function (snapshot) {
+    this.tournamentsRef.on('child_changed', function (snapshot) {
 
-      that.store.dispatch(new TournamentDeletedAction(snapshot.key));
+      if (!newItems) {
+        return;
+      }
+
+      const tournament: Tournament = Tournament.fromJson(snapshot.val());
+      tournament.id = snapshot.key;
+
+      that.store.dispatch({type: CHANGE_TOURNAMENT_ACTION, payload: tournament});
     });
 
+    this.tournamentsRef.on('child_removed', function (snapshot) {
+
+      if (!newItems) {
+        return;
+      }
+
+      that.store.dispatch({type: REMOVE_TOURNAMENT_ACTION, payload: snapshot.key});
+    });
+
+    this.tournamentsRef.once('value', function (snapshot) {
+
+      snapshot.forEach(function (tournamentSnapshot) {
+
+        const tournament: Tournament = Tournament.fromJson(tournamentSnapshot.val());
+        tournament.id = tournamentSnapshot.key;
+        allTournaments.push(tournament);
+        return false;
+
+      });
+    }).then(function () {
+      that.store.dispatch({type: ADD_ALL_TOURNAMENTS_ACTION, payload: allTournaments});
+      newItems = true;
+    });
   }
 
   pushTournament(newTournament: Tournament) {

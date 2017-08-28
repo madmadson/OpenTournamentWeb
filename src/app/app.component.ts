@@ -2,8 +2,8 @@ import { Component, OnDestroy, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 
-import {AuthSubscribeAction, LogoutAction} from './store/actions/auth-actions';
-import {TournamentsSubscribeAction, TournamentsUnsubscribeAction} from './store/actions/tournaments-actions';
+import {LogoutAction} from './store/actions/auth-actions';
+
 import {Router} from '@angular/router';
 import {GlobalEventService} from './service/global-event-service';
 import { Subscription } from 'rxjs/Subscription';
@@ -13,6 +13,8 @@ import {Observable} from 'rxjs/Observable';
 
 import { isDevMode } from '@angular/core';
 import {AppState} from './store/reducers/index';
+import {AuthService} from './service/auth.service';
+import {AuthenticationState} from './store/reducers/authenticationReducer';
 
 @Component({
   selector: 'app-root',
@@ -24,26 +26,28 @@ export class AppComponent implements OnDestroy {
 
   @ViewChild('sidenav') sidenav: MdSidenav;
 
-  private fullScreenModeSub: Subscription;
-
-  currentUserName: string;
-  loggedIn: boolean;
-  currentUserEmail: string;
-  currentUserImage: string;
+  fullScreenModeSub: Subscription;
 
   fullscreenMode: boolean;
 
   sideNavOpen: boolean;
-  isConnected: Observable<boolean>;
+
 
   smallScreen: boolean;
 
   isDevMode: boolean;
+  auth$: Observable<AuthenticationState>;
+  isConnected$: Observable<boolean>;
 
-  constructor(private router: Router,
+  constructor(private authService: AuthService,
+              private router: Router,
               private store: Store<AppState>,
               private messageService: GlobalEventService,
               private winRef: WindowRefService) {
+
+    authService.subscribeOnAuthentication();
+
+    this.auth$ = this.store.select(state => state.authentication);
 
     this.isDevMode = isDevMode();
 
@@ -52,35 +56,22 @@ export class AppComponent implements OnDestroy {
       this.sidenav.close();
     });
 
-    this.store.select(state => state.authentication).subscribe(authenticationStoreState => {
-        this.currentUserName = authenticationStoreState.currentUserName;
-        this.loggedIn = authenticationStoreState.loggedIn;
-        this.currentUserEmail = authenticationStoreState.currentUserEmail;
-        this.currentUserImage = authenticationStoreState.currentUserImage;
-      }
-    );
-
-    this.store.dispatch(new AuthSubscribeAction());
-    // this.store.dispatch(new TournamentsSubscribeAction());
 
     this.sideNavOpen = this.winRef.nativeWindow.screen.width >= 800;
 
 
-    this.isConnected = Observable.merge(
+    this.isConnected$ = Observable.merge(
       Observable.of(this.winRef.nativeWindow.navigator.onLine),
       Observable.fromEvent(window, 'online').map(() => true),
       Observable.fromEvent(window, 'offline').map(() => false));
 
-    if (this.winRef.nativeWindow.screen.width < 800) {
-      this.smallScreen = true;
-    } else {
-      this.smallScreen = false;
-    }
+    this.smallScreen = this.winRef.nativeWindow.screen.width < 800;
 
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(new TournamentsUnsubscribeAction());
+
+    this.authService.unsubscribeOnAuthentication();
     this.fullScreenModeSub.unsubscribe();
   }
 

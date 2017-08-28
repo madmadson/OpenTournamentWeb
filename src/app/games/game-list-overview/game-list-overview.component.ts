@@ -20,20 +20,9 @@ export class GameListOverviewComponent implements OnDestroy {
 
     this.gamesService.subscribeOnFirebaseGames();
 
-      this.allGames$ =  this.store.select(state => state.games.allGames);
-
+    this.allGames$ = this.store.select(state => state.games.allGames);
   }
-
-
   ngOnDestroy() {
     this.gamesService.unsubscribeOnFirebaseGames();
-
   }
-
-
-  filterGames(filterString: string) {
-
-
-  }
-
 }

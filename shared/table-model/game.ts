@@ -40,6 +40,13 @@ export class GamesDatabase {
 
 
 export class GamesDataSource extends DataSource<TournamentGame> {
+
+
+  _filterChange = new BehaviorSubject('');
+  get filter(): string { return this._filterChange.value; }
+  set filter(filter: string) { this._filterChange.next(filter); }
+
+
   constructor(private _gamesDatabase: GamesDatabase, private _sort: MdSort, private _paginator: MdPaginator) {
     super();
   }
@@ -50,14 +57,20 @@ export class GamesDataSource extends DataSource<TournamentGame> {
       this._gamesDatabase.dataChange,
       this._sort.mdSortChange,
       this._paginator.page,
+      this._filterChange,
     ];
 
     return Observable.merge(...displayDataChanges).map(() => {
 
       const sortedData = this.getSortedData();
 
+      const filteredData = sortedData.slice().filter((game: TournamentGame) => {
+        const searchStr = (game.playerOnePlayerName + game.playerTwoPlayerName).toLowerCase();
+        return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
+      });
+
       const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-      return sortedData.splice(startIndex, this._paginator.pageSize);
+      return filteredData.splice(startIndex, this._paginator.pageSize);
     });
   }
 
@@ -83,11 +96,17 @@ export class GamesDataSource extends DataSource<TournamentGame> {
         case 'playerOnePlayerName':
           [propertyA, propertyB] = [a.playerOnePlayerName, b.playerOnePlayerName];
           break;
+        case 'playerOneFaction':
+          [propertyA, propertyB] = [a.playerOneFaction, b.playerOneFaction];
+          break;
         case 'playerOneScore':
           [propertyA, propertyB] = [a.playerOneScore, b.playerOneScore];
           break;
         case 'playerTwoPlayerName':
           [propertyA, propertyB] = [a.playerTwoPlayerName, b.playerTwoPlayerName];
+          break;
+        case 'playerTwoFaction':
+          [propertyA, propertyB] = [a.playerTwoFaction, b.playerTwoFaction];
           break;
         case 'playerTwoScore':
           [propertyA, propertyB] = [a.playerTwoScore, b.playerTwoScore];

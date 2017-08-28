@@ -4,14 +4,14 @@
       <mdl-spinner single-color active></mdl-spinner>
     </div>
   </ng-container>
-  <span *ngIf="!(isConnected | async) && !isAdmin  && !isCoOrganizer">
+  <span *ngIf="!(isConnected$ | async) && !isAdmin  && !isCoOrganizer">
       You cannot inserted your gameResult while offline!
       <md-icon class="offline_icon"
                mdTooltip="No Connection">
         signal_wifi_off
       </md-icon>
     </span>
-  <span *ngIf="!(isConnected | async) && !isAdmin && isCoOrganizer">
+  <span *ngIf="!(isConnected$ | async) && !isAdmin && isCoOrganizer">
       Online the Tournament organizer can insert results while offline.
       This should prevent race conditions while offline.
       <md-icon class="offline_icon"
@@ -19,7 +19,7 @@
         signal_wifi_off
       </md-icon>
     </span>
-  <form *ngIf="(isConnected | async) || isAdmin" #gameForm="ngForm">
+  <form *ngIf="(isConnected$ | async) || isAdmin" #gameForm="ngForm">
     <div class="game-result-container">
       <md-card class="game-result-card"
                [ngClass]="{'card-won': gameModel.playerOneScore == 1,
@@ -186,7 +186,7 @@
       <md-icon>check</md-icon>
       Really no winner?
     </button>
-    <button *ngIf="!sureButton  && ((isConnected | async) || isAdmin || isCoOrganizer)"
+    <button *ngIf="!sureButton  && ((isConnected$ | async) || isAdmin || isCoOrganizer)"
             (click)="enterGameResultSubmitted()"
             class="right-align-button big-button"
             type="button"

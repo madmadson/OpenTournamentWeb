@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {
@@ -16,7 +16,7 @@ import {Observable} from 'rxjs/Observable';
 import {AppState} from '../store/reducers/index';
 
 @Injectable()
-export class LoginService implements OnDestroy {
+export class AuthService {
 
   private authSubscription: Subscription;
   private redirectUrlSubscription: Subscription;
@@ -38,7 +38,7 @@ export class LoginService implements OnDestroy {
   }
 
 
-  ngOnDestroy(): void {
+  unsubscribeOnAuthentication(): void {
 
     this.authSubscription.unsubscribe();
     this.redirectUrlSubscription.unsubscribe();

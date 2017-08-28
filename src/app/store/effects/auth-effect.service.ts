@@ -6,7 +6,7 @@ import {
   LoginWithProviderAction,
   LOGOUT_ACTION, RESET_PASSWORD_ACTION, ResetPasswordAction
 } from '../actions/auth-actions';
-import {LoginService} from '../../service/auth.service';
+import {AuthService} from '../../service/auth.service';
 
 @Injectable()
 export class AuthEffectService {
@@ -44,6 +44,6 @@ export class AuthEffectService {
 
   constructor(
     private actions$: Actions,
-    private loginService: LoginService
+    private loginService: AuthService
   ) { }
 }
