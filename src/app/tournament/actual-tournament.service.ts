@@ -5,8 +5,6 @@ import * as firebase from 'firebase';
 
 import {
   AddArmyListAction, ArmyListDeletedAction, ClearArmyListsAction,
-  ClearTournamentPlayerAction,
-  TournamentPlayerAdded, TournamentPlayerChanged, TournamentPlayerDeleted,
   SET_ACTUAL_TOURNAMENT_ACTION, UNSET_ACTUAL_TOURNAMENT_ACTION
 } from './tournament-actions';
 import {Registration} from '../../../shared/model/registration';
@@ -105,41 +103,41 @@ export class TournamentService  {
 
 
 
-  private subscribeOnTournamentPlayers(tournamentId: string) {
-    const that = this;
-
-    this.store.dispatch(new ClearTournamentPlayerAction());
-
-    if (this.tournamentPlayerRef) {
-      this.tournamentPlayerRef.off();
-    }
-
-    this.tournamentPlayerRef = firebase.database().ref('tournament-players/' + tournamentId);
-
-    this.tournamentPlayerRef.on('child_added', function (snapshot) {
-
-      const tournamentPlayer: TournamentPlayer = TournamentPlayer.fromJson(snapshot.val());
-      tournamentPlayer.id = snapshot.key;
-
-      that.store.dispatch(new TournamentPlayerAdded(tournamentPlayer));
-
-    });
-
-    this.tournamentPlayerRef.on('child_changed', function (snapshot) {
-
-      const tournamentPlayer: TournamentPlayer = TournamentPlayer.fromJson(snapshot.val());
-      tournamentPlayer.id = snapshot.key;
-
-      that.store.dispatch(new TournamentPlayerChanged(tournamentPlayer));
-
-    });
-
-    this.tournamentPlayerRef.on('child_removed', function (snapshot) {
-
-      that.store.dispatch(new TournamentPlayerDeleted(snapshot.key));
-
-    });
-  }
+  // private subscribeOnTournamentPlayers(tournamentId: string) {
+  //   const that = this;
+  //
+  //   this.store.dispatch(new ClearTournamentPlayerAction());
+  //
+  //   if (this.tournamentPlayerRef) {
+  //     this.tournamentPlayerRef.off();
+  //   }
+  //
+  //   this.tournamentPlayerRef = firebase.database().ref('tournament-players/' + tournamentId);
+  //
+  //   this.tournamentPlayerRef.on('child_added', function (snapshot) {
+  //
+  //     const tournamentPlayer: TournamentPlayer = TournamentPlayer.fromJson(snapshot.val());
+  //     tournamentPlayer.id = snapshot.key;
+  //
+  //     that.store.dispatch(new TournamentPlayerAdded(tournamentPlayer));
+  //
+  //   });
+  //
+  //   this.tournamentPlayerRef.on('child_changed', function (snapshot) {
+  //
+  //     const tournamentPlayer: TournamentPlayer = TournamentPlayer.fromJson(snapshot.val());
+  //     tournamentPlayer.id = snapshot.key;
+  //
+  //     that.store.dispatch(new TournamentPlayerChanged(tournamentPlayer));
+  //
+  //   });
+  //
+  //   this.tournamentPlayerRef.on('child_removed', function (snapshot) {
+  //
+  //     that.store.dispatch(new TournamentPlayerDeleted(snapshot.key));
+  //
+  //   });
+  // }
 
   private subscribeOnArmyLists(tournamentId: string) {
     const that = this;

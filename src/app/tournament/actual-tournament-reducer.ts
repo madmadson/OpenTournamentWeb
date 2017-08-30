@@ -1,6 +1,15 @@
 import {
-  ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION,
-  CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION,
+  ADD_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION,
+  ADD_ACTUAL_TOURNAMENT_PLAYER_ACTION,
+  ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION, ADD_ALL_ACTUAL_TOURNAMENT_ARMY_LISTS_ACTION,
+  ADD_ALL_ACTUAL_TOURNAMENT_PLAYERS_ACTION,
+  CHANGE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION,
+  CHANGE_ACTUAL_TOURNAMENT_PLAYER_ACTION, CLEAR_ACTUAL_TOURNAMENT_ARMY_LISTS_ACTION,
+  CLEAR_ACTUAL_TOURNAMENT_PLAYERS_ACTION,
+  CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION, LOAD_REGISTRATIONS_FINISHED_ACTION,
+  LOAD_TOURNAMENT_PLAYERS_FINISHED_ACTION,
+  REMOVE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION,
+  REMOVE_ACTUAL_TOURNAMENT_PLAYER_ACTION,
   SET_ACTUAL_TOURNAMENT_ACTION
 } from './tournament-actions';
 import {
@@ -13,12 +22,7 @@ import {
   TOURNAMENT_GAME_ADDED_ACTION, TOURNAMENT_GAME_CHANGED_ACTION,
   TOURNAMENT_GAME_DELETED_ACTION, TOURNAMENT_GAMES_CLEAR_ACTION
 } from '../store/actions/tournament-games-actions';
-import {
 
-  CLEAR_TOURNAMENT_PLAYER_ACTION,
-  TOURNAMENT_PLAYER_ADDED, TOURNAMENT_PLAYER_CHANGED, TOURNAMENT_PLAYER_DELETED,
-
-} from './tournament-actions';
 import {
   TOURNAMENT_RANKING_ADDED_ACTION, TOURNAMENT_RANKING_CHANGED_ACTION,
   TOURNAMENT_RANKING_DELETED_ACTION, TOURNAMENT_RANKINGS_CLEAR_ACTION
@@ -55,10 +59,12 @@ import {TournamentGame} from '../../../shared/model/tournament-game';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {Registration} from '../../../shared/model/registration';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
-import {UNSET_ACTUAL_TOURNAMENT_ACTION,
+import {
+  UNSET_ACTUAL_TOURNAMENT_ACTION,
   CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION,
   REMOVE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION,
-  ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION} from './tournament-actions';
+  ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION
+} from './tournament-actions';
 
 export interface ActualTournamentState {
   actualTournament: Tournament;
@@ -73,6 +79,9 @@ export interface ActualTournamentState {
   actualTournamentRegisteredTeams: TournamentTeam[];
   actualTournamentTeamGames: TournamentGame[];
   actualTournamentTeamRankings: TournamentRanking[];
+
+  loadRegistrations: boolean;
+  loadPlayers: boolean;
 }
 
 const initialState = {
@@ -88,8 +97,12 @@ const initialState = {
   actualTournamentTeams: [],
   actualTournamentRegisteredTeams: [],
   actualTournamentTeamGames: [],
-  actualTournamentTeamRankings: []
+  actualTournamentTeamRankings: [],
+
+  loadRegistrations: true,
+  loadPlayers: true
 };
+
 
 export function actualTournamentReducer(state = initialState, action): ActualTournamentState {
 
@@ -113,15 +126,37 @@ export function actualTournamentReducer(state = initialState, action): ActualTou
     case ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION:
       return handleAddAllTournamentRegistrationAction(state, action);
 
+    case LOAD_REGISTRATIONS_FINISHED_ACTION:
+      return handleLoadRegistrationsFinishedAction(state);
 
-    case ARMY_LIST_ADDED_ACTION:
-      return handleArmyListAddedAction(state, action);
+    // TournamentPlayer
+    case ADD_ACTUAL_TOURNAMENT_PLAYER_ACTION:
+      return handleAddTournamentTournamentPlayerAction(state, action);
+    case CHANGE_ACTUAL_TOURNAMENT_PLAYER_ACTION:
+      return handleChangeTournamentTournamentPlayerAction(state, action);
+    case REMOVE_ACTUAL_TOURNAMENT_PLAYER_ACTION:
+      return handleRemoveTournamentTournamentPlayerAction(state, action);
+    case CLEAR_ACTUAL_TOURNAMENT_PLAYERS_ACTION:
+      return handleClearTournamentTournamentPlayerAction(state);
+    case ADD_ALL_ACTUAL_TOURNAMENT_PLAYERS_ACTION:
+      return handleAddAllTournamentTournamentPlayerAction(state, action);
 
-    case ARMY_LIST_DELETED_ACTION:
-      return handleArmyListDeletedAction(state, action);
+    case LOAD_TOURNAMENT_PLAYERS_FINISHED_ACTION:
+      return handleLoadTournamentPlayersFinishedAction(state);
 
-    case CLEAR_ARMY_LISTS_ACTION:
-      return handleClearArmyListsAction(state);
+    // ArmyLists
+    case ADD_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION:
+      return handleAddTournamentArmyListAction(state, action);
+    case CHANGE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION:
+      return handleChangeTournamentArmyListAction(state, action);
+    case REMOVE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION:
+      return handleRemoveTournamentArmyListAction(state, action);
+    case CLEAR_ACTUAL_TOURNAMENT_ARMY_LISTS_ACTION:
+      return handleClearTournamentArmyListAction(state);
+    case ADD_ALL_ACTUAL_TOURNAMENT_ARMY_LISTS_ACTION:
+      return handleAddAllTournamentArmyListAction(state, action);
+
+
 
     case TOURNAMENT_GAMES_CLEAR_ACTION:
       return handleTournamentGameClearAction(state);
@@ -135,17 +170,6 @@ export function actualTournamentReducer(state = initialState, action): ActualTou
     case TOURNAMENT_GAME_CHANGED_ACTION:
       return handleTournamentGameChangedData(state, action);
 
-    case TOURNAMENT_PLAYER_ADDED:
-      return handleTournamentPlayerAddedAction(state, action);
-
-    case TOURNAMENT_PLAYER_DELETED:
-      return handleTournamentPlayerDeletedAction(state, action);
-
-    case TOURNAMENT_PLAYER_CHANGED:
-      return handleTournamentPlayerChangedData(state, action);
-
-    case CLEAR_TOURNAMENT_PLAYER_ACTION:
-      return handleClearTournamentPlayerAction(state);
 
     case TOURNAMENT_RANKINGS_CLEAR_ACTION:
       return handleTournamentRankingClearAction(state);
@@ -158,7 +182,6 @@ export function actualTournamentReducer(state = initialState, action): ActualTou
 
     case TOURNAMENT_RANKING_CHANGED_ACTION:
       return handleTournamentRankingChangedData(state, action);
-
 
 
     case TOURNAMENT_TEAMS_CLEAR_ACTION:
@@ -234,10 +257,9 @@ function handleUnsetTournament(state): ActualTournamentState {
   return newState;
 }
 
-// TournamentPlayerRegistration
+// Registrations
 
-function handleAddTournamentRegistrationAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleAddTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
 
   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
 
@@ -247,8 +269,7 @@ function handleAddTournamentRegistrationAction(
   return newTournamentData;
 }
 
-function handleChangeTournamentRegistrationAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleChangeTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -260,8 +281,7 @@ function handleChangeTournamentRegistrationAction(
   return newStoreState;
 }
 
-function handleRemoveTournamentRegistrationAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleRemoveTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -273,8 +293,7 @@ function handleRemoveTournamentRegistrationAction(
 }
 
 
-function handleClearTournamentRegistrationAction(
-  state: ActualTournamentState): ActualTournamentState {
+function handleClearTournamentRegistrationAction(state: ActualTournamentState): ActualTournamentState {
 
   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
 
@@ -295,28 +314,106 @@ function handleAddAllTournamentRegistrationAction(state: ActualTournamentState, 
   return newStoreState;
 }
 
+function handleLoadRegistrationsFinishedAction(state: ActualTournamentState): ActualTournamentState {
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
+
+  newStoreState.loadRegistrations = false;
+
+  return newStoreState;
+}
 
 
-// ArmyLists
+// TournamentPlayers
 
-function handleArmyListAddedAction(
-  state, action): ActualTournamentState {
+function handleAddTournamentTournamentPlayerAction(state: ActualTournamentState, action): ActualTournamentState {
 
   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
-    if (newTournamentData.actualTournamentArmyLists === undefined) {
-      newTournamentData.actualTournamentArmyLists = [];
-    }
+    newTournamentData.actualTournamentPlayers.push(action.payload);
+  }
+  return newTournamentData;
+}
+
+function handleChangeTournamentTournamentPlayerAction(state: ActualTournamentState, action): ActualTournamentState {
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    const indexOfSearchedTournamentPlayer = _.findIndex(newStoreState.actualTournamentPlayers, ['id', action.payload.id]);
+
+    newStoreState.actualTournamentPlayers[indexOfSearchedTournamentPlayer] = action.payload;
+  }
+  return newStoreState;
+}
+
+function handleRemoveTournamentTournamentPlayerAction(state: ActualTournamentState, action): ActualTournamentState {
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    const indexOfSearchedTournamentPlayer = _.findIndex(newStoreState.actualTournamentPlayers, ['id', action.payload]);
+    newStoreState.actualTournamentPlayers.splice(indexOfSearchedTournamentPlayer, 1);
+  }
+  return newStoreState;
+}
+
+
+function handleClearTournamentTournamentPlayerAction(state: ActualTournamentState): ActualTournamentState {
+
+  const newTournamentData: ActualTournamentState = _.cloneDeep(state);
+
+  newTournamentData.actualTournamentPlayers = [];
+
+  return newTournamentData;
+}
+
+function handleAddAllTournamentTournamentPlayerAction(state: ActualTournamentState, action): ActualTournamentState {
+
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+    newStoreState.actualTournamentPlayers = action.payload;
+  }
+  return newStoreState;
+}
+
+
+function handleLoadTournamentPlayersFinishedAction(state: ActualTournamentState): ActualTournamentState {
+
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
+
+  newStoreState.loadPlayers = false;
+
+  return newStoreState;
+}
+
+
+// ArmyLists
+
+function handleAddTournamentArmyListAction(state: ActualTournamentState, action): ActualTournamentState {
+
+  const newTournamentData: ActualTournamentState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
     newTournamentData.actualTournamentArmyLists.push(action.payload);
   }
   return newTournamentData;
 }
 
+function handleChangeTournamentArmyListAction(state: ActualTournamentState, action): ActualTournamentState {
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
-function handleArmyListDeletedAction(
-  state, action): ActualTournamentState {
+  if (action.payload !== undefined) {
 
+    const indexOfSearchedArmyList = _.findIndex(newStoreState.actualTournamentArmyLists, ['id', action.payload.id]);
+
+    newStoreState.actualTournamentArmyLists[indexOfSearchedArmyList] = action.payload;
+  }
+  return newStoreState;
+}
+
+function handleRemoveTournamentArmyListAction(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -327,8 +424,8 @@ function handleArmyListDeletedAction(
   return newStoreState;
 }
 
-function handleClearArmyListsAction(
-  state): ActualTournamentState {
+
+function handleClearTournamentArmyListAction(state: ActualTournamentState): ActualTournamentState {
 
   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
 
@@ -337,10 +434,21 @@ function handleClearArmyListsAction(
   return newTournamentData;
 }
 
+function handleAddAllTournamentArmyListAction(state: ActualTournamentState, action): ActualTournamentState {
+
+  const newStoreState: ActualTournamentState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+
+    newStoreState.actualTournamentArmyLists = action.payload;
+
+  }
+  return newStoreState;
+}
+
 // GAMES
 
-function handleTournamentGameClearAction(
-  state): ActualTournamentState {
+function handleTournamentGameClearAction(state): ActualTournamentState {
 
   const gamesStoreData: ActualTournamentState = _.cloneDeep(state);
 
@@ -350,9 +458,7 @@ function handleTournamentGameClearAction(
 }
 
 
-
-function handleTournamentGameAddedAction(
-  state, action): ActualTournamentState {
+function handleTournamentGameAddedAction(state, action): ActualTournamentState {
 
 
   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
@@ -367,8 +473,7 @@ function handleTournamentGameAddedAction(
 }
 
 
-function handleTournamentGameDeletedAction(
-  state, action): ActualTournamentState {
+function handleTournamentGameDeletedAction(state, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -380,8 +485,7 @@ function handleTournamentGameDeletedAction(
 }
 
 
-function handleTournamentGameChangedData(
-  state, action): ActualTournamentState {
+function handleTournamentGameChangedData(state, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -395,8 +499,7 @@ function handleTournamentGameChangedData(
 
 // TournamentPlayer
 
-function handleTournamentPlayerAddedAction(
-  state, action): ActualTournamentState {
+function handleTournamentPlayerAddedAction(state, action): ActualTournamentState {
 
 
   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
@@ -434,8 +537,7 @@ function handleTournamentPlayerChangedData(state, action): ActualTournamentState
   return newStoreState;
 }
 
-function handleClearTournamentPlayerAction(
-  state): ActualTournamentState {
+function handleClearTournamentPlayerAction(state): ActualTournamentState {
 
   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
 
@@ -446,8 +548,7 @@ function handleClearTournamentPlayerAction(
 
 // TournamentRanking
 
-function handleTournamentRankingClearAction(
-  state: ActualTournamentState): ActualTournamentState {
+function handleTournamentRankingClearAction(state: ActualTournamentState): ActualTournamentState {
 
   const rankingData: ActualTournamentState = _.cloneDeep(state);
 
@@ -456,8 +557,7 @@ function handleTournamentRankingClearAction(
   return rankingData;
 }
 
-function handleTournamentRankingAddedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentRankingAddedAction(state: ActualTournamentState, action): ActualTournamentState {
 
 
   const rankingsStoreData: ActualTournamentState = _.cloneDeep(state);
@@ -472,8 +572,7 @@ function handleTournamentRankingAddedAction(
 }
 
 
-function handleTournamentRankingDeletedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentRankingDeletedAction(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -485,8 +584,7 @@ function handleTournamentRankingDeletedAction(
 }
 
 
-function handleTournamentRankingChangedData(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentRankingChangedData(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -497,7 +595,6 @@ function handleTournamentRankingChangedData(
   }
   return newStoreState;
 }
-
 
 
 // TournamentTeam
@@ -552,8 +649,7 @@ function handleTournamentTeamRegistrationClearAction(state: ActualTournamentStat
   return newStoreState;
 }
 
-function handleTournamentTeamRegistrationAddedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentTeamRegistrationAddedAction(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -563,8 +659,7 @@ function handleTournamentTeamRegistrationAddedAction(
   return newStoreState;
 }
 
-function handleTournamentTeamRegistrationChangedData(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentTeamRegistrationChangedData(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -575,8 +670,7 @@ function handleTournamentTeamRegistrationChangedData(
   return newStoreState;
 }
 
-function handleTournamentTeamRegistrationDeletedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentTeamRegistrationDeletedAction(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -589,8 +683,7 @@ function handleTournamentTeamRegistrationDeletedAction(
 
 // Team Games
 
-function handleTournamentTeamGameClearAction(
-  state: ActualTournamentState): ActualTournamentState {
+function handleTournamentTeamGameClearAction(state: ActualTournamentState): ActualTournamentState {
 
   const gamesStoreData: ActualTournamentState = _.cloneDeep(state);
 
@@ -600,9 +693,7 @@ function handleTournamentTeamGameClearAction(
 }
 
 
-
-function handleTournamentTeamGameAddedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentTeamGameAddedAction(state: ActualTournamentState, action): ActualTournamentState {
 
   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
 
@@ -616,8 +707,7 @@ function handleTournamentTeamGameAddedAction(
 }
 
 
-function handleTournamentTeamGameDeletedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentTeamGameDeletedAction(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -629,8 +719,7 @@ function handleTournamentTeamGameDeletedAction(
 }
 
 
-function handleTournamentTeamGameChangedData(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentTeamGameChangedData(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -644,8 +733,7 @@ function handleTournamentTeamGameChangedData(
 
 // TeamRanking
 
-function handleTournamentTeamRankingClearAction(
-  state: ActualTournamentState): ActualTournamentState {
+function handleTournamentTeamRankingClearAction(state: ActualTournamentState): ActualTournamentState {
 
   const gamesStoreData: ActualTournamentState = _.cloneDeep(state);
 
@@ -655,9 +743,7 @@ function handleTournamentTeamRankingClearAction(
 }
 
 
-
-function handleTournamentTeamRankingAddedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentTeamRankingAddedAction(state: ActualTournamentState, action): ActualTournamentState {
 
   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
 
@@ -671,8 +757,7 @@ function handleTournamentTeamRankingAddedAction(
 }
 
 
-function handleTournamentTeamRankingDeletedAction(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentTeamRankingDeletedAction(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -684,8 +769,7 @@ function handleTournamentTeamRankingDeletedAction(
 }
 
 
-function handleTournamentTeamRankingChangedData(
-  state: ActualTournamentState, action): ActualTournamentState {
+function handleTournamentTeamRankingChangedData(state: ActualTournamentState, action): ActualTournamentState {
   const newStoreState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {

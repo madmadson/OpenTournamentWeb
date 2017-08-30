@@ -2,7 +2,10 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import * as firebase from 'firebase';
 import {TournamentGame} from '../../../shared/model/tournament-game';
-import {ADD_ALL_GAMES_ACTION, ADD_GAME_ACTION, ADD_TO_FILTER_GAME_ACTION, CLEAR_GAMES_ACTION} from './games-actions';
+import {
+  ADD_ALL_GAMES_ACTION, ADD_GAME_ACTION, CLEAR_GAMES_ACTION,
+  LOAD_GAMES_FINISHED_ACTION
+} from './games-actions';
 import {AppState} from '../store/reducers/index';
 import * as _ from 'lodash';
 
@@ -62,8 +65,7 @@ export class GamesService  {
         const game: TournamentGame = TournamentGame.fromJson(child.val());
         game.id = child.key;
         if (!findGame(allGames, game)) {
-          console.log('add game: ' + JSON.stringify(game));
-          that.store.dispatch({type: ADD_GAME_ACTION, payload: game});;
+          that.store.dispatch({type: ADD_GAME_ACTION, payload: game});
         }
         return false;
       });
@@ -83,6 +85,7 @@ export class GamesService  {
         return false;
       });
     }).then(function () {
+      that.store.dispatch({type: LOAD_GAMES_FINISHED_ACTION});
       that.store.dispatch({type: ADD_ALL_GAMES_ACTION, payload: allGames});
       newItems = true;
     });

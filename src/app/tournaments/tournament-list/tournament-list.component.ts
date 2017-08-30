@@ -34,7 +34,14 @@ export class TournamentListComponent  {
   }
 
   onSelect(tournament: Tournament) {
-    this.router.navigate(['/tournament', tournament.id]);
+
+    if (tournament.actualRound > 0) {
+      this.router.navigate(['/tournament', tournament.id, 'round', tournament.actualRound]);
+    } else {
+      this.router.navigate(['/tournament', tournament.id, 'registrations']);
+    }
+
+
   }
 
   openInfoDialog(event: any, tournament: Tournament) {

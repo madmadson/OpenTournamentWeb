@@ -15,12 +15,14 @@ import {Store} from '@ngrx/store';
 export class GameListOverviewComponent implements OnDestroy {
 
   allGames$: Observable<TournamentGame[]>;
+  gamesLoaded$: Observable<boolean>;
 
   constructor(private gamesService: GamesService, private store: Store<AppState>) {
 
     this.gamesService.subscribeOnFirebaseGames();
 
     this.allGames$ = this.store.select(state => state.games.allGames);
+    this.gamesLoaded$ = this.store.select(state => state.games.loadGames);
   }
   ngOnDestroy() {
     this.gamesService.unsubscribeOnFirebaseGames();

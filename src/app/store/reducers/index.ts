@@ -23,7 +23,6 @@ export interface AppState {
   mySite: fromMySite.MySiteState;
   players: fromPlayers.PlayersState;
   actualTournament: fromActualTournament.ActualTournamentState;
-
 }
 
 export const reducers: ActionReducerMap<AppState> = {

@@ -49,10 +49,10 @@ import {PlayerListComponent} from './player/player-list/player-list.component';
 import {PlayerFormComponent} from './player/player-form/player-form.component';
 import { RegisterPageComponent } from './auth/register-page/register-page.component';
 import { PasswordForgetComponent } from './auth/password-forget/password-forget.component';
-import { TournamentRegistrationListComponent } from './tournament/tournament-registration-list/tournament-registration-list.component';
+import { TournamentRegistrationListComponent } from './tournament/registration/tournament-registration-list/tournament-registration-list.component';
 import {
   TournamentPlayerListComponent
-} from './tournament/tournament-player-list/tournament-player-list.component';
+} from './tournament/tournament-player/tournament-player-list/tournament-player-list.component';
 import {TournamentRankingService} from './service/tournament-ranking.service';
 
 
@@ -138,7 +138,11 @@ import {AddCoOrganizatorDialogComponent} from './dialogs/add-co-organizator-dial
 
 import {GamesService} from './games/games.service';
 import {reducers} from './store/reducers/index';
-import {ActualTournamentRegistrationService} from "./tournament/actual-tournament-registration.service";
+import {ActualTournamentRegistrationService} from './tournament/actual-tournament-registration.service';
+import {TournamentRegistrationOverviewComponent} from './tournament/registration/tournament-registration-overview/tournament-registration-overview.component';
+import {ActualTournamentPlayerService} from './tournament/actual-tournament-player.service';
+import {ActualTournamentArmyListService} from "./tournament/actual-tournament-army-list.service";
+import {TournamentPlayerOverviewComponent} from "./tournament/tournament-player/tournament-player-overview/tournament-player-overview.component";
 
 
 
@@ -190,6 +194,8 @@ import {ActualTournamentRegistrationService} from "./tournament/actual-tournamen
     LoginPageComponent,
     HomePageComponent,
     TournamentListOverviewComponent,
+    TournamentRegistrationOverviewComponent,
+    TournamentPlayerOverviewComponent,
     MySiteComponent,
     PageNotFoundComponent,
     TournamentPreparationComponent,
@@ -250,6 +256,8 @@ import {ActualTournamentRegistrationService} from "./tournament/actual-tournamen
     AuthGuard,
     TournamentService,
     ActualTournamentRegistrationService,
+    ActualTournamentPlayerService,
+    ActualTournamentArmyListService,
     PlayersService,
     GamesService,
     TournamentRankingService,

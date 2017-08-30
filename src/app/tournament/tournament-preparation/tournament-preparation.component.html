@@ -140,18 +140,18 @@
         Registrations ({{allRegistrations.length}})
       </h4>
       <mdl-list>
-        <tournament-registration-list
-          [actualTournament]="actualTournament"
-          [isAdmin]="isAdmin"
-          [isCoOrganizer]="isCoOrganizer"
-          [userPlayerData]="userPlayerData"
-          [registrations]="allRegistrations"
-          [actualTournamentArmyList$]="armyLists$"
-          (onAcceptRegistration)="acceptRegistration($event)"
-          (onDeleteRegistration)="deleteMyRegistration($event)"
-          (onAddArmyListForRegistrationDialog)="openAddArmyListForRegistrationDialog($event)"
-          (onPlayerRegChangeEventSubscribe)="handlePlayerRegChange($event)">
-        </tournament-registration-list>
+        <!--<tournament-registration-list-->
+          <!--[actualTournament]="actualTournament"-->
+          <!--[isAdmin]="isAdmin"-->
+          <!--[isCoOrganizer]="isCoOrganizer"-->
+          <!--[userPlayerData]="userPlayerData"-->
+          <!--[registrations]="allRegistrations"-->
+          <!--[actualTournamentArmyList$]="armyLists$"-->
+          <!--(onAcceptRegistration)="acceptRegistration($event)"-->
+          <!--(onDeleteRegistration)="deleteMyRegistration($event)"-->
+          <!--(onAddArmyListForRegistrationDialog)="openAddArmyListForRegistrationDialog($event)"-->
+          <!--(onPlayerRegChangeEventSubscribe)="handlePlayerRegChange($event)">-->
+        <!--</tournament-registration-list>-->
       </mdl-list>
     </md-card>
     <md-card class="registration-list-card" *ngIf="actualTournament?.teamSize > 0">
@@ -205,14 +205,14 @@
                (keyup)="filter(searchInput.value)">
       </md-input-container>
       <mdl-list>
-        <tournament-player-list
-          [actualTournamentArmyList$]="armyLists$"
-          [actualTournament]="actualTournament"
-          [userPlayerData]="userPlayerData"
-          [tournamentPlayers]="filteredActualTournamentPlayers"
-          (onAddArmyLists)="addArmyListForTournamentPlayer($event)"
-          (onDeleteTournamentPlayer)="deleteTournamentPlayer($event)">
-        </tournament-player-list>
+        <!--<tournament-player-list-->
+          <!--[actualTournamentArmyList$]="armyLists$"-->
+          <!--[actualTournament]="actualTournament"-->
+          <!--[userPlayerData]="userPlayerData"-->
+          <!--[tournamentPlayers]="filteredActualTournamentPlayers"-->
+          <!--(onAddArmyLists)="addArmyListForTournamentPlayer($event)"-->
+          <!--(onDeleteTournamentPlayer)="deleteTournamentPlayer($event)">-->
+        <!--</tournament-player-list>-->
 
       </mdl-list>
     </md-card>

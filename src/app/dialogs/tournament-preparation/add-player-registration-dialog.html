@@ -1,36 +1,45 @@
 <md-dialog-content>
   <h4 class="heading">Register for {{actualTournament.name}}</h4>
-  <pre *ngIf="!userPlayerData">
-    You can register only with a valid Player-Profile
-  </pre>
 
-  <form *ngIf="userPlayerData" [formGroup]="tournamentRegistrationForm" novalidate>
 
-    <div class="form-group">
+  <md-input-container class="full-width">
+    <input mdInput placeholder="Player Name" [value]="userPlayerData.getFullPlayerName()" disabled required>
+  </md-input-container>
+  <md-input-container class="full-width">
+    <input mdInput placeholder="Locality" [(ngModel)]="locality">
+  </md-input-container>
 
-      <md-input-container
-        class="full-width">
-        <input mdInput type="text" placeholder="Player Name" formControlName="playerName" required>
-      </md-input-container>
-      <md-input-container
-        class="full-width">
-        <input mdInput type="text" placeholder="Team" formControlName="teamName">
-      </md-input-container>
-      <md-select class="full-width"
-                 required
-                 placeholder="Faction"
-                 formControlName="faction">
-        <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
-      </md-select>
-    </div>
-  </form>
+  <div class="full-width">
+    <md-checkbox  *ngIf="allTeamNames?.length > 0"
+                 [(ngModel)]="joinExistingTeam">
+      <small>Join existing Team</small>
+    </md-checkbox>
+    <md-input-container *ngIf="!joinExistingTeam"
+                        class="full-width">
+      <input mdInput [(ngModel)]="teamName" placeholder="Team">
+    </md-input-container>
+    <md-select class="full-width-select-box" *ngIf="joinExistingTeam"
+               placeholder="Team"
+               [(ngModel)]="teamName">
+      <md-option *ngFor="let teamName of allTeamNames" [value]="teamName">{{ teamName }}</md-option>
+    </md-select>
+  </div>
+  <md-select class="full-width"
+             required
+             [(ngModel)]="faction"
+             placeholder="Faction">
+    <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
+  </md-select>
 </md-dialog-content>
 <div md-dialog-actions>
   <div class="full-width">
     <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
-    <button md-raised-button type="button" color="accent" class="right-align-button"
-            (click)="saveTournamentRegistration()"
-            [disabled]="tournamentRegistrationForm.invalid">
+    <button  [disabled]="!faction"
+            md-raised-button
+            type="button"
+            color="accent"
+            class="right-align-button"
+            (click)="saveTournamentRegistration()">
       Upload Registration
     </button>
   </div>

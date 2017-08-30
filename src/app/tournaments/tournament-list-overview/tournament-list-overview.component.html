@@ -1,30 +1,20 @@
 <h2 class="heading">Online Tournaments ({{(allTournaments$| async)?.length}})</h2>
 
 
-  <!--<md-input-container class="tournament-search-container" floatPlaceholder="never">-->
-    <!--<input mdInput #filter placeholder="Filter for TournamentName">-->
-  <!--</md-input-container>-->
+  <md-input-container class="tournament-search-container" floatPlaceholder="never">
+    <input mdInput #searchField placeholder="Search for TournamentName">
+  </md-input-container>
 
-  <!--<md-select-->
-    <!--class="tournament-state-filter"-->
-    <!--placeholder="Filter"-->
-    <!--#filter-->
-    <!--(change)="changeFilter()"-->
-    <!--[(ngModel)]="selectedFilterState"-->
-    <!--name="filter">-->
-    <!--<md-option value="Upcoming">Upcoming</md-option>-->
-    <!--<md-option value="Finished">Finished</md-option>-->
-  <!--</md-select>-->
-  <!--<ng-container *ngIf="(allTournaments$ | async)?.length == 0">-->
-    <!--<div class="heading">Load Tournaments...</div>-->
-    <!--<div class="loading-spinner-container">-->
-      <!--<md-spinner></md-spinner>-->
-    <!--</div>-->
-  <!--</ng-container>-->
+  <md-select
+    class="tournament-state-filter"
+    placeholder="Filter"
+    (change)="changeFilter()"
+    [(ngModel)]="selectedFilterState">
+    <md-option value="Upcoming">Upcoming</md-option>
+    <md-option value="Finished">Finished</md-option>
+  </md-select>
 
-  <!--{{(allTournaments$| async | json)}}-->
-
-<ng-container *ngIf="(allTournamentsGrouped$ | async)?.length == 0">
+<ng-container *ngIf="(loadTournaments$ | async)">
   <div class="heading">Load Tournaments...</div>
   <div class="loading-spinner-container">
     <md-spinner></md-spinner>

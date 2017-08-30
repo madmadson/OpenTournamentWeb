@@ -1,0 +1,46 @@
+<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
+<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="!fullscreenMode && isTournamentPlayer" class="sub-heading">Hello Player</h4>
+
+<div class="actual-tournament-nav-container">
+  <button *ngIf="!fullscreenMode"
+          type="button"
+          md-raised-button
+          class="color-info-background action-button"
+          [mdMenuTriggerFor]="menu">
+    <md-icon>more_vert</md-icon>
+    Players
+  </button>
+  <md-menu #menu="mdMenu">
+    <button md-menu-item disabled>
+      Active -> Players
+    </button>
+    <button md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'registrations']);">
+      Go to -> Registrations
+    </button>
+    <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
+            md-menu-item>
+      <md-icon>navigation</md-icon>
+      Go to -> Round {{index +1}}
+    </button>
+
+    <button *ngIf="actualTournament?.finished" md-menu-item>
+      <md-icon>navigation</md-icon>
+      Go to -> Final Rankings
+    </button>
+  </md-menu>
+</div>
+
+
+<h2 class="heading">Players ({{(allTournamentPlayers$| async)?.length}})</h2>
+
+<ng-container *ngIf="(loadPlayers$ | async)">
+  <div class="heading">Load Players...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
+

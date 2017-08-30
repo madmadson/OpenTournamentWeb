@@ -1,0 +1,82 @@
+<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
+<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="!fullscreenMode && isTournamentPlayer" class="sub-heading">Hello Player</h4>
+
+<div class="actual-tournament-nav-container">
+  <button *ngIf="!fullscreenMode"
+          type="button"
+          md-raised-button
+          class="color-info-background action-button"
+          [mdMenuTriggerFor]="menu">
+    <md-icon>more_vert</md-icon>
+    Registrations
+  </button>
+  <md-menu #menu="mdMenu">
+    <button md-menu-item disabled>
+      Active -> Registrations
+    </button>
+    <button *ngIf="isAdmin || isCoOrganizer"
+            md-menu-item
+          (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
+      Go to -> Players
+    </button>
+
+    <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
+            md-menu-item>
+      <md-icon>navigation</md-icon>
+      Go to -> Round {{index +1}}
+    </button>
+
+    <button *ngIf="actualTournament?.finished" md-menu-item>
+      <md-icon>navigation</md-icon>
+      Go to -> Final Rankings
+    </button>
+  </md-menu>
+</div>
+
+
+<h2 class="heading">Registrations ({{(allRegistrations$| async)?.length}})</h2>
+
+<ng-container *ngIf="(loadReg$ | async)">
+  <div class="heading">Load Registrations...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
+
+<div class="action-card-container">
+  <md-card class="action-card action-button-wrapper">
+    <button *ngIf="!isRegisteredPlayer"
+            type="button"
+            (click)="openRegistrationDialog()"
+            class="color-positive-background action-button"
+            md-raised-button>
+      <md-icon>add</md-icon>
+      Register
+    </button>
+    <button *ngIf="isRegisteredPlayer && !isTournamentPlayer"
+            (click)="deleteMyRegistration()"
+            type="button"
+            class="color-negative-background action-button"
+            md-raised-button>
+      <md-icon>delete</md-icon>
+      I'm out
+    </button>
+    <button *ngIf="isRegisteredPlayer"
+            type="button"
+            (click)="openAddArmyListForRegistrationDialog()"
+            class="color-positive-background action-button"
+            md-raised-button>
+      <md-icon>assignment_returned</md-icon>
+      ArmyList
+    </button>
+  </md-card>
+</div>
+
+<tournament-registration-list *ngIf="allActualRegistrations?.length > 0"
+                              [registrations]="allActualRegistrations"
+                              [userPlayerData]="userPlayerData"
+                              (onAcceptRegistration)="handleAcceptRegistration($event)">
+</tournament-registration-list>

@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, ElementRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ElementRef,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {Router} from '@angular/router';
 import {WindowRefService} from '../../service/window-ref-service';
@@ -53,10 +62,8 @@ export class GamesListComponent implements OnInit, OnChanges {
         if (this.gamesDb && propName === 'games') {
           this.gamesDb.resetDatabase(change.currentValue);
         }
-
       }
     }
-
   }
 
   ngOnInit() {
@@ -66,7 +73,9 @@ export class GamesListComponent implements OnInit, OnChanges {
       .debounceTime(150)
       .distinctUntilChanged()
       .subscribe(() => {
-        if (!this.dataSource) { return; }
+        if (!this.dataSource) {
+          return;
+        }
         this.dataSource.filter = this.filter.nativeElement.value;
       });
   }
@@ -74,11 +83,12 @@ export class GamesListComponent implements OnInit, OnChanges {
 
   playerOneWon(game: TournamentGame): boolean {
     return game.playerOneScore > game.playerTwoScore;
-
   }
+
   playerTwoWon(game: TournamentGame): boolean {
     return game.playerOneScore < game.playerTwoScore;
   }
+
   onSelect(game: TournamentGame) {
     this.router.navigate(['/tournament/' + game.tournamentId]);
   }

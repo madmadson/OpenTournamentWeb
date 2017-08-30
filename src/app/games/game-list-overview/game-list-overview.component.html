@@ -1,6 +1,6 @@
 <h2 class="heading">Online Games ({{(allGames$ | async)?.length}})</h2>
 
-<ng-container *ngIf="(allGames$ | async)?.length == 0">
+<ng-container *ngIf="(gamesLoaded$ | async)">
   <div class="heading">Load Games...</div>
   <div class="loading-spinner-container">
     <md-spinner></md-spinner>

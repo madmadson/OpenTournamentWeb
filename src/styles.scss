@@ -86,9 +86,20 @@ a:hover {
 
 .heading {
   text-align: center;
-  font-size: 1.6em;
+  font-size: 2.0em;
+  font-weight: bold;
   margin: $main_tick !important;;
   width: 100%;
+}
+
+@media only screen and (min-width: 500px) {
+  .heading {
+    text-align: center;
+    font-size: 2.4em;
+    font-weight: bold;
+    margin: $main_tick !important;
+    width: 100%;
+  }
 }
 
 .loading-spinner-container {
@@ -96,15 +107,6 @@ a:hover {
   display: flex;
   justify-content: center;
   margin-top: 24px;
-}
-
-@media only screen and (min-width: 500px) {
-  .heading {
-    text-align: center;
-    font-size: 2.4em;
-    margin: $main_tick !important;
-    width: 100%;
-  }
 }
 
 .sub-heading {
@@ -185,6 +187,10 @@ button:hover {
   background-color: $color_secondary;
 }
 
+.color-info-background {
+  background-color: $color_info;
+}
+
 .color-negative {
   color: $fail_color;
 }
@@ -236,8 +242,14 @@ md-card {
 
 .full-width {
   width: 100%;
-  padding-top: 6px;
-  padding-bottom: 6px;
+  padding-top: $halve_tick;
+  padding-bottom: $halve_tick;
+}
+
+.full-width-select-box {
+  width: 100%;
+  padding-top: $double_tick;
+  padding-bottom: $halve_tick;
 }
 
 .margin-right {
@@ -321,9 +333,15 @@ md-card {
   margin-left: 12px
 }
 
+.actual-tournament-nav-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+}
+
 .action-card-container {
   display: flex;
-  flex-flow: column;
   align-items: center;
   justify-content: center;
 }
@@ -346,7 +364,7 @@ md-card {
 }
 
 .action-button-wrapper {
-  display: flex;
+  display: flex !important;
   flex-flow: column;
   align-items: center;
   justify-content: center;

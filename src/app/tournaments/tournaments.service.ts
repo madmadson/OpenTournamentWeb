@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import {AppState} from '../store/reducers/index';
 import {
   ADD_ALL_TOURNAMENTS_ACTION, ADD_TOURNAMENT_ACTION, CHANGE_TOURNAMENT_ACTION,
-  CLEAR_ALL_TOURNAMENTS_ACTION, REMOVE_TOURNAMENT_ACTION
+  CLEAR_ALL_TOURNAMENTS_ACTION, REMOVE_TOURNAMENT_ACTION, LOAD_TOURNAMENTS_FINISHED_ACTION
 } from './tournaments-actions';
 
 @Injectable()
@@ -87,6 +87,7 @@ export class TournamentsService  {
 
       });
     }).then(function () {
+      that.store.dispatch({type: LOAD_TOURNAMENTS_FINISHED_ACTION});
       that.store.dispatch({type: ADD_ALL_TOURNAMENTS_ACTION, payload: allTournaments});
       newItems = true;
     });

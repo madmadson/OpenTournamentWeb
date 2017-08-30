@@ -61,11 +61,11 @@
         Player
       </md-header-cell>
       <md-cell *cdkCellDef="let registration" class="playerName-column">
-        {{registration.playerName}}
+        {{registration.playerName | truncate:truncateMax}}
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="team">
+    <ng-container *ngIf="!smallScreen"  cdkColumnDef="team">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="team-column">
         Team
       </md-header-cell>
@@ -74,7 +74,7 @@
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="locality">
+    <ng-container *ngIf="!smallScreen"  cdkColumnDef="locality">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="locality-column">
         Locality
       </md-header-cell>
@@ -94,7 +94,7 @@
 
     <ng-container cdkColumnDef="armyList">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="armyList-column">
-        ArmyList
+        List
       </md-header-cell>
       <md-cell *cdkCellDef="let registration" class="armyList-column">
         <md-icon  *ngIf="!registration.armyListsChecked && !registration.playerUploadedArmyLists"
@@ -123,8 +123,10 @@
         Actions
       </md-header-cell>
       <md-cell *cdkCellDef="let registration" class="actions-column">
-        <md-icon class="color-positive list-action" md-tooltip="Accept Registration"
-          (click)="acceptRegistration($event, registration)">check_circle</md-icon>
+        <md-icon *ngIf="!registration.isTournamentPlayer"
+                 class="color-positive list-action"
+                 md-tooltip="Accept Registration"
+          (click)="acceptRegistration(registration)">check_circle</md-icon>
       </md-cell>
     </ng-container>
 

@@ -1,4 +1,4 @@
-@import '../../../styles';
+@import '../../../../styles';
 
 .number-icon{
   float: left;
@@ -20,19 +20,19 @@
 }
 
 .playerName-column{
-  flex: 6;
+  flex: 4;
 }
 
 .team-column{
-  flex: 4;
+  flex: 3;
 }
 
 .locality-column{
-  flex: 4;
+  flex: 3;
 }
 
 .faction-column{
-  flex: 3;
+  flex: 2;
 }
 
 .armyList-column{

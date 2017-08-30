@@ -22,20 +22,31 @@ export class AddPlayerRegistrationDialogComponent  implements OnInit {
   actualTournament: Tournament;
   team: TournamentTeam;
 
-  tournamentRegistrationForm: FormGroup;
   factions: string[];
+  allTeamNames: string[];
+
+  joinExistingTeam: boolean;
+
+  locality: string;
+  teamName: string;
+  faction: string;
 
   @Output() onAddTournamentRegistration = new EventEmitter<RegistrationPush>();
 
   constructor(public dialogRef: MdDialogRef<AddPlayerRegistrationDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any,
-              private formBuilder: FormBuilder) {
+              @Inject(MD_DIALOG_DATA) public data: any) {
+  }
 
-    this.userPlayerData = data.userPlayerData;
-    this.actualTournament = data.actualTournament;
-    this.team = data.team;
+  ngOnInit() {
+
+    this.userPlayerData = this.data.userPlayerData;
+    this.actualTournament = this.data.actualTournament;
+    this.allTeamNames = this.data.allTeamNames;
 
     this.factions = getAllFactions();
+
+    this.locality = this.userPlayerData.meta;
+
   }
 
   saveTournamentRegistration() {
@@ -50,32 +61,8 @@ export class AddPlayerRegistrationDialogComponent  implements OnInit {
     this.dialogRef.close();
   }
 
-  ngOnInit() {
-
-    if (this.team) {
-      this.tournamentRegistrationForm = this.formBuilder.group({
-        playerName: [ {
-          value: this.userPlayerData.getFullPlayerName(), disabled: true
-        } , [Validators.required]],
-        faction: [''],
-        meta: [this.userPlayerData.meta],
-        teamName: [{value: this.team.teamName, disabled: true}, [Validators.required]],
-      });
-    } else {
-      this.tournamentRegistrationForm = this.formBuilder.group({
-        playerName: [ {
-          value: this.userPlayerData.getFullPlayerName(), disabled: true
-        } , [Validators.required]],
-        faction: [''],
-        meta: [this.userPlayerData.meta],
-        teamName: [''],
-      });
-    }
-  }
-
 
   prepareSaveRegistration(): Registration {
-    const formModel = this.tournamentRegistrationForm.getRawValue();
 
     return {
       tournamentId: this.actualTournament.id,
@@ -85,14 +72,14 @@ export class AddPlayerRegistrationDialogComponent  implements OnInit {
       playerName: this.userPlayerData.getFullPlayerName(),
       email: this.userPlayerData.userEmail,
       origin: this.userPlayerData.origin,
-      meta: formModel.meta,
+      meta: this.locality ? this.locality : '',
       registrationDate: moment().format(),
-      teamName: formModel.teamName,
+      teamName: this.teamName ? this.teamName : '',
       playerId: this.userPlayerData.id,
       teamId: '',
       country: this.userPlayerData.country,
       elo: this.userPlayerData.elo,
-      faction: formModel.faction,
+      faction: this.faction,
       isTournamentPlayer: false,
       armyListsChecked: false,
       paymentChecked: false,

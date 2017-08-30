@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 
 import {
   ADD_ALL_TOURNAMENTS_ACTION, ADD_TOURNAMENT_ACTION, CHANGE_TOURNAMENT_ACTION,
-  CLEAR_ALL_TOURNAMENTS_ACTION, REMOVE_TOURNAMENT_ACTION
+  CLEAR_ALL_TOURNAMENTS_ACTION, CHANGE_FILTER_TOURNAMENTS_ACTION, REMOVE_TOURNAMENT_ACTION,
+  CHANGE_SEARCH_FIELD_TOURNAMENTS_ACTION, LOAD_TOURNAMENTS_FINISHED_ACTION
 } from './tournaments-actions';
 import {Tournament} from '../../../shared/model/tournament';
 
@@ -11,11 +12,19 @@ import {Tournament} from '../../../shared/model/tournament';
 
 export interface TournamentsState {
   tournaments: Tournament[];
+
+  loadTournaments: boolean;
+
+  filter: string;
+  searchField: string;
 }
 
 const initialState: TournamentsState = {
 
-  tournaments: []
+  tournaments: [],
+  loadTournaments: true,
+  filter: 'UPCOMING',
+  searchField: ''
 };
 
 export function tournamentsReducer(state: TournamentsState = initialState, action): TournamentsState {
@@ -36,6 +45,15 @@ export function tournamentsReducer(state: TournamentsState = initialState, actio
 
     case REMOVE_TOURNAMENT_ACTION:
       return handleTournamentDeletedData(state, action);
+
+    case LOAD_TOURNAMENTS_FINISHED_ACTION:
+      return handleLoadFinishedTournaments(state);
+
+    case CHANGE_FILTER_TOURNAMENTS_ACTION:
+      return handleFilterTournaments(state, action);
+
+    case CHANGE_SEARCH_FIELD_TOURNAMENTS_ACTION:
+      return handleSearchFieldTournaments(state, action);
 
     default:
       return state;
@@ -96,3 +114,29 @@ function handleTournamentDeletedData(state: TournamentsState, action): Tournamen
   return newStoreState;
 }
 
+function handleLoadFinishedTournaments(state: TournamentsState): TournamentsState {
+  const newStoreState = _.cloneDeep(state);
+
+    newStoreState.loadTournaments = false;
+
+  return newStoreState;
+}
+
+
+function handleFilterTournaments(state: TournamentsState, action): TournamentsState {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+     newStoreState.filter = action.payload;
+  }
+  return newStoreState;
+}
+
+function handleSearchFieldTournaments(state: TournamentsState, action): TournamentsState {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+    newStoreState.searchField = action.searchField;
+  }
+  return newStoreState;
+}

@@ -57,10 +57,10 @@
   <md-table #table [dataSource]="dataSource" mdSort>
 
     <ng-container cdkColumnDef="playerName">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="playerName-column">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="teamName-column">
         Player
       </md-header-cell>
-      <md-cell *cdkCellDef="let registration" class="playerName-column">
+      <md-cell *cdkCellDef="let team" class="teamName-column">
         {{registration.playerName}}
       </md-cell>
     </ng-container>

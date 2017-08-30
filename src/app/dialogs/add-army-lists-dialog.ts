@@ -8,6 +8,7 @@ import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
 import {getWMHOCaster} from '../../../shared/model/wa_ho-caster';
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'add-army-lists-dialog',
@@ -44,7 +45,7 @@ export class AddArmyListsDialogComponent {
         this.registration.id, this.registration.playerId, this.registration.playerName,
         this.registration.teamName, this.listOfCasterFaction[0], 'PAST HERE');
 
-      data.armyLists.subscribe(armyLists => {
+      data.armyLists$.subscribe(armyLists => {
         this.armyLists = _.filter(armyLists, function (armyList: ArmyList) {
           if (that.registration) {
             return armyList.playerId === that.registration.playerId;
@@ -57,9 +58,9 @@ export class AddArmyListsDialogComponent {
 
       this.armyListModel = new ArmyList(this.tournamentPlayer.tournamentId,
         '', this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
-        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName,  this.listOfCasterFaction[0], 'PAST HERE');
+        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName, this.listOfCasterFaction[0], 'PAST HERE');
 
-      data.armyLists.subscribe(armyLists => {
+      data.armyLists$.subscribe(armyLists => {
         this.armyLists = _.filter(armyLists, function (armyList: ArmyList) {
           if (that.tournamentPlayer) {
             if (that.tournamentPlayer.playerId) {
@@ -89,7 +90,7 @@ export class AddArmyListsDialogComponent {
 
       this.armyListModel = new ArmyList(this.registration.tournamentId, this.registration.id,
         '', this.registration.playerId, this.registration.playerName,
-        this.registration.teamName,  this.listOfCasterFaction[0], 'PAST HERE');
+        this.registration.teamName, this.listOfCasterFaction[0], 'PAST HERE');
     } else {
       this.onSaveArmyListForTournamentPlayer.emit({
         armyList: this.armyListModel,
@@ -98,7 +99,7 @@ export class AddArmyListsDialogComponent {
 
       this.armyListModel = new ArmyList(this.tournamentPlayer.tournamentId, '',
         this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
-        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName,  this.listOfCasterFaction[0], 'PAST HERE');
+        this.tournamentPlayer.playerName, this.tournamentPlayer.teamName, this.listOfCasterFaction[0], 'PAST HERE');
     }
   };
 

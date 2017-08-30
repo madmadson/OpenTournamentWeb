@@ -14,6 +14,9 @@ import {PasswordForgetComponent} from './auth/password-forget/password-forget.co
 import {TournamentOverviewComponent} from './tournament/tournament-overview/tournament-overview.component';
 import {AboutComponent} from './about/about.component';
 import {GameListOverviewComponent} from './games/game-list-overview/game-list-overview.component';
+import {TournamentRegistrationOverviewComponent} from './tournament/registration/tournament-registration-overview/tournament-registration-overview.component';
+import {TournamentRoundOverviewComponent} from './tournament/tournament-round-overview/tournament-round-overview.component';
+import {TournamentPlayerOverviewComponent} from "./tournament/tournament-player/tournament-player-overview/tournament-player-overview.component";
 
 
 const routes: Routes = [
@@ -27,6 +30,9 @@ const routes: Routes = [
   {path: 'games', component: GameListOverviewComponent},
   {path: 'my-site', component: MySiteComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'tournament/:id', component: TournamentOverviewComponent},
+  {path: 'tournament/:id/registrations', component: TournamentRegistrationOverviewComponent},
+  {path: 'tournament/:id/players', component: TournamentPlayerOverviewComponent},
+  {path: 'tournament/:id/round/:round', component: TournamentRoundOverviewComponent},
   {path: 'player-profile', component: PlayerFormComponent},
   {path: 'game', component: GameEditComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
