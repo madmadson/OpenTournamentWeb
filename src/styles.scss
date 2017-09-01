@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+$light_success_color: #8bd683;
 $success_color: #388E3C;
 $fail_color: #FF1501;
 $color_info: deepskyblue;
@@ -90,17 +91,18 @@ a:hover {
   font-weight: bold;
   margin: $main_tick !important;;
   width: 100%;
+  line-height: 24px;
 }
-
-@media only screen and (min-width: 500px) {
-  .heading {
-    text-align: center;
-    font-size: 2.4em;
-    font-weight: bold;
-    margin: $main_tick !important;
-    width: 100%;
-  }
-}
+//
+//@media only screen and (min-width: 500px) {
+//  .heading {
+//    text-align: center;
+//    font-size: 2.4em;
+//    font-weight: bold;
+//    margin: $main_tick !important;
+//    width: 100%;
+//  }
+//}
 
 .loading-spinner-container {
 
@@ -115,16 +117,7 @@ a:hover {
   font-size: 0.8em;
   margin: $halve_tick !important;;
   width: 100%;
-}
-
-@media only screen and (min-width: 500px) {
-  .sub-heading {
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.5em;
-    margin: $halve_tick !important;
-    width: 100%;
-  }
+  line-height: $halve_tick;
 }
 
 /*md-changes watch for improvement in lib*/
@@ -330,7 +323,8 @@ md-card {
 }
 
 .search-field {
-  margin-left: 12px
+  margin-right: $main_tick;
+  width: 200px !important;
 }
 
 .actual-tournament-nav-container{

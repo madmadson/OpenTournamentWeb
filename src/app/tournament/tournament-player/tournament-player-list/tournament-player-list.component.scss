@@ -1,1 +1,56 @@
 @import "../../../../styles";
+
+
+.players-table-row{
+  font-size: 0.8em;
+  letter-spacing: 0;
+}
+
+@media only screen and (min-width: 500px) {
+
+  .players-table-row{
+    font-size: 1.2em;
+  }
+}
+
+.player-table-container{
+  margin: $halve_tick;
+}
+
+@media only screen and (min-width: 500px) {
+  .player-table-container{
+    min-width: 450px;
+
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .player-table-container{
+    min-width: 600px;
+
+  }
+}
+
+.isPlayer{
+  background-color: $light_success_color;
+}
+
+.playerName-column{
+  flex: 4;
+}
+
+.team-column{
+  flex: 3;
+}
+
+.locality-column{
+  flex: 3;
+}
+
+.faction-column{
+  flex: 2;
+}
+
+.actions-column{
+  flex: 2;
+}

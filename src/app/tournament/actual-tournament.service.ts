@@ -11,23 +11,15 @@ import {Registration} from '../../../shared/model/registration';
 import {MdSnackBar} from '@angular/material';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyList} from '../../../shared/model/armyList';
-import {TournamentRankingService} from '../service/tournament-ranking.service';
-import {TournamentGameService} from '../service/tournament-game.service';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
-import {SubscribeTournamentRankingsAction} from '../store/actions/tournament-rankings-actions';
-import {SubscribeTournamentGamesAction} from '../store/actions/tournament-games-actions';
+
 import {GameResult} from '../../../shared/dto/game-result';
 import {PublishRound} from '../../../shared/dto/publish-round';
 import {RegistrationPush} from '../../../shared/dto/registration-push';
 import {SwapGames} from '../../../shared/dto/swap-player';
 import {TournamentGame} from '../../../shared/model/tournament-game';
-import {
-  SubscribeTournamentTeamRegistrationsAction,
-  SubscribeTournamentTeamsAction
-} from '../store/actions/tournament-teams-actions';
-import {SubscribeTournamentTeamGamesAction} from '../store/actions/tournament-team-games-actions';
-import {SubscribeTournamentTeamRankingsAction} from '../store/actions/tournament-team-rankings-actions';
+
 import {ScenarioSelectedModel} from '../../../shared/dto/scenario-selected-model';
 
 import * as _ from 'lodash';
@@ -39,10 +31,13 @@ import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournam
 import {DropPlayerPush} from '../../../shared/dto/drop-player-push';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../store/reducers/index';
+import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
+import {ActualTournamentRankingService} from './actual-tournament-ranking.service';
+import {ActualTournamentGamesService} from './actual-tournament-games.service';
 
 
 @Injectable()
-export class TournamentService  {
+export class TournamentService {
 
 
   private tournamentPlayerRef: firebase.database.Reference;
@@ -52,12 +47,12 @@ export class TournamentService  {
   private tournamentSub: Subscription;
 
   constructor(protected afoDatabase: AngularFireOfflineDatabase,
-              protected rankingService: TournamentRankingService,
-              protected tournamentGameService: TournamentGameService,
+              protected rankingService: ActualTournamentRankingService,
+              protected tournamentGameService: ActualTournamentGamesService,
               protected store: Store<AppState>,
               private snackBar: MdSnackBar) {
 
-    this.tournamentSub =  this.store.select(state => state).subscribe(state => {
+    this.tournamentSub = this.store.select(state => state).subscribe(state => {
 
       this.actualTournament = state.actualTournament.actualTournament;
     });
@@ -68,7 +63,6 @@ export class TournamentService  {
     this.tournamentSub.unsubscribe();
 
     this.store.dispatch({type: UNSET_ACTUAL_TOURNAMENT_ACTION});
-
 
 
     if (this.tournamentPlayerRef) {
@@ -100,7 +94,6 @@ export class TournamentService  {
     // this.store.dispatch(new SubscribeTournamentGamesAction(tournamentId));
     // this.store.dispatch(new SubscribeTournamentTeamGamesAction(tournamentId));
   }
-
 
 
   // private subscribeOnTournamentPlayers(tournamentId: string) {
@@ -177,7 +170,7 @@ export class TournamentService  {
     const tournamentRef = this.afoDatabase.object('tournaments/' + registrationPush.tournament.id);
     tournamentRef.update({actualParticipants: (registrationPush.tournament.actualParticipants + 1 )});
 
-    if ( registrationPush.tournament.teamSize > 0) {
+    if (registrationPush.tournament.teamSize > 0) {
 
       let newListOfRegisteredTeamMembers = [];
 
@@ -234,7 +227,7 @@ export class TournamentService  {
     const tournamentRef = this.afoDatabase.object('tournaments/' + regPush.tournament.id);
     tournamentRef.update({actualParticipants: (regPush.tournament.actualParticipants - 1 )});
 
-    if ( regPush.tournament.teamSize > 0) {
+    if (regPush.tournament.teamSize > 0) {
 
       const newListOfRegisteredTeamMembers = _.cloneDeep(regPush.tournamentTeam.registeredPlayerIds);
 
@@ -332,27 +325,27 @@ export class TournamentService  {
   }
 
   pairAgainTournament(config: TournamentManagementConfiguration) {
-    const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
-    const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
-    if (successFullyPaired) {
+    // const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
+    // const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
+    // if (successFullyPaired) {
       this.snackBar.open('Round ' + config.round + ' paired again successfully ', '', {
         extraClasses: ['snackBar-success'],
         duration: 5000
       });
-
-    } else {
-      this.snackBar.open('Failed to pair Round ' + config.round + ' again. Check Pairing Options.', '', {
-        extraClasses: ['snackBar-fail'],
-        duration: 5000
-      });
-    }
+    //
+    // } else {
+    //   this.snackBar.open('Failed to pair Round ' + config.round + ' again. Check Pairing Options.', '', {
+    //     extraClasses: ['snackBar-fail'],
+    //     duration: 5000
+    //   });
+    // }
   }
 
   pairAgainTeamTournament(config: TournamentManagementConfiguration) {
 
     // first delete and create new all player rankings.
     this.rankingService.eraseRankingsForRound(config);
-    this.rankingService.pushRankingForRound(config);
+    // this.rankingService.pushRankingForRound(config);
 
     // second delete and create new all team rankings.
     this.rankingService.eraseTeamRankingsForRound(config);
@@ -377,13 +370,13 @@ export class TournamentService  {
 
   pairNewRound(config: TournamentManagementConfiguration) {
 
-    const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
+    // const newRankings: TournamentRanking[] = this.rankingService.pushRankingForRound(config);
 
     this.tournamentGameService.eraseGamesForRound(config);
 
-    const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
+    // const successFullyPaired: boolean = this.tournamentGameService.createGamesForRound(config, newRankings);
 
-    if (successFullyPaired) {
+    // if (successFullyPaired) {
       const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
       registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
       this.snackBar.open('new Round Paired', '', {
@@ -391,17 +384,17 @@ export class TournamentService  {
         duration: 5000
       });
 
-    } else {
-      this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
-        extraClasses: ['snackBar-fail'],
-        duration: 5000
-      });
-    }
+    // } else {
+    //   this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
+    //     extraClasses: ['snackBar-fail'],
+    //     duration: 5000
+    //   });
+    // }
   }
 
   pairNewTeamTournamentRound(config: TournamentManagementConfiguration) {
 
-    this.rankingService.pushRankingForRound(config);
+    // this.rankingService.pushRankingForRound(config);
 
     const newTeamRankings: TournamentRanking[] = this.rankingService.pushTeamRankingForRound(config);
     const successFullyPaired: boolean = this.tournamentGameService.createTeamGamesForRound(config, newTeamRankings);
@@ -425,7 +418,7 @@ export class TournamentService  {
 
   gameResultEntered(gameResult: GameResult) {
 
-    const afoGames = this.afoDatabase.object('/tournament-games/' +  gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
+    const afoGames = this.afoDatabase.object('/tournament-games/' + gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
     afoGames.update(gameResult.gameAfter);
 
     this.rankingService.updateRankingAfterGameResultEntered(gameResult, this.actualTournament.actualRound, false);
@@ -478,7 +471,7 @@ export class TournamentService  {
   }
 
   endTournament(config: TournamentManagementConfiguration) {
-    this.rankingService.pushRankingForRound(config);
+    // this.rankingService.pushRankingForRound(config);
 
     const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
     registrationRef.update(
@@ -492,7 +485,7 @@ export class TournamentService  {
   }
 
   endTeamTournament(config: TournamentManagementConfiguration) {
-    this.rankingService.pushRankingForRound(config);
+     // this.rankingService.pushRankingForRound(config);
     this.rankingService.pushTeamRankingForRound(config);
 
     const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
@@ -609,8 +602,7 @@ export class TournamentService  {
     query.subscribe((gamesRef: any) => {
       gamesRef.forEach((game) => {
         if (game.tournamentRound === scenarioSelected.round) {
-          this.afoDatabase.object('tournament-games/' + scenarioSelected.tournamentId + '/' + game.$key).
-            update({'scenario': scenarioSelected.scenario});
+          this.afoDatabase.object('tournament-games/' + scenarioSelected.tournamentId + '/' + game.$key).update({'scenario': scenarioSelected.scenario});
         }
       });
     });
@@ -669,7 +661,7 @@ export class TournamentService  {
 
   teamGameResultEntered(gameResult: GameResult) {
 
-    const afoGame = this.afoDatabase.object('/tournament-games/' +  gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
+    const afoGame = this.afoDatabase.object('/tournament-games/' + gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
     afoGame.update(gameResult.gameAfter);
 
     this.tournamentGameService.updateTeamMatchAfterGameResultEntered(gameResult);
@@ -689,8 +681,7 @@ export class TournamentService  {
     playerGamesRef.subscribe((gamesRef: any) => {
       gamesRef.forEach((game) => {
         if (game.tournamentRound === scenarioSelected.round) {
-          this.afoDatabase.object('tournament-games/' + scenarioSelected.tournamentId + '/' + game.$key).
-          update({'scenario': scenarioSelected.scenario});
+          this.afoDatabase.object('tournament-games/' + scenarioSelected.tournamentId + '/' + game.$key).update({'scenario': scenarioSelected.scenario});
         }
       });
     });
@@ -699,8 +690,7 @@ export class TournamentService  {
     teamGamesRef.subscribe((gamesRef: any) => {
       gamesRef.forEach((game) => {
         if (game.tournamentRound === scenarioSelected.round) {
-          this.afoDatabase.object('tournament-team-games/' + scenarioSelected.tournamentId + '/' + game.$key).
-          update({'scenario': scenarioSelected.scenario});
+          this.afoDatabase.object('tournament-team-games/' + scenarioSelected.tournamentId + '/' + game.$key).update({'scenario': scenarioSelected.scenario});
         }
       });
     });
@@ -738,9 +728,9 @@ export class TournamentService  {
     const registrationRef = this.afoDatabase.object('tournament-registrations/' +
       regChange.registration.tournamentId + '/' + regChange.registration.id);
 
-     registrationRef.update({
+    registrationRef.update({
       armyListsChecked: regChange.armyListsChecked,
-      paymentChecked:  regChange.paymentChecked,
+      paymentChecked: regChange.paymentChecked,
       playerMarkedPayment: regChange.playerMarkedPayment,
       playerUploadedArmyLists: regChange.playerUploadedArmyLists
     });
@@ -855,6 +845,65 @@ export class TournamentService  {
 
 
     this.snackBar.open('Successfully undo drop Team', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+
+  }
+
+  updateTournament(tournament: Tournament) {
+    const tournamentRef = this.afoDatabase.object('tournaments/' + tournament.id);
+    tournamentRef.set(tournament);
+
+    this.snackBar.open('Tournament edited successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  addCoOrganizer(coOrganizer: CoOrganizatorPush) {
+
+    const tournamentRef = this.afoDatabase.object('tournaments/' + coOrganizer.tournament.id);
+
+    if (coOrganizer.tournament.coOrganizators) {
+      coOrganizer.tournament.coOrganizators.push(coOrganizer.coOrganizatorEmail);
+    } else {
+      coOrganizer.tournament.coOrganizators = [coOrganizer.coOrganizatorEmail];
+    }
+
+    tournamentRef.set(coOrganizer.tournament);
+
+    this.snackBar.open('Co-Organizer added successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+
+  }
+
+  deleteCoOrganizer(coOrganizer: CoOrganizatorPush) {
+
+    const tournamentRef = this.afoDatabase.object('tournaments/' + coOrganizer.tournament.id);
+
+    if (coOrganizer.tournament.coOrganizators) {
+      const indexOfSearchedEmail = _.findIndex(coOrganizer.tournament.coOrganizators, function (email) {
+        return email === coOrganizer.coOrganizatorEmail;
+      });
+      coOrganizer.tournament.coOrganizators.splice(indexOfSearchedEmail, 1);
+    }
+
+    tournamentRef.set(coOrganizer.tournament);
+    this.snackBar.open('Co-Organizer deleted successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  startTournament(config: TournamentManagementConfiguration) {
+
+
+    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
+    registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
+    this.snackBar.open('Tournament successfully started', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });

@@ -1,19 +1,19 @@
 <h3 md-dialog-title class="heading">{{selectedGame.playerOnePlayerName}} VS {{selectedGame.playerTwoPlayerName}}</h3>
 
 <md-dialog-content>
-<tournament-game-list [actualTournament]="actualTournament"
-                      [actualTournamentArmyLists$]="actualTournamentArmyLists$"
-                      [gamesForRound]="playerGamesForTeam"
-                      [rankingsForRound$]="rankingsForRound$"
-                      [teamMatch]="true"
-                      [round]="round"
-                      [isAdmin]="isAdmin"
-                      [isCoOrganizer]="isCoOrganizer"
-                      [actualTournamentTeams$]="actualTournamentTeams$"
-                      (onGameResult)="handlePlayerGameResult($event)"
-                      (onClearPlayerGameResult)="handleClearPlayerGameResult($event)"
-                      (onSwapPlayer)="handlePlayerSwap($event)">
-</tournament-game-list>
+<!--<tournament-game-list [actualTournament]="actualTournament"-->
+                      <!--[actualTournamentArmyLists$]="actualTournamentArmyLists$"-->
+                      <!--[gamesForRound]="playerGamesForTeam"-->
+                      <!--[rankingsForRound$]="rankingsForRound$"-->
+                      <!--[teamMatch]="true"-->
+                      <!--[round]="round"-->
+                      <!--[isAdmin]="isAdmin"-->
+                      <!--[isCoOrganizer]="isCoOrganizer"-->
+                      <!--[actualTournamentTeams$]="actualTournamentTeams$"-->
+                      <!--(onGameResult)="handlePlayerGameResult($event)"-->
+                      <!--(onClearPlayerGameResult)="handleClearPlayerGameResult($event)"-->
+                      <!--(onSwapPlayer)="handlePlayerSwap($event)">-->
+<!--</tournament-game-list>-->
 </md-dialog-content>
 <div md-dialog-actions>
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>

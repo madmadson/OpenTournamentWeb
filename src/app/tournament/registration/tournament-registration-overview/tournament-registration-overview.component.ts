@@ -21,6 +21,7 @@ import {AddArmyListsDialogComponent} from '../../../dialogs/add-army-lists-dialo
 import {ActualTournamentArmyListService} from '../../actual-tournament-army-list.service';
 import {ArmyList} from '../../../../../shared/model/armyList';
 import {ArmyListRegistrationPush} from '../../../../../shared/dto/armyList-registration-push';
+import {PrintArmyListsDialogComponent} from "../../../dialogs/print-army-lists-dialog";
 
 
 @Component({
@@ -105,10 +106,12 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
     this.allActualTournamentPlayersSub = this.allTournamentPlayers$.subscribe((allTournamentPlayers: TournamentPlayer[]) => {
       this.allActualTournamentPlayers = allTournamentPlayers;
+      this.setIsTournamentPlayer();
     });
 
     this.allActualRegistrationsSub = this.allRegistrations$.subscribe((allRegistrations: Registration[]) => {
       this.allActualRegistrations = allRegistrations;
+      this.setIsRegistered();
     });
 
   }
@@ -240,6 +243,15 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
       saveEventSubscribe.unsubscribe();
       deleteEventSubscribe.unsubscribe();
     });
+  }
+
+  openPrintArmyListDialog() {
+    this.dialog.open(PrintArmyListsDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        armyLists$: this.allArmyLists$
+      }
+    });
 
   }
 
@@ -253,6 +265,8 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
   handleAcceptRegistration(registration: Registration) {
     this.registrationService.acceptRegistration(registration);
   }
+
+
 }
 
 

@@ -136,7 +136,7 @@ function handleSearchFieldTournaments(state: TournamentsState, action): Tourname
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
-    newStoreState.searchField = action.searchField;
+    newStoreState.searchField = action.payload;
   }
   return newStoreState;
 }

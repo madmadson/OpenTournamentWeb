@@ -21,15 +21,13 @@
           (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
       Go to -> Players
     </button>
-
     <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
-            md-menu-item>
-      <md-icon>navigation</md-icon>
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'round', round]);">>
       Go to -> Round {{index +1}}
     </button>
 
     <button *ngIf="actualTournament?.finished" md-menu-item>
-      <md-icon>navigation</md-icon>
       Go to -> Final Rankings
     </button>
   </md-menu>
@@ -72,11 +70,23 @@
       <md-icon>assignment_returned</md-icon>
       ArmyList
     </button>
+    <button *ngIf="isAdmin || isCoOrganizer"
+            (click)="openPrintArmyListDialog()"
+            type="button"
+            class="color-positive-background action-button"
+            md-raised-button>
+      <md-icon>list</md-icon>
+      Print Lists
+    </button>
   </md-card>
 </div>
 
 <tournament-registration-list *ngIf="allActualRegistrations?.length > 0"
+                              [actualTournament]="actualTournament"
                               [registrations]="allActualRegistrations"
                               [userPlayerData]="userPlayerData"
+                              [armyLists]="allArmyLists$ | async"
+                              [isAdmin]="isAdmin"
+                              [isCoOrganizer]="isCoOrganizer"
                               (onAcceptRegistration)="handleAcceptRegistration($event)">
 </tournament-registration-list>

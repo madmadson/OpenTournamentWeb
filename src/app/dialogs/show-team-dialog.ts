@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Inject, Output, OnInit} from '@angular/core';
 import {Tournament} from '../../../shared/model/tournament';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
-import {StartTournamentDialogComponent} from '../tournament/tournament-preparation/tournament-preparation.component';
+
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 
 import * as _ from 'lodash';
@@ -39,7 +39,7 @@ export class ShowTeamDialogComponent implements OnInit {
   teamNameFormControl: FormControl;
   metaFormControl: FormControl;
 
-  constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
+  constructor(public dialogRef: MdDialogRef<ShowTeamDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
 
 

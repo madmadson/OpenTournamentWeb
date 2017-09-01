@@ -15,8 +15,8 @@ import {TournamentOverviewComponent} from './tournament/tournament-overview/tour
 import {AboutComponent} from './about/about.component';
 import {GameListOverviewComponent} from './games/game-list-overview/game-list-overview.component';
 import {TournamentRegistrationOverviewComponent} from './tournament/registration/tournament-registration-overview/tournament-registration-overview.component';
-import {TournamentRoundOverviewComponent} from './tournament/tournament-round-overview/tournament-round-overview.component';
-import {TournamentPlayerOverviewComponent} from "./tournament/tournament-player/tournament-player-overview/tournament-player-overview.component";
+import {TournamentPlayerOverviewComponent} from './tournament/tournament-player/tournament-player-overview/tournament-player-overview.component';
+import {TournamentRoundOverviewComponent} from './tournament/round/tournament-round-overview/tournament-round-overview.component';
 
 
 const routes: Routes = [

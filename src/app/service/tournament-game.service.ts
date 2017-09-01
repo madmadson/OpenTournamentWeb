@@ -20,8 +20,8 @@ import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import {SwapGames} from '../../../shared/dto/swap-player';
 import {GameResult} from '../../../shared/dto/game-result';
 import {getEloFactorForPlayer} from '../../../shared/model/player';
-import {TournamentRankingService} from './tournament-ranking.service';
 import {AppState} from '../store/reducers/index';
+import {ActualTournamentRankingService} from "../tournament/actual-tournament-ranking.service";
 
 
 @Injectable()
@@ -42,7 +42,7 @@ export class TournamentGameService {
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<AppState>,
-              protected rankingService: TournamentRankingService) {
+              protected rankingService: ActualTournamentRankingService) {
 
     this.store.select(state => state).subscribe(state => {
 

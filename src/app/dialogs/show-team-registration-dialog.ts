@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Inject, Output} from '@angular/core';
 import {Tournament} from '../../../shared/model/tournament';
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
-import {StartTournamentDialogComponent} from '../tournament/tournament-preparation/tournament-preparation.component';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {Registration} from '../../../shared/model/registration';
 
@@ -33,7 +32,7 @@ export class ShowTeamRegistrationDialogComponent {
   isAdmin: boolean;
 
   constructor(public dialog: MdDialog,
-              public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
+              public dialogRef: MdDialogRef<ShowTeamRegistrationDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
               private winRef: WindowRefService) {
 

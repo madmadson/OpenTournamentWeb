@@ -10,6 +10,10 @@ import {Player} from '../../../../../shared/model/player';
 import {RegistrationDatabase, RegistrationsDataSource} from '../../../../../shared/table-model/registration';
 import {MdDialog, MdPaginator, MdSort} from '@angular/material';
 import {WindowRefService} from '../../../service/window-ref-service';
+import {ArmyList} from '../../../../../shared/model/armyList';
+import {PlayerRegistrationChange} from '../../../../../shared/dto/playerRegistration-change';
+import {PlayerRegistrationInfoDialogComponent} from '../../../dialogs/tournament-preparation/player-registration-info-dialog';
+import {Tournament} from '../../../../../shared/model/tournament';
 
 @Component({
   selector: 'tournament-registration-list',
@@ -19,17 +23,16 @@ import {WindowRefService} from '../../../service/window-ref-service';
 })
 export class TournamentRegistrationListComponent implements OnInit, OnChanges {
 
-  // @Input() actualTournament: Tournament;
+  @Input() actualTournament: Tournament;
   @Input() registrations: Registration[];
   @Input() userPlayerData: Player;
-  // @Input() isAdmin: boolean;
-  // @Input() isCoOrganizer: boolean;
-  // @Input() armyLists: ArmyList[];
+  @Input() isAdmin: boolean;
+  @Input() isCoOrganizer: boolean;
+  @Input() armyLists: ArmyList[];
 
   @Output() onAcceptRegistration = new EventEmitter<Registration>();
-  // @Output() onDeleteRegistration = new EventEmitter<Registration>();
-  // @Output() onAddArmyListForRegistrationDialog = new EventEmitter<Registration>();
-  // @Output() onPlayerRegChangeEventSubscribe = new EventEmitter<PlayerRegistrationChange>();
+  @Output() onDeleteRegistration = new EventEmitter<Registration>();
+  @Output() onPlayerRegChangeEventSubscribe = new EventEmitter<PlayerRegistrationChange>();
 
   displayedColumns = [
     'playerName', 'team', 'locality', 'faction', 'armyList', 'paid', 'actions'];
@@ -74,6 +77,8 @@ export class TournamentRegistrationListComponent implements OnInit, OnChanges {
       if (changes.hasOwnProperty(propName)) {
         const change = changes[propName];
         if (this.registrationDb && propName === 'registrations') {
+
+          // console.log('registrations: ' + JSON.stringify(change.currentValue))
           this.registrationDb.resetDatabase(change.currentValue);
         }
       }
@@ -91,39 +96,35 @@ export class TournamentRegistrationListComponent implements OnInit, OnChanges {
 
     this.onAcceptRegistration.emit(registration);
   }
-  //
-  // addArmyLists(event: any, registration: Registration) {
-  //   event.stopPropagation();
-  //   this.onAddArmyListForRegistrationDialog.emit(registration);
-  // }
-  //
-  // showRegistrationInfo(playerRegistration: Registration) {
-  //   const dialogRef = this.dialog.open(PlayerRegistrationInfoDialogComponent, {
-  //     data: {
-  //       playerRegistration: playerRegistration,
-  //       armyLists: this.armyLists,
-  //       isAdmin: this.isAdmin
-  //     }
-  //   });
-  //   const regChangeEventSubscribe = dialogRef.componentInstance.onRegChangeEventSubscribe.subscribe(
-  //     (playerRegistrationChange: PlayerRegistrationChange) => {
-  //     if (playerRegistrationChange) {
-  //       this.onPlayerRegChangeEventSubscribe.emit(playerRegistrationChange);
-  //     }
-  //     dialogRef.close();
-  //   });
-  //
-  //   const deleteEventSubscribe = dialogRef.componentInstance.onDeleteRegistration.subscribe(
-  //     (reg: Registration) => {
-  //       if (reg) {
-  //         this.onDeleteRegistration.emit(reg);
-  //       }
-  //       dialogRef.close();
-  //     });
-  //   dialogRef.afterClosed().subscribe(() => {
-  //
-  //     regChangeEventSubscribe.unsubscribe();
-  //     deleteEventSubscribe.unsubscribe();
-  //   });
-  // }
+
+
+  showRegistrationInfo(playerRegistration: Registration) {
+    const dialogRef = this.dialog.open(PlayerRegistrationInfoDialogComponent, {
+      data: {
+        playerRegistration: playerRegistration,
+        armyLists: this.armyLists,
+        isAdmin: this.isAdmin
+      }
+    });
+    const regChangeEventSubscribe = dialogRef.componentInstance.onRegChangeEventSubscribe.subscribe(
+      (playerRegistrationChange: PlayerRegistrationChange) => {
+      if (playerRegistrationChange) {
+        this.onPlayerRegChangeEventSubscribe.emit(playerRegistrationChange);
+      }
+      dialogRef.close();
+    });
+
+    const deleteEventSubscribe = dialogRef.componentInstance.onDeleteRegistration.subscribe(
+      (reg: Registration) => {
+        if (reg) {
+          this.onDeleteRegistration.emit(reg);
+        }
+        dialogRef.close();
+      });
+    dialogRef.afterClosed().subscribe(() => {
+
+      regChangeEventSubscribe.unsubscribe();
+      deleteEventSubscribe.unsubscribe();
+    });
+  }
 }

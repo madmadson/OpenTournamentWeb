@@ -96,25 +96,25 @@
       Show All
     </button>
     <h4 *ngIf="allGamesFiltered?.length == 0" class="heading">No Games found (Filter?)</h4>
-    <tournament-game-list *ngIf="!gamesTableMode"
-                          [round]="round"
-                          [isAdmin]="isAdmin"
-                          [isCoOrganizer]="isCoOrganizer"
-                          [teamMatch]="false"
-                          [actualTournament]="actualTournament"
-                          [actualTournamentArmyLists$]="actualTournamentArmyLists$"
-                          [gamesForRound]="allGamesFiltered"
-                          [rankingsForRound$]="rankingsForRound$"
-                          (onGameResult)="handleGameResult($event)"
-                          (onSwapPlayer)="handleSwapPlayer($event)"
-                          (onScenarioSelected)="handleScenarioSelected($event)"
-                          (onClearPlayerGameResult)="handleClearPlayerGameResult($event)"
-    ></tournament-game-list>
+    <!--<tournament-game-list *ngIf="!gamesTableMode"-->
+                          <!--[round]="round"-->
+                          <!--[isAdmin]="isAdmin"-->
+                          <!--[isCoOrganizer]="isCoOrganizer"-->
+                          <!--[teamMatch]="false"-->
+                          <!--[actualTournament]="actualTournament"-->
+                          <!--[actualTournamentArmyLists$]="actualTournamentArmyLists$"-->
+                          <!--[gamesForRound]="allGamesFiltered"-->
+                          <!--[rankingsForRound$]="rankingsForRound$"-->
+                          <!--(onGameResult)="handleGameResult($event)"-->
+                          <!--(onSwapPlayer)="handleSwapPlayer($event)"-->
+                          <!--(onScenarioSelected)="handleScenarioSelected($event)"-->
+                          <!--(onClearPlayerGameResult)="handleClearPlayerGameResult($event)"-->
+    <!--&gt;</tournament-game-list>-->
 
-    <tournament-game-table *ngIf="gamesTableMode"
-                           [actualTournament]="actualTournament"
-                           [games]="allGamesFiltered"
-    ></tournament-game-table>
+    <!--<tournament-game-table *ngIf="gamesTableMode"-->
+                           <!--[actualTournament]="actualTournament"-->
+                           <!--[games]="allGamesFiltered"-->
+    <!--&gt;</tournament-game-table>-->
   </md-card>
   <md-card *ngIf="!gamesFullscreenMode" class="tournament-ranking-table-card">
     <h3 class="heading">Rankings Round {{round}}</h3>
@@ -125,16 +125,16 @@
     <mdl-icon *ngIf="rankingsFullscreenMode" (click)="openRankingsFullScreenMode(false)"
               mdTooltip="Exit Fullscreen Mode" class="fullscreen-mode">fullscreen_exit
     </mdl-icon>
-    <tournament-ranking-list
-      [isAdmin]="isAdmin"
-      [isCoOrganizer]="isCoOrganizer"
-      [round]="round"
-      [actualTournament]="actualTournament"
-      [actualTournamentArmyList$]="armyLists$"
-      [rankingsForRound$]="rankingsForRound$"
-      [userPlayerData]="userPlayerData"
-      (onDropPlayer)="handleDropPlayer($event)"
-      (onUndoDropPlayer)="handleUndoDropPlayer($event)"
-    ></tournament-ranking-list>
+    <!--<tournament-ranking-list-->
+      <!--[isAdmin]="isAdmin"-->
+      <!--[isCoOrganizer]="isCoOrganizer"-->
+      <!--[round]="round"-->
+      <!--[actualTournament]="actualTournament"-->
+      <!--[actualTournamentArmyList$]="armyLists$"-->
+      <!--[rankingsForRound$]="rankingsForRound$"-->
+      <!--[userPlayerData]="userPlayerData"-->
+      <!--(onDropPlayer)="handleDropPlayer($event)"-->
+      <!--(onUndoDropPlayer)="handleUndoDropPlayer($event)"-->
+    <!--&gt;</tournament-ranking-list>-->
   </md-card>
 </div>

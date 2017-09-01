@@ -12,13 +12,17 @@ import {
 
 import * as firebase from 'firebase';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {MdSnackBar} from '@angular/material';
 
 @Injectable()
 export class ActualTournamentPlayerService {
 
   private tournamentPlayersRef: firebase.database.Reference;
 
-  constructor(protected store: Store<AppState>) {
+  constructor(private afoDatabase: AngularFireOfflineDatabase,
+              protected store: Store<AppState>,
+              private snackBar: MdSnackBar) {
 
   }
 
@@ -34,7 +38,7 @@ export class ActualTournamentPlayerService {
 
     const that = this;
     const allTournamentPlayers: TournamentPlayer[] = [];
-    let newItems = true;
+    let newItems = false;
 
     this.tournamentPlayersRef = firebase.database().ref('tournament-players/' + tournamentId);
 
@@ -89,5 +93,28 @@ export class ActualTournamentPlayerService {
     });
   }
 
+  killPlayer(player: TournamentPlayer) {
+    const playerRef = this.afoDatabase.list('tournament-players/' + player.tournamentId + '/' + player.id);
+    playerRef.remove();
 
+    if (player.registrationId) {
+      const registrationRef = this.afoDatabase
+        .object('tournament-registrations/' + player.tournamentId + '/' + player.registrationId);
+      registrationRef.update({isTournamentPlayer: false});
+    }
+    this.snackBar.open('Player deleted successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  pushTournamentPlayer(tournamentPlayer: TournamentPlayer) {
+    const tournamentPlayers = this.afoDatabase.list('tournament-players/' + tournamentPlayer.tournamentId);
+    tournamentPlayers.push(tournamentPlayer);
+
+    this.snackBar.open('Player saved successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
 }

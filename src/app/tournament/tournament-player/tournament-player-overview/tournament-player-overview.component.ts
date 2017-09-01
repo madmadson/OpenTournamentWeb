@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {MdDialog} from '@angular/material';
+import {MdDialog, MdSnackBar} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {Tournament} from '../../../../../shared/model/tournament';
 import {Player} from '../../../../../shared/model/player';
@@ -16,11 +16,20 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../../store/reducers/index';
 
 import * as _ from 'lodash';
-import {AddPlayerRegistrationDialogComponent} from 'app/dialogs/tournament-preparation/add-player-registration-dialog';
+
 import {AddArmyListsDialogComponent} from '../../../dialogs/add-army-lists-dialog';
 import {ActualTournamentArmyListService} from '../../actual-tournament-army-list.service';
 import {ArmyList} from '../../../../../shared/model/armyList';
-import {ArmyListRegistrationPush} from '../../../../../shared/dto/armyList-registration-push';
+
+import {ArmyListTournamentPlayerPush} from '../../../../../shared/dto/armyList-tournamentPlayer-push';
+import {CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION} from '../../tournament-actions';
+import {NewTournamentPlayerDialogComponent} from '../../../dialogs/add-tournament-player-dialog';
+import {PrintArmyListsDialogComponent} from '../../../dialogs/print-army-lists-dialog';
+import {TournamentFormDialogComponent} from '../../../dialogs/tournament-form-dialog';
+import {StartTournamentDialogComponent} from '../../../dialogs/actualTournament/start-tournament-dialog';
+import {TournamentManagementConfiguration} from '../../../../../shared/dto/tournament-management-configuration';
+import {TournamentRanking} from '../../../../../shared/model/tournament-ranking';
+import {PairingService} from '../../pairing.service';
 
 
 @Component({
@@ -41,29 +50,31 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
   allRegistrations$: Observable<Registration[]>;
   allTournamentPlayers$: Observable<TournamentPlayer[]>;
+  allTournamentPlayersFiltered$: Observable<TournamentPlayer[]>;
   allArmyLists$: Observable<ArmyList[]>;
   loadPlayers$: Observable<boolean>;
 
   isAdmin: boolean;
   isCoOrganizer: boolean;
   isTournamentPlayer: boolean;
-  isRegisteredPlayer: boolean;
-
-  myRegistration: Registration;
 
   private actualTournamentSub: Subscription;
   private userPlayerDataSub: Subscription;
   private allActualTournamentPlayersSub: Subscription;
   private allActualRegistrationsSub: Subscription;
 
-  private allTeamNames: string[] = [];
+  searchField$: Observable<string>;
+
+  @ViewChild('searchField') searchField: ElementRef;
 
 
-  constructor(private dialog: MdDialog,
+  constructor( private snackBar: MdSnackBar,
+               private dialog: MdDialog,
               private tournamentService: TournamentService,
               private registrationService: ActualTournamentRegistrationService,
               private tournamentPlayerService: ActualTournamentPlayerService,
               private armyListService: ActualTournamentArmyListService,
+              private pairingService: PairingService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
               private router: Router) {
@@ -84,6 +95,18 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
     this.allArmyLists$ = this.store.select(state => state.actualTournament.actualTournamentArmyLists);
 
     this.loadPlayers$ = this.store.select(state => state.actualTournament.loadPlayers);
+
+    this.searchField$ = this.store.select(state => state.actualTournament.playersSearchField);
+
+    this.allTournamentPlayersFiltered$ = Observable.combineLatest(
+      this.allTournamentPlayers$,
+      this.searchField$,
+      (allPlayers, searchField) => {
+        return allPlayers.filter((p: TournamentPlayer) => {
+          const searchStr = p.playerName.toLowerCase();
+          return searchStr.startsWith(searchField.toLowerCase());
+        });
+      });
   }
 
   ngOnInit() {
@@ -93,14 +116,12 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
       this.setIsAdmin();
       this.setIsCoAdmin();
       this.setIsTournamentPlayer();
-      this.setIsRegistered();
     });
     this.userPlayerDataSub = this.userPlayerData$.subscribe((player: Player) => {
       this.userPlayerData = player;
       this.setIsAdmin();
       this.setIsCoAdmin();
       this.setIsTournamentPlayer();
-      this.setIsRegistered();
     });
 
     this.allActualTournamentPlayersSub = this.allTournamentPlayers$.subscribe((allTournamentPlayers: TournamentPlayer[]) => {
@@ -111,6 +132,13 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
       this.allActualRegistrations = allRegistrations;
     });
 
+
+    Observable.fromEvent(this.searchField.nativeElement, 'keyup')
+      .debounceTime(150)
+      .distinctUntilChanged()
+      .subscribe(() => {
+        this.store.dispatch({type: CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION, payload: this.searchField.nativeElement.value});
+      });
   }
 
 
@@ -170,62 +198,23 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  setIsRegistered(): void {
-    const that = this;
-
-    if (this.allActualRegistrations && this.userPlayerData) {
-
-      this.myRegistration = undefined;
-      this.isRegisteredPlayer = false;
-
-      _.find(this.allActualRegistrations, function (reg: Registration) {
-
-        if (that.allTeamNames.indexOf(reg.teamName) === -1 && reg.teamName !== '') {
-          that.allTeamNames.push(reg.teamName);
-        }
-
-        if (that.userPlayerData && that.userPlayerData.id === reg.playerId) {
-          that.isRegisteredPlayer = true;
-          that.myRegistration = reg;
-        }
-      });
-    }
+  handleDeletePlayer(player: TournamentPlayer) {
+    this.tournamentPlayerService.killPlayer(player);
   }
 
-  openRegistrationDialog() {
-    const dialogRef = this.dialog.open(AddPlayerRegistrationDialogComponent, {
-      data: {
-        actualTournament: this.actualTournament,
-        userPlayerData: this.userPlayerData,
-        allTeamNames: this.allTeamNames
-      }
-    });
-
-    const saveEventSubscribe = dialogRef.componentInstance.onAddTournamentRegistration.subscribe(registrationPush => {
-
-      if (registrationPush !== undefined) {
-        this.registrationService.pushRegistration(registrationPush);
-      }
-    });
-    dialogRef.afterClosed().subscribe(() => {
-
-      saveEventSubscribe.unsubscribe();
-    });
-  }
-
-  openAddArmyListForRegistrationDialog() {
+  handleAddArmyLists(player: TournamentPlayer) {
 
     const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
       data: {
-        registration: this.myRegistration,
+        tournamentPlayer: player,
         armyLists$: this.allArmyLists$
       }
     });
-    const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
-      (armyListRegistrationPush: ArmyListRegistrationPush) => {
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForTournamentPlayer.subscribe(
+      (armyListForPlayer: ArmyListTournamentPlayerPush) => {
 
-        if (armyListRegistrationPush !== undefined) {
-          this.armyListService.pushArmyListForRegistration(armyListRegistrationPush);
+        if (armyListForPlayer !== undefined) {
+          this.armyListService.pushArmyListForTournamentPlayer(armyListForPlayer.armyList);
         }
       });
     const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
@@ -243,13 +232,126 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
   }
 
-  deleteMyRegistration() {
+  addTournamentPlayer() {
+    const dialogRef = this.dialog.open(NewTournamentPlayerDialogComponent, {
+      data: {
+        actualTournament: this.actualTournament,
+        allActualTournamentPlayers: this.allActualTournamentPlayers
+      },
+      width: '800px',
+    });
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveNewTournamentPlayer.subscribe((tournamentPlayer: TournamentPlayer) => {
 
-    this.registrationService.killRegistration({
-      registration: this.myRegistration,
-      tournament: this.actualTournament
+      if (tournamentPlayer !== undefined) {
+        this.tournamentPlayerService.pushTournamentPlayer(tournamentPlayer);
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+    });
+  }
+
+  openPrintArmyListDialog() {
+    this.dialog.open(PrintArmyListsDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        armyLists$: this.allArmyLists$
+      }
     });
 
+  }
+
+  openTournamentFormDialog() {
+
+    if (!this.actualTournament.creatorMail) {
+      this.actualTournament.creatorMail = '';
+    }
+
+    const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        allActualTournamentPlayers: this.allActualTournamentPlayers,
+        allRegistrations: this.allActualRegistrations,
+        tournamentTeams: [],
+        tournamentTeamRegistrations: []
+      },
+      width: '800px'
+    });
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
+      if (tournament) {
+        this.tournamentService.updateTournament(tournament);
+      }
+      dialogRef.close();
+    });
+    const saveCoOperatorSubscribe = dialogRef.componentInstance.onAddCoOrganizator
+      .subscribe(coOrganizatorPush => {
+        if (coOrganizatorPush) {
+
+          this.tournamentService.addCoOrganizer(coOrganizatorPush);
+        }
+      });
+
+    const deleteCoOperatorSubscribe = dialogRef.componentInstance.onDeleteCoOrganizator
+      .subscribe(coOrganizatorPush => {
+        if (coOrganizatorPush) {
+
+          this.tournamentService.deleteCoOrganizer(coOrganizatorPush);
+        }
+      });
+
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+      saveCoOperatorSubscribe.unsubscribe();
+      deleteCoOperatorSubscribe.unsubscribe();
+    });
+  }
+
+  openStartTournamentDialog() {
+
+
+    const dialogRef = this.dialog.open(StartTournamentDialogComponent, {
+      data: {
+        allActualTournamentPlayers: this.allActualTournamentPlayers,
+        allActualTournamentTeams: [],
+        actualTournament: this.actualTournament,
+      },
+      width: '600px',
+    });
+    const startTournamentSub = dialogRef.componentInstance.onStartTournament.subscribe((config: TournamentManagementConfiguration) => {
+      if (config !== undefined) {
+        config.tournamentId = this.actualTournament.id;
+        config.round = 1;
+        if (this.actualTournament.teamSize === 0) {
+
+          const newRankings: TournamentRanking[] = this.pairingService.pushRankingForFirstRound(this.allActualTournamentPlayers);
+          const success: boolean = this.pairingService.pushGamesForFirstRound(config, newRankings);
+
+          if (success) {
+            this.tournamentService.startTournament(config);
+
+            this.router.navigate(['/tournament', this.actualTournament.id, 'round', 1]);
+          } else {
+
+            this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
+              extraClasses: ['snackBar-fail'],
+              duration: 5000
+            });
+
+            this.pairingService.killRankingsForRound(config);
+            this.pairingService.killGamesForRound(config);
+          }
+
+        } else {
+          // this.onStartTeamTournament.emit(config);
+        }
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      startTournamentSub.unsubscribe();
+    });
 
   }
 }

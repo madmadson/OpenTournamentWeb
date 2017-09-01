@@ -1,22 +1,41 @@
 @import '../../../../styles';
 
-.number-icon{
-  float: left;
-  margin-right: 16px;
-  color: black;
-}
-
-.registration-list-item{
-  font-size: 12px;
+.registrations-table-row{
+  font-size: 0.8em;
   letter-spacing: 0;
+}
+.registrations-table-row:hover{
+  cursor: pointer;
+  background-color: $color_info;
 }
 
 @media only screen and (min-width: 500px) {
 
-  .registration-list-item{
+  .registrations-table-row{
     font-size: 1.2em;
   }
+}
 
+.registration-table-container{
+  margin: $halve_tick;
+}
+
+@media only screen and (min-width: 500px) {
+  .registration-table-container{
+    min-width: 450px;
+
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .registration-table-container{
+    min-width: 600px;
+
+  }
+}
+
+.isPlayer{
+  background-color: $light_success_color;
 }
 
 .playerName-column{

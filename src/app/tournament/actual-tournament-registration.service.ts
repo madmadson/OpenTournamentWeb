@@ -44,7 +44,7 @@ export class ActualTournamentRegistrationService {
 
     const that = this;
     const allRegistrations: Registration[] = [];
-    let newItems = true;
+    let newItems = false;
 
     this.tournamentRegistrationsRef = firebase.database().ref('tournament-registrations/' + tournamentId);
 
@@ -141,14 +141,14 @@ export class ActualTournamentRegistrationService {
   }
 
   killRegistration(regPush: RegistrationPush) {
-    const regRef = this.afoDatabase.list('tournament-registrations/' + regPush.tournament.id + '/' + regPush.registration.id);
+    const regRef = this.afoDatabase.list('tournament-registrations/' + regPush.registration.tournamentId + '/' + regPush.registration.id);
     regRef.remove();
 
     const playerRegRef = this.afoDatabase
       .list('players-registrations/' + regPush.registration.playerId + '/' + regPush.registration.id);
     playerRegRef.remove();
 
-    const tournamentRef = this.afoDatabase.object('tournaments/' + regPush.tournament.id);
+    const tournamentRef = this.afoDatabase.object('tournaments/' + regPush.registration.tournamentId);
     tournamentRef.update({actualParticipants: (regPush.tournament.actualParticipants - 1 )});
 
     if ( regPush.tournament.teamSize > 0) {

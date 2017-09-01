@@ -51,6 +51,9 @@
   cursor: pointer;
 }
 
+.games-table-container{
+  margin: $halve_tick;
+}
 
 @media only screen and (min-width: 500px) {
   .games-table-container{

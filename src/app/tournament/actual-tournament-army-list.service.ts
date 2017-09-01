@@ -43,7 +43,7 @@ export class ActualTournamentArmyListService {
 
     const that = this;
     const allArmyLists: ArmyList[] = [];
-    let newItems = true;
+    let newItems = false;
 
     this.armyListRef = firebase.database().ref('tournament-armyLists/' + tournamentId);
 
@@ -83,10 +83,10 @@ export class ActualTournamentArmyListService {
 
     this.armyListRef.once('value', function (snapshot) {
 
-      snapshot.forEach(function (regSnapshot) {
+      snapshot.forEach(function (armyListSnapshot) {
 
-        const reg: ArmyList = ArmyList.fromJson(regSnapshot.val());
-        reg.id = regSnapshot.key;
+        const reg: ArmyList = ArmyList.fromJson(armyListSnapshot.val());
+        reg.id = armyListSnapshot.key;
         allArmyLists.push(reg);
         return false;
 
@@ -111,6 +111,17 @@ export class ActualTournamentArmyListService {
     });
 
     this.snackBar.open('ArmyList uploaded successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  pushArmyListForTournamentPlayer(armyList: ArmyList) {
+
+    const tournamentArmyListRef = this.afoDatabase.list('tournament-armyLists/' + armyList.tournamentId);
+    tournamentArmyListRef.push(armyList);
+
+    this.snackBar.open('Army List for Player saved successfully', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });

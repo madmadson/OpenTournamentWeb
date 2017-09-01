@@ -1,7 +1,6 @@
 import {Component, Inject} from '@angular/core';
 
 import {MD_DIALOG_DATA, MdDialog, MdDialogRef} from '@angular/material';
-import {StartTournamentDialogComponent} from '../tournament/tournament-preparation/tournament-preparation.component';
 
 import * as _ from 'lodash';
 import {Player} from '../../../shared/model/player';
@@ -26,7 +25,7 @@ export class ShowTeamRankingDialogComponent {
   userPlayerData: Player;
 
   constructor(public dialog: MdDialog,
-              public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
+              public dialogRef: MdDialogRef<ShowTeamRankingDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
 
     this.teamRanking = data.team;

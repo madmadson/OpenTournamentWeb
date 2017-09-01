@@ -105,13 +105,7 @@ export class TournamentsService  {
   }
 
   setTournament(tournament: Tournament) {
-    const tournamentRef = this.afoDatabase.object('tournaments/' + tournament.id);
-    tournamentRef.set(tournament);
 
-    this.snackBar.open('Tournament edited successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
   }
 
   addCoOrganizer(coOrganizer: CoOrganizatorPush) {

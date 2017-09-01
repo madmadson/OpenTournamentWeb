@@ -6,7 +6,6 @@ import {CustomValidators} from 'ng2-validation';
 import * as moment from 'moment';
 
 import { FormControl, FormGroup, Validators} from '@angular/forms';
-import {StartTournamentDialogComponent} from '../tournament/tournament-preparation/tournament-preparation.component';
 import {Tournament} from '../../../shared/model/tournament';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {Registration} from '../../../shared/model/registration';
@@ -59,7 +58,7 @@ export class TournamentFormDialogComponent implements OnInit {
     }
   };
 
-  constructor(public dialogRef: MdDialogRef<StartTournamentDialogComponent>,
+  constructor(public dialogRef: MdDialogRef<TournamentFormDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
               protected snackBar: MdSnackBar,
               public dialog: MdDialog) {

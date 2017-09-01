@@ -1,0 +1,45 @@
+@import "../../../../styles";
+
+.game-table-container{
+  margin: $halve_tick;
+}
+
+@media only screen and (min-width: 500px) {
+  .game-table-container{
+    min-width: 450px;
+
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .game-table-container{
+    min-width: 600px;
+
+  }
+}
+
+.playing-field-column{
+  flex: 1;
+}
+
+.first-player-column{
+  justify-content: flex-end;
+  flex: 4;
+}
+
+.player-column{
+  flex: 4;
+}
+
+.vs-column{
+  flex: 1;
+  text-align: center;
+}
+
+.right-align{
+  text-align: right;
+}
+
+.mat-column-playerOnePlayerName {
+  text-align: right;
+}

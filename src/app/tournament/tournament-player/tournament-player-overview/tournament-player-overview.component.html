@@ -21,20 +21,60 @@
       Go to -> Registrations
     </button>
     <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
-            md-menu-item>
-      <md-icon>navigation</md-icon>
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'round', round]);">
+
       Go to -> Round {{index +1}}
     </button>
 
     <button *ngIf="actualTournament?.finished" md-menu-item>
-      <md-icon>navigation</md-icon>
       Go to -> Final Rankings
     </button>
   </md-menu>
 </div>
-
-
 <h2 class="heading">Players ({{(allTournamentPlayers$| async)?.length}})</h2>
+
+<div class="action-card-container" *ngIf="isAdmin || isCoOrganizer">
+  <md-card class="action-card action-button-wrapper">
+    <button (click)="openPrintArmyListDialog()"
+            type="button"
+            class="color-positive-background action-button"
+            md-raised-button>
+      <md-icon>list</md-icon>
+      Print Lists
+    </button>
+    <button (click)="openTournamentFormDialog()"
+            type="button"
+            class="color-positive-background action-button"
+            md-raised-button>
+      <md-icon>build</md-icon>
+      Edit
+    </button>
+    <button *ngIf="(allTournamentPlayers$ | async)?.length > 1 && actualTournament?.actualRound === 0"
+            (click)="openStartTournamentDialog()"
+            type="button"
+            class=" color-positive-background action-button"
+            md-raised-button>
+      <md-icon>play_arrow</md-icon>
+      Start Tournament
+    </button>
+  </md-card>
+</div>
+
+
+<div class="action-card-container">
+  <md-input-container class="players-search-container" floatPlaceholder="never">
+    <input class="search-field" mdInput #searchField placeholder="Search for PlayerName">
+  </md-input-container>
+
+  <button *ngIf="actualTournament?.actualRound === 0"
+          color="accent"
+          class="action-button"
+          md-raised-button (click)="addTournamentPlayer()">
+    <md-icon>person_add</md-icon>
+    Add Player
+  </button>
+</div>
 
 <ng-container *ngIf="(loadPlayers$ | async)">
   <div class="heading">Load Players...</div>
@@ -42,5 +82,16 @@
     <md-spinner></md-spinner>
   </div>
 </ng-container>
+
+<tournament-player-list *ngIf="(allTournamentPlayersFiltered$ | async).length > 0"
+                        [actualTournament]="actualTournament"
+                        [tournamentPlayers]="allTournamentPlayersFiltered$ | async"
+                        [userPlayerData]="userPlayerData"
+                        [armyLists]="allArmyLists$ | async"
+                        [isAdmin]="isAdmin"
+                        [isCoOrganizer]="isCoOrganizer"
+                        (onDeletePlayer)="handleDeletePlayer($event)"
+                        (onAddArmyLists)="handleAddArmyLists($event)">
+</tournament-player-list>
 
 
