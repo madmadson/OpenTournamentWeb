@@ -58,7 +58,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
     this.activeRouter.params.subscribe(
       params => {
-        this.tournamentService.subscribeOnFirebaseTournament(params['id']);
+        this.tournamentService.subscribeOnFirebase(params['id']);
         this.registrationService.subscribeOnFirebase(params['id']);
         this.tournamentPlayerService.subscribeOnFirebase(params['id']);
       }
@@ -99,7 +99,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
 
   ngOnDestroy() {
-    this.tournamentService.unsubscribeOnFirebaseTournament();
+    this.tournamentService.unsubscribeOnFirebase();
     this.registrationService.unsubscribeOnFirebase();
     this.tournamentPlayerService.unsubscribeOnFirebase();
 

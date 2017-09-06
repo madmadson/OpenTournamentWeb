@@ -58,7 +58,7 @@ import {
   MdButtonModule, MdCardModule, MdCheckboxModule, MdDialogModule, MdIconModule, MdInputModule,
   MdSelectModule, MdSidenavModule, MdSnackBarModule, MdTabsModule, MdToolbarModule, MdListModule, MdTooltip,
   MdTooltipModule, MdSort, MdSortModule, MdTableModule, MdPaginatorModule, MdSlideToggleModule, MdProgressSpinner,
-  MdProgressSpinnerModule, MdMenu, MdMenuModule,
+  MdProgressSpinnerModule, MdMenu, MdMenuModule, MdGridListModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
@@ -66,7 +66,7 @@ import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/to
 import {
   TournamentRoundOverviewComponent,
 } from './tournament/round/tournament-round-overview/tournament-round-overview.component';
-import { TournamentGameListComponent, GameResultDialogComponent } from './tournament/tournament-game-list/tournament-game-list.component';
+import { TournamentGameListComponent } from './tournament/tournament-game-list/tournament-game-list.component';
 import { TournamentRankingListComponent
 } from './tournament/tournament-ranking-list/tournament-ranking-list.component';
 import {MdlModule} from 'angular2-mdl';
@@ -144,6 +144,10 @@ import {PairingService} from './tournament/pairing.service';
 import {GameMatchingService} from 'app/tournament/game-matching.service';
 import {GameResultService} from './tournament/game-result.service';
 import {TournamentGamesComponent} from './tournament/round/tournament-game-list/tournament-games.component';
+import {GameResultDialogComponent} from './dialogs/game-result-dialog';
+import {SwappingService} from './tournament/swapping.service';
+import {TournamentRankingsComponent} from "./tournament/rankings/tournament-ranking-list/tournament-rankings.component";
+import {TournamentRankingsOverviewComponent} from "app/tournament/rankings/tournament-ranking-overview/tournament-ranking-overview.component";
 
 
 @NgModule({
@@ -174,9 +178,7 @@ import {TournamentGamesComponent} from './tournament/round/tournament-game-list/
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule, MdTooltipModule, MdSortModule, MdTableModule,
-    MdMenuModule,
-    MdProgressSpinnerModule,
-    MdSlideToggleModule,
+    MdMenuModule, MdProgressSpinnerModule, MdSlideToggleModule,
     MdPaginatorModule,
     DateTimePickerModule,
     MdlExpansionPanelModule,
@@ -193,7 +195,6 @@ import {TournamentGamesComponent} from './tournament/round/tournament-game-list/
     HomePageComponent,
     AboutComponent,
     PageNotFoundComponent,
-
 
     TournamentListOverviewComponent,
     TournamentRegistrationOverviewComponent,
@@ -214,6 +215,8 @@ import {TournamentGamesComponent} from './tournament/round/tournament-game-list/
     TournamentOverviewComponent,
     TournamentRoundOverviewComponent,
     TournamentRankingListComponent,
+    TournamentRankingsOverviewComponent,
+    TournamentRankingsComponent,
     TruncatePipe,
 
     TournamentFinalRankingsComponent,
@@ -230,6 +233,7 @@ import {TournamentGamesComponent} from './tournament/round/tournament-game-list/
     TournamentTeamListComponent,
     TournamentTeamRegistrationListComponent,
     TournamentTeamRoundOverviewComponent,
+
     TournamentTeamRankingListComponent,
     TournamentTeamGameListComponent,
     TournamentTeamFinalRankingsComponent,
@@ -274,7 +278,8 @@ import {TournamentGamesComponent} from './tournament/round/tournament-game-list/
     WindowRefService,
     PairingService,
     GameMatchingService,
-    GameResultService
+    GameResultService,
+    SwappingService
   ],
   entryComponents: [
     AddArmyListsDialogComponent,

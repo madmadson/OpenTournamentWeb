@@ -139,7 +139,7 @@ export class TournamentEffectService {
   @Effect({dispatch: false}) pairAgainTournament = this.actions$
     .ofType(TOURNAMENT_PAIR_AGAIN_ACTION)
     .debug('TOURNAMENT_PAIR_AGAIN_ACTION')
-    .map((action: TournamentPairAgainAction) => this.tournamentService.pairAgainTournament(action.payload));
+    .map((action: TournamentPairAgainAction) => this.tournamentService.pairAgainRound(action.payload));
 
   @Effect({dispatch: false}) pairAgainTeamTournament = this.actions$
     .ofType(TOURNAMENT_PAIR_AGAIN_TEAM_ACTION)

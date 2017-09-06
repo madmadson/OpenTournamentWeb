@@ -22,6 +22,7 @@ import {ActualTournamentArmyListService} from '../../actual-tournament-army-list
 import {ArmyList} from '../../../../../shared/model/armyList';
 import {ArmyListRegistrationPush} from '../../../../../shared/dto/armyList-registration-push';
 import {PrintArmyListsDialogComponent} from "../../../dialogs/print-army-lists-dialog";
+import {TournamentFormDialogComponent} from "../../../dialogs/tournament-form-dialog";
 
 
 @Component({
@@ -71,7 +72,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
     this.activeRouter.params.subscribe(
       params => {
-        this.tournamentService.subscribeOnFirebaseTournament(params['id']);
+        this.tournamentService.subscribeOnFirebase(params['id']);
         this.registrationService.subscribeOnFirebase(params['id']);
         this.tournamentPlayerService.subscribeOnFirebase(params['id']);
         this.armyListService.subscribeOnFirebase(params['id']);
@@ -118,7 +119,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
 
   ngOnDestroy() {
-    this.tournamentService.unsubscribeOnFirebaseTournament();
+    this.tournamentService.unsubscribeOnFirebase();
     this.registrationService.unsubscribeOnFirebase();
     this.tournamentPlayerService.unsubscribeOnFirebase();
     this.armyListService.unsubscribeOnFirebase();
@@ -266,7 +267,51 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
     this.registrationService.acceptRegistration(registration);
   }
 
+  openTournamentFormDialog() {
 
+    if (!this.actualTournament.creatorMail) {
+      this.actualTournament.creatorMail = '';
+    }
+
+    const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
+      data: {
+        tournament: this.actualTournament,
+        allActualTournamentPlayers: this.allActualTournamentPlayers,
+        allRegistrations: this.allActualRegistrations,
+        tournamentTeams: [],
+        tournamentTeamRegistrations: []
+      },
+      width: '800px'
+    });
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
+      if (tournament) {
+        this.tournamentService.updateTournament(tournament);
+      }
+      dialogRef.close();
+    });
+    const saveCoOperatorSubscribe = dialogRef.componentInstance.onAddCoOrganizator
+      .subscribe(coOrganizatorPush => {
+        if (coOrganizatorPush) {
+
+          this.tournamentService.addCoOrganizer(coOrganizatorPush);
+        }
+      });
+
+    const deleteCoOperatorSubscribe = dialogRef.componentInstance.onDeleteCoOrganizator
+      .subscribe(coOrganizatorPush => {
+        if (coOrganizatorPush) {
+
+          this.tournamentService.deleteCoOrganizer(coOrganizatorPush);
+        }
+      });
+
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+      saveCoOperatorSubscribe.unsubscribe();
+      deleteCoOperatorSubscribe.unsubscribe();
+    });
+  }
 }
 
 

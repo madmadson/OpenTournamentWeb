@@ -1,4 +1,4 @@
-
+import * as _ from 'lodash';
 
 export class TournamentGame {
 
@@ -103,4 +103,21 @@ export class TournamentGame {
     this.finished = finished;
     this.scenario = scenario;
   }
+}
+
+export function clearTournamentGame(playerGameToClear: TournamentGame): TournamentGame {
+
+  const gameBefore = _.cloneDeep(playerGameToClear);
+
+  playerGameToClear.playerOneScore = 0;
+  playerGameToClear.playerOneControlPoints = 0;
+  playerGameToClear.playerOneVictoryPoints = 0;
+  playerGameToClear.playerOneArmyList = '';
+  playerGameToClear.playerTwoScore = 0;
+  playerGameToClear.playerTwoControlPoints = 0;
+  playerGameToClear.playerTwoVictoryPoints = 0;
+  playerGameToClear.playerTwoArmyList = '';
+  playerGameToClear.finished = false;
+
+  return gameBefore;
 }

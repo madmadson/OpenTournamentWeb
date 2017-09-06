@@ -1,0 +1,86 @@
+<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
+<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="!fullscreenMode && isTournamentPlayer" class="sub-heading">Hello Player</h4>
+
+<div class="actual-tournament-nav-container">
+  <button *ngIf="!fullscreenMode"
+          type="button"
+          md-raised-button
+          class="color-info-background action-button"
+          [mdMenuTriggerFor]="menu">
+    <md-icon>more_vert</md-icon>
+    Rankings {{round}}
+  </button>
+  <md-menu #menu="mdMenu">
+    <button md-menu-item disabled>
+      Active -> Rankings Round {{round}}
+    </button>
+    <button md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'registrations']);">
+      Go to -> Registrations
+    </button>
+    <button *ngIf="isAdmin || isCoOrganizer"
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
+      Go to -> Players
+    </button>
+    <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'round', round]);">
+      Go to -> Round {{index +1}}
+    </button>
+
+  </md-menu>
+</div>
+<h3 class="heading" *ngIf="round > actualTournament?.actualRound">
+  No data for round {{round}} found
+</h3>
+
+<ng-container *ngIf="round <= actualTournament?.actualRound">
+  <h2 class="heading">
+    Rankings Round {{round}}
+  </h2>
+
+
+  <h3 class="heading" *ngIf="(!isAdmin && !isCoOrganizer) &&
+            (actualTournament?.actualRound > actualTournament?.visibleRound) &&
+            (round === actualTournament?.actualRound)">
+    Tournament Organizer is pairing.
+    Page will reload when he publish the new round.
+  </h3>
+  <div class="action-card-container">
+    <md-card class="action-card action-button-wrapper">
+      <button (click)="showGamesOfRound()"
+              type="button"
+              class="color-info-background action-button"
+              md-raised-button>
+        <md-icon>list</md-icon>
+       Show Games
+      </button>
+    </md-card>
+  </div>
+
+  <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
+    <ng-container *ngIf="(loadGames$ | async)">
+      <div class="heading">Load Rankings...</div>
+      <div class="loading-spinner-container">
+        <md-spinner></md-spinner>
+      </div>
+    </ng-container>
+
+    <tournament-rankings *ngIf="(gamesForRound$ | async).length > 0 && actualTournament"
+                      [isAdmin]="isAdmin"
+                      [isCoOrganizer]="isCoOrganizer"
+                      [actualTournament]="actualTournament"
+                      [gamesForRound]="gamesForRound$ | async"
+                      [rankingsForRound]="rankingsForRound$ | async"
+                      [armyLists]="allArmyLists$ | async"
+                      [userPlayerData]="userPlayerData"
+                      (onGameResultEntered)="handleGameResultEntered($event)"
+                      (onDeletePlayer)="handleDeletePlayer($event)"
+                      (onAddArmyLists)="handleAddArmyLists($event)"
+                      (onClearPlayerGameResult)="handleClearPlayerGameResult($event)">
+    </tournament-rankings>
+  </ng-container>
+</ng-container>

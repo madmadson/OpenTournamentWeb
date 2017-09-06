@@ -171,14 +171,14 @@ export class ActualTournamentGamesService {
         newGame.playerTwoVictoryPoints = 38;
         newGame.finished = true;
 
-        that.rankingService.updateRankingAfterGameResultEntered(
-          {
-            gameBefore: newGame,
-            gameAfter: newGame
-          },
-          newGame.tournamentRound,
-          false
-        );
+        // that.rankingService.updateRankingAfterGameResultEntered(
+        //   {
+        //     gameBefore: newGame,
+        //     gameAfter: newGame
+        //   },
+        //   newGame.tournamentRound,
+        //   false
+        // );
 
       }
 
@@ -188,14 +188,14 @@ export class ActualTournamentGamesService {
         newGame.playerOneVictoryPoints = 38;
         newGame.finished = true;
 
-        that.rankingService.updateRankingAfterGameResultEntered(
-          {
-            gameBefore: newGame,
-            gameAfter: newGame
-          },
-          newGame.tournamentRound,
-          false
-        );
+        // that.rankingService.updateRankingAfterGameResultEntered(
+        //   {
+        //     gameBefore: newGame,
+        //     gameAfter: newGame
+        //   },
+        //   newGame.tournamentRound,
+        //   false
+        // );
       }
 
       tournamentGamesRef.push(newGame);
@@ -1073,34 +1073,12 @@ export class ActualTournamentGamesService {
     return notDroppedPlayers;
   }
 
-  clearGameForPlayerMatch(playerGameToClear: TournamentGame) {
-    const that = this;
+  updatePlayerMatch(game: TournamentGame) {
 
     const playerGameRef = this.afoDatabase
-      .object('tournament-games/' + playerGameToClear.tournamentId + '/' + playerGameToClear.id);
+      .object('tournament-games/' + game.tournamentId + '/' + game.id);
+    playerGameRef.update(game);
 
-    const gameBefore = _.cloneDeep(playerGameToClear);
-
-    playerGameToClear.playerOneScore = 0;
-    playerGameToClear.playerOneControlPoints = 0;
-    playerGameToClear.playerOneVictoryPoints = 0;
-    playerGameToClear.playerOneArmyList = '';
-    playerGameToClear.playerTwoScore = 0;
-    playerGameToClear.playerTwoControlPoints = 0;
-    playerGameToClear.playerTwoVictoryPoints = 0;
-    playerGameToClear.playerTwoArmyList = '';
-    playerGameToClear.finished = false;
-
-    playerGameRef.update(playerGameToClear);
-
-    that.rankingService.updateRankingAfterGameResultEntered(
-      {
-        gameBefore: gameBefore,
-        gameAfter: playerGameToClear
-      },
-      playerGameToClear.tournamentRound,
-      true
-    );
   }
 
   pushGamesForFirstRound(config: TournamentManagementConfiguration, newRankings: TournamentRanking[]): boolean {
@@ -1139,14 +1117,14 @@ export class ActualTournamentGamesService {
         newGame.playerTwoVictoryPoints = 38;
         newGame.finished = true;
 
-        that.rankingService.updateRankingAfterGameResultEntered(
-          {
-            gameBefore: newGame,
-            gameAfter: newGame
-          },
-          newGame.tournamentRound,
-          false
-        );
+        // that.rankingService.updateRankingAfterGameResultEntered(
+        //   {
+        //     gameBefore: newGame,
+        //     gameAfter: newGame
+        //   },
+        //   newGame.tournamentRound,
+        //   false
+        // );
 
       }
 
@@ -1156,14 +1134,14 @@ export class ActualTournamentGamesService {
         newGame.playerOneVictoryPoints = 38;
         newGame.finished = true;
 
-        that.rankingService.updateRankingAfterGameResultEntered(
-          {
-            gameBefore: newGame,
-            gameAfter: newGame
-          },
-          newGame.tournamentRound,
-          false
-        );
+        // that.rankingService.updateRankingAfterGameResultEntered(
+        //   {
+        //     gameBefore: newGame,
+        //     gameAfter: newGame
+        //   },
+        //   newGame.tournamentRound,
+        //   false
+        // );
       }
 
       tournamentGamesRef.push(newGame);
@@ -1183,6 +1161,7 @@ export class ActualTournamentGamesService {
       });
     });
   }
+
 }
 
 class EloChange {

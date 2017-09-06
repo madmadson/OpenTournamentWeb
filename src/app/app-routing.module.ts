@@ -17,6 +17,7 @@ import {GameListOverviewComponent} from './games/game-list-overview/game-list-ov
 import {TournamentRegistrationOverviewComponent} from './tournament/registration/tournament-registration-overview/tournament-registration-overview.component';
 import {TournamentPlayerOverviewComponent} from './tournament/tournament-player/tournament-player-overview/tournament-player-overview.component';
 import {TournamentRoundOverviewComponent} from './tournament/round/tournament-round-overview/tournament-round-overview.component';
+import {TournamentRankingsOverviewComponent} from './tournament/rankings/tournament-ranking-overview/tournament-ranking-overview.component';
 
 
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
   {path: 'tournament/:id/registrations', component: TournamentRegistrationOverviewComponent},
   {path: 'tournament/:id/players', component: TournamentPlayerOverviewComponent},
   {path: 'tournament/:id/round/:round', component: TournamentRoundOverviewComponent},
+  {path: 'tournament/:id/round/:round/rankings', component: TournamentRankingsOverviewComponent},
   {path: 'player-profile', component: PlayerFormComponent},
   {path: 'game', component: GameEditComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},

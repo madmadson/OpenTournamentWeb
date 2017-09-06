@@ -78,6 +78,14 @@
       <md-icon>list</md-icon>
       Print Lists
     </button>
+    <button *ngIf="isAdmin || isCoOrganizer"
+            (click)="openTournamentFormDialog()"
+            type="button"
+            class="color-positive-background action-button"
+            md-raised-button>
+      <md-icon>build</md-icon>
+      Edit
+    </button>
   </md-card>
 </div>
 

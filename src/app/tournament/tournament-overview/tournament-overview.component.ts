@@ -123,7 +123,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
     this.activeRouter.params.subscribe(
       params => {
-        this.tournamentService.subscribeOnFirebaseTournament(params['id']);
+        this.tournamentService.subscribeOnFirebase(params['id']);
         this.registrationService.subscribeOnFirebase(params['id']);
       }
     );
@@ -216,7 +216,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.tournamentService.unsubscribeOnFirebaseTournament();
+    this.tournamentService.unsubscribeOnFirebase();
     this.registrationService.unsubscribeOnFirebase();
     this.fullScreenModeSub.unsubscribe();
     this.swapPlayerModeSub.unsubscribe();

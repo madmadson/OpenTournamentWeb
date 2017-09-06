@@ -1,4 +1,7 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {WindowRefService} from '../../../service/window-ref-service';
 import {ArmyList} from '../../../../../shared/model/armyList';
 
@@ -16,7 +19,8 @@ import * as _ from 'lodash';
 @Component({
   selector: 'tournament-player-list',
   templateUrl: './tournament-player-list.component.html',
-  styleUrls: ['./tournament-player-list.component.scss']
+  styleUrls: ['./tournament-player-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TournamentPlayerListComponent implements OnInit, OnChanges  {
 

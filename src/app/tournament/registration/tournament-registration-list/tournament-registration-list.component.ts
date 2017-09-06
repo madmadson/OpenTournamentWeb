@@ -77,8 +77,6 @@ export class TournamentRegistrationListComponent implements OnInit, OnChanges {
       if (changes.hasOwnProperty(propName)) {
         const change = changes[propName];
         if (this.registrationDb && propName === 'registrations') {
-
-          // console.log('registrations: ' + JSON.stringify(change.currentValue))
           this.registrationDb.resetDatabase(change.currentValue);
         }
       }

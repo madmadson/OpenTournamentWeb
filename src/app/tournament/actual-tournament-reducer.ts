@@ -3,7 +3,7 @@ import {
   ADD_ACTUAL_TOURNAMENT_PLAYER_ACTION, ADD_ACTUAL_TOURNAMENT_RANKING_ACTION,
   ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION, ADD_ALL_ACTUAL_TOURNAMENT_ARMY_LISTS_ACTION,
   ADD_ALL_ACTUAL_TOURNAMENT_GAMES_ACTION,
-  ADD_ALL_ACTUAL_TOURNAMENT_PLAYERS_ACTION, ADD_ALL_ACTUAL_TOURNAMENT_RANKINGS_ACTION,
+  ADD_ALL_ACTUAL_TOURNAMENT_PLAYERS_ACTION, ADD_ALL_ACTUAL_TOURNAMENT_RANKINGS_ACTION, CHANGE_ACTUAL_TOURNAMENT_ACTION,
   CHANGE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION, CHANGE_ACTUAL_TOURNAMENT_GAME_ACTION,
   CHANGE_ACTUAL_TOURNAMENT_PLAYER_ACTION, CHANGE_ACTUAL_TOURNAMENT_RANKING_ACTION,
   CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION,
@@ -121,10 +121,9 @@ export function actualTournamentReducer(state = initialState, action): ActualTou
   switch (action.type) {
 
     case SET_ACTUAL_TOURNAMENT_ACTION:
-      return handleSetTournament(state, action);
-
+      return handleSetTournamentAction(state, action);
     case UNSET_ACTUAL_TOURNAMENT_ACTION:
-      return handleUnsetTournament(state);
+      return handleUnsetTournamentAction(state);
 
     // Registrations
     case ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
@@ -281,7 +280,7 @@ export function actualTournamentReducer(state = initialState, action): ActualTou
 
 // Tournament itself
 
-function handleSetTournament(state, action): ActualTournamentState {
+function handleSetTournamentAction(state, action): ActualTournamentState {
   const newState: ActualTournamentState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
@@ -291,7 +290,7 @@ function handleSetTournament(state, action): ActualTournamentState {
   return newState;
 }
 
-function handleUnsetTournament(state): ActualTournamentState {
+function handleUnsetTournamentAction(state): ActualTournamentState {
   const newState: ActualTournamentState = _.cloneDeep(state);
 
   newState.actualTournament = undefined;

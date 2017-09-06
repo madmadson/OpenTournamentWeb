@@ -30,11 +30,11 @@ import {GameResultService} from '../../game-result.service';
 
 
 @Component({
-  selector: 'tournament-round-overview',
-  templateUrl: './tournament-round-overview.component.html',
-  styleUrls: ['./tournament-round-overview.component.scss']
+  selector: 'tournament-ranking-overview',
+  templateUrl: './tournament-ranking-overview.component.html',
+  styleUrls: ['./tournament-ranking-overview.component.scss']
 })
-export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
+export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
 
   round: number;
 
@@ -252,9 +252,9 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  showRankingsOfRound() {
+  showGamesOfRound() {
 
-    this.router.navigate(['/tournament', this.actualTournament.id, 'round', (this.round ), 'rankings']);
+    this.router.navigate(['/tournament', this.actualTournament.id, 'round', (this.round )]);
 
   }
 

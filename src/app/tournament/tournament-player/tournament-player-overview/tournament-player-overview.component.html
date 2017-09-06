@@ -23,12 +23,7 @@
     <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
             md-menu-item
             (click)="router.navigate(['/tournament', actualTournament?.id, 'round', round]);">
-
       Go to -> Round {{index +1}}
-    </button>
-
-    <button *ngIf="actualTournament?.finished" md-menu-item>
-      Go to -> Final Rankings
     </button>
   </md-menu>
 </div>

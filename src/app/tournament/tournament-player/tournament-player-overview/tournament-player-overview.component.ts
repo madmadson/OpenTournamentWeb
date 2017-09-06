@@ -81,7 +81,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
     this.activeRouter.params.subscribe(
       params => {
-        this.tournamentService.subscribeOnFirebaseTournament(params['id']);
+        this.tournamentService.subscribeOnFirebase(params['id']);
         this.registrationService.subscribeOnFirebase(params['id']);
         this.tournamentPlayerService.subscribeOnFirebase(params['id']);
         this.armyListService.subscribeOnFirebase(params['id']);
@@ -143,7 +143,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.tournamentService.unsubscribeOnFirebaseTournament();
+    this.tournamentService.unsubscribeOnFirebase();
     this.registrationService.unsubscribeOnFirebase();
     this.tournamentPlayerService.unsubscribeOnFirebase();
     this.armyListService.unsubscribeOnFirebase();
@@ -325,8 +325,9 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
         config.round = 1;
         if (this.actualTournament.teamSize === 0) {
 
-          const newRankings: TournamentRanking[] = this.pairingService.pushRankingForFirstRound(this.allActualTournamentPlayers);
-          const success: boolean = this.pairingService.pushGamesForFirstRound(config, newRankings);
+          const newRankings: TournamentRanking[] =
+            this.pairingService.pushRankingForRound(config, this.allActualTournamentPlayers, []);
+          const success: boolean = this.pairingService.pushGamesForRound(config, newRankings);
 
           if (success) {
             this.tournamentService.startTournament(config);

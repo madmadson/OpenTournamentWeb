@@ -37,16 +37,6 @@ export class TournamentRankingService {
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<AppState>) {
 
-    this.store.select(state => state).subscribe(state => {
-      this.allPlayers = state.actualTournament.actualTournamentPlayers;
-      this.allTeams = state.actualTournament.actualTournamentTeams;
-      this.allPlayerRankings = state.actualTournament.actualTournamentRankings;
-      this.allTeamRankings = state.actualTournament.actualTournamentTeamRankings;
-      this.allGames = state.actualTournament.actualTournamentGames;
-      this.allTeamGames = state.actualTournament.actualTournamentTeamGames;
-      this.actualTournament = state.actualTournament.actualTournament;
-    });
-
   }
 
   public subscribeOnTournamentRankings(tournamentId: string) {

@@ -27,12 +27,12 @@ import {SwappingService} from "../../swapping.service";
 
 
 @Component({
-  selector: 'tournament-games',
-  templateUrl: './tournament-games.component.html',
-  styleUrls: ['./tournament-games.component.scss'],
+  selector: 'tournament-rankings',
+  templateUrl: './tournament-rankings.component.html',
+  styleUrls: ['./tournament-rankings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TournamentGamesComponent implements OnInit, OnChanges {
+export class TournamentRankingsComponent implements OnInit, OnChanges {
 
 
   @Input() isAdmin: boolean;

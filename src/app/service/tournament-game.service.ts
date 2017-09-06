@@ -44,18 +44,6 @@ export class TournamentGameService {
               protected store: Store<AppState>,
               protected rankingService: ActualTournamentRankingService) {
 
-    this.store.select(state => state).subscribe(state => {
-
-      this.actualTournament = state.actualTournament.actualTournament;
-      this.allRankings = state.actualTournament.actualTournamentRankings;
-      this.allTeamRankings = state.actualTournament.actualTournamentTeamRankings;
-      this.allTeamGames = state.actualTournament.actualTournamentTeamGames;
-      this.allPlayers = state.actualTournament.actualTournamentPlayers;
-      this.allTeams = state.actualTournament.actualTournamentTeams;
-      this.allGames = state.actualTournament.actualTournamentGames;
-      this.allRegistrations = state.actualTournament.actualTournamentRegisteredPlayers;
-
-    });
   }
 
 
@@ -136,14 +124,14 @@ export class TournamentGameService {
         newGame.playerTwoVictoryPoints = 38;
         newGame.finished = true;
 
-        that.rankingService.updateRankingAfterGameResultEntered(
-          {
-            gameBefore: newGame,
-            gameAfter: newGame
-          },
-          newGame.tournamentRound,
-          false
-        );
+        // that.rankingService.updateRankingAfterGameResultEntered(
+        //   {
+        //     gameBefore: newGame,
+        //     gameAfter: newGame
+        //   },
+        //   newGame.tournamentRound,
+        //   false
+        // );
 
       }
 
@@ -153,14 +141,14 @@ export class TournamentGameService {
         newGame.playerOneVictoryPoints = 38;
         newGame.finished = true;
 
-        that.rankingService.updateRankingAfterGameResultEntered(
-          {
-            gameBefore: newGame,
-            gameAfter: newGame
-          },
-          newGame.tournamentRound,
-          false
-        );
+        // that.rankingService.updateRankingAfterGameResultEntered(
+        //   {
+        //     gameBefore: newGame,
+        //     gameAfter: newGame
+        //   },
+        //   newGame.tournamentRound,
+        //   false
+        // );
       }
 
       tournamentGamesRef.push(newGame);
@@ -797,14 +785,14 @@ export class TournamentGameService {
           newTeamGame.tournamentRound,
           false
         );
-        that.rankingService.updateRankingAfterGameResultEntered(
-          {
-            gameBefore: emptyGameBefore,
-            gameAfter: newTeamGame
-          },
-          newTeamGame.tournamentRound,
-          false
-        );
+        // that.rankingService.updateRankingAfterGameResultEntered(
+        //   {
+        //     gameBefore: emptyGameBefore,
+        //     gameAfter: newTeamGame
+        //   },
+        //   newTeamGame.tournamentRound,
+        //   false
+        // );
       });
     }
 
@@ -843,14 +831,14 @@ export class TournamentGameService {
           false
         );
 
-        that.rankingService.updateRankingAfterGameResultEntered(
-          {
-            gameBefore: emptyGameBefore,
-            gameAfter: newTeamGame
-          },
-          newTeamGame.tournamentRound,
-          false
-        );
+        // that.rankingService.updateRankingAfterGameResultEntered(
+        //   {
+        //     gameBefore: emptyGameBefore,
+        //     gameAfter: newTeamGame
+        //   },
+        //   newTeamGame.tournamentRound,
+        //   false
+        // );
       });
     }
     if (teamMatch.playerOneTournamentPlayerId !== 'bye' && teamMatch.playerTwoTournamentPlayerId !== 'bye') {
@@ -1046,6 +1034,7 @@ export class TournamentGameService {
 
     const gameBefore = _.cloneDeep(playerGameToClear);
 
+
     playerGameToClear.playerOneScore = 0;
     playerGameToClear.playerOneControlPoints = 0;
     playerGameToClear.playerOneVictoryPoints = 0;
@@ -1058,14 +1047,14 @@ export class TournamentGameService {
 
     playerGameRef.update(playerGameToClear);
 
-    that.rankingService.updateRankingAfterGameResultEntered(
-      {
-        gameBefore: gameBefore,
-        gameAfter: playerGameToClear
-      },
-      playerGameToClear.tournamentRound,
-      true
-    );
+    // that.rankingService.updateRankingAfterGameResultEntered(
+    //   {
+    //     gameBefore: gameBefore,
+    //     gameAfter: playerGameToClear
+    //   },
+    //   playerGameToClear.tournamentRound,
+    //   true
+    // );
   }
 }
 

@@ -20,6 +20,7 @@ import {GlobalEventService} from 'app/service/global-event-service';
 import {getAllScenarios} from '../../../../shared/model/szenarios';
 import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
+import {GameResultDialogComponent} from '../../dialogs/game-result-dialog';
 
 
 @Component({
@@ -49,7 +50,6 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
   @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
 
   userPlayerData: Player;
-  currentUserId: string;
   armyLists$: Observable<ArmyList[]>;
 
   dragStarted: boolean;
@@ -140,7 +140,7 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
     this.draggedGame = game;
     this.dragStarted = true;
 
-    _.each(this.rankingsForRound, function (ranking: TournamentRanking) {
+    _.forEach(this.rankingsForRound, function (ranking: TournamentRanking) {
       if (ranking.tournamentPlayerId === game.playerOneTournamentPlayerId) {
         that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
       }
@@ -572,215 +572,3 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 }
 
 
-@Component({
-  selector: 'game-result-dialog',
-  templateUrl: './game-result-dialog.html',
-  styleUrls: ['./tournament-game-list.component.scss']
-})
-export class GameResultDialogComponent {
-
-  @Output() onGameResult = new EventEmitter<GameResult>();
-
-  gameModel: TournamentGame;
-  givenGame: TournamentGame;
-
-  gameConfig: GameConfig;
-
-  playerOneArmyLists: ArmyList[];
-  playerTwoArmyLists: ArmyList[];
-
-  sureButton: boolean;
-  isConnected: Observable<boolean>;
-
-  isAdmin: boolean;
-  isCoOrganizer: boolean;
-
-  constructor(public dialogRef: MdDialogRef<GameResultDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any,
-              private winRef: WindowRefService) {
-
-    const that = this;
-
-    // TODO make this generic
-    this.gameConfig = getWarmachineConfig();
-
-    this.givenGame = data.selectedGame;
-    this.isAdmin = data.isAdmin;
-    this.isCoOrganizer = data.isCoOrganizer;
-
-    this.gameModel = TournamentGame.fromJson(this.givenGame);
-
-    this.playerOneArmyLists = [];
-    this.playerTwoArmyLists = [];
-
-    this.isConnected = Observable.merge(
-      Observable.of(this.winRef.nativeWindow.navigator.onLine),
-      Observable.fromEvent(window, 'online').map(() => true),
-      Observable.fromEvent(window, 'offline').map(() => false));
-
-    data.armyLists$.subscribe((armyLists: ArmyList[]) => {
-
-      _.each(armyLists, function (list: ArmyList) {
-        if (list.tournamentPlayerId && list.tournamentPlayerId === data.selectedGame.playerOneTournamentPlayerId) {
-          that.playerOneArmyLists.push(list);
-        } else if (list.playerId && list.playerId === data.selectedGame.playerOnePlayerId) {
-          that.playerOneArmyLists.push(list);
-        } else if (list.tournamentPlayerId && list.tournamentPlayerId === data.selectedGame.playerTwoTournamentPlayerId) {
-          that.playerTwoArmyLists.push(list);
-        } else if (list.playerId && list.playerId === data.selectedGame.playerTwoPlayerId) {
-          that.playerTwoArmyLists.push(list);
-        }
-      });
-    });
-  }
-
-  playerOneWinChange() {
-    if (this.gameModel.playerOneScore) {
-      this.gameModel.playerTwoScore = 0;
-
-    }
-    this.sureButton = false;
-  }
-
-  playerTwoWinChange() {
-    if (this.gameModel.playerTwoScore) {
-      this.gameModel.playerOneScore = 0;
-    }
-    this.sureButton = false;
-  }
-
-
-  decreasePlayerOneCP() {
-    const actualCP = this.gameModel.playerOneControlPoints;
-    if (actualCP > this.gameConfig.points[1].min) {
-      this.gameModel.playerOneControlPoints = (this.gameModel.playerOneControlPoints - 1);
-    }
-  }
-
-  increasePlayerOneCP() {
-    const actualCP = this.gameModel.playerOneControlPoints;
-    if (actualCP < this.gameConfig.points[1].max) {
-      this.gameModel.playerOneControlPoints = (this.gameModel.playerOneControlPoints + 1);
-    }
-  }
-
-  correctPlayerOneCPInput() {
-    const actualCP = this.gameModel.playerOneControlPoints;
-    if (actualCP > this.gameConfig.points[1].max) {
-      this.gameModel.playerOneControlPoints = this.gameConfig.points[1].max;
-    }
-    if (actualCP < this.gameConfig.points[1].min) {
-      this.gameModel.playerOneControlPoints = this.gameConfig.points[1].min;
-    }
-  }
-
-  increasePlayerOneVP() {
-    const actualVP = this.gameModel.playerOneVictoryPoints;
-    if (actualVP < this.gameConfig.points[2].max) {
-      this.gameModel.playerOneVictoryPoints = (this.gameModel.playerOneVictoryPoints + 1);
-    }
-  }
-
-  decreasePlayerOneVP() {
-    const actualVP = this.gameModel.playerOneVictoryPoints;
-    if (actualVP > this.gameConfig.points[2].min) {
-      this.gameModel.playerOneVictoryPoints = (this.gameModel.playerOneVictoryPoints - 1);
-    }
-  }
-
-  correctPlayerOneVPInput() {
-    const actualVP = this.gameModel.playerOneVictoryPoints;
-    if (actualVP > this.gameConfig.points[2].max) {
-      this.gameModel.playerOneVictoryPoints = this.gameConfig.points[2].max;
-    }
-    if (actualVP < this.gameConfig.points[2].min) {
-      this.gameModel.playerOneVictoryPoints = this.gameConfig.points[2].min;
-    }
-  }
-
-  increasePlayerTwoCP() {
-    const actualCP = this.gameModel.playerTwoControlPoints;
-    if (actualCP < this.gameConfig.points[1].max) {
-      this.gameModel.playerTwoControlPoints = (this.gameModel.playerTwoControlPoints + 1);
-    }
-  }
-
-  decreasePlayerTwoCP() {
-    const actualCP = this.gameModel.playerTwoControlPoints;
-    if (actualCP > this.gameConfig.points[1].min) {
-      this.gameModel.playerTwoControlPoints = (this.gameModel.playerTwoControlPoints - 1);
-    }
-  }
-
-  correctPlayerTwoCPInput() {
-    const actualCP = this.gameModel.playerTwoControlPoints;
-    if (actualCP > this.gameConfig.points[1].max) {
-      this.gameModel.playerTwoControlPoints = this.gameConfig.points[1].max;
-    }
-    if (actualCP < this.gameConfig.points[1].min) {
-      this.gameModel.playerTwoControlPoints = this.gameConfig.points[1].min;
-    }
-  }
-
-  decreasePlayerTwoVP() {
-    const actualVP = this.gameModel.playerTwoVictoryPoints;
-    if (actualVP > this.gameConfig.points[2].min) {
-      this.gameModel.playerTwoVictoryPoints = (this.gameModel.playerTwoVictoryPoints - 1);
-    }
-  }
-
-  increasePlayerTwoVP() {
-    const actualVP = this.gameModel.playerTwoVictoryPoints;
-    if (actualVP < this.gameConfig.points[2].max) {
-      this.gameModel.playerTwoVictoryPoints = (this.gameModel.playerTwoVictoryPoints + 1);
-    }
-  }
-
-  correctPlayerTwoVPInput() {
-    const actualVP = this.gameModel.playerTwoVictoryPoints;
-    if (actualVP > this.gameConfig.points[2].max) {
-      this.gameModel.playerTwoVictoryPoints = this.gameConfig.points[2].max;
-    }
-    if (actualVP < this.gameConfig.points[2].min) {
-      this.gameModel.playerTwoVictoryPoints = this.gameConfig.points[2].min;
-    }
-  }
-
-
-  enterGameResultSubmitted() {
-
-    if (this.gameModel.playerOneScore === 0 && this.gameModel.playerTwoScore === 0) {
-      this.sureButton = true;
-    } else {
-      this.pushGameResult();
-    }
-  }
-
-  private pushGameResult() {
-    this.gameModel.id = this.givenGame.id;
-    this.gameModel.finished = true;
-
-    if (!this.gameModel.playerOneVictoryPoints) {
-      this.gameModel.playerOneVictoryPoints = 0;
-    }
-    if (!this.gameModel.playerOneControlPoints) {
-      this.gameModel.playerOneControlPoints = 0;
-    }
-    if (!this.gameModel.playerTwoVictoryPoints) {
-      this.gameModel.playerTwoVictoryPoints = 0;
-    }
-    if (!this.gameModel.playerTwoVictoryPoints) {
-      this.gameModel.playerTwoVictoryPoints = 0;
-    }
-
-    if (this.gameModel.playerOneScore) {
-      this.gameModel.playerOneScore = 1;
-    }
-    if (this.gameModel.playerTwoScore) {
-      this.gameModel.playerTwoScore = 1;
-    }
-
-    this.onGameResult.emit({gameBefore: this.givenGame, gameAfter: this.gameModel});
-
-  }
-}

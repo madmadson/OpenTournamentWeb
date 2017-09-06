@@ -1,13 +1,13 @@
 <h3 class="heading" *ngIf="(!isAdmin && !isCoOrganizer) &&
-            (actualTournament.actualRound > actualTournament.visibleRound) &&
-            (round === actualTournament.actualRound)">
+            (actualTournament?.actualRound > actualTournament?.visibleRound) &&
+            (round === actualTournament?.actualRound)">
   Tournament Organizer is pairing.
   Page will reload when he publish the new round.
 </h3>
 
 <div *ngIf="(isAdmin || isCoOrganizer)  &&
-            (round === actualTournament.actualRound) &&
-             !actualTournament.finished && !rankingsFullscreenMode && !gamesFullscreenMode && !swapPlayerMode"
+            (round === actualTournament?.actualRound) &&
+             !actualTournament?.finished && !rankingsFullscreenMode && !gamesFullscreenMode && !swapPlayerMode"
      class="action-card-container">
   <md-card class="action-card">
     <div class="action-button-wrapper">
@@ -37,7 +37,7 @@
         End Tournament
       </button>
 
-      <button *ngIf="actualTournament.visibleRound < actualTournament.actualRound"
+      <button *ngIf="actualTournament?.visibleRound < actualTournament?.actualRound"
               (click)="publishRound()"
               type="button"
               class="color-positive-background action-button"
@@ -57,7 +57,7 @@
   </md-card>
 </div>
 <div class="content-cards-container" *ngIf="(isAdmin) ||
-            (!isAdmin && !isCoOrganizer && (round <= actualTournament.visibleRound))">
+            (!isAdmin && !isCoOrganizer && (round <= actualTournament?.visibleRound))">
   <md-card *ngIf="!rankingsFullscreenMode" class="games-for-round-card">
     <h3 class="heading">Games Round {{round}}</h3>
     <mdl-icon (click)="printGames()" mdTooltip="Print Games" class="print-games-icon">print</mdl-icon>

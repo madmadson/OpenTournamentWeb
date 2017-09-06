@@ -1,0 +1,111 @@
+@import '../../styles';
+
+
+.game-result-table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+.game-result-table th {
+
+  text-align: center;
+  border: 1px solid black;
+}
+
+.game-result-table td {
+
+  border: 1px solid black;
+
+  text-align:center;
+  vertical-align:middle;
+}
+
+.game-result-button {
+  min-width:36px;
+  max-width:36px;
+  font-size:48px;
+  margin-top: $main_tick;
+}
+
+.add-button{
+  color: $success_color;
+}
+
+.remove-button {
+  color: $fail_color;
+}
+
+.game-result-input{
+  height: 20px;
+  width: 40px;
+  margin-left: $main_tick;
+  font-size:24px;
+  padding-bottom: $main_tick;
+}
+
+game-result-card-divider{
+  font-weight: bold;
+  text-align: center;
+  margin-right: $main_tick;
+  margin-left: $main_tick;
+}
+
+@media only screen and (max-width: 800px) {
+  .game-result-card-divider {
+    width: 100%;
+  }
+}
+
+.card-won {
+  background: #AEFFAE;
+}
+
+.card-not-won {
+  background: #FDCDC6;
+}
+
+.game-result-container{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+@media only screen and (min-width: 800px) {
+  .game-result-container{
+    flex-flow:row nowrap;
+  }
+}
+
+.game-result-card{
+  width: 300px;
+}
+
+//@media only screen and (min-width: 1200px) {
+//  .game-result-card {
+//    width: 400px;
+//  }
+//}
+
+.game-result-card-line{
+  display: flex;
+  flex-flow:row wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.player-score-switch{
+  width: auto !important;
+}
+
+.score-heading-label{
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: bold;
+  width: 100%;
+}
+
+.mat-input-wrapper{
+  padding-bottom: 0 !important;
+}

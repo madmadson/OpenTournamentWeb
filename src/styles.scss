@@ -3,6 +3,7 @@
 
 $light_success_color: #8bd683;
 $success_color: #388E3C;
+$light_fail_color: #ff4e3d;
 $fail_color: #FF1501;
 $color_info: deepskyblue;
 $hover_color: #1e05ff;
@@ -17,6 +18,10 @@ $quarter_tick: 3px;
 $small-icon-size: 2em;
 $medium-icon-size: 3em;
 $big-icon-size: 4em;
+
+$small-text-size: 0.7em;
+$big-text-size: 1.3em;
+$mega-text-size: 1.6em;
 
 body {
   margin: 0;
@@ -45,6 +50,11 @@ a:hover {
 .clickable-icon:hover {
   cursor: pointer;
   color: deepskyblue;
+}
+
+.clickable-row:hover{
+  background-color: deepskyblue;
+  cursor: pointer;
 }
 
 .dark-primary-color {
@@ -194,15 +204,13 @@ button:hover {
 
 .color-secondary {
   color: $color_secondary;
-}
+}bu
 
 .color-info {
   color: $color_info;
 }
 
-.small-text {
-  font-size: 0.7em;
-}
+
 
 .zero-line-height {
   line-height: 100%;
@@ -248,6 +256,9 @@ md-card {
 .margin-right {
   margin-right: $double_tick;
 }
+.margin-top {
+  margin-top: $double_tick;
+}
 
 .restriction-section {
   display: flex;
@@ -255,8 +266,18 @@ md-card {
   align-items: center;
 }
 
+.small-text {
+  font-size: $small-text-size;
+  line-height: $main_tick;
+}
+
 .big-text {
-  font-size: 1.8em;
+  font-weight: bold;
+}
+
+.mega-text {
+  font-size: $mega-text-size;
+  font-weight: bold;
 }
 
 .full-width-select-box {
@@ -269,6 +290,13 @@ md-card {
   margin-bottom: 6px !important;
   margin-left: 6px !important;
   margin-top: 6px !important;
+}
+
+.small-button {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 36px;
+  min-width: 36px;
 }
 
 .big-button {
