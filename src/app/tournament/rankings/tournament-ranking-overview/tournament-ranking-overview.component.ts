@@ -47,12 +47,7 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
   allTournamentPlayers$: Observable<TournamentPlayer[]>;
   allActualTournamentPlayers: TournamentPlayer[];
 
-  allTournamentGames$: Observable<TournamentGame[]>;
-  allTournamentGames: TournamentGame[];
-  gamesForRound$: Observable<TournamentGame[]>;
-  finishedGamesForRound$: Observable<TournamentGame[]>;
-  unfinishedGamesForRound$: Observable<TournamentGame[]>;
-  loadGames$: Observable<boolean>;
+  loadRanking$: Observable<boolean>;
 
   allTournamentRankings$: Observable<TournamentRanking[]>;
   allTournamentRankings: TournamentRanking[];
@@ -60,17 +55,8 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
 
   allArmyLists$: Observable<ArmyList[]>;
 
-  allGamesFinished: boolean;
-  allGamesUntouched: boolean;
-
-  gamesFullscreenMode: boolean;
-  rankingsFullscreenMode: boolean;
   swapPlayerMode: boolean;
-
-  gamesTableMode: boolean;
   smallScreen: boolean;
-
-  showOnlyMyGameState: boolean;
 
   isAdmin: boolean;
   isCoOrganizer: boolean;
@@ -79,8 +65,6 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
   private actualTournamentSub: Subscription;
   private userPlayerDataSub: Subscription;
   private allActualTournamentPlayersSub: Subscription;
-  private allActualTournamentGamesSub: Subscription;
-  private allActualTournamentRankingsSub: Subscription;
 
   constructor(private snackBar: MdSnackBar,
               private dialog: MdDialog,
@@ -88,9 +72,6 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
               private armyListService: ActualTournamentArmyListService,
               private tournamentPlayerService: ActualTournamentPlayerService,
               private rankingService: ActualTournamentRankingService,
-              private gamesService: ActualTournamentGamesService,
-              private pairingService: PairingService,
-              private gameResultService: GameResultService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
               private router: Router) {
@@ -103,30 +84,19 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
         this.tournamentPlayerService.subscribeOnFirebase(params['id']);
         this.armyListService.subscribeOnFirebase(params['id']);
         this.rankingService.subscribeOnFirebase(params['id']);
-        this.gamesService.subscribeOnFirebase(params['id']);
       }
     );
 
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
     this.allTournamentPlayers$ = this.store.select(state => state.actualTournament.actualTournamentPlayers);
-    this.allTournamentGames$ = this.store.select(state => state.actualTournament.actualTournamentGames);
     this.allTournamentRankings$ = this.store.select(state => state.actualTournament.actualTournamentRankings);
     this.allArmyLists$ = this.store.select(state => state.actualTournament.actualTournamentArmyLists);
-
-    this.gamesForRound$ = this.allTournamentGames$.map(
-      games => games.filter(t => t.tournamentRound === this.round));
-
-    this.finishedGamesForRound$ = this.allTournamentGames$.map(
-      games => games.filter(t => t.tournamentRound === this.round && t.finished));
-
-    this.unfinishedGamesForRound$ = this.allTournamentGames$.map(
-      games => games.filter(t => t.tournamentRound === this.round && !t.finished));
 
     this.rankingsForRound$ = this.allTournamentRankings$.map(
       rankings => rankings.filter(r => r.tournamentRound === this.round));
 
-    this.loadGames$ = this.store.select(state => state.actualTournament.loadGames);
+    this.loadRanking$ = this.store.select(state => state.actualTournament.loadRankings);
 
   }
 
@@ -149,14 +119,6 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
       this.allActualTournamentPlayers = allTournamentPlayers;
     });
 
-    this.allActualTournamentGamesSub = this.allTournamentGames$.subscribe((allTournamentGames: TournamentGame[]) => {
-      this.allTournamentGames = allTournamentGames;
-    });
-
-    this.allActualTournamentRankingsSub = this.allTournamentRankings$.subscribe((rankings: TournamentRanking[]) => {
-      this.allTournamentRankings = rankings;
-    });
-
   }
 
   ngOnDestroy() {
@@ -165,13 +127,10 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
     this.tournamentPlayerService.unsubscribeOnFirebase();
     this.armyListService.unsubscribeOnFirebase();
     this.rankingService.unsubscribeOnFirebase();
-    this.gamesService.unsubscribeOnFirebase();
 
     this.actualTournamentSub.unsubscribe();
     this.userPlayerDataSub.unsubscribe();
     this.allActualTournamentPlayersSub.unsubscribe();
-    this.allActualTournamentGamesSub.unsubscribe();
-    this.allActualTournamentRankingsSub.unsubscribe();
   }
 
   getArrayForNumber(round: number): number[] {
@@ -218,39 +177,7 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  openKillRoundDialog() {
-    const dialogRef = this.dialog.open(KillRoundDialogComponent, {
-      data: {
-        round: this.round
-      },
-      width: '600px',
-    });
-    const eventSubscribe = dialogRef.componentInstance.onKillRound
-      .subscribe((config: TournamentManagementConfiguration) => {
 
-        if (config !== undefined) {
-          config.tournamentId = this.actualTournament.id;
-          config.round = this.round;
-          this.pairingService.killRound(config);
-
-          this.snackBar.open('Round ' + config.round + ' successfully killed with fire!', '', {
-            extraClasses: ['snackBar-success'],
-            duration: 5000
-          });
-
-          if (this.round === 1) {
-            this.router.navigate(['/tournament', this.actualTournament.id, 'players']);
-          } else {
-            this.router.navigate(['/tournament', this.actualTournament.id, 'round', (this.round - 1)]);
-          }
-
-        }
-      });
-    dialogRef.afterClosed().subscribe(() => {
-
-      eventSubscribe.unsubscribe();
-    });
-  }
 
   showGamesOfRound() {
 
@@ -258,74 +185,7 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
 
   }
 
-  publishRound() {
-    this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
-    this.snackBar.open('Round ' + this.round + ' successfully published', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
-  }
 
-  openPairAgainDialog() {
-    const dialogRef = this.dialog.open(PairAgainDialogComponent, {
-      data: {
-        round: this.round,
-        teamMatch: false
-      },
-      width: '600px',
-    });
-    const eventSubscribe = dialogRef.componentInstance.onPairAgain
-      .subscribe((config: TournamentManagementConfiguration) => {
-
-        if (config !== undefined) {
-          config.tournamentId = this.actualTournament.id;
-          config.round = this.round;
-          this.pairingService.pairRoundAgain(config, this.allActualTournamentPlayers, this.allTournamentRankings);
-        }
-      });
-    dialogRef.afterClosed().subscribe(() => {
-
-      eventSubscribe.unsubscribe();
-    });
-  }
-
-
-  handleClearPlayerGameResult(game: TournamentGame) {
-
-    const clearedGame = clearTournamentGame(game);
-
-    this.gamesService.updatePlayerMatch(game);
-
-    this.rankingService.updateRankingAfterGameResultEntered({
-      gameResult: {
-        gameBefore: game,
-        gameAfter: clearedGame
-      },
-      actualTournament: this.actualTournament,
-      allRankings: this.allTournamentRankings,
-      allGames: this.allTournamentGames,
-      reset: true
-    });
-
-    this.snackBar.open('Game cleared successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
-  }
-
-  handleGameResultEntered(gameResult: GameResult) {
-
-    this.gameResultService.gameResultEntered(
-      gameResult,
-      this.actualTournament,
-      this.allTournamentRankings,
-      this.allTournamentGames);
-
-    this.snackBar.open('GameResult entered successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
-  }
 }
 
 

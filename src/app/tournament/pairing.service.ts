@@ -116,7 +116,7 @@ export class PairingService {
 
         _.forEach(newRankings, function (ranking: TournamentRanking) {
 
-          if (ranking.playerId === newGame.playerTwoPlayerId) {
+          if (ranking.tournamentPlayerId === newGame.playerTwoTournamentPlayerId) {
             const playerTwoRankingRef = that.afoDatabase
               .object('tournament-rankings/' + newGame.tournamentId + '/' + ranking.id);
             playerTwoRankingRef.update(
@@ -137,7 +137,7 @@ export class PairingService {
 
         _.forEach(newRankings, function (ranking: TournamentRanking) {
 
-          if (ranking.playerId === newGame.playerOnePlayerId) {
+          if (ranking.tournamentPlayerId === newGame.playerOneTournamentPlayerId) {
             const playerOneRankingRef = that.afoDatabase
               .object('tournament-rankings/' + newGame.tournamentId + '/' + ranking.id);
             playerOneRankingRef.update(

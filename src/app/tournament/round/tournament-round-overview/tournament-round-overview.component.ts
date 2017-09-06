@@ -294,18 +294,15 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
     const clearedGame = clearTournamentGame(game);
 
-    this.gamesService.updatePlayerMatch(game);
-
-    this.rankingService.updateRankingAfterGameResultEntered({
-      gameResult: {
+    this.gameResultService.gameResultEntered(
+      {
         gameBefore: game,
         gameAfter: clearedGame
       },
-      actualTournament: this.actualTournament,
-      allRankings: this.allTournamentRankings,
-      allGames: this.allTournamentGames,
-      reset: true
-    });
+      this.actualTournament,
+      this.allTournamentRankings,
+      this.allTournamentGames
+    );
 
     this.snackBar.open('Game cleared successfully', '', {
       extraClasses: ['snackBar-success'],

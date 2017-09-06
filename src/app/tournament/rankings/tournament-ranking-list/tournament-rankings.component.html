@@ -7,177 +7,65 @@
   <md-icon>play_arrow</md-icon>
   AutoScroll
 </button>
-<div class="game-table-container mat-elevation-z8">
+<div class="ranking-table-container mat-elevation-z8">
   <md-table #table [dataSource]="dataSource" mdSort>
 
-    <ng-container cdkColumnDef="playingField">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="playing-field-column">
-        Table
-      </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="playing-field-column">
-        {{game.playingField}}
-      </md-cell>
-    </ng-container>
-
-    <ng-container cdkColumnDef="playerOnePlayerName" *ngIf="actualTournament?.teamSize > 0">
+    <ng-container cdkColumnDef="playerName">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
-        Team 1
+        Player
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="player-column right-align"
-               [ngClass]="{'game-table-won': (playerOneWon(game)),'game-table-lost': (playerTwoWon(game))}">
-        <div class="big-text">{{game.playerOnePlayerName | truncate:truncateMax}}</div>
-        <div class="small-text">
-          (SC:{{game.playerOneScore}}/CP:{{game.playerOneControlPoints}}/VP:{{game.playerOneVictoryPoints}})
-        </div>
-      </md-cell>
-    </ng-container>
-
-    <ng-container cdkColumnDef="playerOnePlayerName" *ngIf="actualTournament?.teamSize === 0">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
-        <div>Player 1</div>
-      </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="player-column right-align"
-               [ngClass]="{
-               'game-table-won': (playerOneWon(game)),
-               'game-table-lost': (playerTwoWon(game)),
-               'drag-started':  draggedTournamentPlayerId === game.playerOneTournamentPlayerId,
-               'drop-possible': draggedTournamentPlayerId && dropPossible(game, game.playerOneTournamentPlayerId),
-               'drop-not-possible':  draggedTournamentPlayerId && !dropPossible(game, game.playerOneTournamentPlayerId)
-               }"
-               (click)="confirmDropPlayer($event, game, game.playerOneTournamentPlayerId)">
-        <div class="big-text">{{game.playerOnePlayerName | truncate:truncateMax}}</div>
-        <div class="small-text">
-          (SC:{{game.playerOneScore}}/CP:{{game.playerOneControlPoints}}/VP:{{game.playerOneVictoryPoints}})
-          {{game.playerOneArmyList | truncate:truncateMax}}
-        </div>
+      <md-cell *cdkCellDef="let ranking" class="player-column">
+        {{ranking.playerName}}
       </md-cell>
     </ng-container>
 
 
-    <ng-container cdkColumnDef="swapPlayerOne">
-      <md-header-cell *cdkHeaderCellDef class="swap-column">
+    <ng-container cdkColumnDef="score">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="score-column">
+        Score
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="swap-column">
-        <md-icon *ngIf="!game.finished && !draggedTournamentPlayerId "
-                 (click)="swapPlayerOne($event, game)"
-                 mdTooltip="Swap Player {{game.playerOnePlayerName}}"
-                 class="swap-player-icon">swap_vert
-        </md-icon>
-
-        <md-icon *ngIf="draggedTournamentPlayerId === game.playerOneTournamentPlayerId"
-                 (click)="endSwapPlayer($event, game)"
-                 mdTooltip="Cancel swap"
-                 class="cancel-swap-player-icon">cancel
-        </md-icon>
+      <md-cell *cdkCellDef="let ranking" class="score-column">
+        {{ranking.score}}
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="vs">
-      <md-header-cell *cdkHeaderCellDef class="vs-column">
+    <ng-container cdkColumnDef="sos">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="sos-column">
+        SoS
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="vs-column">VS</md-cell>
-    </ng-container>
-
-    <ng-container cdkColumnDef="swapPlayerTwo">
-      <md-header-cell *cdkHeaderCellDef class="swap-column">
-      </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="swap-column">
-        <md-icon *ngIf="!game.finished && !draggedTournamentPlayerId "
-                 (click)="swapPlayerTwo($event, game)"
-                 mdTooltip="Swap Player {{game.playerTwoPlayerName}}"
-                 class="swap-player-icon">swap_vert
-        </md-icon>
-
-        <md-icon *ngIf="draggedTournamentPlayerId === game.playerTwoTournamentPlayerId"
-                 (click)="endSwapPlayer($event, game)"
-                 mdTooltip="Cancel swap"
-                 class="cancel-swap-player-icon">cancel
-        </md-icon>
+      <md-cell *cdkCellDef="let ranking" class="sos-column">
+        {{ranking.sos}}
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="playerTwoPlayerName" *ngIf="actualTournament?.teamSize === 0">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
-        Player 2
+    <ng-container cdkColumnDef="cp">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="cp-column">
+        CP
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="player-column"
-               [ngClass]="{
-               'game-table-won': (playerTwoWon(game)),
-               'game-table-lost': (playerOneWon(game)),
-               'drag-started': draggedTournamentPlayerId === game.playerTwoTournamentPlayerId,
-               'drop-possible':draggedTournamentPlayerId && dropPossible(game, game.playerTwoTournamentPlayerId),
-               'drop-not-possible': draggedTournamentPlayerId && !dropPossible(game, game.playerTwoTournamentPlayerId)
-               }"
-               (click)="confirmDropPlayer($event, game, game.playerTwoTournamentPlayerId)">
-        <div class="big-text">{{game.playerTwoPlayerName | truncate:truncateMax}}</div>
-        <div class="small-text">
-          (SC:{{game.playerTwoScore}}/CP:{{game.playerTwoControlPoints}}/VP:{{game.playerTwoVictoryPoints}})
-        </div>
-        <div class="small-text">
-          {{game.playerTwoArmyList | truncate:truncateMax}}
-        </div>
+      <md-cell *cdkCellDef="let ranking" class="sos-column">
+        {{ranking.controlPoints}}
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="playerTwoPlayerName" *ngIf="actualTournament?.teamSize > 0">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
-        Team 2
+    <ng-container cdkColumnDef="vp">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="vp-column">
+        VP
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="player-column"
-               [ngClass]="{'game-table-won': (playerOneWon(game)),'game-table-lost': (playerTwoWon(game))}">
-        <div class="big-text">{{game.playerTwoPlayerName | truncate:truncateMax}}</div>
-        <div class="small-text">
-          (SC:{{game.playerTwoScore}}/CP:{{game.playerTwoControlPoints}}/VP:{{game.playerTwoVictoryPoints}})
-        </div>
+      <md-cell *cdkCellDef="let ranking" class="vp-column">
+        {{ranking.victoryPoints}}
       </md-cell>
     </ng-container>
-    <ng-container cdkColumnDef="actions" >
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="actions-column">
-        <ng-container *ngIf="(isAdmin || isCoOrganizer)">Action</ng-container>
-      </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="actions-column">
-        <div>
-          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && !swapPlayerMode  && !requestClearGame"
-                  (click)="requestClearGameResult($event, game)"
-                  class="color-negative-background"
-                  [ngClass]="{'small-button': smallScreen}"
-                  md-raised-button>
-            <md-icon>clear</md-icon>
-            <ng-container *ngIf="!smallScreen">Reset</ng-container>
-          </button>
 
-          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && !swapPlayerMode &&  requestClearGame === game.id"
-                  (click)="clearGameResultConfirm($event, game)"
-                  class="color-positive-background"
-                  [ngClass]="{'small-button': smallScreen}"
-                  md-raised-button>
-            <md-icon>check</md-icon>
-            <ng-container *ngIf="!smallScreen">ok</ng-container>
-          </button>
-          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && !swapPlayerMode &&  requestClearGame === game.id"
-                  (click)="clearGameResultDecline($event, game)"
-                  class="color-negative-background"
-                  [ngClass]="{'small-button': smallScreen}"
-                  md-raised-button>
-            <md-icon>clear</md-icon>
-            <ng-container *ngIf="!smallScreen">no</ng-container>
-          </button>
-        </div>
-      </md-cell>
-    </ng-container>
 
     <ng-container>
       <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
-      <md-row *cdkRowDef="let game; columns: displayedColumns;"
-              [ngClass]="{'even': even,
-                          'my-item':isItMyGame(game),
-                          'clickable-row': (!draggedTournamentPlayerId && (isItMyGame(game) || isAdmin || isCoOrganizer) &&  !actualTournament?.finished)}"
-              (click)="openGameResultDialog(game)">
+      <md-row *cdkRowDef="let ranking; columns: displayedColumns;"
+              [ngClass]="{'even': even}">
       </md-row>
     </ng-container>
   </md-table>
   <md-paginator #paginator
-                [length]="gamesDb?.data.length"
+                [length]="rankingsDb?.data.length"
                 [pageIndex]="0"
                 [pageSize]="100"
                 [pageSizeOptions]="[10, 25, 50, 100]">

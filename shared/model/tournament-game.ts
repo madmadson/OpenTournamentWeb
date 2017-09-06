@@ -105,9 +105,9 @@ export class TournamentGame {
   }
 }
 
-export function clearTournamentGame(playerGameToClear: TournamentGame): TournamentGame {
+export function clearTournamentGame(gameBefore: TournamentGame): TournamentGame {
 
-  const gameBefore = _.cloneDeep(playerGameToClear);
+  const playerGameToClear = _.cloneDeep(gameBefore);
 
   playerGameToClear.playerOneScore = 0;
   playerGameToClear.playerOneControlPoints = 0;
@@ -119,5 +119,5 @@ export function clearTournamentGame(playerGameToClear: TournamentGame): Tourname
   playerGameToClear.playerTwoArmyList = '';
   playerGameToClear.finished = false;
 
-  return gameBefore;
+  return playerGameToClear;
 }

@@ -1,6 +1,5 @@
 import {
-  AfterContentChecked, ChangeDetectionStrategy,
-  Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild, SimpleChanges, OnChanges
+  ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild, SimpleChanges, OnChanges
 } from '@angular/core';
 
 
@@ -11,18 +10,16 @@ import {TournamentGame} from '../../../../../shared/model/tournament-game';
 import {ScenarioSelectedModel} from '../../../../../shared/dto/scenario-selected-model';
 import {SwapGames} from '../../../../../shared/dto/swap-player';
 import {GameResult} from '../../../../../shared/dto/game-result';
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
+import { MdDialog, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
 import {WindowRefService} from '../../../service/window-ref-service';
 import {GlobalEventService} from '../../../service/global-event-service';
-import {getAllScenarios} from '../../../../../shared/model/szenarios';
 import {ArmyList} from '../../../../../shared/model/armyList';
 import {Player} from '../../../../../shared/model/player';
-import {GameConfig, getWarmachineConfig} from '../../../../../shared/dto/game-config';
 import {GamesDatabase, GamesDataSource} from '../../../../../shared/table-model/game';
 import {PageScrollInstance, PageScrollService} from 'ng2-page-scroll';
 import {DOCUMENT} from '@angular/common';
 import {GameResultDialogComponent} from '../../../dialogs/game-result-dialog';
-import {SwappingService} from "../../swapping.service";
+import {SwappingService} from '../../swapping.service';
 
 
 
@@ -57,9 +54,6 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
   onReachBottomOfPageEvent: EventEmitter<boolean>;
   onReachTopOfPageEvent: EventEmitter<boolean>;
 
-
-  dragStarted: boolean;
-  draggedGameTeamName: string;
   draggedTournamentPlayerCurrentOpponentId: string;
 
   draggedGame: TournamentGame;

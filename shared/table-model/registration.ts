@@ -40,8 +40,6 @@ export class RegistrationDatabase {
 
 export class RegistrationsDataSource extends DataSource<Registration> {
 
-
-
   constructor(private _registrationsDatabase: RegistrationDatabase, private _sort: MdSort, private _paginator: MdPaginator) {
     super();
   }

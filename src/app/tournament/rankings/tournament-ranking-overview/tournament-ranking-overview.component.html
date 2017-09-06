@@ -62,25 +62,20 @@
   </div>
 
   <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
-    <ng-container *ngIf="(loadGames$ | async)">
+    <ng-container *ngIf="(loadRanking$ | async)">
       <div class="heading">Load Rankings...</div>
       <div class="loading-spinner-container">
         <md-spinner></md-spinner>
       </div>
     </ng-container>
 
-    <tournament-rankings *ngIf="(gamesForRound$ | async).length > 0 && actualTournament"
+    <tournament-rankings *ngIf="(rankingsForRound$ | async).length > 0 && actualTournament"
                       [isAdmin]="isAdmin"
                       [isCoOrganizer]="isCoOrganizer"
                       [actualTournament]="actualTournament"
-                      [gamesForRound]="gamesForRound$ | async"
                       [rankingsForRound]="rankingsForRound$ | async"
                       [armyLists]="allArmyLists$ | async"
-                      [userPlayerData]="userPlayerData"
-                      (onGameResultEntered)="handleGameResultEntered($event)"
-                      (onDeletePlayer)="handleDeletePlayer($event)"
-                      (onAddArmyLists)="handleAddArmyLists($event)"
-                      (onClearPlayerGameResult)="handleClearPlayerGameResult($event)">
+                      [userPlayerData]="userPlayerData">
     </tournament-rankings>
   </ng-container>
 </ng-container>

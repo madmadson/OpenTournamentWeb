@@ -1,86 +1,43 @@
 @import "../../../../styles";
 
-.game-table-container{
+.ranking-table-container{
   margin: $halve_tick;
 }
 
 @media only screen and (min-width: 500px) {
-  .game-table-container{
+  .ranking-table-container{
     min-width: 450px;
 
   }
 }
 
 @media only screen and (min-width: 800px) {
-  .game-table-container{
+  .ranking-table-container{
     min-width: 600px;
 
   }
-}
-
-.playing-field-column{
-  flex: 1;
 }
 
 .player-column{
   flex: 5;
 }
 
-.actions-column{
-  flex: 2;
-}
-
-.swap-column{
+.score-column{
   flex: 1;
-  text-align: center;
-  margin-left: $halve_tick;
-  margin-right: $halve_tick;
 }
 
-.vs-column{
+.sos-column{
   flex: 1;
-  text-align: center;
-  margin-left: $halve_tick;
-  margin-right: $halve_tick;
 }
 
-.right-align{
-  text-align: right;
+.cp-column{
+  flex: 1;
 }
 
-md-header-cell.mat-column-playerOnePlayerName {
-  display: flex;
-  text-align: right;
-  justify-content: flex-end;
+.vp-column{
+  flex: 1;
 }
 
-.game-table-won {
-  color:  $success_color;
-}
-
-.game-table-lost {
-  color: $fail_color;
-}
-
-.action-icon{
-  top: 5px;
-  left: 5px;
-  font-size: $small-icon-size;
-}
-.action-icon:hover{
-  color: blue;
-  cursor: pointer;
-}
-
-.clear-game-icon {
-  color: $fail_color;
-}
-.okay-icon {
-  color: $success_color;
-}
-.no-icon {
-  color: $fail_color;
-}
 
 .mat-header-row{
   padding-left: $main_tick;
@@ -91,31 +48,3 @@ md-header-cell.mat-column-playerOnePlayerName {
   padding-left: $main_tick;
   padding-right: $main_tick;
 }
-
-.swap-player-icon{
-  font-size: $small-icon-size;
-}
-
-.cancel-swap-player-icon {
-  color: $fail_color;
-}
-
-.drag-started{
-  border: 2px dashed $hover_color;
-}
-
-.drop-possible{
-  opacity: 0.7;
-  box-shadow: 0 0 0 2px black;
-  background-color: $success_color;
-  color: black;
-}
-
-.drop-not-possible{
-  opacity: 0.4;
-  box-shadow: 0 0 0 2px black;
-  background-color: $fail_color;
-  color: black;
-}
-
-

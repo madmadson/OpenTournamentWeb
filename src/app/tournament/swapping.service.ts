@@ -48,13 +48,13 @@ export class SwappingService {
 
       _.forEach(rankingsForRound, function (ranking: TournamentRanking) {
 
-        if (ranking.playerId === game.playerTwoPlayerId) {
+        if (ranking.tournamentPlayerId === game.playerTwoTournamentPlayerId) {
           const playerTwoRankingRef = that.afoDatabase
             .object('tournament-rankings/' + game.tournamentId + '/' + ranking.id);
           playerTwoRankingRef.update(
             {
               score: (ranking.score + 1),
-              controlPoints: (ranking.controlPoints + 1),
+              controlPoints: (ranking.controlPoints + 3),
               victoryPoints: (ranking.controlPoints + 38),
             });
         }
@@ -74,13 +74,13 @@ export class SwappingService {
 
       _.forEach(rankingsForRound, function (ranking: TournamentRanking) {
 
-        if (ranking.playerId === game.playerOnePlayerId) {
+        if (ranking.tournamentPlayerId === game.playerOneTournamentPlayerId) {
           const playerTwoRankingRef = that.afoDatabase
             .object('tournament-rankings/' + game.tournamentId + '/' + ranking.id);
           playerTwoRankingRef.update(
             {
               score: (ranking.score + 1),
-              controlPoints: (ranking.controlPoints + 1),
+              controlPoints: (ranking.controlPoints + 3),
               victoryPoints: (ranking.controlPoints + 38),
             });
         }
