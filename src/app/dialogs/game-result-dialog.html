@@ -15,7 +15,7 @@
       signal_wifi_off
     </md-icon>
   </span>
-  <md-select class="full-width margin-top" placeholder="Winner" [(ngModel)]="selectedWinner" floatPlaceholder="always">
+  <md-select class="full-width margin-top" placeholder="Winner" (change)="changeWinner()" [(ngModel)]="selectedWinner" floatPlaceholder="always">
     <md-option [value]="1">{{givenGame.playerOnePlayerName | truncate: truncateMax}}</md-option>
     <md-option [value]="2">{{givenGame.playerTwoPlayerName | truncate: truncateMax}}</md-option>
     <md-option [value]="0">DRAW</md-option>

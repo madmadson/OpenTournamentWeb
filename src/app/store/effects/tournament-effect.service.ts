@@ -2,29 +2,69 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 
 import {
-  ARMY_LIST_ERASE_ACTION, TOURNAMENT_PLAYER_PUSH_ACTION, REGISTRATION_ERASE_ACTION,
-  REGISTRATION_PUSH_ACTION, TOURNAMENT_PLAYER_ERASE_ACTION, REGISTRATION_ACCEPT_ACTION,
-  TOURNAMENT_PAIR_AGAIN_ACTION, GAME_RESULT_ENTERED_ACTION, TOURNAMENT_NEW_ROUND_ACTION, PUBLISH_ROUND_ACTION,
-  TOURNAMENT_KILL_ROUND_ACTION, END_TOURNAMENT_ACTION, UNDO_TOURNAMENT_END_ACTION, SWAP_PLAYER_ACTION,
-  UPLOAD_TOURNAMENT_ACTION, TEAM_TOURNAMENT_NEW_ROUND_ACTION, TOURNAMENT_KILL_TEAM_ROUND_ACTION,
-  SCENARIO_SELECTED_ACTION, TOURNAMENT_PAIR_AGAIN_TEAM_ACTION, SWAP_TEAM_ACTION, TEAM_GAME_RESULT_ENTERED_ACTION,
-  SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION, END_TEAM_TOURNAMENT_ACTION, UNDO_TEAM_TOURNAMENT_END_ACTION,
-  UPLOAD_TEAM_TOURNAMENT_ACTION, PLAYER_REGISTRATION_CHANGE_ACTION, ARMY_LIST_FOR_REGISTRATION_PUSH_ACTION,
-  ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION, DROP_PLAYER_PUSH_ACTION, UNDO_DROP_PLAYER_PUSH_ACTION,
-  DROP_TEAM_PUSH_ACTION, UNDO_DROP_TEAM_PUSH_ACTION, EndTournamentAction, EndTeamTournamentAction,
-  TournamentNewRoundAction, TeamTournamentNewRoundAction, TournamentKillRoundAction, TournamentKillTeamRoundAction,
-  UndoTournamentEndAction, UndoTeamTournamentEndAction, UploadTournamentAction, UploadTeamTournamentAction,
-  GameResultEnteredAction, TeamGameResultEnteredAction, ScenarioSelectedAction, ScenarioSelectedTeamTournamentAction,
-  SwapPlayerAction, SwapTeamAction, DropPlayerPushAction, UndoDropPlayerPushAction, DropTeamPushAction,
-  UndoDropTeamPushAction, PublishRoundAction, TournamentPairAgainAction, TournamentPairAgainTeamAction,
-  RegistrationPushAction, RegistrationEraseAction, RegistrationAcceptAction,
-  TournamentPlayerEraseAction, ArmyListForRegistrationPushAction, ArmyListForTournamentPlayerPushAction,
-  ArmyListEraseAction, TournamentPlayerPushAction, PlayerRegistrationChangeAction
-} from '../../tournament/tournament-actions';
+  ARMY_LIST_ERASE_ACTION,
+  ARMY_LIST_FOR_REGISTRATION_PUSH_ACTION,
+  ARMY_LIST_FOR_TOURNAMENT_PLAYER_PUSH_ACTION,
+  ArmyListEraseAction,
+  ArmyListForRegistrationPushAction,
+  ArmyListForTournamentPlayerPushAction,
+  DROP_TEAM_PUSH_ACTION,
+  DropTeamPushAction,
+  END_TEAM_TOURNAMENT_ACTION,
+  END_TOURNAMENT_ACTION,
+  EndTeamTournamentAction,
+  EndTournamentAction,
+  GAME_RESULT_ENTERED_ACTION,
+  GameResultEnteredAction,
+  PLAYER_REGISTRATION_CHANGE_ACTION,
+  PlayerRegistrationChangeAction,
+  PUBLISH_ROUND_ACTION,
+  PublishRoundAction,
+  REGISTRATION_ACCEPT_ACTION,
+  REGISTRATION_ERASE_ACTION,
+  REGISTRATION_PUSH_ACTION,
+  RegistrationAcceptAction,
+  RegistrationEraseAction,
+  RegistrationPushAction,
+  SCENARIO_SELECTED_ACTION,
+  SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION,
+  ScenarioSelectedAction,
+  ScenarioSelectedTeamTournamentAction,
+  SWAP_PLAYER_ACTION,
+  SWAP_TEAM_ACTION,
+  SwapPlayerAction,
+  SwapTeamAction,
+  TEAM_GAME_RESULT_ENTERED_ACTION,
+  TEAM_TOURNAMENT_NEW_ROUND_ACTION,
+  TeamGameResultEnteredAction,
+  TeamTournamentNewRoundAction,
+  TOURNAMENT_KILL_ROUND_ACTION,
+  TOURNAMENT_KILL_TEAM_ROUND_ACTION,
+  TOURNAMENT_NEW_ROUND_ACTION,
+  TOURNAMENT_PAIR_AGAIN_ACTION,
+  TOURNAMENT_PAIR_AGAIN_TEAM_ACTION,
+  TOURNAMENT_PLAYER_ERASE_ACTION,
+  TOURNAMENT_PLAYER_PUSH_ACTION,
+  TournamentKillRoundAction,
+  TournamentKillTeamRoundAction,
+  TournamentNewRoundAction,
+  TournamentPairAgainAction,
+  TournamentPairAgainTeamAction,
+  TournamentPlayerEraseAction,
+  TournamentPlayerPushAction,
+  UNDO_DROP_TEAM_PUSH_ACTION,
+  UNDO_TEAM_TOURNAMENT_END_ACTION,
+  UNDO_TOURNAMENT_END_ACTION,
+  UndoDropTeamPushAction,
+  UndoTeamTournamentEndAction,
+  UndoTournamentEndAction,
+  UPLOAD_TEAM_TOURNAMENT_ACTION,
+  UPLOAD_TOURNAMENT_ACTION,
+  UploadTeamTournamentAction,
+  UploadTournamentAction
+} from '../../tournament/store/tournament-actions';
 import {TournamentService} from '../../tournament/actual-tournament.service';
-import {
-  CLEAR_TEAM_GAME_RESULT_ACTION, ClearTeamGameResultAction
-} from '../actions/tournament-team-games-actions';
+import {CLEAR_TEAM_GAME_RESULT_ACTION, ClearTeamGameResultAction} from '../actions/tournament-team-games-actions';
 import {CLEAR_PLAYER_GAME_RESULT_ACTION, ClearPlayerGameResultAction} from 'app/store/actions/tournament-games-actions';
 
 
@@ -111,15 +151,7 @@ export class TournamentEffectService {
     .debug('SWAP_TEAM_ACTION')
     .map((action: SwapTeamAction) => this.tournamentService.swapTeam(action.payload));
 
-  @Effect({dispatch: false}) dropPlayer = this.actions$
-    .ofType(DROP_PLAYER_PUSH_ACTION)
-    .debug('DROP_PLAYER_PUSH_ACTION')
-    .map((action: DropPlayerPushAction) => this.tournamentService.dropPlayer(action.payload));
 
-  @Effect({dispatch: false}) undoDropPlayer = this.actions$
-    .ofType(UNDO_DROP_PLAYER_PUSH_ACTION)
-    .debug('UNDO_DROP_PLAYER_PUSH_ACTION')
-    .map((action: UndoDropPlayerPushAction) => this.tournamentService.undoDropPlayer(action.payload));
 
   @Effect({dispatch: false}) dropTeam = this.actions$
     .ofType(DROP_TEAM_PUSH_ACTION)

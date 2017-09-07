@@ -1,5 +1,14 @@
 import {
-  ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild, SimpleChanges, OnChanges
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
 
 
@@ -10,7 +19,7 @@ import {TournamentGame} from '../../../../../shared/model/tournament-game';
 import {ScenarioSelectedModel} from '../../../../../shared/dto/scenario-selected-model';
 import {SwapGames} from '../../../../../shared/dto/swap-player';
 import {GameResult} from '../../../../../shared/dto/game-result';
-import { MdDialog, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
+import {MdDialog, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
 import {WindowRefService} from '../../../service/window-ref-service';
 import {GlobalEventService} from '../../../service/global-event-service';
 import {ArmyList} from '../../../../../shared/model/armyList';
@@ -20,7 +29,6 @@ import {PageScrollInstance, PageScrollService} from 'ng2-page-scroll';
 import {DOCUMENT} from '@angular/common';
 import {GameResultDialogComponent} from '../../../dialogs/game-result-dialog';
 import {SwappingService} from '../../swapping.service';
-
 
 
 @Component({
@@ -271,22 +279,52 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
     }
   }
 
-  // confirmDropPlayerTwo(event: any, droppedGame: TournamentGame, droppedPlayerId: string) {
-  //
-  //   if (this.draggedTournamentPlayerId && this.dropPossible(droppedGame, droppedPlayerId)) {
-  //     event.stopPropagation();
-  //
-  //     console.log('confirmDropPlayerTwo');
-  //     this.swappingService.swapPlayer(this.rankingsForRound, this.draggedGame, this.draggedTournamentPlayerId, droppedGame, droppedPlayerId);
-  //
-  //     this.snackBar.open('Players successfully swapped ', '', {
-  //       extraClasses: ['snackBar-info'],
-  //       duration: 5000
-  //     });
-  //
-  //     this.draggedTournamentPlayerId = '';
-  //     this.draggedTournamentPlayerCurrentOpponentId = '';
-  //     this.draggedGame = undefined;
-  //   }
-  // }
+  startAutoScroll() {
+
+    const that = this;
+
+    this.onReachBottomOfPageEvent = new EventEmitter();
+
+    this.onReachBottomOfPageEvent.subscribe(function (x) {
+
+      if (!x) {
+        that.onReachBottomOfPageEvent.complete();
+      }
+      that.autoScrollToTop();
+    });
+
+    this.onReachTopOfPageEvent = new EventEmitter();
+
+    this.onReachTopOfPageEvent.subscribe(function (x) {
+
+      if (!x) {
+        that.onReachTopOfPageEvent.complete();
+      }
+      that.autoScrollToBottom();
+    });
+
+    this.autoScrollToBottom();
+  }
+
+  autoScrollToBottom() {
+
+    const pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
+      document: this.document,
+      scrollTarget: '#bottom',
+      pageScrollDuration: 30000,
+      pageScrollFinishListener: this.onReachBottomOfPageEvent
+    });
+    this.pageScrollService.start(pageScrollInstance);
+  }
+
+  autoScrollToTop() {
+
+    const pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
+      document: this.document,
+      scrollTarget: '#top',
+      pageScrollDuration: 15000,
+      pageScrollFinishListener: this.onReachTopOfPageEvent
+    });
+    this.pageScrollService.start(pageScrollInstance);
+  }
 }

@@ -1,7 +1,4 @@
-import {
-  ADD_GAME_ACTION, CLEAR_GAMES_ACTION, ADD_ALL_GAMES_ACTION,
-  LOAD_GAMES_FINISHED_ACTION
-} from './games-actions';
+import {ADD_ALL_GAMES_ACTION, ADD_GAME_ACTION, CLEAR_GAMES_ACTION, LOAD_GAMES_FINISHED_ACTION} from './games-actions';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import * as _ from 'lodash';
 

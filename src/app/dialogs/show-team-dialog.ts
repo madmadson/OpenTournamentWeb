@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Output, OnInit} from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {Tournament} from '../../../shared/model/tournament';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 

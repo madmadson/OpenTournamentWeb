@@ -21,8 +21,8 @@ import {AddArmyListsDialogComponent} from '../../../dialogs/add-army-lists-dialo
 import {ActualTournamentArmyListService} from '../../actual-tournament-army-list.service';
 import {ArmyList} from '../../../../../shared/model/armyList';
 import {ArmyListRegistrationPush} from '../../../../../shared/dto/armyList-registration-push';
-import {PrintArmyListsDialogComponent} from "../../../dialogs/print-army-lists-dialog";
-import {TournamentFormDialogComponent} from "../../../dialogs/tournament-form-dialog";
+import {PrintArmyListsDialogComponent} from '../../../dialogs/print-army-lists-dialog';
+import {TournamentFormDialogComponent} from '../../../dialogs/tournament-form-dialog';
 
 
 @Component({
@@ -67,8 +67,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
               private tournamentPlayerService: ActualTournamentPlayerService,
               private armyListService: ActualTournamentArmyListService,
               private store: Store<AppState>,
-              private activeRouter: ActivatedRoute,
-              private router: Router) {
+              private activeRouter: ActivatedRoute) {
 
     this.activeRouter.params.subscribe(
       params => {
@@ -82,8 +81,8 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
     this.allRegistrations$ = this.store.select(state => state.actualTournament.actualTournamentRegisteredPlayers);
-    this.allTournamentPlayers$ = this.store.select(state => state.actualTournament.actualTournamentPlayers);
-    this.allArmyLists$ = this.store.select(state => state.actualTournament.actualTournamentArmyLists);
+    this.allTournamentPlayers$ = this.store.select(state => state.actualTournamentPlayers.players);
+    this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
 
     this.loadReg$ = this.store.select(state => state.actualTournament.loadRegistrations);
   }

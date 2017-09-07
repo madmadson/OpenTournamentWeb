@@ -91,6 +91,11 @@ export class GameResultDialogComponent {
     });
   }
 
+  changeWinner(){
+
+    this.sureButton = false;
+  }
+
 
   decreasePlayerOneCP() {
     const actualCP = this.gameModel.playerOneControlPoints;

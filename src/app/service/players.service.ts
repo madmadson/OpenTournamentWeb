@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {

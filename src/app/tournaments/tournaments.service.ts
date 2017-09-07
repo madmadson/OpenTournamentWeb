@@ -1,4 +1,4 @@
-import { Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import * as firebase from 'firebase';
@@ -11,8 +11,12 @@ import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
 import * as _ from 'lodash';
 import {AppState} from '../store/reducers/index';
 import {
-  ADD_ALL_TOURNAMENTS_ACTION, ADD_TOURNAMENT_ACTION, CHANGE_TOURNAMENT_ACTION,
-  CLEAR_ALL_TOURNAMENTS_ACTION, REMOVE_TOURNAMENT_ACTION, LOAD_TOURNAMENTS_FINISHED_ACTION
+  ADD_ALL_TOURNAMENTS_ACTION,
+  ADD_TOURNAMENT_ACTION,
+  CHANGE_TOURNAMENT_ACTION,
+  CLEAR_ALL_TOURNAMENTS_ACTION,
+  LOAD_TOURNAMENTS_FINISHED_ACTION,
+  REMOVE_TOURNAMENT_ACTION
 } from './tournaments-actions';
 
 @Injectable()

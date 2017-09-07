@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 
 
@@ -6,27 +6,18 @@ import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
 import {Player} from '../../../../../shared/model/player';
 import {MdDialog, MdSnackBar} from '@angular/material';
-import {GlobalEventService} from 'app/service/global-event-service';
 import {TournamentService} from '../../actual-tournament.service';
-import {ActualTournamentRegistrationService} from '../../actual-tournament-registration.service';
 import {ActualTournamentPlayerService} from '../../actual-tournament-player.service';
 import {ActualTournamentArmyListService} from '../../actual-tournament-army-list.service';
 import {ActualTournamentRankingService} from 'app/tournament/actual-tournament-ranking.service';
-import {ActualTournamentGamesService} from '../../actual-tournament-games.service';
 import {AppState} from '../../../store/reducers/index';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Tournament} from '../../../../../shared/model/tournament';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
-import {KillRoundDialogComponent} from '../../../dialogs/round-overview/kill-round-dialog';
-import {TournamentManagementConfiguration} from '../../../../../shared/dto/tournament-management-configuration';
-import {PairingService} from '../../pairing.service';
-import {clearTournamentGame, TournamentGame} from '../../../../../shared/model/tournament-game';
-import {TournamentRanking} from '../../../../../shared/model/tournament-ranking';
+import {compareRanking, TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {ArmyList} from '../../../../../shared/model/armyList';
-import {PairAgainDialogComponent} from '../../../dialogs/round-overview/pair-again-dialog';
-import {GameResult} from '../../../../../shared/dto/game-result';
-import {GameResultService} from '../../game-result.service';
+import {DropPlayerPush} from "../../../../../shared/dto/drop-player-push";
 
 
 @Component({
@@ -89,14 +80,14 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
 
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
-    this.allTournamentPlayers$ = this.store.select(state => state.actualTournament.actualTournamentPlayers);
-    this.allTournamentRankings$ = this.store.select(state => state.actualTournament.actualTournamentRankings);
-    this.allArmyLists$ = this.store.select(state => state.actualTournament.actualTournamentArmyLists);
+    this.allTournamentPlayers$ = this.store.select(state => state.actualTournamentPlayers.players);
+    this.allTournamentRankings$ = this.store.select(state => state.actualTournamentRankings.rankings);
+    this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
 
     this.rankingsForRound$ = this.allTournamentRankings$.map(
-      rankings => rankings.filter(r => r.tournamentRound === this.round));
+      rankings => rankings.filter(r => r.tournamentRound === this.round).sort(compareRanking).reverse());
 
-    this.loadRanking$ = this.store.select(state => state.actualTournament.loadRankings);
+    this.loadRanking$ = this.store.select(state => state.actualTournamentRankings.loadRankings);
 
   }
 
@@ -177,14 +168,29 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   showGamesOfRound() {
-
     this.router.navigate(['/tournament', this.actualTournament.id, 'round', (this.round )]);
-
   }
 
+  handleDropPlayer(dropPush: DropPlayerPush) {
+
+    this.rankingService.dropPlayer(dropPush);
+
+    this.snackBar.open('Drop player successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  handleUndoDropPlayer(rank: TournamentRanking) {
+
+    this.rankingService.undoDropPlayer(rank);
+
+    this.snackBar.open('Undo drop player successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
 
 }
 

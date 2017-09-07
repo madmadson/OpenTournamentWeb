@@ -1,12 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Registration} from '../../../../shared/model/registration';
 import {Player} from '../../../../shared/model/player';
-import {Tournament} from '../../../../shared/model/tournament';
 import {WindowRefService} from '../../service/window-ref-service';
 import {MdDialog, MdPaginator, MdSort} from '@angular/material';
-import {PlayerRegistrationInfoDialogComponent} from '../../dialogs/tournament-preparation/player-registration-info-dialog';
-import {ArmyList} from '../../../../shared/model/armyList';
-import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
 import {RegistrationDatabase, RegistrationsDataSource} from '../../../../shared/table-model/registration';
 
 

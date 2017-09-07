@@ -72,10 +72,13 @@
     <tournament-rankings *ngIf="(rankingsForRound$ | async).length > 0 && actualTournament"
                       [isAdmin]="isAdmin"
                       [isCoOrganizer]="isCoOrganizer"
+                      [round]="round"
+                      [userPlayerData]="userPlayerData"
                       [actualTournament]="actualTournament"
                       [rankingsForRound]="rankingsForRound$ | async"
                       [armyLists]="allArmyLists$ | async"
-                      [userPlayerData]="userPlayerData">
+                      (onDropPlayer)="handleDropPlayer($event)"
+                      (onUndoDropPlayer)="handleUndoDropPlayer($event)">
     </tournament-rankings>
   </ng-container>
 </ng-container>

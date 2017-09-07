@@ -4,9 +4,14 @@ import {Store} from '@ngrx/store';
 import * as firebase from 'firebase';
 
 import {
-  AddTournamentTeamAction, AddTournamentTeamRegistrationAction, ChangeTournamentTeamAction,
-  ChangeTournamentTeamRegistrationAction, ClearTournamentTeamRegistrationsAction,
-  ClearTournamentTeamsAction, DeleteTournamentTeamAction, DeleteTournamentTeamRegistrationAction
+  AddTournamentTeamAction,
+  AddTournamentTeamRegistrationAction,
+  ChangeTournamentTeamAction,
+  ChangeTournamentTeamRegistrationAction,
+  ClearTournamentTeamRegistrationsAction,
+  ClearTournamentTeamsAction,
+  DeleteTournamentTeamAction,
+  DeleteTournamentTeamRegistrationAction
 } from '../store/actions/tournament-teams-actions';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {MdSnackBar} from '@angular/material';
@@ -17,21 +22,24 @@ import * as _ from 'lodash';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {TournamentTeamEraseModel} from '../../../shared/dto/tournament-team-erase';
 import {
-  AddTournamentTeamGameAction, ChangeTournamentTeamGameAction,
-  ClearTournamentTeamGamesAction, DeleteTournamentTeamGameAction
+  AddTournamentTeamGameAction,
+  ChangeTournamentTeamGameAction,
+  ClearTournamentTeamGamesAction,
+  DeleteTournamentTeamGameAction
 } from '../store/actions/tournament-team-games-actions';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {
-  AddTournamentTeamRankingAction, ChangeTournamentTeamRankingAction,
-  ClearTeamRankingsAction, DeleteTournamentTeamRankingAction
+  AddTournamentTeamRankingAction,
+  ChangeTournamentTeamRankingAction,
+  ClearTeamRankingsAction,
+  DeleteTournamentTeamRankingAction
 } from '../store/actions/tournament-team-rankings-actions';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import {TeamRegistrationChange} from '../../../shared/dto/team-registration-change';
 import {ArmyListTeamPush} from '../../../shared/dto/team-armyList-push';
 import {TeamUpdate} from '../../../shared/dto/team-update';
 import {AppState} from '../store/reducers/index';
-
 
 
 @Injectable()

@@ -1,14 +1,10 @@
-import {
-  AfterContentChecked,
-  Component, EventEmitter, Inject, Input, OnInit, Output
-} from '@angular/core';
+import {AfterContentChecked, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Player} from '../../../../shared/model/player';
 import {Observable} from 'rxjs/Observable';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+import {MdDialog, MdSnackBar} from '@angular/material';
 
 import {ArmyList} from '../../../../shared/model/armyList';
-import {GameConfig, getWarmachineConfig} from '../../../../shared/dto/game-config';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {Tournament} from '../../../../shared/model/tournament';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';

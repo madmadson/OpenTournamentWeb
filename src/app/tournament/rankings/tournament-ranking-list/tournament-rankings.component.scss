@@ -18,8 +18,16 @@
   }
 }
 
+.rank-column{
+  flex: 1;
+}
+
 .player-column{
   flex: 5;
+}
+
+.faction-column{
+  flex: 2;
 }
 
 .score-column{
@@ -36,6 +44,16 @@
 
 .vp-column{
   flex: 1;
+}
+
+.action-column{
+  flex: 3;
+}
+
+@media only screen and (min-width: 800px) {
+  .action-column{
+    flex: 2;
+  }
 }
 
 

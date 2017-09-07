@@ -10,19 +10,39 @@
 <div class="ranking-table-container mat-elevation-z8">
   <md-table #table [dataSource]="dataSource" mdSort>
 
+
+    <ng-container cdkColumnDef="rank">
+      <md-header-cell *cdkHeaderCellDef class="rank-column">
+        Rank
+      </md-header-cell>
+      <md-cell *cdkCellDef="let ranking; let i = index;" class="rank-column">
+        {{i +1}}
+      </md-cell>
+    </ng-container>
+
     <ng-container cdkColumnDef="playerName">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
         Player
       </md-header-cell>
       <md-cell *cdkCellDef="let ranking" class="player-column">
-        {{ranking.playerName}}
+        <div class="big-text">{{ranking.playerName | truncate:truncateMax}}</div>
+        <div *ngIf="smallScreen">{{ranking.faction}}</div>
+        <div class="color-negative" *ngIf="ranking.droppedInRound">Dropped in round {{ranking.droppedInRound}}</div>
       </md-cell>
     </ng-container>
 
+    <ng-container *ngIf="!smallScreen" cdkColumnDef="faction">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="faction-column">
+        Faction
+      </md-header-cell>
+      <md-cell *cdkCellDef="let ranking; " class="faction-column">
+        {{ranking.faction}}
+      </md-cell>
+    </ng-container>
 
     <ng-container cdkColumnDef="score">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="score-column">
-        Score
+        Sc
       </md-header-cell>
       <md-cell *cdkCellDef="let ranking" class="score-column">
         {{ranking.score}}
@@ -56,10 +76,51 @@
       </md-cell>
     </ng-container>
 
+    <ng-container cdkColumnDef="action">
+      <md-header-cell *cdkHeaderCellDef class="action-column">
+        Action
+      </md-header-cell>
+      <md-cell *cdkCellDef="let ranking" class="action-column">
+        <md-icon  *ngIf="!dropRequest"
+                  class="list-action"
+                 (click)="showArmyList(ranking)">
+          list</md-icon>
+
+        <ng-container *ngIf="(isAdmin || isCoOrganizer) && !dropRequest">
+          <md-icon *ngIf="isDroppable(ranking)"
+                   class="list-action color-negative"
+                   mdTooltip="Drop Player"
+                   (click)="clickDropPlayerRequest(ranking)">
+            delete</md-icon>
+          <md-icon *ngIf="isUndoDroppable(ranking)"
+                   class="list-action color-positive"
+                   mdTooltip="Undo Drop"
+                   (click)="undoDropPlayer(ranking)">
+            undo</md-icon>
+        </ng-container>
+        <ng-container *ngIf="(isAdmin || isCoOrganizer) && dropRequest === ranking.id">
+          <button (click)="confirmDropPlayer( ranking)"
+                  class="color-negative-background"
+                  [ngClass]="{'small-button': smallScreen}"
+                  md-raised-button>
+            <md-icon>check</md-icon>
+            <ng-container *ngIf="!smallScreen">ok</ng-container>
+          </button>
+          <button (click)="dropPlayerDeclined()"
+                  class="color-positive-background"
+                  [ngClass]="{'small-button': smallScreen}"
+                  md-raised-button>
+            <md-icon >clear</md-icon>
+            <ng-container *ngIf="!smallScreen">no</ng-container>
+          </button>
+        </ng-container>
+      </md-cell>
+    </ng-container>
+
 
     <ng-container>
       <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
-      <md-row *cdkRowDef="let ranking; columns: displayedColumns;"
+      <md-row *cdkRowDef="let ranking; columns: displayedColumns; let even = even"
               [ngClass]="{'even': even}">
       </md-row>
     </ng-container>

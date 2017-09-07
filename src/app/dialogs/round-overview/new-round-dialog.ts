@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Inject, Output} from '@angular/core';
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
+import {Tournament} from "../../../../shared/model/tournament";
 
 @Component({
   selector: 'new-round-dialog',
@@ -17,6 +18,7 @@ export class NewRoundDialogComponent {
   countryRestriction: boolean;
 
   teamMatch: boolean;
+  actualTournament: Tournament;
 
   @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
 
@@ -25,15 +27,16 @@ export class NewRoundDialogComponent {
 
     this.teamMatch = data.teamMatch;
     this.round = data.round;
-    data.allPlayers$.subscribe(allPlayers => {
-      this.suggestedRoundToPlay = Math.round(Math.log2(allPlayers.length));
-    });
+    this.actualTournament = data.actualTournament;
+
+    this.suggestedRoundToPlay = Math.round(Math.log2(data.allActualTournamentPlayers.length));
+
   }
 
   pairNewRound() {
 
     this.onNewRound.emit({
-      tournamentId: '',
+      tournamentId: this.actualTournament.id,
       round: this.round + 1,
       teamRestriction: this.teamRestriction,
       metaRestriction: this.metaRestriction,

@@ -2,10 +2,7 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import * as firebase from 'firebase';
 import {TournamentGame} from '../../../shared/model/tournament-game';
-import {
-  ADD_ALL_GAMES_ACTION, ADD_GAME_ACTION, CLEAR_GAMES_ACTION,
-  LOAD_GAMES_FINISHED_ACTION
-} from './games-actions';
+import {ADD_ALL_GAMES_ACTION, ADD_GAME_ACTION, CLEAR_GAMES_ACTION, LOAD_GAMES_FINISHED_ACTION} from './games-actions';
 import {AppState} from '../store/reducers/index';
 import * as _ from 'lodash';
 

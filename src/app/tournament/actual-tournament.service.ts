@@ -3,10 +3,7 @@ import {Store} from '@ngrx/store';
 
 import * as firebase from 'firebase';
 
-import {
-  AddArmyListAction, ArmyListDeletedAction, ClearArmyListsAction,
-  SET_ACTUAL_TOURNAMENT_ACTION, UNSET_ACTUAL_TOURNAMENT_ACTION
-} from './tournament-actions';
+import {SET_ACTUAL_TOURNAMENT_ACTION, UNSET_ACTUAL_TOURNAMENT_ACTION} from './store/tournament-actions';
 import {Registration} from '../../../shared/model/registration';
 import {MdSnackBar} from '@angular/material';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
@@ -29,7 +26,6 @@ import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-c
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
 import {DropPlayerPush} from '../../../shared/dto/drop-player-push';
-import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../store/reducers/index';
 import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
 import {ActualTournamentRankingService} from './actual-tournament-ranking.service';
@@ -699,51 +695,6 @@ export class TournamentService {
     });
   }
 
-  dropPlayer(dropAction: DropPlayerPush) {
-
-    const rankingRef = this.afoDatabase.object('tournament-rankings/' +
-      dropAction.ranking.tournamentId + '/' + dropAction.ranking.id);
-
-    rankingRef.update({
-      droppedInRound: dropAction.round
-    });
-
-    const tournamentPlayerRef = this.afoDatabase.object('tournament-players/' +
-      dropAction.ranking.tournamentId + '/' + dropAction.ranking.tournamentPlayerId);
-
-    tournamentPlayerRef.update({
-      droppedInRound: dropAction.round
-    });
-
-    this.snackBar.open('Successfully drop Player', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
-  }
-
-  undoDropPlayer(ranking: TournamentRanking) {
-
-    const rankingRef = this.afoDatabase.object('tournament-rankings/' +
-      ranking.tournamentId + '/' + ranking.id);
-
-    rankingRef.update({
-      droppedInRound: 0
-    });
-
-    const tournamentPlayerRef = this.afoDatabase.object('tournament-players/' +
-      ranking.tournamentId + '/' + ranking.tournamentPlayerId);
-
-    tournamentPlayerRef.update({
-      droppedInRound: 0
-    });
-
-
-    this.snackBar.open('Successfully undo drop Player', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
-  }
-
   clearTeamGameResult(teamGameToClear: TournamentGame) {
 
     this.tournamentGameService.clearGameForTeamMatch(teamGameToClear);
@@ -866,5 +817,22 @@ export class TournamentService {
       duration: 5000
     });
 
+  }
+
+  newRound(config: TournamentManagementConfiguration) {
+    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
+    registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
+  }
+
+  scenarioSelected(scenarioSelected: ScenarioSelectedModel) {
+    const query = this.afoDatabase.list('tournament-games/' + scenarioSelected.tournamentId).take(1);
+
+    query.subscribe((gamesRef: any) => {
+      gamesRef.forEach((game) => {
+        if (game.tournamentRound === scenarioSelected.round) {
+          this.afoDatabase.object('tournament-games/' + scenarioSelected.tournamentId + '/' + game.$key).update({'scenario': scenarioSelected.scenario});
+        }
+      });
+    });
   }
 }

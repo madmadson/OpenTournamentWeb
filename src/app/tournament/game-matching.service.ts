@@ -1,5 +1,3 @@
-
-
 import {Injectable} from '@angular/core';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
@@ -14,7 +12,8 @@ export class GameMatchingService {
 
   matchGame(config: TournamentManagementConfiguration,
                     allRankingsToMatch: TournamentRanking[],
-                    newGames: TournamentGame[]): boolean {
+                    newGames: TournamentGame[],
+                    debug: boolean): boolean {
 
     const gamesToCalculate = allRankingsToMatch.length;
     if (gamesToCalculate === 0) {
@@ -81,9 +80,10 @@ export class GameMatchingService {
             player.tournamentPlayerId === ranking2.tournamentPlayerId;
         });
 
-        const success = this.matchGame(config, newCopiedRankings, newGames);
+        const success = this.matchGame(config, newCopiedRankings, newGames, debug);
 
         if (success) {
+
           const newGame = new TournamentGame(
             config.tournamentId,
             ranking1.playerId, ranking1.tournamentPlayerId,
@@ -94,6 +94,11 @@ export class GameMatchingService {
             0, 0, 0, '', 0, 0,
             config.round, (gamesToCalculate / 2), false, '');
           newGames.push(newGame);
+
+          if (debug) {
+            console.log('found game rek1 : ' + newGame.playerOnePlayerName + ' (' + ranking1.score + ') VS ' +
+              newGame.playerTwoPlayerName + ' (' + ranking2.score + ')');
+          }
 
           return true;
         }
@@ -135,7 +140,7 @@ export class GameMatchingService {
             player.tournamentPlayerId === ranking2.tournamentPlayerId;
         });
 
-        const success = this.matchGame(config, newCopiedRankings, newGames);
+        const success = this.matchGame(config, newCopiedRankings, newGames, debug);
 
         if (success) {
           const newGame = new TournamentGame(
@@ -148,6 +153,11 @@ export class GameMatchingService {
             0, 0, 0, '', 0, 0,
             config.round, (gamesToCalculate / 2), false, '');
           newGames.push(newGame);
+
+          if (debug) {
+            console.log('found game rek2 : ' + newGame.playerOnePlayerName + ' (' + ranking1.score + ') VS ' +
+              newGame.playerTwoPlayerName + ' (' + ranking2.score + ')');
+          }
 
           return true;
         }
@@ -187,7 +197,7 @@ export class GameMatchingService {
             player.tournamentPlayerId === ranking2.tournamentPlayerId;
         });
 
-        const success = this.matchGame(config, newCopiedRankings, newGames);
+        const success = this.matchGame(config, newCopiedRankings, newGames, debug);
 
         if (success) {
           const newGame = new TournamentGame(
@@ -200,6 +210,10 @@ export class GameMatchingService {
             0, 0, 0, '', 0, 0,
             config.round, (gamesToCalculate / 2), false, '');
           newGames.push(newGame);
+
+          if (debug) {
+            console.log('found game rek3 : ' + newGame.playerOnePlayerName + ' VS ' + newGame.playerTwoPlayerName);
+          }
 
           return true;
         }

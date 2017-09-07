@@ -16,7 +16,6 @@ import {ActualTournamentPlayerService} from '../actual-tournament-player.service
 import {Subscription} from 'rxjs/Subscription';
 import {AddPlayerRegistrationDialogComponent} from '../../dialogs/tournament-preparation/add-player-registration-dialog';
 import {MdDialog} from '@angular/material';
-import {isNullOrUndefined} from "util";
 
 @Component({
   selector: 'tournament-round-overview',
@@ -67,7 +66,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
     this.allRegistrations$ = this.store.select(state => state.actualTournament.actualTournamentRegisteredPlayers);
-    this.allTournamentPlayers$ = this.store.select(state => state.actualTournament.actualTournamentPlayers);
+    // this.allTournamentPlayers$ = this.store.select(state => state.actualTouacrnament.actualTournamentPlayers);
   }
 
   ngOnInit() {

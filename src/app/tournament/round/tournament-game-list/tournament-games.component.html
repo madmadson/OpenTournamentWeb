@@ -145,7 +145,6 @@
             <md-icon>clear</md-icon>
             <ng-container *ngIf="!smallScreen">Reset</ng-container>
           </button>
-
           <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && !swapPlayerMode &&  requestClearGame === game.id"
                   (click)="clearGameResultConfirm($event, game)"
                   class="color-positive-background"
@@ -168,7 +167,7 @@
 
     <ng-container>
       <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
-      <md-row *cdkRowDef="let game; columns: displayedColumns;"
+      <md-row *cdkRowDef="let game; columns: displayedColumns;  let even = even"
               [ngClass]="{'even': even,
                           'my-item':isItMyGame(game),
                           'clickable-row': (!draggedTournamentPlayerId && (isItMyGame(game) || isAdmin || isCoOrganizer) &&  !actualTournament?.finished)}"
@@ -179,7 +178,7 @@
   <md-paginator #paginator
                 [length]="gamesDb?.data.length"
                 [pageIndex]="0"
-                [pageSize]="100"
+                [pageSize]="10"
                 [pageSizeOptions]="[10, 25, 50, 100]">
   </md-paginator>
 </div>

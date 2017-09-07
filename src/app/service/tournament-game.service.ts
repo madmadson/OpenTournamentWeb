@@ -8,9 +8,10 @@ import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import * as _ from 'lodash';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {
-  AddTournamentGameAction, ChangeTournamentGameAction,
-  DeleteTournamentGameAction,
+  AddTournamentGameAction,
+  ChangeTournamentGameAction,
   ClearTournamentGamesAction,
+  DeleteTournamentGameAction,
 } from '../store/actions/tournament-games-actions';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {Tournament} from '../../../shared/model/tournament';

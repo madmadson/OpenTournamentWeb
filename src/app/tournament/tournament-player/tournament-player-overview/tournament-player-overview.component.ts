@@ -22,7 +22,7 @@ import {ActualTournamentArmyListService} from '../../actual-tournament-army-list
 import {ArmyList} from '../../../../../shared/model/armyList';
 
 import {ArmyListTournamentPlayerPush} from '../../../../../shared/dto/armyList-tournamentPlayer-push';
-import {CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION} from '../../tournament-actions';
+import {CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION} from '../../store/tournament-actions';
 import {NewTournamentPlayerDialogComponent} from '../../../dialogs/add-tournament-player-dialog';
 import {PrintArmyListsDialogComponent} from '../../../dialogs/print-army-lists-dialog';
 import {TournamentFormDialogComponent} from '../../../dialogs/tournament-form-dialog';
@@ -30,6 +30,7 @@ import {StartTournamentDialogComponent} from '../../../dialogs/actualTournament/
 import {TournamentManagementConfiguration} from '../../../../../shared/dto/tournament-management-configuration';
 import {TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {PairingService} from '../../pairing.service';
+import {getAllFactions} from '../../../../../shared/model/factions';
 
 
 @Component({
@@ -91,12 +92,12 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
     this.allRegistrations$ = this.store.select(state => state.actualTournament.actualTournamentRegisteredPlayers);
-    this.allTournamentPlayers$ = this.store.select(state => state.actualTournament.actualTournamentPlayers);
-    this.allArmyLists$ = this.store.select(state => state.actualTournament.actualTournamentArmyLists);
+    this.allTournamentPlayers$ = this.store.select(state => state.actualTournamentPlayers.players);
+    this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
 
-    this.loadPlayers$ = this.store.select(state => state.actualTournament.loadPlayers);
+    this.loadPlayers$ = this.store.select(state => state.actualTournamentPlayers.loadPlayers);
 
-    this.searchField$ = this.store.select(state => state.actualTournament.playersSearchField);
+    this.searchField$ = this.store.select(state => state.actualTournamentPlayers.playersSearchField);
 
     this.allTournamentPlayersFiltered$ = Observable.combineLatest(
       this.allTournamentPlayers$,
@@ -353,6 +354,19 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(() => {
       startTournamentSub.unsubscribe();
     });
+
+  }
+
+  createRandomPlayers() {
+
+    for (let i = 0; i < 100; i++) {
+
+      const allFactions = getAllFactions();
+      const randomFaction = allFactions[Math.floor(Math.random() * allFactions.length)];
+
+      const newPlayer = new TournamentPlayer(this.actualTournament.id, '', '', '', 'GeneratedPlayer ' + (i + 1), '', '', '', '', 0, randomFaction, 0);
+      this.tournamentPlayerService.pushTournamentPlayer(newPlayer);
+    }
 
   }
 }

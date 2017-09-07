@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
-  ElementRef,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   OnInit,

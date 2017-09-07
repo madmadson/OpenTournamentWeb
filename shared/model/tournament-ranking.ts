@@ -28,9 +28,11 @@ export class TournamentRanking {
 
   droppedInRound: number;
 
-  static fromJson({tournamentId, tournamentPlayerId, playerId, playerName,
+  static fromJson({
+                    tournamentId, tournamentPlayerId, playerId, playerName,
                     teamName, faction, origin, meta, country, elo, score, secondScore, sos,
-                    controlPoints, victoryPoints, tournamentRound,  opponentTournamentPlayerIds, droppedInRound}): TournamentRanking {
+                    controlPoints, victoryPoints, tournamentRound, opponentTournamentPlayerIds, droppedInRound
+                  }): TournamentRanking {
     return new TournamentRanking(tournamentId, tournamentPlayerId, playerId,
       playerName, faction, teamName, origin, meta, country, elo, score, secondScore,
       sos, controlPoints, victoryPoints,
@@ -64,5 +66,33 @@ export class TournamentRanking {
     this.opponentTournamentPlayerIds = opponentTournamentPlayerIds;
 
     this.droppedInRound = droppedInRound;
+  }
+}
+
+export function compareRanking(rankingOne: TournamentRanking, rankingTwo: TournamentRanking): number {
+  if (rankingOne.score < rankingTwo.score) {
+    return -1;
+  } else if (rankingOne.score > rankingTwo.score) {
+    return 1;
+  } else {
+    if (rankingOne.sos < rankingTwo.sos) {
+      return -1;
+    } else if (rankingOne.sos > rankingTwo.sos) {
+      return 1;
+    } else {
+      if (rankingOne.controlPoints < rankingTwo.controlPoints) {
+        return -1;
+      } else if (rankingOne.controlPoints > rankingTwo.controlPoints) {
+        return 1;
+      } else {
+        if (rankingOne.victoryPoints < rankingTwo.victoryPoints) {
+          return -1;
+        } else if (rankingOne.victoryPoints > rankingTwo.victoryPoints) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
   }
 }

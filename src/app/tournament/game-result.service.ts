@@ -1,5 +1,3 @@
-
-
 import {Injectable} from '@angular/core';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 
@@ -23,7 +21,7 @@ export class GameResultService {
     const afoGames = this.afoDatabase.object('/tournament-games/' + gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
     afoGames.update(gameResult.gameAfter);
 
-    this.updateRankingAfterGameResultEntered(gameResult, actualTournament.actualRound, false, allPlayerRankings, allGames);
+    this.updateRankingAfterGameResultEntered(gameResult, actualTournament.actualRound, false, allPlayerRankings, allGames, false);
 
 
   }
@@ -32,7 +30,8 @@ export class GameResultService {
                                               round: number,
                                               reset: boolean,
                                               allPlayerRankings: TournamentRanking[],
-                                              allGames: TournamentGame[]) {
+                                              allGames: TournamentGame[],
+                                              debug: boolean) {
 
     const that = this;
     const roundOfGameResult = gameResult.gameAfter.tournamentRound;
@@ -141,6 +140,11 @@ export class GameResultService {
               opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerOne
             });
 
+          if (debug) {
+            console.log('update playerOne actual round: ' + gameResult.gameAfter.playerOnePlayerName +
+              ' SC: ' + newScorePlayerOne + ' CP: ' + newCPPlayerOne + ' VP: ' + newVPPlayerOne);
+          }
+
           if (!gameResult.gameBefore.finished) {
             scoreTournamentPlayerMap[rankingPlayerOne.tournamentPlayerId] = newScorePlayerOne;
 
@@ -173,6 +177,12 @@ export class GameResultService {
 
           const playerOneRankingRef = this.afoDatabase
             .object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankingPlayerOne.id);
+
+
+          if (debug) {
+            console.log('update playerOne round after' + gameResult.gameAfter.playerOnePlayerName +
+                        ' SC: ' + newScorePlayerOne + ' CP: ' + newCPPlayerOne + ' VP: ' + newVPPlayerOne);
+          }
 
           playerOneRankingRef.update(
             {
@@ -225,6 +235,11 @@ export class GameResultService {
               opponentTournamentPlayerIds: newListOfOpponentsIdsPlayerTwo
             });
 
+          if (debug) {
+            console.log('update playerTwo actual round: ' + gameResult.gameAfter.playerTwoPlayerName +
+              ' SC: ' + newScorePlayerTwo + ' CP: ' + newCPPlayerTwo + ' VP: ' + newVPPlayerTwo);
+          }
+
           if (!gameResult.gameBefore.finished) {
             scoreTournamentPlayerMap[rankingPlayerTwo.tournamentPlayerId] = newScorePlayerTwo;
           } else if (gameResult.gameBefore.playerTwoScore < gameResult.gameAfter.playerTwoScore) {
@@ -262,6 +277,11 @@ export class GameResultService {
               controlPoints: newCPPlayerTwo,
               victoryPoints: newVPPlayerTwo,
             });
+
+          if (debug) {
+            console.log('update playerTwo next round: ' + gameResult.gameAfter.playerTwoPlayerName +
+              ' SC: ' + newScorePlayerTwo + ' CP: ' + newCPPlayerTwo + ' VP: ' + newVPPlayerTwo);
+          }
         }
       }
 
@@ -281,9 +301,15 @@ export class GameResultService {
           }
         });
 
-        const rankRef = that.afoDatabase.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankToUpdate.id);
-        rankRef.update({'sos': newSos});
+        if (rankToUpdate.sos !== newSos) {
+          const rankRef = that.afoDatabase.object('tournament-rankings/' + gameResult.gameAfter.tournamentId + '/' + rankToUpdate.id);
+          rankRef.update({'sos': newSos});
+        }
 
+        if (debug) {
+          console.log('update sos: ' + rankToUpdate.playerName +
+            ' NewSos: ' + newSos);
+        }
       });
     } // loop over game result round till actual rounds
   }

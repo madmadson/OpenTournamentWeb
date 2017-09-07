@@ -2,20 +2,18 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../store/reducers/index';
 import {Injectable} from '@angular/core';
 import {
+  ADD_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION,
   ADD_ALL_ACTUAL_TOURNAMENT_ARMY_LISTS_ACTION,
+  CHANGE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION,
   CLEAR_ACTUAL_TOURNAMENT_ARMY_LISTS_ACTION,
-  REMOVE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION,
-  CHANGE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION
-} from './tournament-actions';
+  REMOVE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION
+} from './store/tournament-actions';
 
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 import {MdSnackBar} from '@angular/material';
-
-import * as _ from 'lodash';
 import * as firebase from 'firebase';
 import {ArmyList} from '../../../shared/model/armyList';
-import {ADD_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION} from './tournament-actions';
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
 
 

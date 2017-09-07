@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
 import {MdDialog} from '@angular/material';

@@ -1,5 +1,3 @@
-
-
 import {Player} from '../../../shared/model/player';
 import {UserData} from '../../../shared/model/user-data';
 

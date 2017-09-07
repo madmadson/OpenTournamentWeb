@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import {
-  PLAYER_ADDED_ACTION, PLAYER_CHANGED_ACTION, PLAYER_DELETED_ACTION,
+  PLAYER_ADDED_ACTION,
+  PLAYER_CHANGED_ACTION,
+  PLAYER_DELETED_ACTION,
   PLAYERS_CLEAR_ACTION
 } from '../actions/players-actions';
 import {Player} from '../../../../shared/model/player';

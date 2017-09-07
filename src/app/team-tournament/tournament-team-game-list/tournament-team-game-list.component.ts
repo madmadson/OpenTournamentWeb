@@ -1,7 +1,4 @@
-import {
-  AfterContentChecked,
-  Component, EventEmitter, Inject, Input, OnInit, Output, Renderer2
-} from '@angular/core';
+import {AfterContentChecked, Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {Player} from '../../../../shared/model/player';
 import {Observable} from 'rxjs/Observable';
 import {TournamentGame} from '../../../../shared/model/tournament-game';

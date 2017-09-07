@@ -7,8 +7,6 @@ import {RegistrationPush} from '../../../../shared/dto/registration-push';
 import {Registration} from '../../../../shared/model/registration';
 
 import * as moment from 'moment';
-
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {getAllFactions} from '../../../../shared/model/factions';
 
 @Component({

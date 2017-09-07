@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild} from '@angular/core';
+import {Component, isDevMode, OnDestroy, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 
@@ -6,12 +6,10 @@ import {LogoutAction} from './store/actions/auth-actions';
 
 import {Router} from '@angular/router';
 import {GlobalEventService} from './service/global-event-service';
-import { Subscription } from 'rxjs/Subscription';
+import {Subscription} from 'rxjs/Subscription';
 import {MdSidenav} from '@angular/material';
 import {WindowRefService} from './service/window-ref-service';
 import {Observable} from 'rxjs/Observable';
-
-import { isDevMode } from '@angular/core';
 import {AppState} from './store/reducers/index';
 import {AuthService} from './service/auth.service';
 import {AuthenticationState} from './store/reducers/authenticationReducer';

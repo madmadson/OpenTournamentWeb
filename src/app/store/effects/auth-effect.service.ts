@@ -1,10 +1,17 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {
-  AUTH_SUBSCRIBE_ACTION, AuthSubscribeAction, CREATE_ACCOUNT_ACTION, CreateAccountAction, LOGIN_ACTION,
-  LOGIN_PROVIDER_ACTION, LoginAction,
+  AUTH_SUBSCRIBE_ACTION,
+  AuthSubscribeAction,
+  CREATE_ACCOUNT_ACTION,
+  CreateAccountAction,
+  LOGIN_ACTION,
+  LOGIN_PROVIDER_ACTION,
+  LoginAction,
   LoginWithProviderAction,
-  LOGOUT_ACTION, RESET_PASSWORD_ACTION, ResetPasswordAction
+  LOGOUT_ACTION,
+  RESET_PASSWORD_ACTION,
+  ResetPasswordAction
 } from '../actions/auth-actions';
 import {AuthService} from '../../service/auth.service';
 

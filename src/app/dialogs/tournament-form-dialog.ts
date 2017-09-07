@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 
-import {MD_DIALOG_DATA, MdDialogRef, MdSnackBar, MdDialog} from '@angular/material';
+import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
 
 import * as moment from 'moment';
 
-import { FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Tournament} from '../../../shared/model/tournament';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {Registration} from '../../../shared/model/registration';

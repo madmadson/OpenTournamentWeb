@@ -3,7 +3,7 @@ import {Observable} from 'rxjs/Observable';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {Player} from '../../../../shared/model/player';
-import { MdDialog} from '@angular/material';
+import {MdDialog} from '@angular/material';
 import {WindowRefService} from '../../service/window-ref-service';
 
 import * as _ from 'lodash';

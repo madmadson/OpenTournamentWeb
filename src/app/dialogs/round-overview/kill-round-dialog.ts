@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Inject, Output} from "@angular/core";
 import {TournamentManagementConfiguration} from "../../../../shared/dto/tournament-management-configuration";
 import {MD_DIALOG_DATA, MdDialogRef} from "@angular/material";
+
 @Component({
   selector: 'kill-round-dialog',
   templateUrl: './kill-round-dialog.html'

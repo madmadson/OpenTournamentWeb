@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 

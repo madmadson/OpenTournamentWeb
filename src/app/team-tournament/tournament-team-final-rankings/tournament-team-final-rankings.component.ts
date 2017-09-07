@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Tournament} from '../../../../shared/model/tournament';
 import {Observable} from 'rxjs/Observable';
-import {AuthenticationStoreState} from '../../store/authentication-state';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';

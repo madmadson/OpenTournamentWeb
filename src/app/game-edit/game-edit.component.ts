@@ -1,5 +1,5 @@
-import {Component, OnInit, OnChanges, Input} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MdSnackBar} from '@angular/material';
 import {Game} from './game';
 import {AngularFireDatabase} from 'angularfire2/database';

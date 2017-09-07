@@ -13,23 +13,47 @@ import {ActivatedRoute} from '@angular/router';
 import * as _ from 'lodash';
 
 import {
-  TournamentPlayerPushAction, TournamentPlayerEraseAction, RegistrationEraseAction,
-  ArmyListEraseAction, RegistrationPushAction, TournamentPairAgainAction, GameResultEnteredAction,
-  TournamentNewRoundAction, PublishRoundAction, TournamentKillRoundAction,
-  RegistrationAcceptAction, EndTournamentAction, UndoTournamentEndAction, SwapPlayerAction, UploadTournamentAction,
-  TeamTournamentNewRoundAction, TournamentKillTeamRoundAction, TournamentPairAgainTeamAction, ScenarioSelectedAction,
-  SwapTeamAction, TeamGameResultEnteredAction, ScenarioSelectedTeamTournamentAction, EndTeamTournamentAction,
-  UndoTeamTournamentEndAction, UploadTeamTournamentAction, PlayerRegistrationChangeAction,
-  ArmyListForRegistrationPushAction, ArmyListForTournamentPlayerPushAction, DropPlayerPushAction,
-  UndoDropPlayerPushAction, DropTeamPushAction, UndoDropTeamPushAction,
-} from '../tournament-actions';
+  ArmyListEraseAction,
+  ArmyListForRegistrationPushAction,
+  ArmyListForTournamentPlayerPushAction,
+  DropPlayerPushAction,
+  DropTeamPushAction,
+  EndTeamTournamentAction,
+  EndTournamentAction,
+  GameResultEnteredAction,
+  PlayerRegistrationChangeAction,
+  PublishRoundAction,
+  RegistrationAcceptAction,
+  RegistrationEraseAction,
+  RegistrationPushAction,
+  ScenarioSelectedAction,
+  ScenarioSelectedTeamTournamentAction,
+  SwapPlayerAction,
+  SwapTeamAction,
+  TeamGameResultEnteredAction,
+  TeamTournamentNewRoundAction,
+  TournamentKillRoundAction,
+  TournamentKillTeamRoundAction,
+  TournamentNewRoundAction,
+  TournamentPairAgainAction,
+  TournamentPairAgainTeamAction,
+  TournamentPlayerEraseAction,
+  TournamentPlayerPushAction,
+  UndoDropPlayerPushAction,
+  UndoDropTeamPushAction,
+  UndoTeamTournamentEndAction,
+  UndoTournamentEndAction,
+  UploadTeamTournamentAction,
+  UploadTournamentAction,
+} from '../store/tournament-actions';
 
 
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
 import {GameResult} from '../../../../shared/dto/game-result';
 import {PublishRound} from '../../../../shared/dto/publish-round';
 import {
-  CoOrganizatorAddAction, CoOrganizatorDeleteAction,
+  CoOrganizatorAddAction,
+  CoOrganizatorDeleteAction,
   TournamentSetAction
 } from '../../store/actions/tournaments-actions';
 import {SwapGames} from '../../../../shared/dto/swap-player';
@@ -38,11 +62,13 @@ import {Subscription} from 'rxjs/Subscription';
 import {WindowRefService} from '../../service/window-ref-service';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
 import {
-  TournamentTeamEraseAction,
-  TournamentTeamPushAction, TournamentTeamRegistrationAcceptAction,
-  TournamentTeamRegistrationPushAction,
-  TournamentTeamRegistrationEraseAction, TeamRegistrationChangeAction,
   ArmyListForTeamRegistrationPushAction,
+  TeamRegistrationChangeAction,
+  TournamentTeamEraseAction,
+  TournamentTeamPushAction,
+  TournamentTeamRegistrationAcceptAction,
+  TournamentTeamRegistrationEraseAction,
+  TournamentTeamRegistrationPushAction,
   UpdateTeamAction,
 } from '../../store/actions/tournament-teams-actions';
 import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-push';
@@ -182,14 +208,14 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     //     this.allActualTournamentPlayers = players;
     // });
     //
-    // this.actualTournamentRankings$ = this.store.select(
-    //   state => state.actualTournament.actualTournamentRankings);
+    // this.rankings$ = this.store.select(
+    //   state => state.actualTournament.rankings);
     //
     // this.actualTournamentTeamRankings$ = this.store.select(
     //   state => state.actualTournament.actualTournamentTeamRankings);
     //
-    // this.actualTournamentGames$ = this.store.select(
-    //   state => state.actualTournament.actualTournamentGames);
+    // this.games$ = this.store.select(
+    //   state => state.actualTournament.games);
     //
     // this.actualTournamentTeamGames$ = this.store.select(
     //   state => state.actualTournament.actualTournamentTeamGames);

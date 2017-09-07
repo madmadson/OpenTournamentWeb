@@ -6,16 +6,22 @@ import {
   ArmyListForTeamRegistrationPushAction,
   SubscribeTournamentTeamRegistrationsAction,
   SubscribeTournamentTeamsAction,
-  TEAM_REGISTRATION_CHANGE_ACTION, TeamRegistrationChangeAction,
+  TEAM_REGISTRATION_CHANGE_ACTION,
+  TeamRegistrationChangeAction,
   TOURNAMENT_TEAM_ERASE_ACTION,
-  TOURNAMENT_TEAM_PUSH_ACTION, TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION, TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION,
+  TOURNAMENT_TEAM_PUSH_ACTION,
+  TOURNAMENT_TEAM_REGISTRATION_ACCEPT_ACTION,
+  TOURNAMENT_TEAM_REGISTRATION_ERASE_ACTION,
   TOURNAMENT_TEAM_REGISTRATION_PUSH_ACTION,
   TOURNAMENT_TEAM_REGISTRATIONS_SUBSCRIBE_ACTION,
-  TOURNAMENT_TEAMS_SUBSCRIBE_ACTION, TournamentTeamEraseAction, TournamentTeamPushAction,
+  TOURNAMENT_TEAMS_SUBSCRIBE_ACTION,
+  TournamentTeamEraseAction,
+  TournamentTeamPushAction,
   TournamentTeamRegistrationAcceptAction,
   TournamentTeamRegistrationEraseAction,
   TournamentTeamRegistrationPushAction,
-  UPDATE_TEAM_ACTION, UpdateTeamAction
+  UPDATE_TEAM_ACTION,
+  UpdateTeamAction
 } from '../actions/tournament-teams-actions';
 import {TournamentTeamService} from '../../service/tournament-team.service';
 import {
@@ -27,7 +33,6 @@ import {
   TOURNAMENT_TEAM_RANKINGS_SUBSCRIBE_ACTION
 } from '../actions/tournament-team-rankings-actions';
 import {Observable} from 'rxjs/Observable';
-
 
 
 @Injectable()

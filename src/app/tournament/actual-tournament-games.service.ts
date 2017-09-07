@@ -2,28 +2,26 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import * as firebase from 'firebase';
-
-import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import * as _ from 'lodash';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
-import {Tournament} from '../../../shared/model/tournament';
-import {Registration} from '../../../shared/model/registration';
-import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import {SwapGames} from '../../../shared/dto/swap-player';
 import {GameResult} from '../../../shared/dto/game-result';
-import {getEloFactorForPlayer} from '../../../shared/model/player';
 import {AppState} from '../store/reducers/index';
 
 import {
-  CLEAR_ACTUAL_TOURNAMENT_GAMES_ACTION, ADD_ACTUAL_TOURNAMENT_GAME_ACTION,
+  ADD_ACTUAL_TOURNAMENT_GAME_ACTION,
   CHANGE_ACTUAL_TOURNAMENT_GAME_ACTION,
+  CLEAR_ACTUAL_TOURNAMENT_GAMES_ACTION,
   REMOVE_ACTUAL_TOURNAMENT_GAME_ACTION,
-} from 'app/tournament/tournament-actions';
-import {ADD_ALL_ACTUAL_TOURNAMENT_GAMES_ACTION, LOAD_TOURNAMENT_GAMES_FINISHED_ACTION} from './tournament-actions';
+} from 'app/tournament/store/tournament-actions';
+import {
+  ADD_ALL_ACTUAL_TOURNAMENT_GAMES_ACTION,
+  LOAD_TOURNAMENT_GAMES_FINISHED_ACTION
+} from './store/tournament-actions';
 import {ActualTournamentRankingService} from './actual-tournament-ranking.service';
 
 
@@ -51,12 +49,12 @@ export class ActualTournamentGamesService {
     // this.store.select(state => state).subscribe(state => {
     //
     //   this.actualTournament = state.actualTournament.actualTournament;
-    //   this.allRankings = state.actualTournament.actualTournamentRankings;
+    //   this.allRankings = state.actualTournament.rankings;
     //   this.allTeamRankings = state.actualTournament.actualTournamentTeamRankings;
     //   this.allTeamGames = state.actualTournament.actualTournamentTeamGames;
     //   this.allPlayers = state.actualTournament.actualTournamentPlayers;
     //   this.allTeams = state.actualTournament.actualTournamentTeams;
-    //   this.allGames = state.actualTournament.actualTournamentGames;
+    //   this.allGames = state.actualTournament.games;
     //   this.allRegistrations = state.actualTournament.actualTournamentRegisteredPlayers;
     //
     // });

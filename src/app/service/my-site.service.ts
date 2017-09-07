@@ -1,11 +1,14 @@
-
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {
-  MyGameAddedAction, MyGameChangedAction, MyGameDeletedAction,
+  MyGameAddedAction,
+  MyGameChangedAction,
+  MyGameDeletedAction,
   MyGamesClearAction,
-  MyRegistrationAddedAction, MyRegistrationChangedAction, MyRegistrationDeletedAction,
+  MyRegistrationAddedAction,
+  MyRegistrationChangedAction,
+  MyRegistrationDeletedAction,
   MyRegistrationsClearAction
 } from 'app/store/actions/my-site-actions';
 import {Registration} from '../../../shared/model/registration';

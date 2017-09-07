@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AfoListObservable, AfoObjectObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 
@@ -7,28 +7,28 @@ import * as _ from 'lodash';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {GameMatchingService} from './game-matching.service';
 import {TournamentGame} from '../../../shared/model/tournament-game';
-import {Tournament} from '../../../shared/model/tournament';
 import {PublishRound} from '../../../shared/dto/publish-round';
-import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
+import {TournamentService} from './actual-tournament.service';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class PairingService {
 
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              private gameMatchingService: GameMatchingService) {
-
+              private tournamentService: TournamentService,
+              private gameMatchingService: GameMatchingService,
+              private router: Router) {
   }
 
 
   pushRankingForRound(config: TournamentManagementConfiguration,
-                           allPlayers: TournamentPlayer[],
-                           allRankings: TournamentRanking[]): TournamentRanking[] {
+                      allPlayers: TournamentPlayer[],
+                      allRankings: TournamentRanking[]): TournamentRanking[] {
 
     const that = this;
     const newRankings: TournamentRanking[] = [];
-
 
     const lastRoundRankings: TournamentRanking[] = _.filter(allRankings, function (ranking: TournamentRanking) {
       return (ranking.tournamentRound === (config.round - 1));
@@ -61,7 +61,8 @@ export class PairingService {
             newTournamentRanking.controlPoints = lastRoundRanking.controlPoints;
             newTournamentRanking.victoryPoints = lastRoundRanking.victoryPoints;
             newTournamentRanking.tournamentRound = config.round;
-            newTournamentRanking.opponentTournamentPlayerIds = lastRoundRanking.opponentTournamentPlayerIds;
+            newTournamentRanking.opponentTournamentPlayerIds =
+              lastRoundRanking.opponentTournamentPlayerIds ? lastRoundRanking.opponentTournamentPlayerIds : [];
           }
         });
 
@@ -82,13 +83,13 @@ export class PairingService {
     const that = this;
 
     const shuffledRankings = _.shuffle(newRankings);
-    const sortedRankings = _.orderBy(shuffledRankings, ['score'], ['desc']);
+    const rankingsWithByeIfUneven = this.addByeIfPlayersUneven(shuffledRankings);
 
-    const playerToMatchGamesFor = this.addByeIfPlayersUneven(sortedRankings);
+    const sortedRankings = _.orderBy(rankingsWithByeIfUneven, ['score'], ['desc']);
 
     const newGames: TournamentGame[] = [];
 
-    const megaSuccess = this.gameMatchingService.matchGame(config, playerToMatchGamesFor, newGames);
+    const megaSuccess = this.gameMatchingService.matchGame(config, sortedRankings, newGames, true);
 
     if (!megaSuccess) {
       return false;
@@ -196,7 +197,7 @@ export class PairingService {
     return query;
   }
 
-  killRankingsForRound(config: TournamentManagementConfiguration): Observable<any[]>{
+  killRankingsForRound(config: TournamentManagementConfiguration): Observable<any[]> {
 
     const query = this.afoDatabase.list('tournament-rankings/' + config.tournamentId).take(1);
     query.subscribe((rankingRef: any) => {
@@ -228,16 +229,48 @@ export class PairingService {
 
   }
 
-  pairRoundAgain(config: TournamentManagementConfiguration, allPlayers, allRankings) {
+  pairRoundAgain(config: TournamentManagementConfiguration,
+                 allPlayers: TournamentPlayer[],
+                 allRankings: TournamentRanking[]) {
 
     console.log('pairRoundAgain');
 
     Observable
-      .zip(this.killRankingsForRound(config), this.killGamesForRound(config), (a: any, b: any) => { return { a: a, b: b }; })
+      .zip(this.killRankingsForRound(config), this.killGamesForRound(config), (a: any, b: any) => {
+        return {a: a, b: b};
+      })
       .subscribe((r) => {
-          console.log('new Rankings');
-          const newRankings: TournamentRanking[] = this.pushRankingForRound(config, allPlayers, allRankings);
-          const success: boolean = this.pushGamesForRound(config, newRankings);
+        const newRankings: TournamentRanking[] = this.pushRankingForRound(config, allPlayers, allRankings);
+        const success: boolean = this.pushGamesForRound(config, newRankings);
+
+        if (!success) {
+          this.killRankingsForRound(config);
+        }
+      });
+  }
+
+  pairNewRound(config: TournamentManagementConfiguration,
+               allPlayers: TournamentPlayer[],
+               allRankings: TournamentRanking[]) {
+
+    console.log('pairNewRound');
+
+    Observable
+      .zip(this.killRankingsForRound(config), this.killGamesForRound(config), (a: any, b: any) => {
+        return {a: a, b: b};
+      })
+      .subscribe(() => {
+        const newRankings: TournamentRanking[] = this.pushRankingForRound(config, allPlayers, allRankings);
+        const success: boolean = this.pushGamesForRound(config, newRankings);
+
+        if (success) {
+          console.log('pairNewRound successfull');
+
+          this.tournamentService.newRound(config);
+          this.router.navigate(['/tournament', config.tournamentId, 'round', config.round]);
+        } else {
+          this.killRankingsForRound(config);
+        }
       });
   }
 }

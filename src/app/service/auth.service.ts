@@ -1,10 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
-import {
-  DeleteUserPlayerDataAction, SaveUserDataAction,
-  SaveUserPlayerDataAction
-} from '../store/actions/auth-actions';
+import {DeleteUserPlayerDataAction, SaveUserDataAction, SaveUserPlayerDataAction} from '../store/actions/auth-actions';
 
 import {Subscription} from 'rxjs/Subscription';
 import {Router} from '@angular/router';

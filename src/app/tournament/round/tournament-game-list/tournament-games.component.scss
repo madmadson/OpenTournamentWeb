@@ -83,14 +83,29 @@ md-header-cell.mat-column-playerOnePlayerName {
 }
 
 .mat-header-row{
-  padding-left: $main_tick;
-  padding-right: $main_tick;
+  padding-left: $halve_tick;
+  padding-right: $halve_tick;
+}
+
+@media only screen and (min-width: 800px) {
+  .mat-header-row{
+    padding-left: $main_tick;
+    padding-right: $main_tick;
+  }
 }
 
 .mat-row{
-  padding-left: $main_tick;
-  padding-right: $main_tick;
+  padding-left: $halve_tick;
+  padding-right: $halve_tick;
 }
+
+@media only screen and (min-width: 800px) {
+  .mat-row{
+    padding-left: $main_tick;
+    padding-right: $main_tick;
+  }
+}
+
 
 .swap-player-icon{
   font-size: $small-icon-size;

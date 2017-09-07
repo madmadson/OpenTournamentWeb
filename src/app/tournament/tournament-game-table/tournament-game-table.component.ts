@@ -4,12 +4,12 @@ import {Tournament} from '../../../../shared/model/tournament';
 
 import {MdPaginator, MdSort} from '@angular/material';
 
-import { DOCUMENT } from '@angular/common';
+import {DOCUMENT} from '@angular/common';
 
 
 import {WindowRefService} from '../../service/window-ref-service';
-import {PageScrollService, PageScrollInstance } from 'ng2-page-scroll';
-import {GamesDataSource, GamesDatabase} from '../../../../shared/table-model/game';
+import {PageScrollInstance, PageScrollService} from 'ng2-page-scroll';
+import {GamesDatabase, GamesDataSource} from '../../../../shared/table-model/game';
 
 
 @Component({

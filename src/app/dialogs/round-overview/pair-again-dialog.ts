@@ -1,6 +1,7 @@
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 import {Component, EventEmitter, Inject, Output} from '@angular/core';
 import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
+
 @Component({
   selector: 'pair-again-dialog',
   templateUrl: '../../dialogs/round-overview/pair-again-dialog.html'

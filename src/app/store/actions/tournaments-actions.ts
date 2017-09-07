@@ -3,7 +3,6 @@ import {Tournament} from '../../../../shared/model/tournament';
 import {CoOrganizatorPush} from '../../../../shared/dto/co-organizator-push';
 
 
-
 export const TOURNAMENT_PUSH_ACTION = 'TOURNAMENT_PUSH_ACTION';
 export class TournamentPushAction implements Action {
 

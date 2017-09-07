@@ -8,7 +8,7 @@
     <div *ngIf="tournamentTeam && armyLists.length == 0">No ArmyLists for Team found</div>
     <md-tab-group *ngIf="armyLists.length > 0">
       <md-tab *ngFor="let armyList of armyLists" label=" {{armyList.name}}">
-        <div  class="heading">{{armyList.playerName}}</div>
+        <div *ngIf="tournamentTeam" class="heading">{{armyList.playerName}}</div>
         <md-input-container
           class="full-width">
         <textarea

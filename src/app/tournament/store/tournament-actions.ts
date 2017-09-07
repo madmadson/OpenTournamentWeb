@@ -1,18 +1,18 @@
 import {Action} from '@ngrx/store';
-import {Registration} from '../../../shared/model/registration';
-import {RegistrationPush} from '../../../shared/dto/registration-push';
-import {TournamentPlayer} from '../../../shared/model/tournament-player';
-import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
-import {ArmyList} from '../../../shared/model/armyList';
-import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
-import {ScenarioSelectedModel} from '../../../shared/dto/scenario-selected-model';
-import {GameResult} from '../../../shared/dto/game-result';
-import {SwapGames} from '../../../shared/dto/swap-player';
-import {DropPlayerPush} from '../../../shared/dto/drop-player-push';
-import {TournamentRanking} from '../../../shared/model/tournament-ranking';
-import {PublishRound} from '../../../shared/dto/publish-round';
-import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-change';
-import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
+import {Registration} from '../../../../shared/model/registration';
+import {RegistrationPush} from '../../../../shared/dto/registration-push';
+import {TournamentPlayer} from '../../../../shared/model/tournament-player';
+import {ArmyListTournamentPlayerPush} from '../../../../shared/dto/armyList-tournamentPlayer-push';
+import {ArmyList} from '../../../../shared/model/armyList';
+import {TournamentManagementConfiguration} from '../../../../shared/dto/tournament-management-configuration';
+import {ScenarioSelectedModel} from '../../../../shared/dto/scenario-selected-model';
+import {GameResult} from '../../../../shared/dto/game-result';
+import {SwapGames} from '../../../../shared/dto/swap-player';
+import {DropPlayerPush} from '../../../../shared/dto/drop-player-push';
+import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
+import {PublishRound} from '../../../../shared/dto/publish-round';
+import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
+import {ArmyListRegistrationPush} from '../../../../shared/dto/armyList-registration-push';
 
 export const SET_ACTUAL_TOURNAMENT_ACTION = 'SET_ACTUAL_TOURNAMENT_ACTION';
 export const UNSET_ACTUAL_TOURNAMENT_ACTION = 'UNSET_ACTUAL_TOURNAMENT_ACTION';
@@ -52,6 +52,8 @@ export const REMOVE_ACTUAL_TOURNAMENT_GAME_ACTION = 'REMOVE_ACTUAL_TOURNAMENT_GA
 export const CLEAR_ACTUAL_TOURNAMENT_GAMES_ACTION = 'CLEAR_ACTUAL_TOURNAMENT_GAMES_ACTION';
 export const ADD_ALL_ACTUAL_TOURNAMENT_GAMES_ACTION = 'ADD_ALL_ACTUAL_TOURNAMENT_GAME_ACTION';
 export const LOAD_TOURNAMENT_GAMES_FINISHED_ACTION = 'LOAD_TOURNAMENT_GAMES_FINISHED_ACTION';
+export const CHANGE_SEARCH_FIELD_GAMES_ACTION = 'CHANGE_SEARCH_FIELD_GAMES_ACTION';
+export const CHANGE_SCENARIO_ACTION = 'CHANGE_SCENARIO_ACTION';
 
 
 export const REGISTRATION_PUSH_ACTION = 'REGISTRATION_PUSH_ACTION';

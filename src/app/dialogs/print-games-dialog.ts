@@ -3,7 +3,6 @@ import {Tournament} from '../../../shared/model/tournament';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {WindowRefService} from '../service/window-ref-service';
-import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {Subscription} from 'rxjs/Subscription';
 

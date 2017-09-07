@@ -8,7 +8,6 @@
     </mdl-card-title>
     <mdl-card-supporting-text>
       <div class="full-width" *ngIf="!teamMatch">
-        NO
         <mdl-switch [(ngModel)]="teamRestriction" mdl-ripple>
           <span class="small-text margin-right">{{teamRestriction ? '(YES)' : '(NO)'}}</span>
           <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
@@ -16,7 +15,6 @@
           </md-icon>
           Team Restriction*
         </mdl-switch>
-        YES
       </div>
       <div class="full-width">
         <mdl-switch [(ngModel)]="metaRestriction" mdl-ripple>

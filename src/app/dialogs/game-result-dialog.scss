@@ -35,75 +35,18 @@
   color: $fail_color;
 }
 
-.game-result-input{
+.game-result-input {
   height: 20px;
   width: 40px;
   margin-left: $main_tick;
-  font-size:24px;
+  font-size: 24px;
   padding-bottom: $main_tick;
 }
 
-game-result-card-divider{
-  font-weight: bold;
-  text-align: center;
-  margin-right: $main_tick;
-  margin-left: $main_tick;
-}
-
-@media only screen and (max-width: 800px) {
-  .game-result-card-divider {
-    width: 100%;
-  }
-}
-
-.card-won {
-  background: #AEFFAE;
-}
-
-.card-not-won {
-  background: #FDCDC6;
-}
-
-.game-result-container{
-  display: flex;
-  flex-flow:row wrap;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-
 @media only screen and (min-width: 800px) {
-  .game-result-container{
-    flex-flow:row nowrap;
+  .game-result-input {
+    width: 60px;
   }
-}
-
-.game-result-card{
-  width: 300px;
-}
-
-//@media only screen and (min-width: 1200px) {
-//  .game-result-card {
-//    width: 400px;
-//  }
-//}
-
-.game-result-card-line{
-  display: flex;
-  flex-flow:row wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.player-score-switch{
-  width: auto !important;
-}
-
-.score-heading-label{
-  text-align: center;
-  font-size: 1.1em;
-  font-weight: bold;
-  width: 100%;
 }
 
 .mat-input-wrapper{

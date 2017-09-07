@@ -8,7 +8,9 @@ import {Tournament} from '../../../shared/model/tournament';
 
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {
-  AddTournamentRankingAction, ChangeTournamentRankingAction, ClearRankingAction,
+  AddTournamentRankingAction,
+  ChangeTournamentRankingAction,
+  ClearRankingAction,
   DeleteTournamentRankingAction
 } from '../store/actions/tournament-rankings-actions';
 

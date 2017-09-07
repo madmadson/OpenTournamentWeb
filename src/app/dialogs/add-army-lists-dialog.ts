@@ -8,7 +8,6 @@ import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
 import {getWMHOCaster} from '../../../shared/model/wa_ho-caster';
-import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'add-army-lists-dialog',

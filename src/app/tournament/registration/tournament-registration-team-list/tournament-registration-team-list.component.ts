@@ -1,6 +1,3 @@
-
-
-
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 import {Registration} from "../../../../../shared/model/registration";
 import {Player} from "../../../../../shared/model/player";

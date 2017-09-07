@@ -16,8 +16,6 @@ import {Registration} from '../../../shared/model/registration';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {WindowRefService} from '../service/window-ref-service';
 import {Player} from '../../../shared/model/player';
-
-import {TournamentListVM} from '../../../shared/view-model/tournamentList.vm';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from "../store/reducers/index";
 

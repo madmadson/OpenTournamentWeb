@@ -96,6 +96,9 @@ export class RankingsDataSource extends DataSource<TournamentRanking> {
         case 'score':
           [propertyA, propertyB] = [a.score, b.score];
           break;
+        case 'faction':
+          [propertyA, propertyB] = [a.faction, b.faction];
+          break;
         case 'sos':
           [propertyA, propertyB] = [a.sos, b.sos];
           break;
