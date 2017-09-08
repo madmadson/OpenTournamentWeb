@@ -26,7 +26,7 @@ export class PlayerRegistrationInfoDialogComponent {
   factions: string[];
   isAdmin: boolean;
 
-  @Output() onRegChangeEventSubscribe = new EventEmitter<PlayerRegistrationChange>();
+  @Output() onChangeRegistration = new EventEmitter<PlayerRegistrationChange>();
   @Output() onDeleteRegistration = new EventEmitter<Registration>();
 
   constructor(public dialog: MdDialog,
@@ -67,7 +67,7 @@ export class PlayerRegistrationInfoDialogComponent {
       playerUploadedArmyLists: false,
       playerMarkedPayment: this.playerRegistration.playerMarkedPayment
     };
-    this.onRegChangeEventSubscribe.emit(regChange);
+    this.onChangeRegistration.emit(regChange);
 
   }
 
@@ -75,7 +75,7 @@ export class PlayerRegistrationInfoDialogComponent {
 
     this.handleUndefined();
 
-    this.onRegChangeEventSubscribe.emit({
+    this.onChangeRegistration.emit({
       registration: this.playerRegistration,
       paymentChecked: !this.playerRegistration.paymentChecked,
       armyListsChecked: this.playerRegistration.armyListsChecked,

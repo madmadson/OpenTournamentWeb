@@ -30,7 +30,11 @@
             (click)="router.navigate(['/tournament', actualTournament?.id, 'round', round]);">
       Go to -> Round {{index +1}}
     </button>
-
+    <button *ngIf="actualTournament?.finished"
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'finalRankings']);">>
+      Go to -> Final Rankings
+    </button>
   </md-menu>
 </div>
 <h3 class="heading" *ngIf="round > actualTournament?.actualRound">

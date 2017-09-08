@@ -59,9 +59,6 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
   @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
 
-  onReachBottomOfPageEvent: EventEmitter<boolean>;
-  onReachTopOfPageEvent: EventEmitter<boolean>;
-
   draggedTournamentPlayerCurrentOpponentId: string;
 
   draggedGame: TournamentGame;
@@ -87,11 +84,8 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
   smallScreen: boolean;
   truncateMax: number;
 
-  constructor(@Inject(DOCUMENT) private document: any,
-              private pageScrollService: PageScrollService,
-              private dialog: MdDialog,
+  constructor(private dialog: MdDialog,
               private snackBar: MdSnackBar,
-              private messageService: GlobalEventService,
               private winRef: WindowRefService,
               private swappingService: SwappingService) {
 
@@ -279,52 +273,5 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
     }
   }
 
-  startAutoScroll() {
 
-    const that = this;
-
-    this.onReachBottomOfPageEvent = new EventEmitter();
-
-    this.onReachBottomOfPageEvent.subscribe(function (x) {
-
-      if (!x) {
-        that.onReachBottomOfPageEvent.complete();
-      }
-      that.autoScrollToTop();
-    });
-
-    this.onReachTopOfPageEvent = new EventEmitter();
-
-    this.onReachTopOfPageEvent.subscribe(function (x) {
-
-      if (!x) {
-        that.onReachTopOfPageEvent.complete();
-      }
-      that.autoScrollToBottom();
-    });
-
-    this.autoScrollToBottom();
-  }
-
-  autoScrollToBottom() {
-
-    const pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
-      document: this.document,
-      scrollTarget: '#bottom',
-      pageScrollDuration: 30000,
-      pageScrollFinishListener: this.onReachBottomOfPageEvent
-    });
-    this.pageScrollService.start(pageScrollInstance);
-  }
-
-  autoScrollToTop() {
-
-    const pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
-      document: this.document,
-      scrollTarget: '#top',
-      pageScrollDuration: 15000,
-      pageScrollFinishListener: this.onReachTopOfPageEvent
-    });
-    this.pageScrollService.start(pageScrollInstance);
-  }
 }

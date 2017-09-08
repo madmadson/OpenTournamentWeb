@@ -74,7 +74,7 @@ import {
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
 
-import {TournamentRoundOverviewComponent,} from './tournament/round/tournament-round-overview/tournament-round-overview.component';
+import {TournamentRoundOverviewComponent, } from './tournament/round/tournament-round-overview/tournament-round-overview.component';
 import {TournamentRankingListComponent} from './tournament/tournament-ranking-list/tournament-ranking-list.component';
 import {MdlModule} from 'angular2-mdl';
 import {TruncatePipe} from '../pipes/truncate-pise';
@@ -150,8 +150,11 @@ import {GameResultService} from './tournament/game-result.service';
 import {TournamentGamesComponent} from './tournament/round/tournament-game-list/tournament-games.component';
 import {GameResultDialogComponent} from './dialogs/game-result-dialog';
 import {SwappingService} from './tournament/swapping.service';
-import {TournamentRankingsComponent} from "./tournament/rankings/tournament-ranking-list/tournament-rankings.component";
-import {TournamentRankingsOverviewComponent} from "app/tournament/rankings/tournament-ranking-overview/tournament-ranking-overview.component";
+import {TournamentRankingsComponent} from './tournament/rankings/tournament-ranking-list/tournament-rankings.component';
+import {TournamentRankingsOverviewComponent} from 'app/tournament/rankings/tournament-ranking-overview/tournament-ranking-overview.component';
+import {GamesListComponent} from './games/games-list/games-list.component';
+import {TournamentFinalRankingsOverviewComponent} from 'app/tournament/final-rankings/tournament-final-ranking-overview/tournament-final-ranking-overview.component';
+import {EloService} from './tournament/elo.service';
 
 
 @NgModule({
@@ -204,6 +207,7 @@ import {TournamentRankingsOverviewComponent} from "app/tournament/rankings/tourn
     TournamentRegistrationOverviewComponent,
     TournamentPlayerOverviewComponent,
     MySiteComponent,
+    GamesListComponent,
 
     TournamentPreparationComponent,
     PlayerListOverviewComponent,
@@ -222,6 +226,8 @@ import {TournamentRankingsOverviewComponent} from "app/tournament/rankings/tourn
     TournamentRankingsOverviewComponent,
     TournamentRankingsComponent,
     TruncatePipe,
+
+    TournamentFinalRankingsOverviewComponent,
 
     TournamentFinalRankingsComponent,
 
@@ -283,7 +289,8 @@ import {TournamentRankingsOverviewComponent} from "app/tournament/rankings/tourn
     PairingService,
     GameMatchingService,
     GameResultService,
-    SwappingService
+    SwappingService,
+    EloService
   ],
   entryComponents: [
     AddArmyListsDialogComponent,

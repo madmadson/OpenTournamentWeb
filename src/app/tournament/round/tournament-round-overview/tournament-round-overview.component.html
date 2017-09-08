@@ -30,7 +30,11 @@
             (click)="router.navigate(['/tournament', actualTournament?.id, 'round', round]);">
       Go to -> Round {{index +1}}
     </button>
-
+    <button *ngIf="actualTournament?.finished"
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'finalRankings']);">>
+      Go to -> Final Rankings
+    </button>
   </md-menu>
 </div>
 <h3 class="heading" *ngIf="round > actualTournament?.actualRound">
@@ -111,35 +115,62 @@
   </div>
 </ng-container>
 
-<md-input-container class="players-search-container" floatPlaceholder="never">
-  <input class="search-field" mdInput #searchField placeholder="Show Game on Table Number">
-</md-input-container>
+<ng-container *ngIf="(loadGames$ | async)">
+  <div class="heading">Load Games...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
 
-<ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
-  <ng-container *ngIf="(loadGames$ | async)">
-    <div class="heading">Load Games...</div>
-    <div class="loading-spinner-container">
-      <md-spinner></md-spinner>
-    </div>
-  </ng-container>
-
-  <md-input-container *ngIf="!isAdmin && !isCoOrganizer"
-                      class="full-width">
+<ng-container *ngIf="(!isAdmin && !isCoOrganizer) && (allTournamentGamesFiltered$ | async).length > 0">
+  <md-input-container
+    class="full-width">
     <input mdInput disabled placeholder="Scenario" value="{{selectedScenario}}">
   </md-input-container>
-
+</ng-container>
+<ng-container *ngIf="(isAdmin || isCoOrganizer) && (allTournamentGamesFiltered$ | async).length > 0">
   <md-select
-    *ngIf="(isAdmin || isCoOrganizer)"
-    class="full-width-select-box"
     placeholder="Scenario"
+    class="full-width-select-box"
     #scenario
     (change)="changeScenario()"
     [(ngModel)]="selectedScenario"
     name="scenario">
     <md-option *ngFor="let scenario of scenarios" [value]="scenario">{{ scenario }}</md-option>
   </md-select>
+</ng-container>
 
+<div class="full-width">
 
+  <div id="top"></div>
+  <button
+    (click)="startAutoScroll()"
+    type="button"
+    class="color-secondary-background"
+    md-raised-button>
+    <md-icon>play_arrow</md-icon>
+    AutoScroll
+  </button>
+  <button *ngIf="isTournamentPlayer && !(onlyMyGameFilter$ | async)"
+          class="my-game-button color-secondary-background"
+          type="button"
+          md-tooltip="Show only MyGame" (click)="showOnlyMyGame(true)"
+          md-raised-button>
+    Show only MyGame
+  </button>
+  <button *ngIf="isTournamentPlayer && (onlyMyGameFilter$ | async)"
+          class="my-game-button color-secondary-background"
+          type="button"
+          md-tooltip="Show all" (click)="showOnlyMyGame(false)"
+          md-raised-button>
+    Show All Games
+  </button>
+  <md-input-container class="players-search-container" floatPlaceholder="never">
+    <input class="search-field" mdInput #searchField placeholder="Show Game on Table Number">
+  </md-input-container>
+</div>
+
+<ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
   <tournament-games *ngIf="(allTournamentGamesFiltered$ | async).length > 0 && actualTournament"
                     [isAdmin]="isAdmin"
                     [isCoOrganizer]="isCoOrganizer"
@@ -153,6 +184,7 @@
                     (onAddArmyLists)="handleAddArmyLists($event)"
                     (onClearPlayerGameResult)="handleClearPlayerGameResult($event)">
   </tournament-games>
+  <div id="bottom"></div>
 </ng-container>
 
 <!--<div *ngIf="(isAdmin || isCoOrganizer)  &&-->

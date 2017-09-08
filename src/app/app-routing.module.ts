@@ -18,6 +18,7 @@ import {TournamentRegistrationOverviewComponent} from './tournament/registration
 import {TournamentPlayerOverviewComponent} from './tournament/tournament-player/tournament-player-overview/tournament-player-overview.component';
 import {TournamentRoundOverviewComponent} from './tournament/round/tournament-round-overview/tournament-round-overview.component';
 import {TournamentRankingsOverviewComponent} from './tournament/rankings/tournament-ranking-overview/tournament-ranking-overview.component';
+import {TournamentFinalRankingsOverviewComponent} from './tournament/final-rankings/tournament-final-ranking-overview/tournament-final-ranking-overview.component';
 
 
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
   {path: 'tournament/:id', component: TournamentOverviewComponent},
   {path: 'tournament/:id/registrations', component: TournamentRegistrationOverviewComponent},
   {path: 'tournament/:id/players', component: TournamentPlayerOverviewComponent},
+  {path: 'tournament/:id/finalRankings', component: TournamentFinalRankingsOverviewComponent},
   {path: 'tournament/:id/round/:round', component: TournamentRoundOverviewComponent},
   {path: 'tournament/:id/round/:round/rankings', component: TournamentRankingsOverviewComponent},
   {path: 'player-profile', component: PlayerFormComponent},

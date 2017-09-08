@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 
 
@@ -26,8 +26,11 @@ import {PairAgainDialogComponent} from '../../../dialogs/round-overview/pair-aga
 import {GameResult} from '../../../../../shared/dto/game-result';
 import {GameResultService} from '../../game-result.service';
 import {NewRoundDialogComponent} from '../../../dialogs/round-overview/new-round-dialog';
-import {CHANGE_SEARCH_FIELD_GAMES_ACTION} from '../../store/tournament-actions';
+import {CHANGE_SEARCH_FIELD_GAMES_ACTION, SHOW_ONLY_MY_GAME_ACTION} from '../../store/tournament-actions';
 import {getAllScenarios} from '../../../../../shared/model/szenarios';
+import {PageScrollInstance, PageScrollService} from 'ng2-page-scroll';
+import {DOCUMENT} from '@angular/common';
+import {FinishTournamentDialogComponent} from '../../../dialogs/finish-tournament-dialog';
 
 
 @Component({
@@ -89,11 +92,16 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   scenarios: string[];
   searchField$: Observable<string>;
+  onlyMyGameFilter$: Observable<boolean>;
 
   @ViewChild('searchField') searchField: ElementRef;
 
+  onReachBottomOfPageEvent: EventEmitter<boolean>;
+  onReachTopOfPageEvent: EventEmitter<boolean>;
 
-  constructor(private snackBar: MdSnackBar,
+
+  constructor(@Inject(DOCUMENT) private document: any,
+              private snackBar: MdSnackBar,
               private dialog: MdDialog,
               private tournamentService: TournamentService,
               private armyListService: ActualTournamentArmyListService,
@@ -104,12 +112,13 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
               private gameResultService: GameResultService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private pageScrollService: PageScrollService) {
 
     this.round = +this.activeRouter.snapshot.paramMap.get('round');
     this._tournamentId = this.activeRouter.snapshot.paramMap.get('id');
 
-    console.log('create round: ' + this.round + ' for tournament: ' + this._tournamentId);
+    // console.log('create round: ' + this.round + ' for tournament: ' + this._tournamentId);
 
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
@@ -120,12 +129,11 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.loadGames$ = this.store.select(state => state.actualTournamentGames.loadGames);
 
     this.searchField$ = this.store.select(state => state.actualTournamentGames.gamesSearch);
+    this.onlyMyGameFilter$ = this.store.select(state => state.actualTournamentGames.onlyMyGameFilter);
 
     this.subscribeOnServices(this._tournamentId, this.round);
 
     this.scenarios = getAllScenarios();
-
-
   }
 
   ngOnInit() {
@@ -135,8 +143,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         const incomingTournamentId = params['id'];
         const incomingRound: number = +params['round'];
 
-        console.log('incomingTournamentId: ' + incomingTournamentId);
-        console.log('incomingRound: ' + incomingRound);
+        // console.log('incomingTournamentId: ' + incomingTournamentId);
+        // console.log('incomingRound: ' + incomingRound);
 
         if (incomingTournamentId !== this._tournamentId) {
           console.log('other tournament to display');
@@ -152,8 +160,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         }
       }
     );
-
-
     Observable.fromEvent(this.searchField.nativeElement, 'keyup')
       .debounceTime(150)
       .distinctUntilChanged()
@@ -168,21 +174,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     console.log('destroy round: ' + this.round + ' for tournament: ' + this._tournamentId);
 
     this.unsubscribeOnServices();
-  }
-
-
-  changeScenario(): void {
-
-    this.tournamentService.scenarioSelected({
-      scenario: this.selectedScenario,
-      tournamentId: this.actualTournament.id,
-      round: this.round
-    });
-
-    this.snackBar.open('Scenario selected', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
   }
 
   private subscribeOnServices(incomingTournamentId: string, incomingRound: number) {
@@ -225,38 +216,37 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   }
 
   private createDataObservables(incomingRound: number) {
-    // this.gamesForRound$ = this.allTournamentGames$.map(
-    //   games => games.filter((game: TournamentGame) => {
-    //     if (game.tournamentRound === incomingRound) {
-    //       this.selectedScenario = game.scenario;
-    //       return true;
-    //     }
-    //   }));
 
     this.gamesForRound$ = this.allTournamentGames$.map(
       games => games.filter((game: TournamentGame) => {
-
         return game.tournamentRound === incomingRound;
       }));
 
     this.allTournamentGamesFiltered$ = Observable.combineLatest(
       this.allTournamentGames$,
       this.searchField$,
-      (allGames, searchField) => {
-        if (!searchField) {
+      this.onlyMyGameFilter$,
+      (allGames, searchField, onlyMyGameFilter) => {
+        if (!searchField && !onlyMyGameFilter) {
           return allGames.filter(g => {
-
-
             if (!this.selectedScenario && g.tournamentRound === incomingRound) {
               this.selectedScenario = g.scenario;
             }
-
             return g.tournamentRound === incomingRound;
+          });
+        } else if (onlyMyGameFilter) {
+          return allGames.filter(g => {
+            const searchedPlayerId = this.userPlayerData.id;
+            return (g.playerOnePlayerId === searchedPlayerId || g.playerTwoPlayerId === searchedPlayerId)
+              && g.tournamentRound === incomingRound;
           });
         } else {
           return allGames.filter((game: TournamentGame) => {
-            const searched = game.playingField;
-            return +searchField === searched && game.tournamentRound === incomingRound;
+            const field = game.playingField;
+            const p1 = game.playerOnePlayerName;
+            const p2 = game.playerOnePlayerName;
+            return (+searchField === field || p1.startsWith(searchField) || p2.startsWith(searchField))
+              && game.tournamentRound === incomingRound;
           });
         }
       });
@@ -272,8 +262,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
     this.rankingsForRound$ = this.allTournamentRankings$.map(
       rankings => rankings.filter(r => r.tournamentRound === incomingRound));
-
-
   }
 
   private unsubscribeOnServices() {
@@ -289,6 +277,25 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.allActualTournamentPlayersSub.unsubscribe();
     this.allActualTournamentGamesSub.unsubscribe();
     this.allActualTournamentRankingsSub.unsubscribe();
+  }
+
+  changeScenario(): void {
+
+    this.tournamentService.scenarioSelected({
+      scenario: this.selectedScenario,
+      tournamentId: this.actualTournament.id,
+      round: this.round
+    });
+
+    this.snackBar.open('Scenario selected', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  showOnlyMyGame(show: boolean): void {
+
+    this.store.dispatch({type: SHOW_ONLY_MY_GAME_ACTION, payload: show});
   }
 
   getArrayForNumber(round: number): number[] {
@@ -427,6 +434,34 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  openFinishTournamentDialog() {
+    const dialogRef = this.dialog.open(FinishTournamentDialogComponent, {
+      data: {
+        round: this.round,
+        allActualTournamentPlayers: this.allActualTournamentPlayers
+      },
+      width: '600px',
+    });
+    const eventSubscribe = dialogRef.componentInstance.onEndTournament
+      .subscribe(() => {
+
+        this.tournamentService.endTournament(this.actualTournament);
+
+        this.snackBar.open('Tournament ended successfully ', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
+
+        this.router.navigate(['/tournament', this.actualTournament.id, 'finalRankings']);
+
+
+      });
+    dialogRef.afterClosed().subscribe(() => {
+
+      eventSubscribe.unsubscribe();
+    });
+  }
+
 
   handleClearPlayerGameResult(game: TournamentGame) {
 
@@ -496,6 +531,55 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       }
     });
   };
+
+  startAutoScroll() {
+
+    const that = this;
+
+    this.onReachBottomOfPageEvent = new EventEmitter();
+
+    this.onReachBottomOfPageEvent.subscribe(function (x) {
+
+      if (!x) {
+        that.onReachBottomOfPageEvent.complete();
+      }
+      that.autoScrollToTop();
+    });
+
+    this.onReachTopOfPageEvent = new EventEmitter();
+
+    this.onReachTopOfPageEvent.subscribe(function (x) {
+
+      if (!x) {
+        that.onReachTopOfPageEvent.complete();
+      }
+      that.autoScrollToBottom();
+    });
+
+    this.autoScrollToBottom();
+  }
+
+  autoScrollToBottom() {
+
+    const pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
+      document: this.document,
+      scrollTarget: '#bottom',
+      pageScrollDuration: 30000,
+      pageScrollFinishListener: this.onReachBottomOfPageEvent
+    });
+    this.pageScrollService.start(pageScrollInstance);
+  }
+
+  autoScrollToTop() {
+
+    const pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({
+      document: this.document,
+      scrollTarget: '#top',
+      pageScrollDuration: 15000,
+      pageScrollFinishListener: this.onReachTopOfPageEvent
+    });
+    this.pageScrollService.start(pageScrollInstance);
+  }
 
 }
 

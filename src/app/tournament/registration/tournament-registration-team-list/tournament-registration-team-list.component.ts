@@ -81,7 +81,7 @@ export class TournamentRegistrationTeamComponent implements OnInit {
   //       isAdmin: this.isAdmin
   //     }
   //   });
-  //   const regChangeEventSubscribe = dialogRef.componentInstance.onRegChangeEventSubscribe.subscribe(
+  //   const regChangeEventSubscribe = dialogRef.componentInstance.onChangeRegistration.subscribe(
   //     (playerRegistrationChange: PlayerRegistrationChange) => {
   //     if (playerRegistrationChange) {
   //       this.onPlayerRegChangeEventSubscribe.emit(playerRegistrationChange);

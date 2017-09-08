@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {MdDialog} from '@angular/material';
+import {MdDialog, MdSnackBar} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {Tournament} from '../../../../../shared/model/tournament';
 import {Player} from '../../../../../shared/model/player';
@@ -23,6 +23,7 @@ import {ArmyList} from '../../../../../shared/model/armyList';
 import {ArmyListRegistrationPush} from '../../../../../shared/dto/armyList-registration-push';
 import {PrintArmyListsDialogComponent} from '../../../dialogs/print-army-lists-dialog';
 import {TournamentFormDialogComponent} from '../../../dialogs/tournament-form-dialog';
+import {PlayerRegistrationChange} from '../../../../../shared/dto/playerRegistration-change';
 
 
 @Component({
@@ -60,14 +61,18 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
   private allTeamNames: string[] = [];
 
+  private router: Router;
 
-  constructor(private dialog: MdDialog,
+  constructor(private _router: Router,
+              private snackBar: MdSnackBar,
+              private dialog: MdDialog,
               private tournamentService: TournamentService,
               private registrationService: ActualTournamentRegistrationService,
               private tournamentPlayerService: ActualTournamentPlayerService,
               private armyListService: ActualTournamentArmyListService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute) {
+    this.router = _router;
 
     this.activeRouter.params.subscribe(
       params => {
@@ -80,11 +85,11 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
-    this.allRegistrations$ = this.store.select(state => state.actualTournament.actualTournamentRegisteredPlayers);
+    this.allRegistrations$ = this.store.select(state => state.actualTournamentRegistrations.registrations);
     this.allTournamentPlayers$ = this.store.select(state => state.actualTournamentPlayers.players);
     this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
 
-    this.loadReg$ = this.store.select(state => state.actualTournament.loadRegistrations);
+    this.loadReg$ = this.store.select(state => state.actualTournamentRegistrations.loadRegistrations);
   }
 
   ngOnInit() {
@@ -208,6 +213,11 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
       if (registrationPush !== undefined) {
         this.registrationService.pushRegistration(registrationPush);
+
+        this.snackBar.open('Registration saved successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
       }
     });
     dialogRef.afterClosed().subscribe(() => {
@@ -264,6 +274,30 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
   handleAcceptRegistration(registration: Registration) {
     this.registrationService.acceptRegistration(registration);
+
+    this.snackBar.open('Registration successfully accepted', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+  handleChangeRegistration(registrationChange: PlayerRegistrationChange) {
+    this.registrationService.changeRegistration(registrationChange);
+
+    this.snackBar.open('Registration successfully updated', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+  handleDeleteRegistration(registration: Registration) {
+    this.registrationService.killRegistration({
+      tournament: this.actualTournament,
+      registration: registration
+    });
+
+    this.snackBar.open('Registration killed successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
   }
 
   openTournamentFormDialog() {

@@ -91,7 +91,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
-    this.allRegistrations$ = this.store.select(state => state.actualTournament.actualTournamentRegisteredPlayers);
+    this.allRegistrations$ = this.store.select(state => state.actualTournamentRegistrations.registrations);
     this.allTournamentPlayers$ = this.store.select(state => state.actualTournamentPlayers.players);
     this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
 

@@ -86,7 +86,7 @@
                  (click)="showArmyList(ranking)">
           list</md-icon>
 
-        <ng-container *ngIf="(isAdmin || isCoOrganizer) && !dropRequest">
+        <ng-container *ngIf="(isAdmin || isCoOrganizer) && !dropRequest && !actualTournament?.finished">
           <md-icon *ngIf="isDroppable(ranking)"
                    class="list-action color-negative"
                    mdTooltip="Drop Player"

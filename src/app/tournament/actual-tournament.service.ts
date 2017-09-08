@@ -69,45 +69,7 @@ export class TournamentService {
   }
 
 
-  // private subscribeOnTournamentPlayers(tournamentId: string) {
-  //   const that = this;
-  //
-  //   this.store.dispatch(new ClearTournamentPlayerAction());
-  //
-  //   if (this.tournamentPlayerRef) {
-  //     this.tournamentPlayerRef.off();
-  //   }
-  //
-  //   this.tournamentPlayerRef = firebase.database().ref('tournament-players/' + tournamentId);
-  //
-  //   this.tournamentPlayerRef.on('child_added', function (snapshot) {
-  //
-  //     const tournamentPlayer: TournamentPlayer = TournamentPlayer.fromJson(snapshot.val());
-  //     tournamentPlayer.id = snapshot.key;
-  //
-  //     that.store.dispatch(new TournamentPlayerAdded(tournamentPlayer));
-  //
-  //   });
-  //
-  //   this.tournamentPlayerRef.on('child_changed', function (snapshot) {
-  //
-  //     const tournamentPlayer: TournamentPlayer = TournamentPlayer.fromJson(snapshot.val());
-  //     tournamentPlayer.id = snapshot.key;
-  //
-  //     that.store.dispatch(new TournamentPlayerChanged(tournamentPlayer));
-  //
-  //   });
-  //
-  //   this.tournamentPlayerRef.on('child_removed', function (snapshot) {
-  //
-  //     that.store.dispatch(new TournamentPlayerDeleted(snapshot.key));
-  //
-  //   });
-  // }
 
-  private subscribeOnArmyLists(tournamentId: string) {
-
-  }
 
   pushRegistration(registrationPush: RegistrationPush) {
 
@@ -424,17 +386,13 @@ export class TournamentService {
     });
   }
 
-  endTournament(config: TournamentManagementConfiguration) {
-    // this.rankingService.pushRankingForRound(config);
+  endTournament(tournament: Tournament) {
 
-    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
+    const registrationRef = this.afoDatabase.object('tournaments/' + tournament.id);
     registrationRef.update(
-      {finished: true, visibleRound: (config.round - 1)}
+      {finished: true, visibleRound: (tournament.actualRound)}
     );
-    this.snackBar.open('Successfully end Tournament', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
+
 
   }
 
@@ -453,17 +411,14 @@ export class TournamentService {
 
   }
 
-  undoTournamentEnd(config: TournamentManagementConfiguration) {
-    this.rankingService.eraseRankingsForRound(config);
+  undoTournamentEnd(tournament: Tournament) {
 
-    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
+
+    const registrationRef = this.afoDatabase.object('tournaments/' + tournament.id);
     registrationRef.update(
       {finished: false}
     );
-    this.snackBar.open('Successfully undo end Tournament', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
+
   }
 
   swapPlayer(swapPlayer: SwapGames) {
@@ -538,16 +493,11 @@ export class TournamentService {
 
   uploadTournament(tournamentId: string) {
 
-    this.tournamentGameService.calculateEloForTournament();
 
     const registrationRef = this.afoDatabase.object('tournaments/' + tournamentId);
     registrationRef.update(
       {uploaded: true}
     );
-    this.snackBar.open('Successfully upload Tournament', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
   }
 
   scenarioSelectedAction(scenarioSelected: ScenarioSelectedModel) {

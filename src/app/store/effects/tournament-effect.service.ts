@@ -71,10 +71,6 @@ import {CLEAR_PLAYER_GAME_RESULT_ACTION, ClearPlayerGameResultAction} from 'app/
 @Injectable()
 export class TournamentEffectService {
 
-  @Effect({dispatch: false}) endTournament = this.actions$
-    .ofType(END_TOURNAMENT_ACTION)
-    .debug('END_TOURNAMENT_ACTION')
-    .map((action: EndTournamentAction) => this.tournamentService.endTournament(action.payload));
 
   @Effect({dispatch: false}) endTeamTournament = this.actions$
     .ofType(END_TEAM_TOURNAMENT_ACTION)
@@ -101,20 +97,11 @@ export class TournamentEffectService {
     .debug('TOURNAMENT_KILL_TEAM_ROUND_ACTION')
     .map((action: TournamentKillTeamRoundAction) => this.tournamentService.killTeamRound(action.payload));
 
-  @Effect({dispatch: false}) undoTournamentEnd = this.actions$
-    .ofType(UNDO_TOURNAMENT_END_ACTION)
-    .debug('UNDO_TOURNAMENT_END_ACTION')
-    .map((action: UndoTournamentEndAction) => this.tournamentService.undoTournamentEnd(action.payload));
-
   @Effect({dispatch: false}) undoTeamTournamentEnd = this.actions$
     .ofType(UNDO_TEAM_TOURNAMENT_END_ACTION)
     .debug('UNDO_TEAM_TOURNAMENT_END_ACTION')
     .map((action: UndoTeamTournamentEndAction) => this.tournamentService.undoTeamTournamentEnd(action.payload));
 
-  @Effect({dispatch: false}) uploadTournament = this.actions$
-    .ofType(UPLOAD_TOURNAMENT_ACTION)
-    .debug('UPLOAD_TOURNAMENT_ACTION')
-    .map((action: UploadTournamentAction) => this.tournamentService.uploadTournament(action.payload));
 
   @Effect({dispatch: false}) uploadTeamTournament = this.actions$
     .ofType(UPLOAD_TEAM_TOURNAMENT_ACTION)
@@ -179,10 +166,7 @@ export class TournamentEffectService {
     .map((action: TournamentPairAgainTeamAction) => this.tournamentService.pairAgainTeamTournament(action.payload));
 
 
-  @Effect({dispatch: false}) pushRegistration = this.actions$
-    .ofType(REGISTRATION_PUSH_ACTION)
-    .debug('REGISTRATION_PUSH_ACTION')
-    .map((action: RegistrationPushAction) => this.tournamentService.pushRegistration(action.payload));
+
 
   @Effect({dispatch: false}) eraseRegistration = this.actions$
     .ofType(REGISTRATION_ERASE_ACTION)

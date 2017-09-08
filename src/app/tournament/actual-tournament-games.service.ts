@@ -1162,9 +1162,4 @@ export class ActualTournamentGamesService {
 
 }
 
-class EloChange {
 
-  playerId: string;
-  eloChange: number;
-
-}

@@ -48,7 +48,7 @@
     <div class="full-width">
       <md-icon class="align-fix">attach_money</md-icon>
       <md-checkbox
-        [checked]="playerRegistration.paymentChecked"
+        [checked]="playerRegistration?.paymentChecked"
         (change)="changePaidForTournament()"
         mdTooltip="Check all ArmyLists before you check"
       >Player paid?
@@ -57,7 +57,7 @@
     <div class="full-width">
       <md-icon class="align-fix">assignment_late</md-icon>
       <md-checkbox
-        [checked]="playerRegistration.armyListsChecked"
+        [checked]="playerRegistration?.armyListsChecked"
         (change)="changeArmyListForTournament()"
         mdTooltip="Check all ArmyLists before you check"
       >ArmyLists Okay?

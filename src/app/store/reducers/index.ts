@@ -13,6 +13,7 @@ import * as fromActualTournamentGames from '../../tournament/store/actual-tourna
 import * as fromActualTournamentRankings from '../../tournament/store/actual-tournament-rankings-reducer';
 import * as fromActualTournamentPlayers from '../../tournament/store/actual-tournament-players-reducer';
 import * as fromActualTournamentArmyLists from '../../tournament/store/actual-tournament-army-lists-reducer';
+import * as fromActualTournamentRegistrations from '../../tournament/store/actual-tournament-registrations-reducer';
 
 
 export interface AppState {
@@ -27,6 +28,7 @@ export interface AppState {
   actualTournamentRankings: fromActualTournamentRankings.ActualTournamentRankingsState;
   actualTournamentPlayers: fromActualTournamentPlayers.ActualTournamentPlayersState;
   actualTournamentArmyLists: fromActualTournamentArmyLists.ActualTournamentArmyListsState;
+  actualTournamentRegistrations: fromActualTournamentRegistrations.ActualTournamentRegistrationsState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
@@ -41,4 +43,5 @@ export const reducers: ActionReducerMap<AppState> = {
   actualTournamentRankings: fromActualTournamentRankings.actualTournamentRankiongsReducer,
   actualTournamentPlayers: fromActualTournamentPlayers.playersReducer,
   actualTournamentArmyLists: fromActualTournamentArmyLists.actualTournamentArmyListsReducer,
+  actualTournamentRegistrations: fromActualTournamentRegistrations.actualTournamentRegistrationsReducer,
 };

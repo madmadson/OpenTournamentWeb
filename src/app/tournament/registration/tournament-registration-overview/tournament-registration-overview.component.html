@@ -1,11 +1,10 @@
-<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
-<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isTournamentPlayer" class="sub-heading">Hello Player</h4>
+<h4  class="heading">{{actualTournament?.name}}</h4>
+<h4 *ngIf="isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="isTournamentPlayer" class="sub-heading">Hello Player</h4>
 
 <div class="actual-tournament-nav-container">
-  <button *ngIf="!fullscreenMode"
-          type="button"
+  <button type="button"
           md-raised-button
           class="color-info-background action-button"
           [mdMenuTriggerFor]="menu">
@@ -26,8 +25,9 @@
             (click)="router.navigate(['/tournament', actualTournament?.id, 'round', round]);">>
       Go to -> Round {{index +1}}
     </button>
-
-    <button *ngIf="actualTournament?.finished" md-menu-item>
+    <button *ngIf="actualTournament?.finished"
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'finalRankings']);">>
       Go to -> Final Rankings
     </button>
   </md-menu>
@@ -46,7 +46,7 @@
 
 <div class="action-card-container">
   <md-card class="action-card action-button-wrapper">
-    <button *ngIf="!isRegisteredPlayer"
+    <button *ngIf="!isRegisteredPlayer && actualTournament?.actualRound === 0"
             type="button"
             (click)="openRegistrationDialog()"
             class="color-positive-background action-button"
@@ -54,7 +54,7 @@
       <md-icon>add</md-icon>
       Register
     </button>
-    <button *ngIf="isRegisteredPlayer && !isTournamentPlayer"
+    <button *ngIf="isRegisteredPlayer && !isTournamentPlayer && actualTournament?.actualRound === 0"
             (click)="deleteMyRegistration()"
             type="button"
             class="color-negative-background action-button"
@@ -68,7 +68,7 @@
             class="color-positive-background action-button"
             md-raised-button>
       <md-icon>assignment_returned</md-icon>
-      ArmyList
+      My ArmyList
     </button>
     <button *ngIf="isAdmin || isCoOrganizer"
             (click)="openPrintArmyListDialog()"
@@ -78,7 +78,7 @@
       <md-icon>list</md-icon>
       Print Lists
     </button>
-    <button *ngIf="isAdmin || isCoOrganizer"
+    <button *ngIf="(isAdmin || isCoOrganizer) && !actualTournament?.finished"
             (click)="openTournamentFormDialog()"
             type="button"
             class="color-positive-background action-button"
@@ -96,5 +96,7 @@
                               [armyLists]="allArmyLists$ | async"
                               [isAdmin]="isAdmin"
                               [isCoOrganizer]="isCoOrganizer"
-                              (onAcceptRegistration)="handleAcceptRegistration($event)">
+                              (onAcceptRegistration)="handleAcceptRegistration($event)"
+                              (onChangeRegistration)="handleChangeRegistration($event)"
+                              (onDeleteRegistration)="handleDeleteRegistration($event)">
 </tournament-registration-list>

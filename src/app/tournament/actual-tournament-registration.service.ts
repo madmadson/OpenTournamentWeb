@@ -19,7 +19,8 @@ import {MdSnackBar} from '@angular/material';
 
 import * as _ from 'lodash';
 import * as firebase from 'firebase';
-import {TournamentPlayer} from "../../../shared/model/tournament-player";
+import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-change';
 
 
 @Injectable()
@@ -133,12 +134,6 @@ export class ActualTournamentRegistrationService {
         extraClasses: ['snackBar-success'],
         duration: 5000
       });
-    } else {
-
-      this.snackBar.open('Registration saved successfully', '', {
-        extraClasses: ['snackBar-success'],
-        duration: 5000
-      });
     }
   }
 
@@ -166,10 +161,6 @@ export class ActualTournamentRegistrationService {
         regPush.tournamentTeam.id);
       tournamentTeamRef.update({registeredPlayerIds: newListOfRegisteredTeamMembers});
     }
-
-    this.snackBar.open('Registration deleted successfully', '', {
-      duration: 5000
-    });
   }
 
   acceptRegistration(registration: Registration) {
@@ -181,9 +172,18 @@ export class ActualTournamentRegistrationService {
     const registrationRef = this.afoDatabase.object('tournament-registrations/' + registration.tournamentId + '/' + registration.id);
     registrationRef.update({isTournamentPlayer: true});
 
-    this.snackBar.open('Registration accepted. Player added.', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
+  }
+
+  changeRegistration(regChange: PlayerRegistrationChange) {
+    const registrationRef = this.afoDatabase.object('tournament-registrations/' +
+      regChange.registration.tournamentId + '/' + regChange.registration.id);
+
+    registrationRef.update({
+      armyListsChecked: regChange.armyListsChecked,
+      paymentChecked: regChange.paymentChecked,
+      playerMarkedPayment: regChange.playerMarkedPayment,
+      playerUploadedArmyLists: regChange.playerUploadedArmyLists
     });
   }
+
 }

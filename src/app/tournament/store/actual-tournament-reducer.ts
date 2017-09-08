@@ -23,7 +23,7 @@ export interface ActualTournamentState {
   // actualTournamentPlayers: TournamentPlayer[];
   // games: TournamentGame[];
   // actualTournamentRankings: TournamentRanking[];
-  actualTournamentRegisteredPlayers: Registration[];
+  // actualTournamentRegisteredPlayers: Registration[];
 
   // only for team tournament
   actualTournamentTeams: TournamentTeam[];
@@ -31,7 +31,7 @@ export interface ActualTournamentState {
   actualTournamentTeamGames: TournamentGame[];
   actualTournamentTeamRankings: TournamentRanking[];
 
-  loadRegistrations: boolean;
+  // loadRegistrations: boolean;
   // loadPlayers: boolean;
   // loadRankings: boolean;
   // loadGames: boolean;
@@ -46,7 +46,7 @@ const initialState = {
   // actualTournamentPlayers: [],
   // actualTournamentGames: [],
   // rankings: [],
-  actualTournamentRegisteredPlayers: [],
+  // actualTournamentRegisteredPlayers: [],
 
   // only for team tournament
   actualTournamentTeams: [],
@@ -54,7 +54,7 @@ const initialState = {
   actualTournamentTeamGames: [],
   actualTournamentTeamRankings: [],
 
-  loadRegistrations: true,
+  // loadRegistrations: true,
   // loadPlayers: true,
   // loadRankings: true,
   // loadGames: true,
@@ -72,20 +72,20 @@ export function actualTournamentReducer(state = initialState, action): ActualTou
     case UNSET_ACTUAL_TOURNAMENT_ACTION:
       return handleUnsetTournamentAction(state);
 
-    // Registrations
-    case ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
-      return handleAddTournamentRegistrationAction(state, action);
-    case CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
-      return handleChangeTournamentRegistrationAction(state, action);
-    case REMOVE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
-      return handleRemoveTournamentRegistrationAction(state, action);
-    case CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION:
-      return handleClearTournamentRegistrationAction(state);
-    case ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION:
-      return handleAddAllTournamentRegistrationAction(state, action);
-
-    case LOAD_REGISTRATIONS_FINISHED_ACTION:
-      return handleLoadRegistrationsFinishedAction(state);
+    // // Registrations
+    // case ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
+    //   return handleAddTournamentRegistrationAction(state, action);
+    // case CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
+    //   return handleChangeTournamentRegistrationAction(state, action);
+    // case REMOVE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION:
+    //   return handleRemoveTournamentRegistrationAction(state, action);
+    // case CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION:
+    //   return handleClearTournamentRegistrationAction(state);
+    // case ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION:
+    //   return handleAddAllTournamentRegistrationAction(state, action);
+    //
+    // case LOAD_REGISTRATIONS_FINISHED_ACTION:
+    //   return handleLoadRegistrationsFinishedAction(state);
 
     // TournamentPlayer
     // case ADD_ACTUAL_TOURNAMENT_PLAYER_ACTION:
@@ -247,68 +247,68 @@ function handleUnsetTournamentAction(state): ActualTournamentState {
 
 // Registrations
 
-function handleAddTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
-
-  const newTournamentData: ActualTournamentState = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-    newTournamentData.actualTournamentRegisteredPlayers.push(action.payload);
-  }
-  return newTournamentData;
-}
-
-function handleChangeTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
-  const newStoreState: ActualTournamentState = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-
-    const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload.id]);
-
-    newStoreState.actualTournamentRegisteredPlayers[indexOfSearchedRegistration] = action.payload;
-  }
-  return newStoreState;
-}
-
-function handleRemoveTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
-  const newStoreState: ActualTournamentState = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-
-    const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload]);
-    newStoreState.actualTournamentRegisteredPlayers.splice(indexOfSearchedRegistration, 1);
-  }
-  return newStoreState;
-}
-
-
-function handleClearTournamentRegistrationAction(state: ActualTournamentState): ActualTournamentState {
-
-  const newTournamentData: ActualTournamentState = _.cloneDeep(state);
-
-  newTournamentData.actualTournamentRegisteredPlayers = [];
-
-  return newTournamentData;
-}
-
-function handleAddAllTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
-
-  const newStoreState: ActualTournamentState = _.cloneDeep(state);
-
-  if (action.payload !== undefined) {
-
-    newStoreState.actualTournamentRegisteredPlayers = action.payload;
-
-  }
-  return newStoreState;
-}
-
-function handleLoadRegistrationsFinishedAction(state: ActualTournamentState): ActualTournamentState {
-  const newStoreState: ActualTournamentState = _.cloneDeep(state);
-
-  newStoreState.loadRegistrations = false;
-
-  return newStoreState;
-}
+// function handleAddTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
+//
+//   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
+//
+//   if (action.payload !== undefined) {
+//     newTournamentData.actualTournamentRegisteredPlayers.push(action.payload);
+//   }
+//   return newTournamentData;
+// }
+//
+// function handleChangeTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
+//   const newStoreState: ActualTournamentState = _.cloneDeep(state);
+//
+//   if (action.payload !== undefined) {
+//
+//     const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload.id]);
+//
+//     newStoreState.actualTournamentRegisteredPlayers[indexOfSearchedRegistration] = action.payload;
+//   }
+//   return newStoreState;
+// }
+//
+// function handleRemoveTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
+//   const newStoreState: ActualTournamentState = _.cloneDeep(state);
+//
+//   if (action.payload !== undefined) {
+//
+//     const indexOfSearchedRegistration = _.findIndex(newStoreState.actualTournamentRegisteredPlayers, ['id', action.payload]);
+//     newStoreState.actualTournamentRegisteredPlayers.splice(indexOfSearchedRegistration, 1);
+//   }
+//   return newStoreState;
+// }
+//
+//
+// function handleClearTournamentRegistrationAction(state: ActualTournamentState): ActualTournamentState {
+//
+//   const newTournamentData: ActualTournamentState = _.cloneDeep(state);
+//
+//   newTournamentData.actualTournamentRegisteredPlayers = [];
+//
+//   return newTournamentData;
+// }
+//
+// function handleAddAllTournamentRegistrationAction(state: ActualTournamentState, action): ActualTournamentState {
+//
+//   const newStoreState: ActualTournamentState = _.cloneDeep(state);
+//
+//   if (action.payload !== undefined) {
+//
+//     newStoreState.actualTournamentRegisteredPlayers = action.payload;
+//
+//   }
+//   return newStoreState;
+// }
+//
+// function handleLoadRegistrationsFinishedAction(state: ActualTournamentState): ActualTournamentState {
+//   const newStoreState: ActualTournamentState = _.cloneDeep(state);
+//
+//   newStoreState.loadRegistrations = false;
+//
+//   return newStoreState;
+// }
 
 
 // TournamentPlayers

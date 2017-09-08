@@ -44,11 +44,12 @@
         List
       </md-header-cell>
       <md-cell *cdkCellDef="let registration" class="armyList-column">
-        <md-icon  *ngIf="!registration.armyListsChecked && !registration.playerUploadedArmyLists"
+
+        <md-icon  *ngIf="!registration?.armyListsChecked && !registration?.playerUploadedArmyLists"
                   md-tooltip="No ArmyList uploaded yet" class="color-negative list-icon">assignment_late</md-icon>
-        <md-icon  *ngIf="!registration.armyListsChecked && registration.playerUploadedArmyLists"
+        <md-icon  *ngIf="!registration?.armyListsChecked && registration?.playerUploadedArmyLists"
                   md-tooltip="ArmyLists uploaded" class="color-secondary list-icon">assignment_returned</md-icon>
-        <md-icon  *ngIf="registration.armyListsChecked && registration.playerUploadedArmyLists"
+        <md-icon  *ngIf="registration?.armyListsChecked"
                   md-tooltip="ArmyLists checked" class="color-positive list-icon">assignment_turned_in</md-icon>
       </md-cell>
     </ng-container>
@@ -58,9 +59,9 @@
         Paid
       </md-header-cell>
       <md-cell *cdkCellDef="let registration" class="paid-column">
-        <md-icon *ngIf="!registration.playerMarkedPayment"
+        <md-icon *ngIf="!registration?.paymentChecked"
                   md-tooltip="Player has not paid yet" class="color-negative list-icon">money_off</md-icon>
-        <md-icon *ngIf="registration.playerMarkedPayment"
+        <md-icon *ngIf="registration?.paymentChecked"
                  md-tooltip="Player has paid" class="color-positive list-icon">attach_money</md-icon>
       </md-cell>
     </ng-container>

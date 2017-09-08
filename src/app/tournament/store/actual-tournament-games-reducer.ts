@@ -4,7 +4,7 @@ import {
   CHANGE_ACTUAL_TOURNAMENT_GAME_ACTION, CHANGE_SCENARIO_ACTION, CHANGE_SEARCH_FIELD_GAMES_ACTION,
   CLEAR_ACTUAL_TOURNAMENT_GAMES_ACTION,
   LOAD_TOURNAMENT_GAMES_FINISHED_ACTION,
-  REMOVE_ACTUAL_TOURNAMENT_GAME_ACTION
+  REMOVE_ACTUAL_TOURNAMENT_GAME_ACTION, SHOW_ONLY_MY_GAME_ACTION
 } from './tournament-actions';
 
 
@@ -19,6 +19,7 @@ export interface ActualTournamentGamesState {
 
   scenario: string;
   gamesSearch: string;
+  onlyMyGameFilter: boolean;
 }
 
 const initialState = {
@@ -28,6 +29,7 @@ const initialState = {
 
   scenario: '',
   gamesSearch: '',
+  onlyMyGameFilter: false
 };
 
 
@@ -54,6 +56,8 @@ export function actualTournamentGamesReducer(state = initialState, action): Actu
       return handleSearchFieldTournamentGamesAction(state, action);
     case CHANGE_SCENARIO_ACTION:
       return handleSetScenarioAction(state, action);
+    case SHOW_ONLY_MY_GAME_ACTION:
+      return handleShowOnlyMyGameAction(state, action);
 
     default:
       return state;
@@ -131,6 +135,8 @@ function handleSearchFieldTournamentGamesAction(state: ActualTournamentGamesStat
   const newStoreState = _.cloneDeep(state);
 
   if (action.payload !== undefined) {
+
+    console.log('new action: ' + action.payload);
     newStoreState.gamesSearch = action.payload;
   }
   return newStoreState;
@@ -141,6 +147,15 @@ function handleSetScenarioAction(state: ActualTournamentGamesState, action): Act
   const newStoreState: ActualTournamentGamesState = _.cloneDeep(state);
 
   newStoreState.scenario = action.payload;
+
+  return newStoreState;
+}
+
+function handleShowOnlyMyGameAction(state: ActualTournamentGamesState, action): ActualTournamentGamesState {
+
+  const newStoreState: ActualTournamentGamesState = _.cloneDeep(state);
+
+  newStoreState.onlyMyGameFilter = action.payload;
 
   return newStoreState;
 }

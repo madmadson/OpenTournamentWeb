@@ -17,9 +17,7 @@ export class FinishTournamentDialogComponent {
               @Inject(MD_DIALOG_DATA) public data: any) {
 
     this.round = data.round;
-    data.allPlayers$.subscribe(allPlayers => {
-      this.suggestedRoundToPlay = Math.round(Math.log2(allPlayers.length));
-    });
+    this.suggestedRoundToPlay = Math.round(Math.log2(data.allActualTournamentPlayers.length));
   }
 
   endTournament() {

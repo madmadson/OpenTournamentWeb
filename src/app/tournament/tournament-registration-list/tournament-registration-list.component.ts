@@ -23,7 +23,7 @@ export class TournamentRegistrationListComponent2 implements OnInit {
   @Output() onAcceptRegistration = new EventEmitter<Registration>();
   // @Output() onDeleteRegistration = new EventEmitter<Registration>();
   // @Output() onAddArmyListForRegistrationDialog = new EventEmitter<Registration>();
-  // @Output() onPlayerRegChangeEventSubscribe = new EventEmitter<PlayerRegistrationChange>();
+  // @Output() onChangeRegistration = new EventEmitter<PlayerRegistrationChange>();
 
   displayedColumns = [
     'playerName', 'team', 'locality', 'faction', 'armyList', 'paid', 'actions'];
@@ -82,10 +82,10 @@ export class TournamentRegistrationListComponent2 implements OnInit {
   //       isAdmin: this.isAdmin
   //     }
   //   });
-  //   const regChangeEventSubscribe = dialogRef.componentInstance.onRegChangeEventSubscribe.subscribe(
+  //   const regChangeEventSubscribe = dialogRef.componentInstance.onChangeRegistration.subscribe(
   //     (playerRegistrationChange: PlayerRegistrationChange) => {
   //     if (playerRegistrationChange) {
-  //       this.onPlayerRegChangeEventSubscribe.emit(playerRegistrationChange);
+  //       this.onChangeRegistration.emit(playerRegistrationChange);
   //     }
   //     dialogRef.close();
   //   });

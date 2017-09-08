@@ -206,7 +206,7 @@ export class PairingService {
           this.afoDatabase.object('tournament-rankings/' + config.tournamentId + '/' + ranking.$key).remove();
         }
       });
-      console.log('all rankings killed');
+      console.log('all rankings for round ' + config.round + ' killed');
     });
 
     return query;
