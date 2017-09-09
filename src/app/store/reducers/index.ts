@@ -5,7 +5,9 @@ import * as fromRouter from '@ngrx/router-store';
 
 import * as fromGames from '../../games/games-reducer';
 import * as fromAuthentication from '../reducers/authenticationReducer';
-import * as fromMySite from '../reducers/mySiteReducer';
+import * as fromMyTournaments from '../../my-site/tournaments/my-tournaments-reducer';
+import * as fromMyRegistrations from '../../my-site/registrations/my-registrations-reducer';
+import * as fromMyGames from '../../my-site/games/my-games-reducer';
 import * as fromPlayers from '../reducers/playersReducer';
 import * as fromActualTournament from '../../tournament/store/actual-tournament-reducer';
 import * as fromTournaments from '../../tournaments/tournaments-reducer';
@@ -21,7 +23,9 @@ export interface AppState {
   tournaments: fromTournaments.TournamentsState;
   routerReducer: fromRouter.RouterReducerState<RouterStateUrl>;
   authentication: fromAuthentication.AuthenticationState;
-  mySite: fromMySite.MySiteState;
+  myTournaments: fromMyTournaments.MyTournamentsState;
+  myRegistrations: fromMyRegistrations.MyRegistrationsState;
+  myGames: fromMyGames.MyGamesState;
   players: fromPlayers.PlayersState;
   actualTournament: fromActualTournament.ActualTournamentState;
   actualTournamentGames: fromActualTournamentGames.ActualTournamentGamesState;
@@ -36,7 +40,9 @@ export const reducers: ActionReducerMap<AppState> = {
   tournaments: fromTournaments.tournamentsReducer,
   routerReducer: fromRouter.routerReducer,
   authentication: fromAuthentication.authenticationReducer,
-  mySite: fromMySite.mySiteReducer,
+  myTournaments: fromMyTournaments.myTournamentsReducer,
+  myRegistrations: fromMyRegistrations.myRegistrationsReducer,
+  myGames: fromMyGames.myGamesReducer,
   players: fromPlayers.playersReducer,
   actualTournament: fromActualTournament.actualTournamentReducer,
   actualTournamentGames: fromActualTournamentGames.actualTournamentGamesReducer,

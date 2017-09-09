@@ -1,11 +1,10 @@
-<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
-<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isTournamentPlayer" class="sub-heading">Hello Player</h4>
+<h4 class="heading">{{actualTournament?.name}}</h4>
+<h4 *ngIf="isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="isTournamentPlayer" class="sub-heading">Hello Player</h4>
 
 <div class="actual-tournament-nav-container">
-  <button *ngIf="!fullscreenMode"
-          type="button"
+  <button type="button"
           md-raised-button
           class="color-info-background action-button"
           [mdMenuTriggerFor]="menu">
@@ -32,7 +31,7 @@
     </button>
     <button *ngIf="actualTournament?.finished"
             md-menu-item
-            (click)="router.navigate(['/tournament', actualTournament?.id, 'finalRankings']);">>
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'finalRankings']);">
       Go to -> Final Rankings
     </button>
   </md-menu>
@@ -56,7 +55,7 @@
   <div class="action-card-container">
     <md-card class="action-card action-button-wrapper">
       <ng-container *ngIf="(round === actualTournament?.actualRound) && (isAdmin || isCoOrganizer)">
-        <button *ngIf="(finishedGamesForRound$ | async).length === 0"
+        <button *ngIf="(finishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
                 (click)="openPairAgainDialog()"
                 type="button"
                 class="color-positive-background action-button"
@@ -64,7 +63,7 @@
           <md-icon>undo</md-icon>
           Pair Again
         </button>
-        <button *ngIf="(unfinishedGamesForRound$ | async).length === 0"
+        <button *ngIf="(unfinishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
                 (click)="openNewRoundDialog()"
                 type="button"
                 class="color-positive-background action-button"
@@ -72,7 +71,7 @@
           <md-icon>play_arrow</md-icon>
           New Round
         </button>
-        <button *ngIf="(unfinishedGamesForRound$ | async).length === 0"
+        <button *ngIf="(unfinishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
                 (click)="openFinishTournamentDialog()"
                 type="button"
                 class="color-positive-background action-button"
@@ -88,20 +87,21 @@
           <md-icon>cloud_upload</md-icon>
           Publish Round
         </button>
-        <button (click)="openKillRoundDialog()"
+        <button *ngIf="(isAdmin || isCoOrganizer) && !actualTournament?.finished"
+                (click)="openKillRoundDialog()"
                 type="button"
                 class="color-negative-background action-button"
                 md-raised-button>
           <md-icon>warning</md-icon>
           Kill Round
         </button>
-
-        <button (click)="doRandomGameResultsForAllGames()"
+        <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
+                (click)="doRandomGameResultsForAllGames()"
                 type="button"
                 class="color-negative-background action-button"
                 md-raised-button>
           <md-icon>warning</md-icon>
-          Random Results
+          !Random Results!
         </button>
       </ng-container>
       <button (click)="showRankingsOfRound()"

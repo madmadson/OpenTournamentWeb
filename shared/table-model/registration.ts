@@ -86,8 +86,14 @@ export class RegistrationsDataSource extends DataSource<Registration> {
         case 'team':
           [propertyA, propertyB] = [a.teamName, b.teamName];
           break;
-        case 'locality':
-          [propertyA, propertyB] = [a.meta, b.meta];
+        case 'tournamentName':
+          [propertyA, propertyB] = [a.tournamentName, b.tournamentName];
+          break;
+        case 'tournamentLocation':
+          [propertyA, propertyB] = [a.tournamentLocation, b.tournamentLocation];
+          break;
+        case 'tournamentDate':
+          [propertyA, propertyB] = [a.tournamentDate, b.tournamentDate];
           break;
       }
 

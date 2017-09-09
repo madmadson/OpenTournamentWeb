@@ -76,7 +76,10 @@
     </ng-container>
 
     <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
-    <md-row  class="games-table-row" *cdkRowDef="let game; columns: displayedColumns;"></md-row>
+    <md-row class="games-table-row"
+            (click)="linkToTournament(game)"
+            *cdkRowDef="let game; columns: displayedColumns;">
+    </md-row>
   </md-table>
   <md-paginator #paginator
                 [length]="gamesDb?.data.length"

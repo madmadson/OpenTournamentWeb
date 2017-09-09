@@ -129,7 +129,8 @@
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="actions-column">
         <div>
-          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && !swapPlayerMode  && !requestClearGame"
+          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && !swapPlayerMode  &&
+                         !requestClearGame && !actualTournament?.finished"
                   (click)="requestClearGameResult($event, game)"
                   class="color-negative-background"
                   [ngClass]="{'small-button': smallScreen}"

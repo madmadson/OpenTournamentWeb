@@ -6,6 +6,10 @@
         Player
       </md-header-cell>
       <md-cell *cdkCellDef="let tournamentPlayer" class="playerName-column">
+        <md-icon *ngIf="!tournamentPlayer?.playerId"
+                 md-tooltip="Offline Player">
+          cloud_off
+        </md-icon>
         {{tournamentPlayer.playerName | truncate:truncateMax}}
       </md-cell>
     </ng-container>
@@ -46,7 +50,8 @@
                              'color-positive':playerHasArmyList(tournamentPlayer)} "
                  class="list-action"
                  (click)="addArmyLists(tournamentPlayer)">playlist_add</md-icon>
-        <md-icon class="color-negative list-action"
+        <md-icon *ngIf="actualTournament?.actualRound > 0"
+                 class="color-negative list-action"
                  md-tooltip="Delete Player"
                  (click)="deleteTournamentPlayer(tournamentPlayer)">delete</md-icon>
       </md-cell>

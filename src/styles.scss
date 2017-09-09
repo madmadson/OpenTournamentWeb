@@ -362,6 +362,19 @@ md-card {
   height: 50px;
 }
 
+.my-site-nav-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column wrap;
+}
+
+@media only screen and (min-width: 500px) {
+  .my-site-nav-container {
+    flex-flow: row wrap;
+  }
+}
+
 .action-card-container {
   display: flex;
   align-items: center;

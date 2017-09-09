@@ -20,10 +20,12 @@
     <md-spinner></md-spinner>
   </div>
 </ng-container>
+
 <md-list *ngFor="let groupedTournaments of (allTournamentsGrouped$| async)">
   <h4 *ngIf="groupedTournaments?.tournaments?.length !== 0" md-subheader>{{groupedTournaments.monthYear}}
     ({{groupedTournaments.tournaments.length}})</h4>
   <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
   <md-divider></md-divider>
 </md-list>
+
 

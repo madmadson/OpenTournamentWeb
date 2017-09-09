@@ -59,12 +59,13 @@
       Start Tournament
     </button>
 
-    <button (click)="createRandomPlayers()"
+    <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
+            (click)="createRandomPlayers()"
             type="button"
             class=" color-positive-background action-button"
             md-raised-button>
       <md-icon>play_arrow</md-icon>
-      Random Players
+      !Random Players!
     </button>
   </md-card>
 </div>

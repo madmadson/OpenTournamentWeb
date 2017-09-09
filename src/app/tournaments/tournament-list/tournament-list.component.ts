@@ -12,7 +12,7 @@ import {MdDialog} from '@angular/material';
   styleUrls: ['tournament-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TournamentListComponent  {
+export class TournamentListComponent {
 
   @Input() tournaments: Tournament[];
 
@@ -26,7 +26,7 @@ export class TournamentListComponent  {
     if (this.winRef.nativeWindow.screen.width < 500) {
       this.verySmallDevice = true;
       this.truncateMax = 30;
-    }  else {
+    } else {
       this.verySmallDevice = false;
       this.truncateMax = 40;
     }
@@ -35,13 +35,13 @@ export class TournamentListComponent  {
 
   onSelect(tournament: Tournament) {
 
-    if (tournament.actualRound > 0) {
+    if (tournament.finished) {
+      this.router.navigate(['/tournament', tournament.id, 'finalRankings']);
+    } else if (tournament.actualRound > 0) {
       this.router.navigate(['/tournament', tournament.id, 'round', tournament.actualRound]);
     } else {
       this.router.navigate(['/tournament', tournament.id, 'registrations']);
     }
-
-
   }
 
   openInfoDialog(event: any, tournament: Tournament) {

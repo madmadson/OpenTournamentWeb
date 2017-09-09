@@ -30,7 +30,8 @@ export class TournamentListOverviewComponent implements OnInit, OnDestroy {
 
   selectedFilterState: string;
 
-  constructor(private tournamentsService: TournamentsService, private store: Store<AppState>) {
+  constructor(private tournamentsService: TournamentsService,
+              private store: Store<AppState>) {
 
     this.tournamentsService.subscribeOnFirebaseTournaments();
 

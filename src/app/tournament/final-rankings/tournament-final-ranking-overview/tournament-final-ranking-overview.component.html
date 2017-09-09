@@ -42,9 +42,10 @@
     Final Rankings
   </h2>
 
-  <div class="action-card-container" *ngIf="isAdmin || isCoOrganizer">
+  <div class="action-card-container" *ngIf="(isAdmin || isCoOrganizer) && !actualTournament?.uploaded">
     <md-card class="action-card action-button-wrapper">
-      <button (click)="publishTournament()"
+      <button
+              (click)="publishTournament()"
               type="button"
               class="color-positive-background action-button"
               md-raised-button>

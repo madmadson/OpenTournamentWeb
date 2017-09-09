@@ -1,0 +1,70 @@
+
+
+<div class="registration-table-container mat-elevation-z8">
+  <md-table #table [dataSource]="dataSource" mdSort>
+
+    <ng-container cdkColumnDef="tournamentName">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="tournamentName-column">
+        Tournament
+      </md-header-cell>
+      <md-cell *cdkCellDef="let registration" class="tournamentName-column">
+        {{registration.tournamentName | truncate:truncateMax}}
+      </md-cell>
+    </ng-container>
+
+    <ng-container  cdkColumnDef="tournamentLocation">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="location-column">
+        Location
+      </md-header-cell>
+      <md-cell *cdkCellDef="let registration" class="location-column">
+        {{registration.tournamentLocation}}
+      </md-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="tournamentDate">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="tournamentDate-column">
+        Date
+      </md-header-cell>
+      <md-cell *cdkCellDef="let registration" class="tournamentDate-column">
+        {{registration.tournamentDate | date:'MM/d/yy HH:mm'}}
+      </md-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="teamName">
+      <md-header-cell *cdkHeaderCellDef class="teamName-column">
+        Team
+      </md-header-cell>
+      <md-cell *cdkCellDef="let registration" class="teamName-column">
+        {{registration.teamName}}
+          </md-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="faction">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="faction-column">
+        Faction
+      </md-header-cell>
+      <md-cell *cdkCellDef="let registration" class="faction-column">
+        {{registration.faction}}
+      </md-cell>
+    </ng-container>
+
+    <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
+    <md-row *cdkRowDef="let registration; columns: displayedColumns;"
+      class="registrations-table-row"
+      [ngClass]="{'even': even} "
+      (click)="onSelect(registration)">
+    </md-row>
+  </md-table>
+  <md-paginator #paginator
+                [length]="registrationDb?.data.length"
+                [pageIndex]="0"
+                [pageSize]="20"
+                [pageSizeOptions]="[10, 25, 50, 100]">
+  </md-paginator>
+</div>
+
+
+
+
+
+

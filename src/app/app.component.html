@@ -8,12 +8,12 @@
         {{(auth$ | async).currentUserName ? (auth$ | async).currentUserName : (auth$ | async).currentUserEmail}}
       </div>
       <div class="nav-container">
-        <md-icon class="nav-icon" >home</md-icon>
+        <md-icon class="nav-icon">home</md-icon>
         <a class="nav-link" (click)="closeIfSmallDevice()" routerLink="/home">Home</a>
       </div>
       <div *ngIf="((auth$ | async).loggedIn)" class="nav-container">
         <img src="../assets/my_crown_small.png" class="nav-icon">
-        <a class="nav-link" (click)="closeIfSmallDevice()" routerLink="/my-site">My Site</a>
+        <a class="nav-link" (click)="closeIfSmallDevice()" routerLink="/my-site/profile">My Site</a>
       </div>
       <div class="nav-container">
         <md-icon class="nav-icon">play_arrow</md-icon>
@@ -54,14 +54,26 @@
         signal_wifi_off
       </md-icon>
     </span>
-    <span *ngIf="((auth$ | async).currentUserName)" class="user-welcome-panel">{{(auth$ | async).currentUserName}}</span>
+    <span *ngIf="((auth$ | async).currentUserName)"
+          class="user-welcome-panel">{{(auth$ | async).currentUserName}}</span>
     <img *ngIf="((auth$ | async).currentUserImage)" class="avatar" src="{{(auth$ | async).currentUserImage}}">
     <img *ngIf="(!(auth$ | async).currentUserImage)" class="avatar" src="../assets/icon_final_48.png">
     <a *ngIf="((auth$ | async).loggedIn)" class="auth-anchor" (click)="logout()">Logout</a>
     <a *ngIf="(!(auth$ | async).loggedIn)" class="auth-anchor" (click)="login()">Login</a>
   </md-toolbar>
 
-  <div class="app-content">
-    <router-outlet></router-outlet>
-  </div>
+  <!--<div class="app-content">-->
+  <!--<router-outlet></router-outlet>-->
+  <!--</div>-->
+
+  <ng-container *ngIf="!(auth$ | async)">
+    <div class="heading">Try to Login...</div>
+    <div class="loading-spinner-container">
+      <md-spinner></md-spinner>
+    </div>
+  </ng-container>
+
+
+  <router-outlet></router-outlet>
+
 </md-sidenav-container>

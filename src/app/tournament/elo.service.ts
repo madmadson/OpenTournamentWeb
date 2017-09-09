@@ -24,15 +24,6 @@ export class EloService {
 
     const that = this;
 
-    _.forEach(allRegistrations, function (reg: Registration) {
-
-      const playersRegRef = that.afoDatabase.object('players-registrations/' + reg.playerId + '/' + reg.id);
-      playersRegRef.remove();
-    });
-
-    const tournamentRegRef = that.afoDatabase.list('tournament-registrations/' + actualTournament.id);
-    tournamentRegRef.remove();
-
     const playersEloChanges: EloChange[] = [];
     const gamesRef = this.afoDatabase.list('games');
 
@@ -93,6 +84,9 @@ export class EloService {
     });
 
     _.forEach(allRegistrations, function (registration: Registration) {
+
+      const playersRegRef = that.afoDatabase.object('players-registrations/' + registration.playerId + '/' + registration.id);
+      playersRegRef.remove();
 
       if (registration.playerId) {
         const playersTournamentRef = that.afoDatabase.list('players-tournaments/' + registration.playerId);

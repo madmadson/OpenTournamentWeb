@@ -1,0 +1,28 @@
+<h4 class="heading">MySite - MyRegistrations</h4>
+
+<div class="my-site-nav-container">
+  <button md-raised-button class="color-info-background action-button"
+          (click)="router.navigate(['/my-site/profile']);">
+    MyProfile
+  </button>
+  <button md-raised-button class="color-info-background action-button"
+          (click)="router.navigate(['/my-site/tournaments']);">
+    MyTournaments
+  </button>
+  <button md-raised-button class="color-info-background action-button"
+          (click)="router.navigate(['/my-site/games']);">
+    MyGames
+  </button>
+</div>
+
+<ng-container *ngIf="(loadMyRegistrations$ | async)">
+  <div class="heading">Load MyRegistrations...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
+
+<my-registration-list [registrations]="allMyRegistrations$ | async">
+
+</my-registration-list>

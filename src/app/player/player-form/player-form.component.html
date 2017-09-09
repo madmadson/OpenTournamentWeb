@@ -1,11 +1,8 @@
-<md-card>
-  <h2 class="heading">Your Player-Profile</h2>
-
+<md-card class="player-profile-card">
   <form [formGroup]="playerForm" novalidate>
 
     <div class="form-group">
-      <md-input-container
-        class="full-width">
+      <md-input-container class="full-width">
         <input mdInput type="text" value="{{currentUserEmail}}" disabled>
         <md-hint >
           <span>You can't change your account email</span>

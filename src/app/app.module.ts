@@ -26,7 +26,7 @@ import {TournamentsService} from './tournaments/tournaments.service';
 import {MomentModule} from 'angular2-moment';
 import {TournamentListOverviewComponent} from './tournaments/tournament-list-overview/tournament-list-overview.component';
 
-import {MySiteComponent} from './my-site/my-site.component';
+
 import {PageNotFoundComponent} from './not-found.component';
 import {AppRoutingModule} from './app-routing.module';
 
@@ -82,11 +82,7 @@ import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
 import {TournamentFinalRankingsComponent} from './tournament/tournament-final-rankings/tournament-final-rankings.component';
 import {DateTimePickerModule} from 'ng-pick-datetime';
 import {AboutComponent} from './about/about.component';
-import {MySiteService} from './service/my-site.service';
-import {MySiteEffectService} from './store/effects/my-registrations-effect.service';
 
-import {PlayerRegistrationsTableComponent} from './my-site/player-registrations-table/player-registrations-table.component';
-import {PlayerGamesTableComponent} from './my-site/player-games-table/player-games-table.component';
 import {GlobalEventService} from './service/global-event-service';
 import {TournamentGameTableComponent} from './tournament/tournament-game-table/tournament-game-table.component';
 import {WindowRefService} from './service/window-ref-service';
@@ -153,8 +149,18 @@ import {SwappingService} from './tournament/swapping.service';
 import {TournamentRankingsComponent} from './tournament/rankings/tournament-ranking-list/tournament-rankings.component';
 import {TournamentRankingsOverviewComponent} from 'app/tournament/rankings/tournament-ranking-overview/tournament-ranking-overview.component';
 import {GamesListComponent} from './games/games-list/games-list.component';
-import {TournamentFinalRankingsOverviewComponent} from 'app/tournament/final-rankings/tournament-final-ranking-overview/tournament-final-ranking-overview.component';
+import {TournamentFinalRankingsOverviewComponent}
+  from 'app/tournament/final-rankings/tournament-final-ranking-overview/tournament-final-ranking-overview.component';
 import {EloService} from './tournament/elo.service';
+import {MySiteProfileComponent} from './my-site/profile/my-site-profile.component';
+import {MySiteTournamentsComponent} from 'app/my-site/tournaments/my-site-tournaments.component';
+import {MyTournamentsService} from 'app/my-site/tournaments/my-tournaments.service';
+import {MyGamesService} from './my-site/games/my-games.service';
+import {MyRegistrationsService} from './my-site/registrations/my-registrations.service';
+import {MySiteRegistrationsComponent} from './my-site/registrations/my-site-registrations.component';
+import {MyRegistrationListComponent}
+  from './my-site/registrations/my-registrations-table/my-registration-list.component';
+import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
 
 
 @NgModule({
@@ -171,7 +177,6 @@ import {EloService} from './tournament/elo.service';
       TournamentEffectService,
       TournamentsEffectService,
       PlayersEffectService,
-      MySiteEffectService,
       TournamentTeamEffectService]),
     StoreModule.forRoot(reducers),
     StoreRouterConnectingModule,
@@ -206,8 +211,12 @@ import {EloService} from './tournament/elo.service';
     TournamentListOverviewComponent,
     TournamentRegistrationOverviewComponent,
     TournamentPlayerOverviewComponent,
-    MySiteComponent,
     GamesListComponent,
+    MySiteProfileComponent,
+    MySiteTournamentsComponent,
+    MySiteRegistrationsComponent,
+    MySiteGamesComponent,
+    MyRegistrationListComponent,
 
     TournamentPreparationComponent,
     PlayerListOverviewComponent,
@@ -231,8 +240,7 @@ import {EloService} from './tournament/elo.service';
 
     TournamentFinalRankingsComponent,
 
-    PlayerRegistrationsTableComponent,
-    PlayerGamesTableComponent,
+
 
     TournamentGamesComponent,
     TournamentGameTableComponent,
@@ -283,7 +291,9 @@ import {EloService} from './tournament/elo.service';
     PlayersService,
     GamesService,
     TournamentTeamService,
-    MySiteService,
+    MyGamesService,
+    MyTournamentsService,
+    MyRegistrationsService,
     GlobalEventService,
     WindowRefService,
     PairingService,

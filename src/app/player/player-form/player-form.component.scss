@@ -1,8 +1,17 @@
 @import "../../../styles";
 
+.player-profile-card {
+  width: 300px;
+}
+
+@media only screen and (min-width: 500px) {
+  .player-profile-card {
+    width: 400px;
+  }
+}
 
 @media only screen and (min-width: 800px) {
-  md-card {
+  .player-profile-card {
     width: 700px;
   }
 }

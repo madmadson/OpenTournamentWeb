@@ -1,4 +1,4 @@
-<h4  class="heading">{{actualTournament?.name}}</h4>
+<h4 class="heading">{{actualTournament?.name}}</h4>
 <h4 *ngIf="isAdmin" class="sub-heading">Hello Organizer</h4>
 <h4 *ngIf="isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
 <h4 *ngIf="isTournamentPlayer" class="sub-heading">Hello Player</h4>
@@ -17,7 +17,7 @@
     </button>
     <button *ngIf="isAdmin || isCoOrganizer"
             md-menu-item
-          (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
       Go to -> Players
     </button>
     <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
@@ -33,16 +33,7 @@
   </md-menu>
 </div>
 
-
 <h2 class="heading">Registrations ({{(allRegistrations$| async)?.length}})</h2>
-
-<ng-container *ngIf="(loadReg$ | async)">
-  <div class="heading">Load Registrations...</div>
-  <div class="loading-spinner-container">
-    <md-spinner></md-spinner>
-  </div>
-</ng-container>
-
 
 <div class="action-card-container">
   <md-card class="action-card action-button-wrapper">
@@ -89,14 +80,28 @@
   </md-card>
 </div>
 
-<tournament-registration-list *ngIf="allActualRegistrations?.length > 0"
-                              [actualTournament]="actualTournament"
-                              [registrations]="allActualRegistrations"
-                              [userPlayerData]="userPlayerData"
-                              [armyLists]="allArmyLists$ | async"
-                              [isAdmin]="isAdmin"
-                              [isCoOrganizer]="isCoOrganizer"
-                              (onAcceptRegistration)="handleAcceptRegistration($event)"
-                              (onChangeRegistration)="handleChangeRegistration($event)"
-                              (onDeleteRegistration)="handleDeleteRegistration($event)">
-</tournament-registration-list>
+<ng-container *ngIf="(loadReg$ | async)">
+  <div class="heading">Load Registrations...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!(loadReg$ | async)">
+
+  <div *ngIf="allActualRegistrations?.length === 0" class="heading">
+    No Registrations found yet
+  </div>
+
+  <tournament-registration-list *ngIf="allActualRegistrations?.length > 0"
+                                [actualTournament]="actualTournament"
+                                [registrations]="allActualRegistrations"
+                                [userPlayerData]="userPlayerData"
+                                [armyLists]="allArmyLists$ | async"
+                                [isAdmin]="isAdmin"
+                                [isCoOrganizer]="isCoOrganizer"
+                                (onAcceptRegistration)="handleAcceptRegistration($event)"
+                                (onChangeRegistration)="handleChangeRegistration($event)"
+                                (onDeleteRegistration)="handleDeleteRegistration($event)">
+  </tournament-registration-list>
+</ng-container>

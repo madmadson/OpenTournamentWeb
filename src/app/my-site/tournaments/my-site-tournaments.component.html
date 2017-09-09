@@ -1,0 +1,33 @@
+<h4 class="heading">MySite - MyTournaments</h4>
+
+<div class="my-site-nav-container">
+  <button md-raised-button class="color-info-background action-button"
+          (click)="router.navigate(['/my-site/profile']);">
+    MyProfile
+  </button>
+  <button md-raised-button class="color-info-background action-button"
+          (click)="router.navigate(['/my-site/registrations']);">
+    MyRegistrations
+  </button>
+  <button md-raised-button class="color-info-background action-button"
+          (click)="router.navigate(['/my-site/games']);">
+    MyGames
+  </button>
+</div>
+
+<ng-container *ngIf="(loadMyTournaments$ | async)">
+  <div class="heading">Load MyTournaments...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
+<md-list *ngFor="let groupedTournaments of (allMyTournamentsGrouped$| async)">
+  <h4 *ngIf="groupedTournaments?.tournaments?.length !== 0" md-subheader>{{groupedTournaments.monthYear}}
+    ({{groupedTournaments.tournaments.length}})</h4>
+  <tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>
+  <md-divider></md-divider>
+</md-list>
+
+
+

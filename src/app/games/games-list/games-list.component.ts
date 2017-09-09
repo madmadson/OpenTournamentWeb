@@ -89,7 +89,7 @@ export class GamesListComponent implements OnInit, OnChanges {
     return game.playerOneScore < game.playerTwoScore;
   }
 
-  onSelect(game: TournamentGame) {
+  linkToTournament(game: TournamentGame) {
     this.router.navigate(['/tournament/' + game.tournamentId]);
   }
 }

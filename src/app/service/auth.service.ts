@@ -20,33 +20,30 @@ export class AuthService {
   private query: any;
   private redirectUrl: string;
 
-  user$: Observable<firebase.User>;
+  firebaseAuth$: Observable<firebase.User>;
 
   constructor(public afAuth: AngularFireAuth,
               private store: Store<AppState>,
               private router: Router,
               private snackBar: MdSnackBar) {
 
-    this.user$ = afAuth.authState;
-
-    this.redirectUrlSubscription = this.store.select(state => state.authentication.redirectUrl).subscribe(redirectUrl => {
-      this.redirectUrl = redirectUrl;
-    });
   }
-
 
   unsubscribeOnAuthentication(): void {
 
     this.authSubscription.unsubscribe();
     this.redirectUrlSubscription.unsubscribe();
+
+    this.query.unsubscribe();
   }
 
   subscribeOnAuthentication() {
 
+    this.firebaseAuth$ = this.afAuth.authState;
 
-    this.authSubscription = this.user$.subscribe(
-      (auth) => {
 
+    this.authSubscription = this.firebaseAuth$.subscribe(
+      (auth: firebase.User) => {
         if (auth != null) {
           console.log('authenticated!');
 
@@ -76,6 +73,10 @@ export class AuthService {
         }
       }
     );
+
+    this.redirectUrlSubscription = this.store.select(state => state.authentication.redirectUrl).subscribe(redirectUrl => {
+      this.redirectUrl = redirectUrl;
+    });
   }
 
   subscribeAsPlayer(userUid: string) {
