@@ -27,9 +27,10 @@ export class GamesListComponent implements OnInit, OnChanges {
   @Input() games: TournamentGame[];
 
   displayedColumns = [
-    'playerOnePlayerName',
-    'playerOneFaction',
     'playerOneScore',
+    'playerOneFaction',
+    'playerOnePlayerName',
+    'vs',
     'playerTwoPlayerName',
     'playerTwoFaction',
     'playerTwoScore'];
@@ -46,12 +47,23 @@ export class GamesListComponent implements OnInit, OnChanges {
   constructor(private router: Router,
               private winRef: WindowRefService) {
 
-    if (this.winRef.nativeWindow.screen.width < 800) {
+    if (this.winRef.nativeWindow.screen.width < 500) {
       this.smallScreen = true;
-      this.truncateMax = 30;
+      this.truncateMax = 15;
+    } else if (this.winRef.nativeWindow.screen.width < 800) {
+      this.smallScreen = true;
+      this.truncateMax = 20;
     } else {
       this.smallScreen = false;
       this.truncateMax = 40;
+    }
+    if (this.smallScreen) {
+      this.displayedColumns = [
+        'playerOneScore',
+        'playerOnePlayerName',
+        'vs',
+        'playerTwoPlayerName',
+        'playerTwoScore'];
     }
   }
 
@@ -90,6 +102,6 @@ export class GamesListComponent implements OnInit, OnChanges {
   }
 
   linkToTournament(game: TournamentGame) {
-    this.router.navigate(['/tournament/' + game.tournamentId]);
+    this.router.navigate(['/tournament/' + game.tournamentId + /round/ + game.tournamentRound]);
   }
 }

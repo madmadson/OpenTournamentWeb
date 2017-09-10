@@ -6,17 +6,21 @@
   </div>
   <md-table #table [dataSource]="dataSource" mdSort>
 
-    <ng-container cdkColumnDef="playerOnePlayerName">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
-        Player 1
+    <ng-container cdkColumnDef="playerOneScore" >
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-score-column">
+        SC/CP/VP
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="player-column"
-               [ngClass]="{'game-table-won': (playerOneWon(game)),'game-table-lost': (playerTwoWon(game))}">
-        {{game.playerOnePlayerName | truncate:truncateMax}}
+      <md-cell *cdkCellDef="let game" class="player-score-column">
+        <div class="small-text">{{game.playerOneScore}}/{{game.playerOneControlPoints}}/{{game.playerOneVictoryPoints}}</div>
+        <div *ngIf="game.playerOneEloChanging" class="small-text"
+             [ngClass]="{'game-table-won': (playerOneWon(game)),'game-table-lost': (playerTwoWon(game))}">
+          <img src="../../../assets/my_crown_small.png">
+          {{game.playerOneEloChanging}}
+        </div>
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="playerOneFaction">
+    <ng-container *ngIf="!smallScreen" cdkColumnDef="playerOneFaction">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="faction-column">
         Faction
       </md-header-cell>
@@ -26,18 +30,22 @@
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="playerOneScore" >
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-score-column">
-        SC/CP/VP
+    <ng-container cdkColumnDef="playerOnePlayerName">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
+        Player 1
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="player-score-column">
-        <div>{{game.playerOneScore}}/{{game.playerOneControlPoints}}/{{game.playerOneVictoryPoints}}</div>
-        <div *ngIf="game.playerOneEloChanging"
-             [ngClass]="{'game-table-won': (playerOneWon(game)),'game-table-lost': (playerTwoWon(game))}">
-          <img src="../../../assets/my_crown_small.png" class="nav-icon">
-          {{game.playerOneEloChanging}}
-        </div>
+      <md-cell *cdkCellDef="let game" class="player-column right-align"
+               [ngClass]="{'game-table-won': (playerOneWon(game)),'game-table-lost': (playerTwoWon(game))}">
+        <div>{{game.playerOnePlayerName | truncate:truncateMax}}</div>
+        <div *ngIf="smallScreen" class="small-text zero-line-height">{{game.playerOneFaction | truncate:truncateMax}}</div>
+        <div *ngIf="smallScreen" class="small-text zero-line-height">{{game.playerOneArmyList | truncate:truncateMax}}</div>
       </md-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="vs">
+      <md-header-cell *cdkHeaderCellDef class="vs-column">
+      </md-header-cell>
+      <md-cell *cdkCellDef="let game" class="vs-column">VS</md-cell>
     </ng-container>
 
     <ng-container cdkColumnDef="playerTwoPlayerName">
@@ -46,11 +54,13 @@
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="player-column"
                [ngClass]="{'game-table-won': (playerTwoWon(game)),'game-table-lost': (playerOneWon(game))}">
-        {{game.playerTwoPlayerName | truncate:truncateMax}}
+        <div>{{game.playerTwoPlayerName | truncate:truncateMax}}</div>
+        <div *ngIf="smallScreen" class="small-text zero-line-height">{{game.playerTwoFaction | truncate:truncateMax}}</div>
+        <div *ngIf="smallScreen" class="small-text zero-line-height">{{game.playerTwoArmyList | truncate:truncateMax}}</div>
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="playerTwoFaction">
+    <ng-container *ngIf="!smallScreen" cdkColumnDef="playerTwoFaction">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="faction-column ">
         Faction
       </md-header-cell>
@@ -60,16 +70,15 @@
       </md-cell>
     </ng-container>
 
-
     <ng-container cdkColumnDef="playerTwoScore" >
       <md-header-cell *cdkHeaderCellDef md-sort-header class="player-score-column">
         SC/CP/VP
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="player-score-column">
-        <div>{{game.playerTwoScore}}/{{game.playerTwoControlPoints}}/{{game.playerTwoVictoryPoints}}</div>
-        <div *ngIf="game.playerTwoEloChanging"
-             [ngClass]="{'game-table-won': (playerOneWon(game)),'game-table-lost': (playerTwoWon(game))}">
-          <img src="../../../assets/my_crown_small.png" class="nav-icon">
+        <div class="small-text">{{game.playerTwoScore}}/{{game.playerTwoControlPoints}}/{{game.playerTwoVictoryPoints}}</div>
+        <div *ngIf="game.playerTwoEloChanging" class="small-text"
+             [ngClass]="{'game-table-won': (playerTwoWon(game)),'game-table-lost': (playerOneWon(game))}">
+          <img src="../../../assets/my_crown_small.png">
           {{game.playerTwoEloChanging}}
         </div>
       </md-cell>

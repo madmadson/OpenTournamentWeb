@@ -44,10 +44,6 @@
   margin-right: $halve_tick;
 }
 
-.right-align{
-  text-align: right;
-}
-
 md-header-cell.mat-column-playerOnePlayerName {
   display: flex;
   text-align: right;
@@ -82,29 +78,7 @@ md-header-cell.mat-column-playerOnePlayerName {
   color: $fail_color;
 }
 
-.mat-header-row{
-  padding-left: $halve_tick;
-  padding-right: $halve_tick;
-}
 
-@media only screen and (min-width: 800px) {
-  .mat-header-row{
-    padding-left: $main_tick;
-    padding-right: $main_tick;
-  }
-}
-
-.mat-row{
-  padding-left: $halve_tick;
-  padding-right: $halve_tick;
-}
-
-@media only screen and (min-width: 800px) {
-  .mat-row{
-    padding-left: $main_tick;
-    padding-right: $main_tick;
-  }
-}
 
 
 .swap-player-icon{

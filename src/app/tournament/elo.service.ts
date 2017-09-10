@@ -1,6 +1,3 @@
-
-
-
 import {Injectable} from '@angular/core';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import * as _ from 'lodash';
@@ -28,15 +25,7 @@ export class EloService {
     const gamesRef = this.afoDatabase.list('games');
 
     _.forEach(allGames, function (game: TournamentGame) {
-      gamesRef.push(game);
-      if (game.playerOnePlayerId) {
-        const playersGamesTournamentRef = that.afoDatabase.object('players-games/' + game.playerOnePlayerId + '/' + game.id);
-        playersGamesTournamentRef.set(game);
-      }
-      if (game.playerTwoPlayerId) {
-        const playersGamesTournamentRef = that.afoDatabase.object('players-games/' + game.playerTwoPlayerId + '/' + game.id);
-        playersGamesTournamentRef.set(game);
-      }
+
 
       if (game.playerOnePlayerId && game.playerTwoPlayerId) {
         const eloDifferenceForPlayerOne = game.playerTwoElo - game.playerOneElo;
@@ -67,20 +56,22 @@ export class EloService {
         } else {
           newEloPlayerTwo = game.playerTwoElo + (Math.round(eloFactor * (0 - percentagePlayerTwo)));
         }
+
+        game.playerOneEloChanging = (newEloPlayerOne - game.playerOneElo);
+        game.playerTwoEloChanging = (newEloPlayerTwo - game.playerTwoElo);
+
         const playerOneGameTournamentRef = that.afoDatabase.object('players-games/' + game.playerOnePlayerId + '/' + game.id);
-        playerOneGameTournamentRef.update({
-          'playerOneEloChanging': (newEloPlayerOne - game.playerOneElo),
-          'playerTwoEloChanging': (newEloPlayerTwo - game.playerTwoElo)
-        });
+        playerOneGameTournamentRef.set(game);
 
         const playerTwoGameTournamentRef = that.afoDatabase.object('players-games/' + game.playerTwoPlayerId + '/' + game.id);
-        playerTwoGameTournamentRef.update({
-          'playerOneEloChanging': (newEloPlayerOne - game.playerOneElo),
-          'playerTwoEloChanging': (newEloPlayerTwo - game.playerTwoElo)
-        });
+        playerTwoGameTournamentRef.set(game);
+
         playersEloChanges.push({playerId: game.playerOnePlayerId, eloChange: (newEloPlayerOne - game.playerOneElo)});
         playersEloChanges.push({playerId: game.playerTwoPlayerId, eloChange: (newEloPlayerTwo - game.playerTwoElo)});
       }
+
+      gamesRef.push(game);
+
     });
 
     _.forEach(allRegistrations, function (registration: Registration) {

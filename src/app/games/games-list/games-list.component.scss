@@ -69,6 +69,9 @@
   }
 }
 
+.vs-column{
+  flex: 1;
+}
 
 .player-column{
   flex: 4;
@@ -80,4 +83,17 @@
 
 .player-score-column{
   flex: 1;
+}
+
+.vs-column{
+  flex: 1;
+  text-align: center;
+  margin-left: $halve_tick;
+  margin-right: $halve_tick;
+}
+
+md-header-cell.mat-column-playerOnePlayerName {
+  display: flex;
+  text-align: right;
+  justify-content: flex-end;
 }

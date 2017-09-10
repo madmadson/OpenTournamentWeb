@@ -1,6 +1,10 @@
 <h4 class="heading">MySite - MyProfile</h4>
 
 <div class="my-site-nav-container">
+  <button md-raised-button class="color-positive-background action-button"
+          (click)="openCreateTournamentDialog()">
+    New Tournament
+  </button>
   <button md-raised-button  class="color-info-background action-button"
           (click)="router.navigate(['/my-site/tournaments']);">
     MyTournaments
@@ -26,52 +30,6 @@
                [playerData]="userPlayerData$ | async">
   </player-form>
 </div>
-
-<!--<mdl-tabs mdl-ripple *ngIf="userPlayerData">-->
-<!--<mdl-tab-panel mdl-tab-panel-title="myProfile">-->
-<!--<div class="flex-container">-->
-<!--<player-form [playerData]="userPlayerData"></player-form>-->
-<!--</div>-->
-<!--</mdl-tab-panel>-->
-<!--<mdl-tab-panel mdl-tab-panel-title="{{getMyTournamentsTitle()}}">-->
-<!--<div class="flex-container">-->
-<!--<md-card class="single-list-card">-->
-<!--<h4 class="heading big-heading" *ngIf="(groupedTournaments$ | async).length == 0">It's time to organize a-->
-<!--Tournament!</h4>-->
-<!--<h4 class="heading" *ngIf="(groupedTournaments$ | async).length > 0">My organized Tournaments-->
-<!--({{(allMyTournaments$| async) ?.length}})</h4>-->
-<!--<button md-fab class="create-action" (click)="openCreateTournamentDialog()">-->
-<!--<md-icon>add</md-icon>-->
-<!--</button>-->
-<!--<mdl-list *ngFor="let groupedTournaments of groupedTournaments$ | async">-->
-<!--<h4 md-subheader>{{groupedTournaments.monthYear}} ({{groupedTournaments.tournaments.length}})</h4>-->
-<!--<tournament-list [tournaments]="groupedTournaments.tournaments"></tournament-list>-->
-<!--<md-divider></md-divider>-->
-<!--</mdl-list>-->
-<!--</md-card>-->
-<!--</div>-->
-<!--</mdl-tab-panel>-->
-<!--<mdl-tab-panel mdl-tab-panel-title="{{getMyRegistrationTitle()}}">-->
-<!--<div class="flex-container">-->
-<!--<md-card class="single-list-card">-->
-<!--<h4 class="heading" *ngIf="myRegistrations.length == 0">No Registrations found</h4>-->
-<!--<player-registrations-table *ngIf="myRegistrations.length > 0"-->
-<!--[myRegistrations]="myRegistrations">-->
-<!--</player-registrations-table>-->
-<!--</md-card>-->
-<!--</div>-->
-<!--</mdl-tab-panel>-->
-<!--<mdl-tab-panel mdl-tab-panel-title="{{getMyGamesTitle()}}">-->
-<!--<div class="flex-container">-->
-<!--<md-card class="single-list-card">-->
-<!--<h4 class="heading" *ngIf="myGames?.length == 0">No Played Games found</h4>-->
-<!--<player-games-table *ngIf="myGames?.length > 0"-->
-<!--[myGames]="myGames">-->
-<!--</player-games-table>-->
-<!--</md-card>-->
-<!--</div>-->
-<!--</mdl-tab-panel>-->
-<!--</mdl-tabs>-->
 
 
 

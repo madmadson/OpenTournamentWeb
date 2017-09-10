@@ -1,18 +1,7 @@
 @import '../../../styles';
 
-.player-heading{
-  text-align: center;
-}
-
-.add-player-button{
-  float: right;
-}
-
-.small-md-line{
-  font-weight: lighter;
-}
-
-.player-name{
-    padding-bottom: 10px;
+.player-search-container{
+  margin: $halve_tick;
+  width: 300px;
 }
 

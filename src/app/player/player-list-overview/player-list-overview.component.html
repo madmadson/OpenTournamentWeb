@@ -1,16 +1,18 @@
-<h2 class="heading">Online Players ({{filteredPlayers.length}}/{{orderedPlayers?.length}})</h2>
+<h2 class="heading">Online Players ({{(allPlayer$| async)?.length}})</h2>
 
-<div class="flex-container">
-  <md-card class="single-list-card">
-    <mdl-textfield type="text"
-                   maxlength="50"
-                   placeholder="Filter Players"
-                   #seachInput
-                   (keyup)="search(seachInput.value)">
-    </mdl-textfield>
-    <h4 *ngIf="filteredPlayers?.length == 0">No Players found</h4>
-    <mdl-list>
-      <player-list [players]="filteredPlayers"></player-list>
-    </mdl-list>
-  </md-card>
-</div>
+
+<md-input-container class="player-search-container" floatPlaceholder="never">
+  <input mdInput #searchField placeholder="Search for PlayerName">
+</md-input-container>
+
+<ng-container *ngIf="(loadPlayers$ | async)">
+  <div class="heading">Load Players...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
+<mdl-list>
+  <player-list [players]="allPlayerFiltered$ | async"></player-list>
+</mdl-list>
+

@@ -1,5 +1,7 @@
 
 
+import {Router} from "@angular/router";
+
 export class Tournament {
 
   id?: string;
@@ -61,4 +63,13 @@ export class Tournament {
   }
 }
 
+export function linkToTournament(tournament: Tournament, router: Router): void {
+  if (tournament.finished) {
+    router.navigate(['/tournament', tournament.id, 'finalRankings']);
+  } else if (tournament.actualRound > 0) {
+    router.navigate(['/tournament', tournament.id, 'round', tournament.actualRound]);
+  } else {
+    router.navigate(['/tournament', tournament.id, 'registrations']);
+  }
+}
 

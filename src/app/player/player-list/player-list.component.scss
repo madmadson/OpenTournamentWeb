@@ -1,15 +1,59 @@
 @import '../../../styles';
 
-
-.player-list-item{
-  font-size: 12px;
+.players-table-row {
+  font-size: 0.8em;
   letter-spacing: 0;
 }
 
 @media only screen and (min-width: 500px) {
 
-  .player-list-item{
+  .players-table-row {
     font-size: 1.2em;
   }
+}
 
+.player-table-container {
+  margin: $halve_tick;
+}
+
+@media only screen and (min-width: 500px) {
+  .player-table-container {
+    min-width: 450px;
+
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .player-table-container {
+    min-width: 600px;
+
+  }
+}
+
+.rank-column {
+  flex: 1;
+}
+
+.firstName-column {
+  flex: 2;
+}
+
+.nickName-column {
+  flex: 2;
+}
+
+.lastName-column {
+  flex: 2;
+}
+
+.locality-column {
+  flex: 2;
+}
+
+.elo-column {
+  flex: 1
+}
+
+.country-column {
+  flex: 1;
 }

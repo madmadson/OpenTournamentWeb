@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 import {Router} from '@angular/router';
-import {Tournament} from '../../../../shared/model/tournament';
+import {linkToTournament, Tournament} from '../../../../shared/model/tournament';
 import {WindowRefService} from '../../service/window-ref-service';
 import {TournamentInfoDialogComponent} from '../../dialogs/tournament-overview/tournament-info-dialog';
 import {MdDialog} from '@angular/material';
@@ -35,13 +35,7 @@ export class TournamentListComponent {
 
   onSelect(tournament: Tournament) {
 
-    if (tournament.finished) {
-      this.router.navigate(['/tournament', tournament.id, 'finalRankings']);
-    } else if (tournament.actualRound > 0) {
-      this.router.navigate(['/tournament', tournament.id, 'round', tournament.actualRound]);
-    } else {
-      this.router.navigate(['/tournament', tournament.id, 'registrations']);
-    }
+    linkToTournament(tournament, this.router);
   }
 
   openInfoDialog(event: any, tournament: Tournament) {

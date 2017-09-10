@@ -7,12 +7,16 @@ import {LogoutAction} from './store/actions/auth-actions';
 import {Router} from '@angular/router';
 import {GlobalEventService} from './service/global-event-service';
 import {Subscription} from 'rxjs/Subscription';
-import {MdSidenav} from '@angular/material';
+import {MdDialog, MdSidenav} from '@angular/material';
 import {WindowRefService} from './service/window-ref-service';
 import {Observable} from 'rxjs/Observable';
 import {AppState} from './store/reducers/index';
 import {AuthService} from './service/auth.service';
 import {AuthenticationState} from './store/reducers/authenticationReducer';
+import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
+import {Tournament} from '../../shared/model/tournament';
+import {TournamentPushAction} from './store/actions/tournaments-actions';
+import {Player} from '../../shared/model/player';
 
 @Component({
   selector: 'app-root',
@@ -25,19 +29,18 @@ export class AppComponent implements OnDestroy {
   @ViewChild('sidenav') sidenav: MdSidenav;
 
   fullScreenModeSub: Subscription;
-
   fullscreenMode: boolean;
-
   sideNavOpen: boolean;
-
-
   smallScreen: boolean;
 
   isDevMode: boolean;
   auth$: Observable<AuthenticationState>;
   isConnected$: Observable<boolean>;
+  userPlayerData: Player;
+  authSubscription: Subscription;
 
-  constructor(private authService: AuthService,
+  constructor(  public dialog: MdDialog,
+                private authService: AuthService,
               private router: Router,
               private store: Store<AppState>,
               private messageService: GlobalEventService,
@@ -65,12 +68,18 @@ export class AppComponent implements OnDestroy {
 
     this.smallScreen = this.winRef.nativeWindow.screen.width < 800;
 
+    this.authSubscription = this.auth$.subscribe((auth: AuthenticationState) => {
+      this.userPlayerData = auth.userPlayerData;
+    });
+
   }
 
   ngOnDestroy(): void {
 
     this.authService.unsubscribeOnAuthentication();
     this.fullScreenModeSub.unsubscribe();
+
+    this.authSubscription.unsubscribe();
   }
 
   logout() {
@@ -88,5 +97,34 @@ export class AppComponent implements OnDestroy {
       this.sidenav.close();
     }
   }
+  requestNewTournament(): void {
 
+    if (this.smallScreen) {
+      this.sidenav.close();
+    }
+
+    const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
+      data: {
+        tournament: new Tournament('', '', '', '', 16, 0, 0, 0, 0,
+          this.userPlayerData.userUid, this.userPlayerData.userEmail, true, false, false, '', '', []),
+        allActualTournamentPlayers: [],
+        allRegistrations: [],
+        tournamentTeams: 0,
+        tournamentTeamRegistrations: 0
+      },
+      width: '800px'
+    });
+
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
+      if (tournament) {
+        this.store.dispatch(new TournamentPushAction(tournament));
+      }
+      dialogRef.close();
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+    });
+  }
 }

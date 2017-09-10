@@ -622,3 +622,32 @@ snack-bar-container.snackBar-info {
 .filter-textfield {
   width: 300px;
 }
+
+.mat-header-row{
+  padding-left: $halve_tick;
+  padding-right: $halve_tick;
+}
+
+@media only screen and (min-width: 800px) {
+  .mat-header-row{
+    padding-left: $main_tick;
+    padding-right: $main_tick;
+  }
+}
+
+.mat-row{
+  padding-left: $halve_tick;
+  padding-right: $halve_tick;
+}
+
+@media only screen and (min-width: 800px) {
+  .mat-row{
+    padding-left: $main_tick;
+    padding-right: $main_tick;
+  }
+}
+
+.right-align{
+  text-align: right;
+}
+

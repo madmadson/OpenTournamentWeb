@@ -1,6 +1,10 @@
 <h4 class="heading">MySite - MyRegistrations</h4>
 
 <div class="my-site-nav-container">
+  <button md-raised-button class="color-positive-background action-button"
+          (click)="openCreateTournamentDialog()">
+    New Tournament
+  </button>
   <button md-raised-button class="color-info-background action-button"
           (click)="router.navigate(['/my-site/profile']);">
     MyProfile

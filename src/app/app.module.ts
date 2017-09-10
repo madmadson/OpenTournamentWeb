@@ -41,8 +41,7 @@ import {
 import {TournamentEffectService} from './store/effects/tournament-effect.service';
 import {TournamentService} from './tournament/actual-tournament.service';
 import {PlayerListOverviewComponent} from './player/player-list-overview/player-list-overview.component';
-import {PlayersEffectService} from './store/effects/players-effect.service';
-import {PlayersService} from './service/players.service';
+import {PlayersService} from './player/players.service';
 import {PlayerListComponent} from './player/player-list/player-list.component';
 import {PlayerFormComponent} from './player/player-form/player-form.component';
 import {RegisterPageComponent} from './auth/register-page/register-page.component';
@@ -176,7 +175,7 @@ import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
       AuthEffectService,
       TournamentEffectService,
       TournamentsEffectService,
-      PlayersEffectService,
+
       TournamentTeamEffectService]),
     StoreModule.forRoot(reducers),
     StoreRouterConnectingModule,

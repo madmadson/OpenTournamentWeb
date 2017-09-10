@@ -54,7 +54,10 @@ export class MyRegistrationListComponent implements OnInit, OnChanges {
       this.smallScreen = false;
       this.truncateMax = 40;
     }
-
+    if (this.smallScreen) {
+      this.displayedColumns = [
+        'tournamentName', 'tournamentLocation', 'tournamentDate'];
+    }
   }
 
   ngOnInit() {

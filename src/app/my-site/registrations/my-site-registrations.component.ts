@@ -9,6 +9,10 @@ import {MyRegistrationsService} from './my-registrations.service';
 import {AppState} from '../../store/reducers/index';
 import {Store} from '@ngrx/store';
 import * as moment from 'moment';
+import {TournamentFormDialogComponent} from "../../dialogs/tournament-form-dialog";
+import {MdDialog} from "@angular/material";
+import {Tournament} from "../../../../shared/model/tournament";
+import {TournamentPushAction} from "../../store/actions/tournaments-actions";
 
 @Component({
   selector: 'my-site-registrations',
@@ -25,9 +29,11 @@ export class MySiteRegistrationsComponent implements OnDestroy{
   userPlayerSubscription: Subscription;
 
   router: Router;
+  userPlayerData: Player;
 
   constructor(private _router: Router,
               private store: Store<AppState>,
+              public dialog: MdDialog,
               private myRegistrationsService: MyRegistrationsService,
               private winRef: WindowRefService) {
 
@@ -38,6 +44,7 @@ export class MySiteRegistrationsComponent implements OnDestroy{
 
     this.userPlayerSubscription = this.userPlayerData$.subscribe((player: Player) => {
       if (player && player.id) {
+        this.userPlayerData = player;
         this.myRegistrationsService.subscribeOnFirebaseMyRegistrations(player.id);
       }
     });
@@ -57,5 +64,29 @@ export class MySiteRegistrationsComponent implements OnDestroy{
     this.userPlayerSubscription.unsubscribe();
   }
 
+  openCreateTournamentDialog(): void {
+    const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
+      data: {
+        tournament: new Tournament('', '', '', '', 16, 0, 0, 0, 0,
+          this.userPlayerData.userUid, this.userPlayerData.userEmail, true, false, false, '', '', []),
+        allActualTournamentPlayers: [],
+        allRegistrations: [],
+        tournamentTeams: 0,
+        tournamentTeamRegistrations: 0
+      },
+      width: '800px'
+    });
 
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
+      if (tournament) {
+        this.store.dispatch(new TournamentPushAction(tournament));
+      }
+      dialogRef.close();
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+    });
+  }
 }

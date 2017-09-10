@@ -25,7 +25,6 @@ import {GlobalEventService} from '../../../service/global-event-service';
 import {ArmyList} from '../../../../../shared/model/armyList';
 import {Player} from '../../../../../shared/model/player';
 import {GamesDatabase, GamesDataSource} from '../../../../../shared/table-model/game';
-import {PageScrollInstance, PageScrollService} from 'ng2-page-scroll';
 import {DOCUMENT} from '@angular/common';
 import {GameResultDialogComponent} from '../../../dialogs/game-result-dialog';
 import {SwappingService} from '../../swapping.service';

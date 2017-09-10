@@ -8,7 +8,7 @@ import * as fromAuthentication from '../reducers/authenticationReducer';
 import * as fromMyTournaments from '../../my-site/tournaments/my-tournaments-reducer';
 import * as fromMyRegistrations from '../../my-site/registrations/my-registrations-reducer';
 import * as fromMyGames from '../../my-site/games/my-games-reducer';
-import * as fromPlayers from '../reducers/playersReducer';
+import * as fromPlayers from '../../player/players-reducer';
 import * as fromActualTournament from '../../tournament/store/actual-tournament-reducer';
 import * as fromTournaments from '../../tournaments/tournaments-reducer';
 import * as fromActualTournamentGames from '../../tournament/store/actual-tournament-games-reducer';

@@ -12,12 +12,12 @@
       </md-cell>
     </ng-container>
 
-    <ng-container  cdkColumnDef="tournamentLocation">
+    <ng-container  cdkColumnDef="tournamentLocation" >
       <md-header-cell *cdkHeaderCellDef md-sort-header class="location-column">
         Location
       </md-header-cell>
       <md-cell *cdkCellDef="let registration" class="location-column">
-        {{registration.tournamentLocation}}
+        {{registration.tournamentLocation | truncate:truncateMax}}
       </md-cell>
     </ng-container>
 
@@ -30,7 +30,7 @@
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="teamName">
+    <ng-container cdkColumnDef="teamName" *ngIf="!smallScreen">
       <md-header-cell *cdkHeaderCellDef class="teamName-column">
         Team
       </md-header-cell>
@@ -39,7 +39,7 @@
           </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="faction">
+    <ng-container cdkColumnDef="faction" *ngIf="!smallScreen">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="faction-column">
         Faction
       </md-header-cell>
@@ -49,7 +49,7 @@
     </ng-container>
 
     <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
-    <md-row *cdkRowDef="let registration; columns: displayedColumns;"
+    <md-row *cdkRowDef="let registration; columns: displayedColumns; let even = even"
       class="registrations-table-row"
       [ngClass]="{'even': even} "
       (click)="onSelect(registration)">

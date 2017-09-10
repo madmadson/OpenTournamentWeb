@@ -1,21 +1,20 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
-import {
-  PlayerAddedAction,
-  PlayerChangedAction,
-  PlayerDeletedAction,
-  PlayersClearAction
-} from '../store/actions/players-actions';
 import {Player} from '../../../shared/model/player';
 import {MdSnackBar} from '@angular/material';
 import {Router} from '@angular/router';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import * as firebase from 'firebase';
 import {AppState} from '../store/reducers/index';
+import {
+  ADD_ALL_PLAYERS_ACTION, ADD_PLAYER_ACTION, CHANGE_PLAYER_ACTION, CLEAR_ALL_PLAYERS_ACTION,
+  LOAD_PLAYERS_FINISHED_ACTION,
+  REMOVE_PLAYER_ACTION
+} from './players-actions';
 
 @Injectable()
-export class PlayersService  implements OnDestroy {
+export class PlayersService {
 
   private playersRef: firebase.database.Reference;
 
@@ -25,49 +24,72 @@ export class PlayersService  implements OnDestroy {
               private snackBar: MdSnackBar) {
   }
 
-  ngOnDestroy(): void {
-
+  unsubscribeOnFirebase(): void {
     if (this.playersRef) {
       this.playersRef.off();
     }
+    this.store.dispatch({type: CLEAR_ALL_PLAYERS_ACTION});
   }
 
 
+  subscribeOnFirebase() {
 
-  subscribeOnPlayers() {
-
-    this.store.dispatch(new PlayersClearAction());
     const that = this;
+    const allPlayers: Player[] = [];
+    let newItems = false;
 
-    if (this.playersRef) {
-      this.playersRef.off();
-    }
 
     this.playersRef = firebase.database().ref('players');
 
     this.playersRef.on('child_added', function (snapshot) {
 
-      const tournament: Player = Player.fromJson(snapshot.val());
-      tournament.id = snapshot.key;
+      if (!newItems) {
+        return;
+      }
 
-      that.store.dispatch(new PlayerAddedAction(tournament));
+      const player: Player = Player.fromJson(snapshot.val());
+      player.id = snapshot.key;
+
+      that.store.dispatch({type: ADD_PLAYER_ACTION, payload: player});
 
     });
 
     this.playersRef.on('child_changed', function (snapshot) {
 
-      const tournament: Player = Player.fromJson(snapshot.val());
-      tournament.id = snapshot.key;
+      if (!newItems) {
+        return;
+      }
 
-      that.store.dispatch(new PlayerChangedAction(tournament));
+      const player: Player = Player.fromJson(snapshot.val());
+      player.id = snapshot.key;
+
+      that.store.dispatch({type: CHANGE_PLAYER_ACTION, payload: player});
     });
 
     this.playersRef.on('child_removed', function (snapshot) {
 
-      that.store.dispatch(new PlayerDeletedAction(snapshot.key));
+      if (!newItems) {
+        return;
+      }
+
+      that.store.dispatch({type: REMOVE_PLAYER_ACTION, payload: snapshot});
     });
 
 
+    this.playersRef.once('value', function (snapshot) {
+
+      snapshot.forEach(function (playersSnapshot) {
+        const player: Player = Player.fromJson(playersSnapshot.val());
+        player.id = playersSnapshot.key;
+        allPlayers.push(player);
+        return false;
+
+      });
+    }).then(function () {
+      that.store.dispatch({type: LOAD_PLAYERS_FINISHED_ACTION});
+      that.store.dispatch({type: ADD_ALL_PLAYERS_ACTION, payload: allPlayers});
+      newItems = true;
+    });
   }
 
 

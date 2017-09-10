@@ -33,6 +33,7 @@ export class MySiteTournamentsComponent implements OnDestroy {
   loadMyTournaments$: Observable<boolean>;
   allMyTournamentsGrouped$: Observable<any>;
   userPlayerData$: Observable<Player>;
+  userPlayerData: Player;
   userPlayerSubscription: Subscription;
 
   router: Router;
@@ -49,6 +50,9 @@ export class MySiteTournamentsComponent implements OnDestroy {
 
     this.userPlayerSubscription = this.userPlayerData$.subscribe((player: Player) => {
       if (player && player.id) {
+
+        this.userPlayerData = player;
+
         this.myTournamentsService.subscribeOnFirebaseMyTournaments(player.userUid);
       }
 
@@ -79,53 +83,30 @@ export class MySiteTournamentsComponent implements OnDestroy {
 
   }
 
-  // getMyTournamentsTitle(): string {
-  //   if (this.smallScreen) {
-  //     return 'Orga..';
-  //   } else {
-  //     return 'Organised Tournaments';
-  //   }
-  // }
-  //
-  // getMyGamesTitle(): string {
-  //   if (this.smallScreen) {
-  //     return 'Games';
-  //   } else {
-  //     return 'Games';
-  //   }
-  // }
-  //
-  // getMyRegistrationTitle(): string {
-  //   if (this.smallScreen) {
-  //     return 'Regist..';
-  //   } else {
-  //     return 'Registrations';
-  //   }
-  // }
-  //
-  // openCreateTournamentDialog(): void {
-  //   const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
-  //     data: {
-  //       tournament: new Tournament('', '', '', '', 16, 0, 0, 0, 0,
-  //         this.creatorId, this.creatorMail, true, false, false, '', '', []),
-  //       allActualTournamentPlayers: [],
-  //       allRegistrations: [],
-  //       tournamentTeams: 0,
-  //       tournamentTeamRegistrations: 0
-  //     },
-  //     width: '800px'
-  //   });
-  //
-  //   const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
-  //     if (tournament) {
-  //       this.store.dispatch(new TournamentPushAction(tournament));
-  //     }
-  //     dialogRef.close();
-  //   });
-  //
-  //   dialogRef.afterClosed().subscribe(() => {
-  //
-  //     saveEventSubscribe.unsubscribe();
-  //   });
-  // }
+
+  openCreateTournamentDialog(): void {
+    const dialogRef = this.dialog.open(TournamentFormDialogComponent, {
+      data: {
+        tournament: new Tournament('', '', '', '', 16, 0, 0, 0, 0,
+          this.userPlayerData.userUid, this.userPlayerData.userEmail, true, false, false, '', '', []),
+        allActualTournamentPlayers: [],
+        allRegistrations: [],
+        tournamentTeams: 0,
+        tournamentTeamRegistrations: 0
+      },
+      width: '800px'
+    });
+
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
+      if (tournament) {
+        this.store.dispatch(new TournamentPushAction(tournament));
+      }
+      dialogRef.close();
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+    });
+  }
 }

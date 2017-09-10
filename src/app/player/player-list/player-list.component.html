@@ -1,27 +1,118 @@
-<ng-container *ngIf="!players" >
-  <div class="heading">Load Players... <mdl-spinner  single-color active></mdl-spinner></div>
-</ng-container>
 
-<mdl-list-item lines="3"
-               class="list-item"
-               *ngFor="let player of players | paginate: { itemsPerPage: 10, currentPage: page }; let i = index; let even = even;"
-               [ngClass]="{'even': even}">
 
-  <mdl-list-item-primary-content>
-    <mdl-icon mdl-list-item-avatar mdl-badge="{{i + 1}}" mdl-badge-overlap>
-      person
-    </mdl-icon>
-    <span *ngIf="!smallScreen" class="player-list-item">{{player.firstName}} <b>{{player.nickName}}</b> {{player.lastName |truncate:truncateMax}}</span>
-    <span *ngIf="smallScreen" class="player-list-item">{{player.firstName | truncate:truncateMax}} {{player.lastName |truncate:truncateMax}}</span>
-    <mdl-list-item-text-body >
-      <div mdTooltip="Locality" class="player-list-item">{{player.meta |truncate:truncateMax}}</div>
-      <div class="player-list-item">{{player.country}}</div>
-    </mdl-list-item-text-body>
-  </mdl-list-item-primary-content>
-  <mdl-list-item-secondary-content>
-    <mdl-list-item-secondary-info class="align-fix">ELO<img class="padding-fix-icon" src="../../../assets/my_crown_small.png"></mdl-list-item-secondary-info>
-    <span >{{player.elo}}</span>
-  </mdl-list-item-secondary-content>
-</mdl-list-item>
-<pagination-controls (pageChange)="page = $event"></pagination-controls>
+<div class="player-table-container mat-elevation-z8">
+  <md-table #table [dataSource]="dataSource" mdSort>
+
+    <ng-container cdkColumnDef="rank">
+      <md-header-cell *cdkHeaderCellDef class="rank-column">
+        Rank
+      </md-header-cell>
+      <md-cell *cdkCellDef="let ranking; let i = index;" class="rank-column">
+        {{i +1}}
+      </md-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="firstName">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="firstName-column">
+        FirstName
+      </md-header-cell>
+      <md-cell *cdkCellDef="let player" class="firstName-column">
+        {{player.firstName | truncate:truncateMax}}
+      </md-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="nickName">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="nickName-column">
+        NickName
+      </md-header-cell>
+      <md-cell *cdkCellDef="let player" class="nickName-column">
+        {{player.nickName | truncate:truncateMax}}
+      </md-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="lastName">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="lastName-column">
+        LastName
+      </md-header-cell>
+      <md-cell *cdkCellDef="let player" class="lastName-column">
+        {{player.lastName | truncate:truncateMax}}
+      </md-cell>
+    </ng-container>
+
+
+    <ng-container  *ngIf="!smallScreen" cdkColumnDef="locality">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="locality-column">
+        Locailty
+      </md-header-cell>
+      <md-cell *cdkCellDef="let player" class="locality-column">
+        {{player.meta}}
+      </md-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="elo">
+      <md-header-cell *cdkHeaderCellDef class="elo-column">
+        Elo
+      </md-header-cell>
+      <md-cell *cdkCellDef="let player" class="elo-column">
+        <img class="padding-fix-icon" src="../../../assets/my_crown_small.png">
+        {{player.elo}}
+      </md-cell>
+    </ng-container>
+
+    <ng-container  *ngIf="!smallScreen" cdkColumnDef="country">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="country-column">
+        Country
+      </md-header-cell>
+      <md-cell *cdkCellDef="let player" class="country-column">
+        {{player.country}}
+      </md-cell>
+    </ng-container>
+
+    <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
+    <md-row *cdkRowDef="let player; columns: displayedColumns; let even = even"
+            class="players-table-row"
+            [ngClass]="{'even': even}">
+    </md-row>
+  </md-table>
+  <md-paginator #paginator
+                [length]="playerDb?.data.length"
+                [pageIndex]="0"
+                [pageSize]="20"
+                [pageSizeOptions]="[10, 25, 50, 100]">
+  </md-paginator>
+</div>
+
+
+
+
+
+
+
+
+<!--<ng-container *ngIf="!players" >-->
+  <!--<div class="heading">Load Players... <mdl-spinner  single-color active></mdl-spinner></div>-->
+<!--</ng-container>-->
+
+<!--<mdl-list-item lines="3"-->
+               <!--class="list-item"-->
+               <!--*ngFor="let player of players | paginate: { itemsPerPage: 10, currentPage: page }; let i = index; let even = even;"-->
+               <!--[ngClass]="{'even': even}">-->
+
+  <!--<mdl-list-item-primary-content>-->
+    <!--<mdl-icon mdl-list-item-avatar mdl-badge="{{i + 1}}" mdl-badge-overlap>-->
+      <!--person-->
+    <!--</mdl-icon>-->
+    <!--<span *ngIf="!smallScreen" class="player-list-item">{{player.firstName}} <b>{{player.nickName}}</b> {{player.lastName |truncate:truncateMax}}</span>-->
+    <!--<span *ngIf="smallScreen" class="player-list-item">{{player.firstName | truncate:truncateMax}} {{player.lastName |truncate:truncateMax}}</span>-->
+    <!--<mdl-list-item-text-body >-->
+      <!--<div mdTooltip="Locality" class="player-list-item">{{player.meta |truncate:truncateMax}}</div>-->
+      <!--<div class="player-list-item">{{player.country}}</div>-->
+    <!--</mdl-list-item-text-body>-->
+  <!--</mdl-list-item-primary-content>-->
+  <!--<mdl-list-item-secondary-content>-->
+    <!--<mdl-list-item-secondary-info class="align-fix">ELO<img class="padding-fix-icon" src="../../../assets/my_crown_small.png"></mdl-list-item-secondary-info>-->
+    <!--<span >{{player.elo}}</span>-->
+  <!--</mdl-list-item-secondary-content>-->
+<!--</mdl-list-item>-->
+<!--<pagination-controls (pageChange)="page = $event"></pagination-controls>-->
 
