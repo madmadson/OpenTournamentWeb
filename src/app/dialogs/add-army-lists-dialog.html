@@ -1,11 +1,11 @@
-<div *ngIf="registration" class="heading">ArmyLists for {{registration.playerName}}</div>
-<div *ngIf="tournamentPlayer" class="heading">ArmyLists for {{tournamentPlayer.playerName}}</div>
+<div *ngIf="registration" class="sub-heading">ArmyLists for {{registration.playerName}}</div>
+<div *ngIf="tournamentPlayer" class="sub-heading">ArmyLists for {{tournamentPlayer.playerName}}</div>
 <md-dialog-content>
   <md-card>
     <p *ngIf="armyLists.length > 6" style="color: red">Maximum reached for ArmyLists</p>
     <md-tab-group [selectedIndex]="selectedTab">
       <md-tab *ngIf="armyLists.length <= 6" label="NewList">
-        <form #armyListForm="ngForm">
+        <form #armyListForm="ngForm" class="padding">
           <md-select class="full-width"
                      required
                      [(ngModel)]="armyListModel.name"

@@ -170,7 +170,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
       this.isTournamentPlayer = false;
 
-      _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      _.forEach(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
         if (that.userPlayerData && that.userPlayerData.id === player.playerId) {
           that.isTournamentPlayer = true;
         }
@@ -186,7 +186,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
       this.myRegistration = undefined;
       this.isRegisteredPlayer = false;
 
-      _.find(this.allActualRegistrations, function (reg: Registration) {
+      _.forEach(this.allActualRegistrations, function (reg: Registration) {
 
         if (that.allTeamNames.indexOf(reg.teamName) === -1 && reg.teamName !== '') {
           that.allTeamNames.push(reg.teamName);

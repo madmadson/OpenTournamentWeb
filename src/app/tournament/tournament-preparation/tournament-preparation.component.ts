@@ -105,48 +105,48 @@ export class TournamentPreparationComponent implements OnInit {
   }
 
   ngOnInit() {
-    const that = this;
-
-    this.armyLists$ = this.actualTournamentArmyList$;
-
-
-    this.actualTournamentRegisteredPlayers$.subscribe(allRegistrations => {
-      this.allRegistrations = allRegistrations;
-      this.myRegistration = _.find(allRegistrations,
-        function (reg) {
-          if (that.userPlayerData !== undefined) {
-            return reg.playerId === that.userPlayerData.id;
-          }
-        });
-    });
-    this.actualTournamentTeamRegistrations$.subscribe(teams => {
-      this.teamCreator = _.find(teams, function (team) {
-        if (that.userPlayerData !== undefined) {
-          return team.creatorUid === that.userPlayerData.userUid;
-        }
-      });
-      this.myTeam = _.find(teams, function (team) {
-        if (that.userPlayerData && team.registeredPlayerIds) {
-          if (team.registeredPlayerIds.indexOf(that.userPlayerData.id) !== -1) {
-            return team;
-          }
-        }
-      });
-      this.tournamentTeamRegistrations = teams.length;
-    });
-
-    this.actualTournamentTeams$.subscribe(teams => {
-
-      this.actualTournamentTeams = teams;
-      this.tournamentTeams = teams.length;
-    });
-
-
-    this.allActualTournamentPlayers$.subscribe(players => {
-      this.allActualTournamentPlayers = players;
-
-      this.filteredActualTournamentPlayers = players;
-    });
+    // const that = this;
+    //
+    // this.armyLists$ = this.actualTournamentArmyList$;
+    //
+    //
+    // this.actualTournamentRegisteredPlayers$.subscribe(allRegistrations => {
+    //   this.allRegistrations = allRegistrations;
+    //   this.myRegistration = _.find(allRegistrations,
+    //     function (reg) {
+    //       if (that.userPlayerData !== undefined) {
+    //         return reg.playerId === that.userPlayerData.id;
+    //       }
+    //     });
+    // });
+    // this.actualTournamentTeamRegistrations$.subscribe(teams => {
+    //   this.teamCreator = _.find(teams, function (team) {
+    //     if (that.userPlayerData !== undefined) {
+    //       return team.creatorUid === that.userPlayerData.userUid;
+    //     }
+    //   });
+    //   this.myTeam = _.find(teams, function (team) {
+    //     if (that.userPlayerData && team.registeredPlayerIds) {
+    //       if (team.registeredPlayerIds.indexOf(that.userPlayerData.id) !== -1) {
+    //         return team;
+    //       }
+    //     }
+    //   });
+    //   this.tournamentTeamRegistrations = teams.length;
+    // });
+    //
+    // this.actualTournamentTeams$.subscribe(teams => {
+    //
+    //   this.actualTournamentTeams = teams;
+    //   this.tournamentTeams = teams.length;
+    // });
+    //
+    //
+    // this.allActualTournamentPlayers$.subscribe(players => {
+    //   this.allActualTournamentPlayers = players;
+    //
+    //   this.filteredActualTournamentPlayers = players;
+    // });
   }
 
   filter(searchString: string) {

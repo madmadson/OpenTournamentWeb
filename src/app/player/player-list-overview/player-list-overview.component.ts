@@ -1,15 +1,12 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 
-import {PlayersSubscribeAction} from '../../store/actions/players-actions';
-
-import * as _ from 'lodash';
 import {Player} from '../../../../shared/model/player';
-import {Subscription} from 'rxjs/Subscription';
+
 import {AppState} from '../../store/reducers/index';
-import {PlayersService} from "../players.service";
-import {Observable} from "rxjs/Observable";
-import {CHANGE_SEARCH_FIELD_PLAYERS_ACTION} from "../players-actions";
+import {PlayersService} from '../players.service';
+import {Observable} from 'rxjs/Observable';
+import {CHANGE_SEARCH_FIELD_PLAYERS_ACTION} from '../players-actions';
 
 
 @Component({

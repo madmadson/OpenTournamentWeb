@@ -11,7 +11,8 @@ import {getWMHOCaster} from '../../../shared/model/wa_ho-caster';
 
 @Component({
   selector: 'add-army-lists-dialog',
-  templateUrl: './add-army-lists-dialog.html'
+  templateUrl: './add-army-lists-dialog.html',
+  styleUrls: ['./add-army-lists-dialog.scss']
 })
 export class AddArmyListsDialogComponent {
 

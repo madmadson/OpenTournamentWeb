@@ -81,38 +81,3 @@
                 [pageSizeOptions]="[10, 25, 50, 100]">
   </md-paginator>
 </div>
-
-
-
-
-
-
-
-
-<!--<ng-container *ngIf="!players" >-->
-  <!--<div class="heading">Load Players... <mdl-spinner  single-color active></mdl-spinner></div>-->
-<!--</ng-container>-->
-
-<!--<mdl-list-item lines="3"-->
-               <!--class="list-item"-->
-               <!--*ngFor="let player of players | paginate: { itemsPerPage: 10, currentPage: page }; let i = index; let even = even;"-->
-               <!--[ngClass]="{'even': even}">-->
-
-  <!--<mdl-list-item-primary-content>-->
-    <!--<mdl-icon mdl-list-item-avatar mdl-badge="{{i + 1}}" mdl-badge-overlap>-->
-      <!--person-->
-    <!--</mdl-icon>-->
-    <!--<span *ngIf="!smallScreen" class="player-list-item">{{player.firstName}} <b>{{player.nickName}}</b> {{player.lastName |truncate:truncateMax}}</span>-->
-    <!--<span *ngIf="smallScreen" class="player-list-item">{{player.firstName | truncate:truncateMax}} {{player.lastName |truncate:truncateMax}}</span>-->
-    <!--<mdl-list-item-text-body >-->
-      <!--<div mdTooltip="Locality" class="player-list-item">{{player.meta |truncate:truncateMax}}</div>-->
-      <!--<div class="player-list-item">{{player.country}}</div>-->
-    <!--</mdl-list-item-text-body>-->
-  <!--</mdl-list-item-primary-content>-->
-  <!--<mdl-list-item-secondary-content>-->
-    <!--<mdl-list-item-secondary-info class="align-fix">ELO<img class="padding-fix-icon" src="../../../assets/my_crown_small.png"></mdl-list-item-secondary-info>-->
-    <!--<span >{{player.elo}}</span>-->
-  <!--</mdl-list-item-secondary-content>-->
-<!--</mdl-list-item>-->
-<!--<pagination-controls (pageChange)="page = $event"></pagination-controls>-->
-

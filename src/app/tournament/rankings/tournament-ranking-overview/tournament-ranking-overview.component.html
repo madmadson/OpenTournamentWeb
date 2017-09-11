@@ -47,22 +47,20 @@
   </h2>
 
 
-  <h3 class="heading" *ngIf="(!isAdmin && !isCoOrganizer) &&
+  <h3 class="heading padding" *ngIf="(!isAdmin && !isCoOrganizer) &&
             (actualTournament?.actualRound > actualTournament?.visibleRound) &&
             (round === actualTournament?.actualRound)">
     Tournament Organizer is pairing.
     Page will reload when he publish the new round.
   </h3>
   <div class="action-card-container">
-    <md-card class="action-card action-button-wrapper">
-      <button (click)="showGamesOfRound()"
-              type="button"
-              class="color-info-background action-button"
-              md-raised-button>
-        <md-icon>list</md-icon>
-       Show Games
-      </button>
-    </md-card>
+    <button (click)="showGamesOfRound()"
+            type="button"
+            class="color-info-background action-button"
+            md-raised-button>
+      <md-icon>list</md-icon>
+      Show Games
+    </button>
   </div>
 
   <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
@@ -74,15 +72,15 @@
     </ng-container>
 
     <tournament-rankings *ngIf="(rankingsForRound$ | async).length > 0 && actualTournament"
-                      [isAdmin]="isAdmin"
-                      [isCoOrganizer]="isCoOrganizer"
-                      [round]="round"
-                      [userPlayerData]="userPlayerData"
-                      [actualTournament]="actualTournament"
-                      [rankingsForRound]="rankingsForRound$ | async"
-                      [armyLists]="allArmyLists$ | async"
-                      (onDropPlayer)="handleDropPlayer($event)"
-                      (onUndoDropPlayer)="handleUndoDropPlayer($event)">
+                         [isAdmin]="isAdmin"
+                         [isCoOrganizer]="isCoOrganizer"
+                         [round]="round"
+                         [userPlayerData]="userPlayerData"
+                         [actualTournament]="actualTournament"
+                         [rankingsForRound]="rankingsForRound$ | async"
+                         [armyLists]="allArmyLists$ | async"
+                         (onDropPlayer)="handleDropPlayer($event)"
+                         (onUndoDropPlayer)="handleUndoDropPlayer($event)">
     </tournament-rankings>
   </ng-container>
 </ng-container>

@@ -27,7 +27,7 @@ export class GameResultDialogComponent {
   playerTwoArmyLists: ArmyList[];
 
   sureButton: boolean;
-  isConnected: Observable<boolean>;
+  isConnected$: Observable<boolean>;
 
   isAdmin: boolean;
   isCoOrganizer: boolean;
@@ -72,7 +72,7 @@ export class GameResultDialogComponent {
     this.playerOneArmyLists = [];
     this.playerTwoArmyLists = [];
 
-    this.isConnected = Observable.merge(
+    this.isConnected$ = Observable.merge(
       Observable.of(this.winRef.nativeWindow.navigator.onLine),
       Observable.fromEvent(window, 'online').map(() => true),
       Observable.fromEvent(window, 'offline').map(() => false));

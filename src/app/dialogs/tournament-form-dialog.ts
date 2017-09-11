@@ -1,6 +1,9 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 
-import {MD_DIALOG_DATA, MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+import {
+  MD_DIALOG_DATA, MdDialog, MdDialogRef,
+  MdSnackBar
+} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
 
 import * as moment from 'moment';
@@ -11,6 +14,7 @@ import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {Registration} from '../../../shared/model/registration';
 import {AddCoOrganizatorDialogComponent} from './add-co-organizator-dialog';
 import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
+import {Moment} from 'moment';
 
 
 @Component({
@@ -33,7 +37,6 @@ export class TournamentFormDialogComponent implements OnInit {
   tournamentTeamRegistrations: number;
 
   tournamentForm: FormGroup;
-  dateFormat = 'dd, M/D/YY HH:mm';
 
   validationMessages = {
     'name': {
@@ -77,18 +80,29 @@ export class TournamentFormDialogComponent implements OnInit {
   }
 
   initForm() {
-    const initialBeginDate = moment().weekday(6).hours(10).minutes(0).add(1, 'week').format(this.dateFormat);
-    const initialEndDate = moment().weekday(6).hours(20).minutes(0).add(1, 'week').format(this.dateFormat);
+    const initialBegin = moment().weekday(6).hours(10).minutes(0).add(1, 'week');
+    const initialEnd = moment().weekday(6).hours(20).minutes(0).add(1, 'week');
+
+    const initialBeginDate: Date = initialBegin.toDate();
+    const initialEndDate: Date = initialEnd.toDate();
+
+    const givenBeginDate: Date = moment(this.tournament.beginDate).toDate();
+    const givenEndDate: Date = moment(this.tournament.endDate).toDate();
 
     this.tournamentForm = new FormGroup({
       name: new FormControl(this.tournament.name, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])),
       location: new FormControl(this.tournament.location, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(30)])),
       beginDate: new FormControl(this.tournament.beginDate ?
-        moment(this.tournament.beginDate).format(this.dateFormat) :
-        initialBeginDate, Validators.required),
-      endDate:  new FormControl(this.tournament.endDate ?
-        moment(this.tournament.endDate).format(this.dateFormat) :
-        initialEndDate, Validators.required),
+        givenBeginDate : initialBeginDate, Validators.required),
+      beginTime: new FormControl(this.tournament.beginDate ?
+        moment(this.tournament.beginDate).format('HH:mm') :
+        '10:00', Validators.required),
+
+      endDate: new FormControl(this.tournament.endDate ?
+        givenEndDate : initialEndDate, Validators.required),
+      endTime: new FormControl(this.tournament.endDate ?
+        moment(this.tournament.endDate).format('HH:mm') :
+        '20:00', Validators.required),
 
       teamTournament: new FormControl( {value: this.tournament.teamSize > 0,
         disabled:  (this.allActualTournamentPlayers.length > 0 ||
@@ -151,83 +165,95 @@ export class TournamentFormDialogComponent implements OnInit {
     }
   }
 
-  setBeginDate(start: any): any {
+  onBeginChange(start): void {
 
-    if (moment(start).isAfter(moment().add(1, 'year'))) {
-      this.tournamentForm.get('beginDate').setValue(
-        moment().add(1, 'year').add(-1, 'week').weekday(6).hours(10).minutes(0).format(this.dateFormat)
-      );
-      this.tournamentForm.get('endDate').setValue(
-        moment().add(1, 'year').add(-1, 'week').weekday(6).hours(20).minutes(0).format(this.dateFormat)
-      );
+    const newData: Moment = moment(start.value);
+    const todayPlusOneYear: Moment = moment().add(1, 'year');
+    const lastPossibleDate: Moment =  moment().add(1, 'year').add(-1, 'week').weekday(6);
+    const nextWeekSaturday: Moment =  moment().weekday(6).add(1, 'week');
+
+    if (newData.isAfter(todayPlusOneYear)) {
+      this.tournamentForm.get('beginDate').setValue(lastPossibleDate.toDate());
+      this.tournamentForm.get('endDate').setValue(lastPossibleDate.toDate());
 
       this.snackBar.open('Maximum tournament date us one year ahead', '', {
         duration: 3000,
         extraClasses: ['info']
       });
-    } else if (moment(start).isBefore(moment())) {
-      this.tournamentForm.get('beginDate').setValue(
-        moment().weekday(6).hours(10).minutes(0).add(1, 'week').format(this.dateFormat)
-      );
+    } else if (newData.isBefore(moment())) {
+      this.tournamentForm.get('beginDate').setValue(nextWeekSaturday.toDate());
 
       this.snackBar.open('Tournament cant be in past', '', {
         duration: 3000,
         extraClasses: ['info']
       });
-    } else if (moment(start).isAfter(moment(this.tournamentForm.get('endDate').value))) {
-      this.tournamentForm.get('beginDate').setValue(moment(start).format(this.dateFormat));
-      this.tournamentForm.get('endDate').setValue(moment(start).add(10, 'hours').format(this.dateFormat));
+    } else if (newData.isAfter(moment(this.tournamentForm.get('endDate').value))) {
+      this.tournamentForm.get('beginDate').setValue(newData.toDate());
+      this.tournamentForm.get('endDate').setValue(newData.toDate());
 
-      this.snackBar.open('Begin before End. Set End start +10hours', '', {
+      this.snackBar.open('Begin before End. Set End to start', '', {
         duration: 3000,
         extraClasses: ['info']
       });
     } else {
-      this.tournamentForm.get('beginDate').setValue(moment(start).format(this.dateFormat));
+      this.tournamentForm.get('beginDate').setValue(newData.toDate());
     }
   }
 
-  setEndDate(end: any): any {
-    if (moment(end).isAfter(moment().add(1, 'year'))) {
-      this.tournamentForm.get('beginDate').setValue(
-        moment().add(1, 'year').add(-1, 'week').weekday(6).hours(10).minutes(0).format(this.dateFormat)
-      );
-      this.tournamentForm.get('endDate').setValue(
-        moment().add(1, 'year').add(-1, 'week').weekday(6).hours(20).minutes(0).format(this.dateFormat)
-      );
+  onEndChange(end): void {
+
+    const newData: Moment = moment(end.value);
+    const todayPlusOneYear: Moment = moment().add(1, 'year');
+    const lastPossibleDate: Moment =  moment().add(1, 'year').add(-1, 'week').weekday(6);
+    const nextWeekSaturday: Moment =  moment().weekday(6).add(1, 'week');
+
+    if (newData.isAfter(todayPlusOneYear)) {
+      this.tournamentForm.get('beginDate').setValue(lastPossibleDate.toDate());
+      this.tournamentForm.get('endDate').setValue(lastPossibleDate.toDate());
+
       this.snackBar.open('Maximum tournament date us one year ahead', '', {
         duration: 3000,
       });
-    } else if (moment(end).isBefore(moment())) {
-      this.tournamentForm.get('endDate').setValue(
-        moment().weekday(6).hours(20).minutes(0).add(1, 'week').format(this.dateFormat)
-      );
-
+    } else if (newData.isBefore(moment())) {
+      this.tournamentForm.get('endDate').setValue(nextWeekSaturday.toDate());
 
       this.snackBar.open('Tournament cant be in past', '', {
         duration: 3000,
       });
-    } else if (moment(end).isBefore(moment(this.tournamentForm.get('beginDate').value))) {
-      this.tournamentForm.get('beginDate').setValue(moment(end).add(-10, 'hours').format(this.dateFormat));
-      this.tournamentForm.get('endDate').setValue(moment(end).format(this.dateFormat));
-
-      this.snackBar.open('Begin before End. Set Begin end -10hours', '', {
+    } else if (newData.isBefore(moment(this.tournamentForm.get('beginDate').value))) {
+      this.tournamentForm.get('beginDate').setValue(newData.toDate());
+      this.tournamentForm.get('endDate').setValue(newData.toDate());
+      this.snackBar.open('Begin before End. Set begin to end', '', {
         duration: 3000,
       });
     } else {
-      this.tournamentForm.get('endDate').setValue(moment(end).format(this.dateFormat));
+      this.tournamentForm.get('endDate').setValue(newData.toDate());
     }
   }
 
 
   prepareSaveTournament(): Tournament {
     const formModel = this.tournamentForm.value;
+
+    const beginDate: string = formModel.beginDate;
+
+    const beginDateWithoutTime = moment(beginDate).hours(0).minutes(0);
+    const beginDateWithHours = beginDateWithoutTime.add(formModel.beginTime.split(':')[0], 'hours');
+    const beginDateWithMinutes = beginDateWithHours.add(formModel.beginTime.split(':')[1], 'minutes');
+
+    const endDate: string = formModel.beginDate;
+
+    const endDateWithoutTime = moment(endDate).hours(0).minutes(0);
+    const endDateWithHours = endDateWithoutTime.add(formModel.endTime.split(':')[0], 'hours');
+    const endDateWithMinutes = endDateWithHours.add(formModel.endTime.split(':')[1], 'minutes');
+
+
     return  {
       id: this.tournament.id ? this.tournament.id : '',
       name: formModel.name as string,
       location: formModel.location as string,
-      beginDate: formModel.beginDate as string,
-      endDate: formModel.endDate as string,
+      beginDate: beginDateWithMinutes.toString(),
+      endDate: endDateWithMinutes.toString(),
       actualRound: this.tournament.actualRound,
       visibleRound: this.tournament.visibleRound,
       maxParticipants: formModel.maxParticipants as number,

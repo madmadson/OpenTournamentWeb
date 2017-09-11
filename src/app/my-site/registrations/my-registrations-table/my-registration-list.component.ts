@@ -79,6 +79,7 @@ export class MyRegistrationListComponent implements OnInit, OnChanges {
   }
 
   onSelect(reg: Registration) {
-    this.router.navigate(['/tournament/' + reg.tournamentId]);
+
+    this.router.navigate(['/tournament/' + reg.tournamentId + '/registrations']);
   }
 }

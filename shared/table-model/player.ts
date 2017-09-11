@@ -1,6 +1,6 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
-import {DataSource} from '@angular/cdk';
+import {DataSource} from '@angular/cdk/table';
 import {MdPaginator, MdSort} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 

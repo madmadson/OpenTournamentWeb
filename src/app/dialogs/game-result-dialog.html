@@ -1,13 +1,13 @@
 <h3 class="heading">Game Result</h3>
 <md-dialog-content>
-  <span *ngIf="!(isConnected$ | async) && !isAdmin  && !isCoOrganizer">
+  <span *ngIf="!(isConnected$ | async) && !isCoOrganizer">
       You cannot inserted your gameResult while offline!
       <md-icon class="offline_icon"
                mdTooltip="No Connection">
         signal_wifi_off
       </md-icon>
     </span>
-  <span *ngIf="!(isConnected$ | async) && !isAdmin && isCoOrganizer">
+  <span *ngIf="!(isConnected$ | async) && isCoOrganizer">
     Ony the Organizer can insert results offline.
     This should prevent race conditions while offline.
     <md-icon class="offline_icon"
@@ -15,143 +15,150 @@
       signal_wifi_off
     </md-icon>
   </span>
-  <md-select class="full-width margin-top" placeholder="Winner" (change)="changeWinner()" [(ngModel)]="selectedWinner" floatPlaceholder="always">
-    <md-option [value]="1">{{givenGame.playerOnePlayerName | truncate: truncateMax}}</md-option>
-    <md-option [value]="2">{{givenGame.playerTwoPlayerName | truncate: truncateMax}}</md-option>
-    <md-option [value]="0">DRAW</md-option>
-  </md-select>
-  <table class="game-result-table">
-    <tr>
-      <th></th>
-      <th [ngClass]="{'color-negative-background': selectedWinner !== 1,
+  <ng-container *ngIf="isAdmin || (isConnected$ | async)">
+    <md-select class="full-width margin-top" placeholder="Winner" (change)="changeWinner()" [(ngModel)]="selectedWinner"
+               floatPlaceholder="always">
+      <md-option [value]="1">{{givenGame.playerOnePlayerName | truncate: truncateMax}}</md-option>
+      <md-option [value]="2">{{givenGame.playerTwoPlayerName | truncate: truncateMax}}</md-option>
+      <md-option [value]="0">DRAW</md-option>
+    </md-select>
+    <table class="game-result-table">
+      <tr>
+        <th></th>
+        <th [ngClass]="{'color-negative-background': selectedWinner !== 1,
                       'color-positive-background': selectedWinner === 1}">
-        {{givenGame.playerOnePlayerName | truncate: truncateMax}}
-      </th>
-      <th [ngClass]="{'color-negative-background': selectedWinner !== 2,
+          {{givenGame.playerOnePlayerName | truncate: truncateMax}}
+        </th>
+        <th [ngClass]="{'color-negative-background': selectedWinner !== 2,
                       'color-positive-background': selectedWinner === 2}">
-        {{givenGame.playerTwoPlayerName | truncate: truncateMax}}
-      </th>
-    </tr>
-    <tr>
-      <td>CP:</td>
-      <td>
-        <md-input-container>
-          <md-icon
-            mdPrefix
-            class="game-result-button remove-button"
-            (click)="decreasePlayerOneCP()">
-            remove_circle_outline
-          </md-icon>
-          <input class="game-result-input"
-                 mdInput
-                 type="number"
-                 min="0"
-                 max="{{gameConfig.points[1].max}}"
-                 maxlength="2"
-                 (blur)="correctPlayerOneCPInput()"
-                 [(ngModel)]="gameModel.playerOneControlPoints">
-          <md-icon
-            mdSuffix
-            class="game-result-button add-button"
-            (click)="increasePlayerOneCP()">
-            add_circle_outline
-          </md-icon>
-        </md-input-container>
+          {{givenGame.playerTwoPlayerName | truncate: truncateMax}}
+        </th>
+      </tr>
+      <tr>
+        <td>CP:</td>
+        <td>
+          <md-input-container>
+            <md-icon
+              mdPrefix
+              class="game-result-button remove-button"
+              (click)="decreasePlayerOneCP()">
+              remove_circle_outline
+            </md-icon>
+            <input class="game-result-input"
+                   mdInput
+                   type="number"
+                   min="0"
+                   max="{{gameConfig.points[1].max}}"
+                   maxlength="2"
+                   (blur)="correctPlayerOneCPInput()"
+                   [(ngModel)]="gameModel.playerOneControlPoints">
+            <md-icon
+              mdSuffix
+              class="game-result-button add-button"
+              (click)="increasePlayerOneCP()">
+              add_circle_outline
+            </md-icon>
+          </md-input-container>
 
-      </td>
-      <td>
-        <md-input-container>
-          <md-icon
-            mdPrefix
-            class="game-result-button remove-button"
-            (click)="decreasePlayerTwoCP()">
-            remove_circle_outline
-          </md-icon>
-          <input class="game-result-input"
-                 mdInput
-                 type="number"
-                 min="0"
-                 maxlength="2"
-                 max="{{gameConfig.points[1].max}}"
-                 (blur)="correctPlayerTwoCPInput()"
-                 [(ngModel)]="gameModel.playerTwoControlPoints">
-          <md-icon
-            mdSuffix
-            class="game-result-button add-button"
-            (click)="increasePlayerTwoCP()">
-            add_circle_outline
-          </md-icon>
-        </md-input-container>
-      </td>
-    </tr>
-    <tr>
-      <td>VP:</td>
-      <td>
-        <md-input-container>
-          <md-icon
-            mdPrefix
-            class="game-result-button remove-button"
-            (click)="decreasePlayerOneVP()">
-            remove_circle_outline
-          </md-icon>
-          <input class="game-result-input"
-                 mdInput
-                 type="number"
-                 min="0"
-                 maxlength="3"
-                 max="{{gameConfig.points[2].max}}"
-                 (blur)="correctPlayerOneVPInput()"
-                 [(ngModel)]="gameModel.playerOneVictoryPoints">
-          <md-icon
-            mdSuffix
-            class="game-result-button add-button"
-            (click)="increasePlayerOneVP()">
-            add_circle_outline
-          </md-icon>
-        </md-input-container>
-      </td>
-      <td>
-        <md-input-container>
-          <md-icon
-            mdPrefix
-            class="game-result-button remove-button"
-            (click)="decreasePlayerTwoVP()">
-            remove_circle_outline
-          </md-icon>
-          <input class="game-result-input"
-                 mdInput
-                 type="number"
-                 min="0"
-                 max="{{gameConfig.points[2].max}}"
-                 maxlength="3"
-                 (blur)="correctPlayerTwoVPInput()"
-                 [(ngModel)]="gameModel.playerTwoVictoryPoints">
-          <md-icon
-            mdSuffix
-            class="game-result-button add-button"
-            (click)="increasePlayerTwoVP()">
-            add_circle_outline
-          </md-icon>
-        </md-input-container>
-      </td>
-    </tr>
-  </table>
-  <md-select class="full-width margin-top" *ngIf="playerOneArmyLists?.length > 0"
-             placeholder="List {{gameModel.playerOnePlayerName | truncate:truncateMax}}" [(ngModel)]="gameModel.playerOneArmyList" floatPlaceholder="always">
-    <md-option *ngFor="let armyList of playerOneArmyLists" [value]="armyList.name">{{ armyList.name }}</md-option>
-  </md-select>
-  <ng-container  *ngIf="playerOneArmyLists?.length === 0">
-    <p class="full-width margin-top">No ArmyLists found for {{gameModel.playerOnePlayerName | truncate:truncateMax}}</p>
+        </td>
+        <td>
+          <md-input-container>
+            <md-icon
+              mdPrefix
+              class="game-result-button remove-button"
+              (click)="decreasePlayerTwoCP()">
+              remove_circle_outline
+            </md-icon>
+            <input class="game-result-input"
+                   mdInput
+                   type="number"
+                   min="0"
+                   maxlength="2"
+                   max="{{gameConfig.points[1].max}}"
+                   (blur)="correctPlayerTwoCPInput()"
+                   [(ngModel)]="gameModel.playerTwoControlPoints">
+            <md-icon
+              mdSuffix
+              class="game-result-button add-button"
+              (click)="increasePlayerTwoCP()">
+              add_circle_outline
+            </md-icon>
+          </md-input-container>
+        </td>
+      </tr>
+      <tr>
+        <td>VP:</td>
+        <td>
+          <md-input-container>
+            <md-icon
+              mdPrefix
+              class="game-result-button remove-button"
+              (click)="decreasePlayerOneVP()">
+              remove_circle_outline
+            </md-icon>
+            <input class="game-result-input"
+                   mdInput
+                   type="number"
+                   min="0"
+                   maxlength="3"
+                   max="{{gameConfig.points[2].max}}"
+                   (blur)="correctPlayerOneVPInput()"
+                   [(ngModel)]="gameModel.playerOneVictoryPoints">
+            <md-icon
+              mdSuffix
+              class="game-result-button add-button"
+              (click)="increasePlayerOneVP()">
+              add_circle_outline
+            </md-icon>
+          </md-input-container>
+        </td>
+        <td>
+          <md-input-container>
+            <md-icon
+              mdPrefix
+              class="game-result-button remove-button"
+              (click)="decreasePlayerTwoVP()">
+              remove_circle_outline
+            </md-icon>
+            <input class="game-result-input"
+                   mdInput
+                   type="number"
+                   min="0"
+                   max="{{gameConfig.points[2].max}}"
+                   maxlength="3"
+                   (blur)="correctPlayerTwoVPInput()"
+                   [(ngModel)]="gameModel.playerTwoVictoryPoints">
+            <md-icon
+              mdSuffix
+              class="game-result-button add-button"
+              (click)="increasePlayerTwoVP()">
+              add_circle_outline
+            </md-icon>
+          </md-input-container>
+        </td>
+      </tr>
+    </table>
+    <md-select class="full-width margin-top" *ngIf="playerOneArmyLists?.length > 0"
+               placeholder="List {{gameModel.playerOnePlayerName | truncate:truncateMax}}"
+               [(ngModel)]="gameModel.playerOneArmyList" floatPlaceholder="always">
+      <md-option *ngFor="let armyList of playerOneArmyLists" [value]="armyList.name">{{ armyList.name }}</md-option>
+    </md-select>
+    <ng-container *ngIf="playerOneArmyLists?.length === 0">
+      <p class="full-width margin-top">No ArmyLists found for {{gameModel.playerOnePlayerName |
+        truncate:truncateMax}}</p>
+    </ng-container>
+    <md-select class="full-width margin-top" *ngIf="playerTwoArmyLists?.length > 0"
+               placeholder="List {{gameModel.playerTwoPlayerName | truncate:truncateMax}}"
+               [(ngModel)]="gameModel.playerTwoArmyList" floatPlaceholder="always">
+      <md-option *ngFor="let armyList of playerTwoArmyLists" [value]="armyList.name">{{ armyList.name }}</md-option>
+    </md-select>
+    <ng-container *ngIf="playerTwoArmyLists?.length === 0">
+      <p class="full-width margin-top">No ArmyLists found for {{gameModel.playerTwoPlayerName |
+        truncate:truncateMax}}</p>
+    </ng-container>
   </ng-container>
-  <md-select class="full-width margin-top"  *ngIf="playerTwoArmyLists?.length > 0"
-             placeholder="List {{gameModel.playerTwoPlayerName | truncate:truncateMax}}" [(ngModel)]="gameModel.playerTwoArmyList" floatPlaceholder="always">
-    <md-option *ngFor="let armyList of playerTwoArmyLists" [value]="armyList.name">{{ armyList.name }}</md-option>
-  </md-select>
-  <ng-container  *ngIf="playerTwoArmyLists?.length === 0">
-    <p class="full-width margin-top">No ArmyLists found for {{gameModel.playerTwoPlayerName | truncate:truncateMax}}</p>
-  </ng-container>
-
 </md-dialog-content>
+
 <md-dialog-actions>
   <div class="full-width">
     <button class="big-button" type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog

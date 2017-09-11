@@ -465,49 +465,49 @@ export class TournamentGameListComponent implements OnInit, AfterContentChecked 
 
   playedAgainstOthers(tournamentPlayerOneId: string, tournamentPlayerTwoId: string, game: TournamentGame): boolean {
 
-    const that = this;
+    // const that = this;
+    //
+    // let playedAgainstOther = false;
+    //
+    // _.find(this.rankingsForRound, function (rank) {
+    //
+    //   if (tournamentPlayerOneId === 'bye' && rank.tournamentPlayerId === tournamentPlayerTwoId) {
+    //
+    //     const alreadyHasABye = _.includes(rank.opponentTournamentPlayerIds, 'bye');
+    //
+    //     if (alreadyHasABye) {
+    //       that.snackBar.open(rank.playerName + 'already has a BYE ', '', {
+    //         extraClasses: ['snackBar-info'],
+    //         duration: 5000
+    //       });
+    //       playedAgainstOther = true;
+    //     }
+    //     return;
+    //   }
+    //   if (rank.tournamentPlayerId === tournamentPlayerOneId) {
+    //     const pl = _.find(rank.opponentTournamentPlayerIds,
+    //       function (player1OpponentTournamentPlayerId: string) {
+    //         return player1OpponentTournamentPlayerId === tournamentPlayerTwoId;
+    //       });
+    //     if (pl) {
+    //       playedAgainstOther = true;
+    //       if (tournamentPlayerTwoId === game.playerOneTournamentPlayerId) {
+    //         that.snackBar.open(rank.playerName + ' already played against ' + game.playerOnePlayerName, '', {
+    //           extraClasses: ['snackBar-info'],
+    //           duration: 5000
+    //         });
+    //       } else {
+    //         that.snackBar.open(rank.playerName + ' already played against ' + game.playerTwoPlayerName, '', {
+    //           extraClasses: ['snackBar-info'],
+    //           duration: 5000
+    //         });
+    //       }
+    //     }
+    //     return;
+    //   }
+    // });
 
-    let playedAgainstOther = false;
-
-    _.find(this.rankingsForRound, function (rank) {
-
-      if (tournamentPlayerOneId === 'bye' && rank.tournamentPlayerId === tournamentPlayerTwoId) {
-
-        const alreadyHasABye = _.includes(rank.opponentTournamentPlayerIds, 'bye');
-
-        if (alreadyHasABye) {
-          that.snackBar.open(rank.playerName + 'already has a BYE ', '', {
-            extraClasses: ['snackBar-info'],
-            duration: 5000
-          });
-          playedAgainstOther = true;
-        }
-        return;
-      }
-      if (rank.tournamentPlayerId === tournamentPlayerOneId) {
-        const pl = _.find(rank.opponentTournamentPlayerIds,
-          function (player1OpponentTournamentPlayerId: string) {
-            return player1OpponentTournamentPlayerId === tournamentPlayerTwoId;
-          });
-        if (pl) {
-          playedAgainstOther = true;
-          if (tournamentPlayerTwoId === game.playerOneTournamentPlayerId) {
-            that.snackBar.open(rank.playerName + ' already played against ' + game.playerOnePlayerName, '', {
-              extraClasses: ['snackBar-info'],
-              duration: 5000
-            });
-          } else {
-            that.snackBar.open(rank.playerName + ' already played against ' + game.playerTwoPlayerName, '', {
-              extraClasses: ['snackBar-info'],
-              duration: 5000
-            });
-          }
-        }
-        return;
-      }
-    });
-
-    return playedAgainstOther;
+    return false;
   }
 
 

@@ -135,7 +135,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
     if (this.allActualTournamentPlayers && this.userPlayerData) {
 
-      _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      _.forEach(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
         if (that.userPlayerData && that.userPlayerData.id === player.playerId) {
           that.isTournamentPlayer = true;
         }
@@ -148,7 +148,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
     if (this.allActualRegistrations && this.userPlayerData) {
 
-      _.find(this.allActualRegistrations, function (reg: Registration) {
+      _.forEach(this.allActualRegistrations, function (reg: Registration) {
         console.log('search regs: ' + JSON.stringify(reg));
         if (that.userPlayerData && that.userPlayerData.id === reg.playerId) {
           that.isRegisteredPlayer = true;

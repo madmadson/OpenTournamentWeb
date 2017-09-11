@@ -32,6 +32,61 @@
       </md-input-container>
     </div>
 
+
+    <div class="full-width">
+      <md-form-field>
+        <input required
+               mdInput
+               formControlName="beginDate"
+               (dateChange)="onBeginChange($event)"
+               (dateInput)="onBeginChange($event)"
+               [mdDatepicker]="startDate"
+               [ngModel]="tournamentForm.get('beginDate').value"
+               placeholder="Start date">
+        <md-datepicker-toggle mdSuffix [for]="startDate"></md-datepicker-toggle>
+        <md-datepicker #startDate></md-datepicker>
+      </md-form-field>
+      <md-form-field>
+        <input required
+               mdInput
+               class="time-input"
+               type="time"
+               placeholder="Start time"
+               formControlName="beginTime"
+               [ngModel]="tournamentForm.get('beginTime').value">
+      </md-form-field>
+    </div>
+
+    <div class="full-width">
+      <md-form-field>
+        <input required
+               mdInput
+               (dateChange)="onEndChange($event)"
+               (dateInput)="onEndChange($event)"
+               formControlName="endDate"
+               [mdDatepicker]="endDate"
+               [ngModel]="tournamentForm.get('endDate').value"
+               placeholder="End date">
+        <md-datepicker-toggle mdSuffix [for]="endDate"></md-datepicker-toggle>
+        <md-datepicker #endDate></md-datepicker>
+      </md-form-field>
+      <md-form-field>
+        <input required
+               mdInput
+               type="time"
+               class="time-input"
+               placeholder="End time"
+               formControlName="endTime"
+               [ngModel]="tournamentForm.get('endTime').value">
+      </md-form-field>
+    </div>
+
+    <!--<md-form-field class="full-width">-->
+      <!--<input mdInput [mdDatepicker]="endDate" placeholder="End date">-->
+      <!--<md-datepicker-toggle mdSuffix [for]="endDate"></md-datepicker-toggle>-->
+      <!--<md-datepicker #endDate></md-datepicker>-->
+    <!--</md-form-field>-->
+
     <!--<md-input-container class="full-width">-->
       <!--<input mdInput-->
              <!--name="beginDate"-->

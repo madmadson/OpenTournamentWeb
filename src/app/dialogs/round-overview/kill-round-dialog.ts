@@ -12,11 +12,15 @@ export class KillRoundDialogComponent {
 
   enableKill: boolean;
 
+  killingRound: boolean;
+
   constructor(public dialogRef: MdDialogRef<KillRoundDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
   }
 
   killIt() {
+
+    this.enableKill = true;
 
     this.onKillRound.emit({
       tournamentId: '',

@@ -191,7 +191,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
       this.isTournamentPlayer = false;
 
-      _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      _.forEach(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
         if (that.userPlayerData && that.userPlayerData.id === player.playerId) {
           that.isTournamentPlayer = true;
         }

@@ -1,7 +1,7 @@
-<h3 *ngIf="ranking" class="heading">ArmyLists for {{ranking.playerName}}</h3>
-<h3 *ngIf="tournamentPlayer" class="heading">ArmyLists for {{tournamentPlayer.playerName}}</h3>
-<h3 *ngIf="tournamentTeam" class="heading">ArmyLists for {{tournamentTeam.teamName}}</h3>
-<h3 *ngIf="tournamentRank" class="heading">ArmyLists for {{tournamentRank.playerName}}</h3>
+<h3 *ngIf="ranking" class="sub-heading">ArmyLists for {{ranking.playerName}}</h3>
+<h3 *ngIf="tournamentPlayer" class="sub-heading">ArmyLists for {{tournamentPlayer.playerName}}</h3>
+<h3 *ngIf="tournamentTeam" class="sub-heading">ArmyLists for {{tournamentTeam.teamName}}</h3>
+<h3 *ngIf="tournamentRank" class="sub-heading">ArmyLists for {{tournamentRank.playerName}}</h3>
 <md-dialog-content>
   <md-card>
     <div *ngIf="!tournamentTeam && armyLists.length == 0">No ArmyLists for Player found</div>

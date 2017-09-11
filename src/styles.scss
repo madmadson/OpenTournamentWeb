@@ -99,20 +99,22 @@ a:hover {
   text-align: center;
   font-size: 2.0em;
   font-weight: bold;
-  margin: $main_tick !important;;
-  width: 100%;
-  line-height: 24px;
+  margin-top: $main_tick !important;
+  margin-bottom: $main_tick !important;
+  width: 95%;
+  line-height: $main_tick;
 }
-//
-//@media only screen and (min-width: 500px) {
-//  .heading {
-//    text-align: center;
-//    font-size: 2.4em;
-//    font-weight: bold;
-//    margin: $main_tick !important;
-//    width: 100%;
-//  }
-//}
+
+.sub-heading {
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.8em;
+  margin-top: $halve_tick !important;
+  margin-bottom: $halve_tick !important;
+  width: 95%;
+  line-height: $halve_tick;
+}
+
 
 .loading-spinner-container {
 
@@ -121,14 +123,7 @@ a:hover {
   margin-top: 24px;
 }
 
-.sub-heading {
-  text-align: center;
-  font-weight: bold;
-  font-size: 0.8em;
-  margin: $halve_tick !important;;
-  width: 100%;
-  line-height: $halve_tick;
-}
+
 
 /*md-changes watch for improvement in lib*/
 
@@ -247,6 +242,12 @@ md-card {
   padding-bottom: $halve_tick;
 }
 
+.full-width-with-padding {
+  width: 95%;
+  padding: $halve_tick;
+}
+
+
 .full-width-select-box {
   width: 100%;
   padding-top: $double_tick;
@@ -360,6 +361,8 @@ md-card {
   align-items: center;
   justify-content: center;
   height: 50px;
+  width: 95%;
+  padding: $halve_tick;
 }
 
 .my-site-nav-container{
@@ -379,6 +382,8 @@ md-card {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: $halve_tick;
+  width: 95%;
 }
 
 .action-card {

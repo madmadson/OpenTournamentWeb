@@ -128,6 +128,7 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
 
     this.allActualTournamentPlayersSub = this.allTournamentPlayers$.subscribe((allTournamentPlayers: TournamentPlayer[]) => {
       this.allActualTournamentPlayers = allTournamentPlayers;
+      this.setIsTournamentPlayer();
     });
 
     this.allActualRegistrationsSub = this.allRegistrations$.subscribe((allReg: Registration[]) => {
@@ -189,7 +190,7 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
 
       this.isTournamentPlayer = false;
 
-      _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      _.forEach(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
         if (that.userPlayerData && that.userPlayerData.id === player.playerId) {
           that.isTournamentPlayer = true;
         }

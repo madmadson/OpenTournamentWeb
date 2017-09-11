@@ -54,6 +54,7 @@ import {
   MdCardModule,
   MdCheckboxModule,
   MdDialogModule,
+  MdDatepickerModule,
   MdIconModule,
   MdInputModule,
   MdListModule,
@@ -68,7 +69,7 @@ import {
   MdTableModule,
   MdTabsModule,
   MdToolbarModule,
-  MdTooltipModule,
+  MdTooltipModule, DateAdapter, MdNativeDateModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
@@ -108,10 +109,7 @@ import {ShowTeamRankingDialogComponent} from './dialogs/show-team-ranking-dialog
 import {MdlSelectModule} from '@angular-mdl/select';
 import {AngularFireOfflineModule} from 'angularfire2-offline';
 import {ShowArmyListDialogComponent} from './dialogs/show-army-lists-dialog';
-import {
-  TeamMatchDialogComponent,
-  TournamentTeamGameListComponent
-} from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
+
 import {NewRoundDialogComponent} from './dialogs/round-overview/new-round-dialog';
 import {FinishTournamentDialogComponent} from './dialogs/finish-tournament-dialog';
 import {TournamentTeamFinalRankingsComponent} from './team-tournament/tournament-team-final-rankings/tournament-team-final-rankings.component';
@@ -124,7 +122,7 @@ import {AddPlayerRegistrationDialogComponent} from './dialogs/tournament-prepara
 import {PlayerRegistrationInfoDialogComponent} from './dialogs/tournament-preparation/player-registration-info-dialog';
 import {ShowSingleArmyListDialogComponent} from './dialogs/mini-dialog/show-single-army-list-dialog';
 import {ShowSoloRankingsComponent} from 'app/dialogs/mini-dialog/show-solo-rankings-dialog';
-import {CdkTableModule} from '@angular/cdk';
+import {CdkTableModule} from '@angular/cdk/table';
 import {Ng2PageScrollModule} from 'ng2-page-scroll';
 import {AddCoOrganizatorDialogComponent} from './dialogs/add-co-organizator-dialog';
 
@@ -160,6 +158,8 @@ import {MySiteRegistrationsComponent} from './my-site/registrations/my-site-regi
 import {MyRegistrationListComponent}
   from './my-site/registrations/my-registrations-table/my-registration-list.component';
 import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
+import {TeamMatchDialogComponent} from 'app/team-tournament/tournament-team-game-list/tournament-team-game-list.component';
+import {TournamentTeamGameListComponent} from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
 
 
 @NgModule({
@@ -175,7 +175,6 @@ import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
       AuthEffectService,
       TournamentEffectService,
       TournamentsEffectService,
-
       TournamentTeamEffectService]),
     StoreModule.forRoot(reducers),
     StoreRouterConnectingModule,
@@ -189,9 +188,8 @@ import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule, MdTooltipModule, MdSortModule, MdTableModule,
-    MdMenuModule, MdProgressSpinnerModule, MdSlideToggleModule,
-    MdPaginatorModule,
-    DateTimePickerModule,
+    MdMenuModule, MdProgressSpinnerModule, MdSlideToggleModule, MdDatepickerModule,
+    MdPaginatorModule, MdNativeDateModule,
     MdlExpansionPanelModule,
     MdlSelectModule,
     AngularFireOfflineModule,

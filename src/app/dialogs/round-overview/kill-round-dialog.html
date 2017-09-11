@@ -1,22 +1,33 @@
 <h3 class="heading">Kill Round {{data.round}} with Fire!</h3>
 
-<button (click)="enableKill = true"
-        class="big-button color-negative-background"
-        type="button"
-        md-raised-button>
-  <md-icon>warning</md-icon>
-  I know what I do
-</button>
-<h4 class="color-negative">All data is lost due to this action. There is no way back!</h4>
+<ng-container *ngIf="killingRound">
+  <div class="heading">Kill round...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
 
-<button (click)="killIt()"
-        class="full-width big-button color-negative-background"
-        type="button"
-        [disabled]="!enableKill"
-        md-raised-button>
-  <md-icon>warning</md-icon>
- Kill it with Fire!
-</button>
+<ng-container *ngIf="!killingRound">
+
+
+  <button (click)="enableKill = true"
+          class="big-button color-negative-background"
+          type="button"
+          md-raised-button>
+    <md-icon>warning</md-icon>
+    I know what I do
+  </button>
+  <h4 class="color-negative">All data is lost due to this action. There is no way back!</h4>
+
+  <button (click)="killIt()"
+          class="full-width big-button color-negative-background"
+          type="button"
+          [disabled]="!enableKill"
+          md-raised-button>
+    <md-icon>warning</md-icon>
+    Kill it with Fire!
+  </button>
+</ng-container>
 <div md-dialog-actions>
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
 </div>

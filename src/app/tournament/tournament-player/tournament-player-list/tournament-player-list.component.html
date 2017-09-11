@@ -50,7 +50,7 @@
                              'color-positive':playerHasArmyList(tournamentPlayer)} "
                  class="list-action"
                  (click)="addArmyLists(tournamentPlayer)">playlist_add</md-icon>
-        <md-icon *ngIf="actualTournament?.actualRound > 0"
+        <md-icon *ngIf="actualTournament?.actualRound === 0"
                  class="color-negative list-action"
                  md-tooltip="Delete Player"
                  (click)="deleteTournamentPlayer(tournamentPlayer)">delete</md-icon>

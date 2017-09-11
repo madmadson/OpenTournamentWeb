@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+  import {Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 
 
@@ -202,6 +202,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
     this.allActualTournamentPlayersSub = this.allTournamentPlayers$.subscribe((allTournamentPlayers: TournamentPlayer[]) => {
       this.allActualTournamentPlayers = allTournamentPlayers;
+      this.setIsTournamentPlayer();
     });
 
     this.allActualTournamentGamesSub = this.allTournamentGames$.subscribe((allTournamentGames: TournamentGame[]) => {
@@ -334,12 +335,22 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
       this.isTournamentPlayer = false;
 
-      _.find(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      _.forEach(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
         if (that.userPlayerData && that.userPlayerData.id === player.playerId) {
           that.isTournamentPlayer = true;
         }
       });
     }
+  }
+
+  checkOrganizerIsParing(): boolean{
+
+    if (this.actualTournament) {
+      return ((!this.isAdmin && !this.isCoOrganizer) &&
+      (this.actualTournament.actualRound > this.actualTournament.visibleRound) &&
+      (this.round === this.actualTournament.actualRound));
+    }
+    return false;
   }
 
   showRankingsOfRound() {
