@@ -33,17 +33,33 @@
   </md-menu>
 </div>
 
-<h2 class="heading">Registrations ({{(allRegistrations$| async)?.length}})</h2>
+<h2 class="heading">Registered Players ({{(allRegistrations$| async)?.length}})</h2>
 
-<div class="action-card-container">
+<div class="action-card-container" *ngIf="userPlayerData">
   <md-card class="action-card action-button-wrapper">
-    <button *ngIf="!isRegisteredPlayer && actualTournament?.actualRound === 0"
+    <button *ngIf="!isTeamTournament && !isRegisteredPlayer && actualTournament?.actualRound === 0"
             type="button"
-            (click)="openRegistrationDialog()"
+            (click)="openCreatePlayerRegistrationDialog()"
             class="color-positive-background action-button"
             md-raised-button>
       <md-icon>add</md-icon>
       Register
+    </button>
+    <button *ngIf="!teamICreated && isTeamTournament && !isRegisteredPlayer && actualTournament?.actualRound === 0"
+            type="button"
+            (click)="openCreateTeamRegistrationDialog()"
+            class="color-positive-background action-button"
+            md-raised-button>
+      <md-icon>group_add</md-icon>
+      New Team
+    </button>
+    <button *ngIf="teamICreated && isTeamTournament"
+            type="button"
+            class="color-positive-background action-button"
+            (click)="openShowMyTeamDialog()"
+            md-raised-button>
+      <md-icon>edit</md-icon>
+      Manage my Team
     </button>
     <button *ngIf="isRegisteredPlayer && !isTournamentPlayer && actualTournament?.actualRound === 0"
             (click)="deleteMyRegistration()"
@@ -55,7 +71,7 @@
     </button>
     <button *ngIf="isRegisteredPlayer"
             type="button"
-            (click)="openAddArmyListForRegistrationDialog()"
+            (click)="openAddArmyListForRegistrationDialog(myRegistration)"
             class="color-positive-background action-button"
             md-raised-button>
       <md-icon>assignment_returned</md-icon>
@@ -80,14 +96,14 @@
   </md-card>
 </div>
 
-<ng-container *ngIf="(loadReg$ | async)">
+<ng-container *ngIf="!isTeamTournament &&  (loadReg$ | async)">
   <div class="heading">Load Registrations...</div>
   <div class="loading-spinner-container">
     <md-spinner></md-spinner>
   </div>
 </ng-container>
 
-<ng-container *ngIf="!(loadReg$ | async)">
+<ng-container *ngIf="!isTeamTournament && !(loadReg$ | async)">
 
   <div *ngIf="allActualRegistrations?.length === 0" class="heading">
     No Registrations found yet
@@ -104,4 +120,31 @@
                                 (onChangeRegistration)="handleChangeRegistration($event)"
                                 (onDeleteRegistration)="handleDeleteRegistration($event)">
   </tournament-registration-list>
+</ng-container>
+
+<ng-container *ngIf="isTeamTournament && (loadTeamReg$ | async)">
+  <div class="heading">Load TeamRegistrations...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isTeamTournament && !(loadTeamReg$ | async)">
+
+  <div *ngIf="allActualTeamRegistrations?.length === 0" class="heading">
+    No TeamRegistrations found yet
+  </div>
+
+  <tournament-team-registration-list *ngIf="allActualTeamRegistrations?.length > 0"
+                                     [actualTournament]="actualTournament"
+                                     [teamRegistrations]="allActualTeamRegistrations"
+                                     [allActualRegistrations]="allActualRegistrations"
+                                     [userPlayerData]="userPlayerData"
+                                     [isAdmin]="isAdmin"
+                                     [isCoOrganizer]="isCoOrganizer"
+                                     [armyLists]="allArmyLists$ | async"
+                                     [myTeam]="myTeam"
+                                     (onAddArmyList)="openAddArmyListForRegistrationDialog($event)"
+                                     (onAcceptTeamRegistration)="handleAcceptTeamRegistration($event)">
+  </tournament-team-registration-list>
 </ng-container>

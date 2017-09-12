@@ -1,6 +1,7 @@
 <md-dialog-content>
-  <h4 class="heading">Register for {{actualTournament.name}}</h4>
-
+  <h4 *ngIf="!team" class="heading">Register for {{actualTournament.name}}</h4>
+  <h4 *ngIf="team" class="heading">Join {{team.teamName}}</h4>
+  <h4 *ngIf="team" class="sub-heading">Leader {{team.leaderName}}</h4>
 
   <md-input-container class="full-width">
     <input mdInput placeholder="Player Name" [value]="userPlayerData.getFullPlayerName()" disabled required>
@@ -9,7 +10,11 @@
     <input mdInput placeholder="Locality" [(ngModel)]="locality">
   </md-input-container>
 
-  <div class="full-width">
+  <md-input-container class="full-width" *ngIf="team">
+    <input mdInput placeholder="Team" [(ngModel)]="teamName" disabled required>
+  </md-input-container>
+
+  <div class="full-width" *ngIf="!team">
     <md-checkbox  *ngIf="allTeamNames?.length > 0"
                  [(ngModel)]="joinExistingTeam">
       <small>Join existing Team</small>

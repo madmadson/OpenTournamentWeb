@@ -45,6 +45,11 @@ export class AddPlayerRegistrationDialogComponent  implements OnInit {
 
     this.locality = this.userPlayerData.meta;
 
+    if (this.data.team) {
+      this.team = this.data.team;
+      this.teamName = this.data.team.teamName;
+    }
+
   }
 
   saveTournamentRegistration() {

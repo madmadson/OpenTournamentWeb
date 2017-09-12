@@ -56,52 +56,60 @@
 <div class="registration-table-container mat-elevation-z8">
   <md-table #table [dataSource]="dataSource" mdSort>
 
-    <ng-container cdkColumnDef="playerName">
+    <ng-container cdkColumnDef="teamName">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="teamName-column">
-        Player
-      </md-header-cell>
-      <md-cell *cdkCellDef="let team" class="teamName-column">
-        {{registration.playerName}}
-      </md-cell>
-    </ng-container>
-
-    <ng-container cdkColumnDef="team">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="team-column">
         Team
       </md-header-cell>
-      <md-cell *cdkCellDef="let registration" class="team-column">
-        {{registration.teamName}}
+      <md-cell *cdkCellDef="let team" class="teamName-column">
+        {{team.teamName}} ({{team.registeredPlayerIds?.length}})
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="locality">
+    <ng-container cdkColumnDef="teamStatus">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="teamStatus-column">
+        Status
+      </md-header-cell>
+      <md-cell *cdkCellDef="let team" class="teamStatus-column">
+        <button *ngIf="teamJoinAble(team) && !smallScreen"
+                (click)="joinTeam($event, team)"
+                class="color-positive-background"
+                md-raised-button>
+          <md-icon>add</md-icon>
+          Join Team
+        </button>
+        <button *ngIf="teamJoinAble(team) && smallScreen"
+                (click)="joinTeam($event, team)"
+                class="color-positive-background"
+                md-raised-button>
+          <md-icon>add</md-icon>
+          Join
+        </button>
+        <div *ngIf="actualTournament?.teamSize <= team.registeredPlayerIds.length"
+             class="align-fix color-positive team-capacity">
+          Team Full
+        </div>
+      </md-cell>
+    </ng-container>
+
+    <ng-container *ngIf="!smallScreen"  cdkColumnDef="locality">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="locality-column">
         Locality
       </md-header-cell>
-      <md-cell *cdkCellDef="let registration" class="locality-column">
-        {{registration.meta}}
-      </md-cell>
-    </ng-container>
-
-    <ng-container cdkColumnDef="faction">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="faction-column">
-        Faction
-      </md-header-cell>
-      <md-cell *cdkCellDef="let registration" class="faction-column">
-        {{registration.faction}}
+      <md-cell *cdkCellDef="let team" class="locality-column">
+        {{team.meta}}
       </md-cell>
     </ng-container>
 
     <ng-container cdkColumnDef="armyList">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="armyList-column">
-        ArmyList
+        ArmyLists
       </md-header-cell>
-      <md-cell *cdkCellDef="let registration" class="armyList-column">
-        <md-icon  *ngIf="!registration.armyListsChecked && !registration.playerUploadedArmyLists"
+      <md-cell *cdkCellDef="let team" class="armyList-column">
+        <md-icon  *ngIf="!team?.armyListsChecked && !team?.playerUploadedArmyLists"
                   md-tooltip="No ArmyList uploaded yet" class="color-negative list-icon">assignment_late</md-icon>
-        <md-icon  *ngIf="!registration.armyListsChecked && registration.playerUploadedArmyLists"
+        <md-icon  *ngIf="!team?.armyListsChecked && team?.playerUploadedArmyLists"
                   md-tooltip="ArmyLists uploaded" class="color-secondary list-icon">assignment_returned</md-icon>
-        <md-icon  *ngIf="registration.armyListsChecked && registration.playerUploadedArmyLists"
+        <md-icon  *ngIf="team?.armyListsChecked"
                   md-tooltip="ArmyLists checked" class="color-positive list-icon">assignment_turned_in</md-icon>
       </md-cell>
     </ng-container>
@@ -110,10 +118,10 @@
       <md-header-cell *cdkHeaderCellDef md-sort-header class="paid-column">
         Paid
       </md-header-cell>
-      <md-cell *cdkCellDef="let registration" class="paid-column">
-        <md-icon *ngIf="!registration.playerMarkedPayment"
+      <md-cell *cdkCellDef="let team" class="paid-column">
+        <md-icon *ngIf="!team.paymentChecked"
                   md-tooltip="Player has not paid yet" class="color-negative list-icon">money_off</md-icon>
-        <md-icon *ngIf="registration.playerMarkedPayment"
+        <md-icon *ngIf="team.paymentChecked"
                  md-tooltip="Player has paid" class="color-positive list-icon">attach_money</md-icon>
       </md-cell>
     </ng-container>
@@ -122,14 +130,19 @@
       <md-header-cell *cdkHeaderCellDef md-sort-header class="actions-column">
         Actions
       </md-header-cell>
-      <md-cell *cdkCellDef="let registration" class="actions-column">
-        <md-icon class="color-positive list-action" md-tooltip="Accept Registration"
-          (click)="acceptRegistration($event, registration)">check_circle</md-icon>
+      <md-cell *cdkCellDef="let team" class="actions-column">
+        <md-icon *ngIf="isAdmin || isCoOrganizer"
+                 class="color-positive list-action" md-tooltip="Accept Registration"
+          (click)="acceptTeamRegistration($event, team)">check_circle</md-icon>
       </md-cell>
     </ng-container>
 
     <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
-    <md-row  class="registrations-table-row" *cdkRowDef="let registration; columns: displayedColumns;"></md-row>
+    <md-row   *cdkRowDef="let team; columns: displayedColumns;  let even = even"
+              class="registrations-table-row"
+              [ngClass]="{'isTeam': team.isAcceptedTournamentTeam, 'even': even, 'my-item':isItMyTeam(team)}"
+              (click)="showTeamInfo(team)">
+    </md-row>
   </md-table>
   <md-paginator #paginator
                 [length]="registrationDb?.data.length"

@@ -16,14 +16,14 @@
     <div class="align-fix color-positive team-capacity">Team Full</div>
   </mdl-list-item-secondary-content>
   <mdl-list-item-secondary-content *ngIf="!checkTournamentFull(team) && actualTournament?.actualRound === 0">
-    <button *ngIf="!myRegistration && userPlayerData"
-            (click)="joinTeam($event, team)"
-            type="button"
-            class="color-positive-background"
-            md-raised-button>
-      <md-icon>add</md-icon>
-      Join Team
-    </button>
+    <!--<button *ngIf="!myRegistration && userPlayerData"-->
+            <!--(click)="joinTeam($event, team)"-->
+            <!--type="button"-->
+            <!--class="color-positive-background"-->
+            <!--md-raised-button>-->
+      <!--<md-icon>add</md-icon>-->
+      <!--Join Team-->
+    <!--</button>-->
   </mdl-list-item-secondary-content>
 
   <mdl-list-item-secondary-content *ngIf="!smallScreen && !team.armyListsChecked && !team.playerUploadedArmyLists">

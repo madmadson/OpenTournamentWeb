@@ -129,11 +129,6 @@ export class ActualTournamentRegistrationService {
         registrationPush.tournament.id + '/' +
         registrationPush.tournamentTeam.id);
       tournamentTeamRef.update({registeredPlayerIds: newListOfRegisteredTeamMembers});
-
-      this.snackBar.open('Registered for Team: ' + registrationPush.registration.teamName, '', {
-        extraClasses: ['snackBar-success'],
-        duration: 5000
-      });
     }
   }
 

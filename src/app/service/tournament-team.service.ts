@@ -291,18 +291,7 @@ export class TournamentTeamService {
     });
   }
 
-  addDummyTeam(tournamentId: string) {
-    const dummy = new TournamentTeam(false, tournamentId, '', 'DUMMY', '', '', true, [], [], '', 'DUMMY-LEADER',
-                                     false, false, false, false, 0);
 
-    const tournamentPlayers = this.afoDatabase.list('tournament-teams/' + tournamentId);
-    tournamentPlayers.push(dummy);
-
-    this.snackBar.open('Dummy Team successfully inserted', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
-  }
 
   teamRegistrationChange(change: TeamRegistrationChange) {
     const registrationRef = this.afoDatabase.object('tournament-team-registrations/' +

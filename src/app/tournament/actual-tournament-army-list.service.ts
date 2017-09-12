@@ -15,6 +15,8 @@ import {MdSnackBar} from '@angular/material';
 import * as firebase from 'firebase';
 import {ArmyList} from '../../../shared/model/armyList';
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
+import {ArmyListTeamPush} from "../../../shared/dto/team-armyList-push";
+import {TournamentTeam} from "../../../shared/model/tournament-team";
 
 
 @Injectable()
@@ -133,6 +135,15 @@ export class ActualTournamentArmyListService {
     this.snackBar.open('ArmyList deleted successfully', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
+    });
+  }
+
+  setTeamArmyListStatus(team: TournamentTeam) {
+    const registrationRef = this.afoDatabase.object('tournament-team-registrations/' +
+      team.tournamentId + '/' + team.id);
+    registrationRef.update({
+      playerUploadedArmyLists: true,
+      armyListsChecked: false
     });
   }
 }

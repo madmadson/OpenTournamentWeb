@@ -35,7 +35,6 @@ import {CustomFormsModule} from 'ng2-validation';
 import {AuthGuard} from './service/auth-guard.service';
 import {
   CreateTeamDialogComponent,
-  RegisterTeamDialogComponent,
   TournamentPreparationComponent,
 } from './tournament/tournament-preparation/tournament-preparation.component';
 import {TournamentEffectService} from './store/effects/tournament-effect.service';
@@ -69,7 +68,7 @@ import {
   MdTableModule,
   MdTabsModule,
   MdToolbarModule,
-  MdTooltipModule, DateAdapter, MdNativeDateModule,
+  MdTooltipModule, MdNativeDateModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
@@ -80,7 +79,6 @@ import {MdlModule} from 'angular2-mdl';
 import {TruncatePipe} from '../pipes/truncate-pise';
 import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
 import {TournamentFinalRankingsComponent} from './tournament/tournament-final-rankings/tournament-final-rankings.component';
-import {DateTimePickerModule} from 'ng-pick-datetime';
 import {AboutComponent} from './about/about.component';
 
 import {GlobalEventService} from './service/global-event-service';
@@ -90,7 +88,6 @@ import {WindowRefService} from './service/window-ref-service';
 import {TournamentTeamService} from './service/tournament-team.service';
 import {TournamentTeamEffectService} from './store/effects/tournament-teams-effect.service';
 import {TournamentTeamListComponent} from './tournament/tournament-team-list/tournament-team-list.component';
-import {TournamentTeamRegistrationListComponent} from './tournament/tournament-team-registration-list/tournament-team-registration-list.component';
 import {MdlExpansionPanelModule} from '@angular-mdl/expansion-panel';
 import {ShowTeamRegistrationDialogComponent} from './dialogs/show-team-registration-dialog';
 import {ShowTeamDialogComponent} from './dialogs/show-team-dialog';
@@ -160,6 +157,10 @@ import {MyRegistrationListComponent}
 import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
 import {TeamMatchDialogComponent} from 'app/team-tournament/tournament-team-game-list/tournament-team-game-list.component';
 import {TournamentTeamGameListComponent} from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
+import {ActualTournamentTeamRegistrationService} from 'app/tournament/actual-tournament-team-registration.service';
+import {ActualTournamentTeamsService} from 'app/tournament/actual-tournament-teams.service';
+import {CreateTeamRegistrationDialogComponent} from "./dialogs/team/create-team-registration-dialog";
+import {TournamentTeamRegistrationListComponent} from "./tournament/registration/tournament-registration-team-list/tournament-team-registration-list.component";
 
 
 @NgModule({
@@ -273,7 +274,7 @@ import {TournamentTeamGameListComponent} from './team-tournament/tournament-team
     ShowSingleArmyListDialogComponent,
     AddCoOrganizatorDialogComponent,
     CreateTeamDialogComponent,
-    RegisterTeamDialogComponent,
+    CreateTeamRegistrationDialogComponent
   ],
   providers: [
     AuthService,
@@ -297,7 +298,9 @@ import {TournamentTeamGameListComponent} from './team-tournament/tournament-team
     GameMatchingService,
     GameResultService,
     SwappingService,
-    EloService
+    EloService,
+    ActualTournamentTeamRegistrationService,
+    ActualTournamentTeamsService
   ],
   entryComponents: [
     AddArmyListsDialogComponent,
@@ -310,7 +313,6 @@ import {TournamentTeamGameListComponent} from './team-tournament/tournament-team
     TournamentFormDialogComponent,
     FinishTournamentDialogComponent,
     CreateTeamDialogComponent,
-    RegisterTeamDialogComponent,
     ShowTeamRegistrationDialogComponent,
     ShowTeamDialogComponent,
     PrintArmyListsDialogComponent,
@@ -324,7 +326,8 @@ import {TournamentTeamGameListComponent} from './team-tournament/tournament-team
     PlayerRegistrationInfoDialogComponent,
     ShowSingleArmyListDialogComponent,
     ShowSoloRankingsComponent,
-    AddCoOrganizatorDialogComponent
+    AddCoOrganizatorDialogComponent,
+    CreateTeamRegistrationDialogComponent
   ],
   bootstrap: [AppComponent]
 })

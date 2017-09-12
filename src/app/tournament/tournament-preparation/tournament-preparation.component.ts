@@ -34,7 +34,7 @@ import {TeamRegistrationChange} from '../../../../shared/dto/team-registration-c
 import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
 import {CoOrganizatorPush} from '../../../../shared/dto/co-organizator-push';
 import {TeamUpdate} from '../../../../shared/dto/team-update';
-import {StartTournamentDialogComponent} from "../../dialogs/actualTournament/start-tournament-dialog";
+import {StartTournamentDialogComponent} from '../../dialogs/actualTournament/start-tournament-dialog';
 
 @Component({
   selector: 'tournament-preparation',
@@ -326,25 +326,25 @@ export class TournamentPreparationComponent implements OnInit {
   }
 
   openRegisterTeamDialog() {
-    const dialogRef = this.dialog.open(RegisterTeamDialogComponent, {
-      data: {
-        actualTournament: this.actualTournament,
-        userPlayerData: this.userPlayerData,
-        tournamentTeamRegistrations$: this.actualTournamentTeamRegistrations$,
-        tournamentTeams$: this.actualTournamentTeams$
-      }
-    });
-
-    const saveEventSubscribe = dialogRef.componentInstance.onRegisterTeamForTeamTournament.subscribe(team => {
-
-      if (team !== undefined) {
-        this.onRegisterTeamForTeamTournament.emit(team);
-      }
-    });
-    dialogRef.afterClosed().subscribe(() => {
-
-      saveEventSubscribe.unsubscribe();
-    });
+    // const dialogRef = this.dialog.open(RegisterTeamDialogComponent, {
+    //   data: {
+    //     actualTournament: this.actualTournament,
+    //     userPlayerData: this.userPlayerData,
+    //     tournamentTeamRegistrations$: this.actualTournamentTeamRegistrations$,
+    //     tournamentTeams$: this.actualTournamentTeams$
+    //   }
+    // });
+    //
+    // const saveEventSubscribe = dialogRef.componentInstance.onCreateTeamRegistration.subscribe(team => {
+    //
+    //   if (team !== undefined) {
+    //     this.onRegisterTeamForTeamTournament.emit(team);
+    //   }
+    // });
+    // dialogRef.afterClosed().subscribe(() => {
+    //
+    //   saveEventSubscribe.unsubscribe();
+    // });
   }
 
   openShowTeamDialog() {
@@ -700,99 +700,5 @@ export class CreateTeamDialogComponent implements OnInit {
   }
 }
 
-@Component({
-  selector: 'register-team-dialog',
-  templateUrl: './register-team-dialog.html'
-})
-export class RegisterTeamDialogComponent implements OnInit {
-
-  @Output() onRegisterTeamForTeamTournament = new EventEmitter<TournamentTeam>();
-
-  userPlayerData: Player;
-  actualTournament: Tournament;
-  countries: string[];
-  tournamentTeams: TournamentTeam[];
-  tournamentTeamRegistrations: TournamentTeam[];
-
-  registerTournamentForm: FormGroup;
-
-  teamNameAlreadyInUse: boolean;
-  byeNotAllowed: boolean;
-
-  constructor(public dialogRef: MdDialogRef<RegisterTeamDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any,
-              private formBuilder: FormBuilder) {
-
-    this.countries = getAllCountries();
-    this.userPlayerData = data.userPlayerData;
-    this.actualTournament = data.actualTournament;
-    data.tournamentTeamRegistrations$.subscribe((teamRegs: TournamentTeam[]) => {
-      this.tournamentTeamRegistrations = teamRegs;
-    });
-    data.tournamentTeams$.subscribe((teams: TournamentTeam[]) => {
-      this.tournamentTeams = teams;
-    });
-  }
-
-  ngOnInit(): void {
-
-    this.registerTournamentForm = this.formBuilder.group({
-      teamName: ['', [Validators.required]],
-      meta: [this.userPlayerData.meta],
-      country: [''],
-    });
-  }
-
-  onRegisterTeam() {
-    const team = this.prepareTeam();
-
-    this.onRegisterTeamForTeamTournament.emit(team);
-    this.dialogRef.close();
-  }
-
-  prepareTeam(): TournamentTeam {
-    const formModel = this.registerTournamentForm.value;
-
-    return {
-      isRegisteredTeam: true,
-      tournamentId: this.actualTournament.id,
-      creatorUid: this.userPlayerData.userUid,
-      teamName: formModel.teamName,
-      country: formModel.country,
-      meta: formModel.meta,
-      isAcceptedTournamentTeam: false,
-      tournamentPlayerIds: [],
-      registeredPlayerIds: [],
-      creatorMail: this.userPlayerData.userEmail,
-      leaderName: this.userPlayerData.nickName,
-      armyListsChecked: false,
-      paymentChecked: false,
-      playerMarkedPayment: false,
-      playerUploadedArmyLists: false,
-      droppedInRound: 0
-    };
-  }
-
-  checkTeamName() {
-
-    const that = this;
-    that.teamNameAlreadyInUse = false;
-
-    that.byeNotAllowed = that.registerTournamentForm.get('teamName').value.toLowerCase() === 'bye';
-
-    _.each(this.tournamentTeams, function (team: TournamentTeam) {
-      if (team.teamName.toLowerCase() === that.registerTournamentForm.get('teamName').value.toLowerCase()) {
-        that.teamNameAlreadyInUse = true;
-      }
-    });
-
-    _.each(this.tournamentTeamRegistrations, function (team: TournamentTeam) {
-      if (team.teamName.toLowerCase() === that.registerTournamentForm.get('teamName').value.toLowerCase()) {
-        that.teamNameAlreadyInUse = true;
-      }
-    });
-
-  }
-}
 
 

@@ -16,7 +16,7 @@
   <md-card class="action-card">
     <button *ngIf="!isRegisteredPlayer"
             type="button"
-            (click)="openRegistrationDialog()"
+            (click)="openCreatePlayerRegistrationDialog()"
             class="color-positive-background action-button"
             md-raised-button>
       <md-icon>add</md-icon>
@@ -31,7 +31,7 @@
       I'm out
     </button>
     <button type="button"
-            (click)="openRegistrationDialog()"
+            (click)="openCreatePlayerRegistrationDialog()"
             class="color-positive-background action-button"
             md-raised-button>
       <md-icon>add</md-icon>

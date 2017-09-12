@@ -80,10 +80,11 @@
 
     <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
     <md-row
+      *cdkRowDef="let registration; columns: displayedColumns;  let even = even"
       class="registrations-table-row"
       (click)="showRegistrationInfo(registration)"
       [ngClass]="{'isPlayer': registration.isTournamentPlayer, 'even': even, 'my-item':isItMe(registration.playerId)} "
-      *cdkRowDef="let registration; columns: displayedColumns;">
+    >
     </md-row>
   </md-table>
   <md-paginator #paginator

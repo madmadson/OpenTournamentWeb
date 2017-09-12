@@ -1,0 +1,60 @@
+<md-dialog-content>
+
+  <h4 class="heading">Register Team for {{actualTournament.name}}</h4>
+  <form [formGroup]="registerTournamentForm" novalidate>
+    <div class="form-group">
+      <md-input-container
+        class="full-width">
+        <input mdInput type="text" (blur)="checkTeamName()" placeholder="Team Name" maxlength="50"
+               formControlName="teamName" required>
+        <md-hint *ngIf="teamNameAlreadyInUse" align="start" class="color-negative">
+          There is already a Team with that name
+        </md-hint>
+        <md-hint align="end">{{registerTournamentForm.get('teamName').value.length}} / 50</md-hint>
+      </md-input-container>
+      <md-input-container
+        class="full-width">
+        <input mdInput type="text" placeholder="Locality" maxlength="50" formControlName="meta">
+        <md-hint align="end">{{registerTournamentForm.get('meta').value.length}} / 50</md-hint>
+      </md-input-container>
+      <md-select class="full-width-only" placeholder="Country" formControlName="country">
+        <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>
+      </md-select>
+
+      <md-select class="full-width-only"
+                 required
+                 formControlName="faction"
+                 placeholder="Faction">
+        <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
+      </md-select>
+    </div>
+  </form>
+
+</md-dialog-content>
+<div md-dialog-actions>
+  <div class="full-width">
+    <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+
+    <button *ngIf="teamNameAlreadyInUse"
+            type="button"
+            class="right-align-button color-negative-background"
+            md-raised-button
+            [disabled]="true">
+      <md-icon>warning</md-icon>
+      TeamName already in use
+    </button>
+    <button *ngIf="byeNotAllowed"
+            type="button"
+            class="right-align-button color-negative-background"
+            md-raised-button
+            [disabled]="true">
+      <md-icon>warning</md-icon>
+      Bye is not a valid teamName
+    </button>
+    <button *ngIf="!teamNameAlreadyInUse && !byeNotAllowed"
+            md-raised-button type="button" color="accent" class="right-align-button"
+            (click)="onRegisterTeam()"
+            [disabled]="registerTournamentForm.invalid">Create Team
+    </button>
+  </div>
+</div>

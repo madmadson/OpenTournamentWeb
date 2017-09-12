@@ -166,13 +166,6 @@ export class TournamentEffectService {
     .map((action: TournamentPairAgainTeamAction) => this.tournamentService.pairAgainTeamTournament(action.payload));
 
 
-
-
-  @Effect({dispatch: false}) eraseRegistration = this.actions$
-    .ofType(REGISTRATION_ERASE_ACTION)
-    .debug('REGISTRATION_ERASE_ACTION')
-    .map((action: RegistrationEraseAction) => this.tournamentService.eraseRegistration(action.payload));
-
   @Effect({dispatch: false}) pushTournamentPlayer = this.actions$
     .ofType(REGISTRATION_ACCEPT_ACTION)
     .debug('REGISTRATION_ACCEPT_ACTION')

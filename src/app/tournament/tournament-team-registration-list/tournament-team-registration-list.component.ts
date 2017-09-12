@@ -20,11 +20,11 @@ import {ArmyListTeamPush} from '../../../../shared/dto/team-armyList-push';
 
 
 @Component({
-  selector: 'tournament-team-registration-list',
+  selector: 'tournament-team-registration-list2',
   templateUrl: './tournament-team-registration-list.component.html',
   styleUrls: ['./tournament-team-registration-list.component.scss']
 })
-export class TournamentTeamRegistrationListComponent {
+export class TournamentTeamRegistrationListComponent2 {
 
   @Input() actualTournamentTeamRegistrations$: Observable<TournamentTeam[]>;
   @Input() allRegistrations: Registration[];
@@ -62,30 +62,30 @@ export class TournamentTeamRegistrationListComponent {
   }
 
 
-  joinTeam(event: any, team: TournamentTeam) {
-
-    event.stopPropagation();
-
-    const dialogRef = this.dialog.open(AddPlayerRegistrationDialogComponent, {
-      data: {
-        actualTournament: this.actualTournament,
-        userPlayerData: this.userPlayerData,
-        team: team,
-      }
-    });
-
-    const saveEventSubscribe = dialogRef.componentInstance.onAddTournamentRegistration.subscribe(registration => {
-
-      if (registration !== undefined) {
-        this.onAddTournamentRegistration.emit(registration);
-      }
-    });
-    dialogRef.afterClosed().subscribe(() => {
-
-      saveEventSubscribe.unsubscribe();
-    });
-
-  }
+  // joinTeam(event: any, team: TournamentTeam) {
+  //
+  //   event.stopPropagation();
+  //
+  //   const dialogRef = this.dialog.open(AddPlayerRegistrationDialogComponent, {
+  //     data: {
+  //       actualTournament: this.actualTournament,
+  //       userPlayerData: this.userPlayerData,
+  //       team: team,
+  //     }
+  //   });
+  //
+  //   const saveEventSubscribe = dialogRef.componentInstance.onAddTournamentRegistration.subscribe(registration => {
+  //
+  //     if (registration !== undefined) {
+  //       this.onAddTournamentRegistration.emit(registration);
+  //     }
+  //   });
+  //   dialogRef.afterClosed().subscribe(() => {
+  //
+  //     saveEventSubscribe.unsubscribe();
+  //   });
+  //
+  // }
 
   acceptTeamRegistration(event: any, team: TournamentTeam) {
 

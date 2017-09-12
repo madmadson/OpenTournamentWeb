@@ -10,6 +10,7 @@ $hover_color: #1e05ff;
 $color_dark_primary: #512DA8;
 $color_secondary: #FFC107;
 
+$quad_tick: 48px;
 $double_tick: 24px;
 $main_tick: 12px;
 $halve_tick: 6px;
@@ -102,7 +103,7 @@ a:hover {
   margin-top: $main_tick !important;
   margin-bottom: $main_tick !important;
   width: 95%;
-  line-height: $main_tick;
+  line-height: $double_tick ;
 }
 
 .sub-heading {

@@ -180,10 +180,10 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
   deleteMyRegistration() {
 
-    this.registrationService.killRegistration({
-      registration: this.myRegistration,
-      tournament: this.actualTournament
-    });
+    // this.registrationService.killRegistration({
+    //   registration: this.myRegistration,
+    //   tournament: this.actualTournament
+    // });
   }
 }
 

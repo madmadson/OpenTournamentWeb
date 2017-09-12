@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 import {Player} from '../../../shared/model/player';
 import {TeamRegistrationChange} from '../../../shared/dto/team-registration-change';
 import {WindowRefService} from '../service/window-ref-service';
+import {TeamRegistrationPush} from '../../../shared/dto/team-registration-push';
 
 @Component({
   selector: 'show-team-registration-dialog',
@@ -20,7 +21,7 @@ export class ShowTeamRegistrationDialogComponent {
   @Output() onAddArmyLists = new EventEmitter<Registration>();
 
   @Output() onTeamRegistrationChanged = new EventEmitter<TeamRegistrationChange>();
-  @Output() onDeleteTeam = new EventEmitter<TournamentTeam>();
+  @Output() onDeleteTeam = new EventEmitter<TeamRegistrationPush>();
 
   tournament: Tournament;
   team: TournamentTeam;
@@ -29,6 +30,12 @@ export class ShowTeamRegistrationDialogComponent {
   userPlayerData: Player;
   myTeam: TournamentTeam;
 
+
+  smallScreen: boolean;
+  truncateMax: number;
+
+  isCreator: boolean;
+  isCoOrganizer: boolean;
   isAdmin: boolean;
 
   constructor(public dialog: MdDialog,
@@ -36,12 +43,25 @@ export class ShowTeamRegistrationDialogComponent {
               @Inject(MD_DIALOG_DATA) public data: any,
               private winRef: WindowRefService) {
 
+    if (this.winRef.nativeWindow.screen.width < 500) {
+      this.smallScreen = true;
+      this.truncateMax = 15;
+    } else if (this.winRef.nativeWindow.screen.width < 800) {
+      this.smallScreen = true;
+      this.truncateMax = 20;
+    } else {
+      this.smallScreen = false;
+      this.truncateMax = 40;
+    }
+
     this.tournament = data.actualTournament;
     this.team = data.team;
     this.allRegistrations = data.allRegistrations;
     this.userPlayerData = data.userPlayerData;
     this.myTeam = data.myTeam;
     this.isAdmin = data.isAdmin;
+    this.isCoOrganizer = data.isCoOrganizer;
+    this.isCreator = data.isCreator;
 
     this.allRegistrationsForTeam = _.filter(data.allRegistrations, function (reg: Registration) {
       return reg.teamName === data.team.teamName;
@@ -54,12 +74,6 @@ export class ShowTeamRegistrationDialogComponent {
     }
   }
 
-  isItMyTeamOrAdmin(team: TournamentTeam): boolean {
-    if (!this.myTeam) {
-      return false;
-    }
-    return (this.team.creatorUid === this.userPlayerData.userUid || team === this.myTeam);
-  }
 
 
   kickPlayer(reg: Registration) {
@@ -67,16 +81,7 @@ export class ShowTeamRegistrationDialogComponent {
     this.onKickPlayer.emit(reg);
   }
 
-  isAdminOrTeamLeader(): boolean {
 
-    if (!this.userPlayerData) {
-      return false;
-
-    }
-    return (this.team.creatorUid === this.userPlayerData.userUid ||
-    this.tournament.creatorUid === this.userPlayerData.userUid);
-
-  }
 
   addArmyLists(event: any, registration: Registration) {
 
@@ -111,8 +116,12 @@ export class ShowTeamRegistrationDialogComponent {
     });
   }
 
-  deleteTeam(team: TournamentTeam) {
-    this.onDeleteTeam.emit(team);
+  deleteTeam() {
+    this.onDeleteTeam.emit({
+      tournament: this.tournament,
+      team: this.team,
+      registrations: this.allRegistrationsForTeam
+    });
   }
 
   sendMail(mail: string) {
