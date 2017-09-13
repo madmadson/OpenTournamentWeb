@@ -22,7 +22,10 @@ import {ActualTournamentArmyListService} from '../../actual-tournament-army-list
 import {ArmyList} from '../../../../../shared/model/armyList';
 
 import {ArmyListTournamentPlayerPush} from '../../../../../shared/dto/armyList-tournamentPlayer-push';
-import {CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION} from '../../store/tournament-actions';
+import {
+  CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION,
+  CHANGE_SEARCH_FIELD_TOURNAMENT_TEAMS_ACTION
+} from '../../store/tournament-actions';
 import {NewTournamentPlayerDialogComponent} from '../../../dialogs/add-tournament-player-dialog';
 import {PrintArmyListsDialogComponent} from '../../../dialogs/print-army-lists-dialog';
 import {TournamentFormDialogComponent} from '../../../dialogs/tournament-form-dialog';
@@ -31,14 +34,16 @@ import {TournamentManagementConfiguration} from '../../../../../shared/dto/tourn
 import {TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {PairingService} from '../../pairing.service';
 import {getAllFactions} from '../../../../../shared/model/factions';
+import {TournamentTeam} from "../../../../../shared/model/tournament-team";
+import {ActualTournamentTeamsService} from "../../actual-tournament-teams.service";
 
 
 @Component({
-  selector: 'tournament-player-overview',
-  templateUrl: './tournament-player-overview.component.html',
-  styleUrls: ['./tournament-player-overview.component.scss']
+  selector: 'tournament-team-overview',
+  templateUrl: './tournament-team-overview.component.html',
+  styleUrls: ['./tournament-team-overview.component.scss']
 })
-export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
+export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
 
   actualTournament$: Observable<Tournament>;
   actualTournament: Tournament;
@@ -51,9 +56,14 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
   allRegistrations$: Observable<Registration[]>;
   allTournamentPlayers$: Observable<TournamentPlayer[]>;
-  allTournamentPlayersFiltered$: Observable<TournamentPlayer[]>;
+
   allArmyLists$: Observable<ArmyList[]>;
-  loadPlayers$: Observable<boolean>;
+
+
+  allTournamentTeams$: Observable<TournamentTeam[]>;
+  allTournamentTeamsFiltered$: Observable<TournamentTeam[]>;
+
+  loadTeams$: Observable<boolean>;
 
   isAdmin: boolean;
   isCoOrganizer: boolean;
@@ -75,6 +85,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
               private tournamentService: TournamentService,
               private registrationService: ActualTournamentRegistrationService,
               private tournamentPlayerService: ActualTournamentPlayerService,
+              private tournamentTeamService: ActualTournamentTeamsService,
               private armyListService: ActualTournamentArmyListService,
               private pairingService: PairingService,
               private store: Store<AppState>,
@@ -87,6 +98,8 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
         this.registrationService.subscribeOnFirebase(params['id']);
         this.tournamentPlayerService.subscribeOnFirebase(params['id']);
         this.armyListService.subscribeOnFirebase(params['id']);
+
+        this.tournamentTeamService.subscribeOnFirebase(params['id'])
       }
     );
 
@@ -96,16 +109,17 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
     this.allTournamentPlayers$ = this.store.select(state => state.actualTournamentPlayers.players);
     this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
 
-    this.loadPlayers$ = this.store.select(state => state.actualTournamentPlayers.loadPlayers);
+    this.allTournamentTeams$ = this.store.select(state => state.actualTournamentTeams.teams);
+    this.loadTeams$ = this.store.select(state => state.actualTournamentTeams.loadTeams);
 
-    this.searchField$ = this.store.select(state => state.actualTournamentPlayers.playersSearchField);
+    this.searchField$ = this.store.select(state => state.actualTournamentTeams.teamsSearchField);
 
-    this.allTournamentPlayersFiltered$ = Observable.combineLatest(
-      this.allTournamentPlayers$,
+    this.allTournamentTeamsFiltered$ = Observable.combineLatest(
+      this.allTournamentTeams$,
       this.searchField$,
       (allPlayers, searchField) => {
-        return allPlayers.filter((p: TournamentPlayer) => {
-          const searchStr = p.playerName.toLowerCase();
+        return allPlayers.filter((p: TournamentTeam) => {
+          const searchStr = p.teamName.toLowerCase();
           return searchStr.startsWith(searchField.toLowerCase());
         });
       });
@@ -118,6 +132,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
       this.setIsAdmin();
       this.setIsCoAdmin();
       this.setIsTournamentPlayer();
+
 
       if (actualTournament) {
         this.isTeamTournament = (actualTournament.teamSize > 0);
@@ -143,7 +158,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
       .debounceTime(150)
       .distinctUntilChanged()
       .subscribe(() => {
-        this.store.dispatch({type: CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION, payload: this.searchField.nativeElement.value});
+        this.store.dispatch({type: CHANGE_SEARCH_FIELD_TOURNAMENT_TEAMS_ACTION, payload: this.searchField.nativeElement.value});
       });
   }
 
@@ -153,6 +168,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
     this.registrationService.unsubscribeOnFirebase();
     this.tournamentPlayerService.unsubscribeOnFirebase();
     this.armyListService.unsubscribeOnFirebase();
+    this.tournamentTeamService.unsubscribeOnFirebase();
 
     this.actualTournamentSub.unsubscribe();
     this.userPlayerDataSub.unsubscribe();
@@ -239,7 +255,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
   }
 
-  addTournamentPlayer() {
+  addTeam() {
     const dialogRef = this.dialog.open(NewTournamentPlayerDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
@@ -363,7 +379,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
   }
 
-  createRandomPlayers() {
+  createRandomTeams() {
 
     for (let i = 0; i < 100; i++) {
 

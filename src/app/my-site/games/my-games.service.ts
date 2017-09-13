@@ -7,11 +7,13 @@ import {AppState} from '../../store/reducers/index';
 
 import {
   ADD_ALL_MY_GAMES_ACTION,
-  ADD_MY_GAME_ACTION, CHANGE_MY_GAME_ACTION,
-  CLEAR_ALL_MY_GAMES_ACTION, LOAD_MY_GAMES_FINISHED_ACTION, REMOVE_MY_GAME_ACTION
+  ADD_MY_GAME_ACTION,
+  CHANGE_MY_GAME_ACTION,
+  CLEAR_ALL_MY_GAMES_ACTION,
+  LOAD_MY_GAMES_FINISHED_ACTION,
+  REMOVE_MY_GAME_ACTION
 } from './my-games-actions';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
-
 
 
 @Injectable()

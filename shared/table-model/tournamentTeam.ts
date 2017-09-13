@@ -33,6 +33,8 @@ export class TournamentTeamDatabase {
 
   }
   resetDatabase(registrations: TournamentTeam[]) {
+
+
     const copiedData = _.cloneDeep(registrations);
     this._dataChange.next(copiedData);
   }

@@ -24,7 +24,7 @@ import {TeamRegistrationPush} from '../../../../shared/dto/team-registration-pus
 import {TournamentTeamEraseModel} from '../../../../shared/dto/tournament-team-erase';
 import {NewTournamentPlayerDialogComponent} from '../../dialogs/add-tournament-player-dialog';
 import {PrintArmyListsDialogComponent} from '../../dialogs/print-army-lists-dialog';
-import {AddArmyListsDialogComponent} from '../../dialogs/add-army-lists-dialog';
+
 import {RegistrationPush} from '../../../../shared/dto/registration-push';
 import {AddPlayerRegistrationDialogComponent} from '../../dialogs/tournament-preparation/add-player-registration-dialog';
 import {PlayerRegistrationChange} from '../../../../shared/dto/playerRegistration-change';
@@ -419,142 +419,142 @@ export class TournamentPreparationComponent implements OnInit {
 
   addArmyListForTournamentPlayer(tournamentPlayer: TournamentPlayer) {
 
-    if (tournamentPlayer !== undefined) {
-
-      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
-        data: {
-          tournamentPlayer: tournamentPlayer,
-          armyLists: this.actualTournamentArmyList$
-        }
-      });
-      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForTournamentPlayer.subscribe(armyList => {
-
-        if (armyList !== undefined) {
-          this.onAddArmyListForTournamentPlayer.emit(armyList);
-        }
-      });
-      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
-
-        if (armyList !== undefined) {
-          this.onDeleteArmyList.emit(armyList);
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-
-        saveEventSubscribe.unsubscribe();
-        deleteEventSubscribe.unsubscribe();
-      });
-    }
+    // if (tournamentPlayer !== undefined) {
+    //
+    //   const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
+    //     data: {
+    //       tournamentPlayer: tournamentPlayer,
+    //       armyLists: this.actualTournamentArmyList$
+    //     }
+    //   });
+    //   const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForTournamentPlayer.subscribe(armyList => {
+    //
+    //     if (armyList !== undefined) {
+    //       this.onAddArmyListForTournamentPlayer.emit(armyList);
+    //     }
+    //   });
+    //   const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
+    //
+    //     if (armyList !== undefined) {
+    //       this.onDeleteArmyList.emit(armyList);
+    //     }
+    //   });
+    //
+    //   dialogRef.afterClosed().subscribe(() => {
+    //
+    //     saveEventSubscribe.unsubscribe();
+    //     deleteEventSubscribe.unsubscribe();
+    //   });
+    // }
   }
 
 
   openAddArmyListForRegistrationDialog(registration: Registration) {
-    if (registration !== undefined) {
-
-      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
-        data: {
-          registration: registration,
-          armyLists: this.actualTournamentArmyList$
-        }
-      });
-      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
-        armyListRegistrationPush => {
-
-          if (armyListRegistrationPush !== undefined) {
-            this.onAddArmyListForRegistration.emit(armyListRegistrationPush);
-          }
-        });
-      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
-
-        if (armyList !== undefined) {
-          this.onDeleteArmyList.emit(armyList);
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-
-        saveEventSubscribe.unsubscribe();
-        deleteEventSubscribe.unsubscribe();
-      });
-    }
+    // if (registration !== undefined) {
+    //
+    //   const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
+    //     data: {
+    //       registration: registration,
+    //       armyLists: this.actualTournamentArmyList$
+    //     }
+    //   });
+    //   const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
+    //     armyListRegistrationPush => {
+    //
+    //       if (armyListRegistrationPush !== undefined) {
+    //         this.onAddArmyListForRegistration.emit(armyListRegistrationPush);
+    //       }
+    //     });
+    //   const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
+    //
+    //     if (armyList !== undefined) {
+    //       this.onDeleteArmyList.emit(armyList);
+    //     }
+    //   });
+    //
+    //   dialogRef.afterClosed().subscribe(() => {
+    //
+    //     saveEventSubscribe.unsubscribe();
+    //     deleteEventSubscribe.unsubscribe();
+    //   });
+    // }
   }
 
   openAddArmyListForRegistrationDialogForTeam(teamArmyList: ArmyListTeamPush) {
-    if (teamArmyList.registration !== undefined) {
-
-      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
-        data: {
-          registration: teamArmyList.registration,
-          armyLists: this.actualTournamentArmyList$
-        }
-      });
-      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
-        (armyListRegistrationPush: ArmyListRegistrationPush) => {
-
-          if (armyListRegistrationPush !== undefined) {
-
-            const armyListForTeamRegistrationPush: ArmyListTeamPush = {
-              armyList: armyListRegistrationPush.armyList,
-              team: teamArmyList.team,
-              registration: teamArmyList.registration
-            };
-
-            console.log('armyListForTeamRegistrationPush: ' + JSON.stringify(armyListForTeamRegistrationPush));
-
-            this.onAddArmyListForTeamRegistration.emit(
-              armyListForTeamRegistrationPush
-            );
-          }
-        });
-      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
-
-        if (armyList !== undefined) {
-          this.onDeleteArmyList.emit(armyList);
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-
-        saveEventSubscribe.unsubscribe();
-        deleteEventSubscribe.unsubscribe();
-      });
-    }
+    // if (teamArmyList.registration !== undefined) {
+    //
+    //   const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
+    //     data: {
+    //       registration: teamArmyList.registration,
+    //       armyLists: this.actualTournamentArmyList$
+    //     }
+    //   });
+    //   const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
+    //     (armyListRegistrationPush: ArmyListRegistrationPush) => {
+    //
+    //       if (armyListRegistrationPush !== undefined) {
+    //
+    //         const armyListForTeamRegistrationPush: ArmyListTeamPush = {
+    //           armyList: armyListRegistrationPush.armyList,
+    //           team: teamArmyList.team,
+    //           registration: teamArmyList.registration
+    //         };
+    //
+    //         console.log('armyListForTeamRegistrationPush: ' + JSON.stringify(armyListForTeamRegistrationPush));
+    //
+    //         this.onAddArmyListForTeamRegistration.emit(
+    //           armyListForTeamRegistrationPush
+    //         );
+    //       }
+    //     });
+    //   const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
+    //
+    //     if (armyList !== undefined) {
+    //       this.onDeleteArmyList.emit(armyList);
+    //     }
+    //   });
+    //
+    //   dialogRef.afterClosed().subscribe(() => {
+    //
+    //     saveEventSubscribe.unsubscribe();
+    //     deleteEventSubscribe.unsubscribe();
+    //   });
+    // }
   }
 
   openAddArmyListForTournamentPlayerDialogForTeam(teamArmyList: ArmyListTeamPush) {
-    if (teamArmyList.registration !== undefined) {
-
-      const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
-        data: {
-          registration: teamArmyList.registration,
-          armyLists: this.actualTournamentArmyList$
-        }
-      });
-      const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
-        (armyListRegistrationPush: ArmyListRegistrationPush) => {
-
-          if (armyListRegistrationPush !== undefined) {
-            this.onAddArmyListForTeamRegistration.emit({
-              armyList: armyListRegistrationPush.armyList,
-              team: teamArmyList.team,
-              registration: teamArmyList.registration
-            });
-          }
-        });
-      const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
-
-        if (armyList !== undefined) {
-          this.onDeleteArmyList.emit(armyList);
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-
-        saveEventSubscribe.unsubscribe();
-        deleteEventSubscribe.unsubscribe();
-      });
-    }
+    // if (teamArmyList.registration !== undefined) {
+    //
+    //   const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
+    //     data: {
+    //       registration: teamArmyList.registration,
+    //       armyLists: this.actualTournamentArmyList$
+    //     }
+    //   });
+    //   const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
+    //     (armyListRegistrationPush: ArmyListRegistrationPush) => {
+    //
+    //       if (armyListRegistrationPush !== undefined) {
+    //         this.onAddArmyListForTeamRegistration.emit({
+    //           armyList: armyListRegistrationPush.armyList,
+    //           team: teamArmyList.team,
+    //           registration: teamArmyList.registration
+    //         });
+    //       }
+    //     });
+    //   const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
+    //
+    //     if (armyList !== undefined) {
+    //       this.onDeleteArmyList.emit(armyList);
+    //     }
+    //   });
+    //
+    //   dialogRef.afterClosed().subscribe(() => {
+    //
+    //     saveEventSubscribe.unsubscribe();
+    //     deleteEventSubscribe.unsubscribe();
+    //   });
+    // }
   }
 
   handlePlayerRegChange(regChange: PlayerRegistrationChange) {

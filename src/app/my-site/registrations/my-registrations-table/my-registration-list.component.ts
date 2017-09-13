@@ -1,16 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Registration} from '../../../../../shared/model/registration';
-import {Player} from '../../../../../shared/model/player';
 import {RegistrationDatabase, RegistrationsDataSource} from '../../../../../shared/table-model/registration';
 import {MdDialog, MdPaginator, MdSort} from '@angular/material';
 import {WindowRefService} from '../../../service/window-ref-service';

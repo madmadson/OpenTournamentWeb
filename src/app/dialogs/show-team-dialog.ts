@@ -74,11 +74,7 @@ export class ShowTeamDialogComponent implements OnInit {
     this.onKickTournamentPlayer.emit(reg);
   }
 
-
-
-  addArmyLists(event: any, tournamentPlayer: TournamentPlayer) {
-
-    event.stopPropagation();
+  addArmyLists(tournamentPlayer: TournamentPlayer) {
 
     this.onAddArmyLists.emit(tournamentPlayer);
   }
@@ -90,7 +86,7 @@ export class ShowTeamDialogComponent implements OnInit {
 
     that.byeNotAllowed = that.teamNameFormControl.value.toLowerCase() === 'bye';
 
-    _.each(this.tournamentTeams, function (team: TournamentTeam) {
+    _.forEach(this.tournamentTeams, function (team: TournamentTeam) {
       if (team.teamName.toLowerCase() === that.teamNameFormControl.value.toLowerCase() &&
           team.teamName.toLowerCase() !== that.teamNameFormControl.value.toLowerCase()) {
         that.teamNameAlreadyInUse = true;

@@ -301,11 +301,14 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
 
   openAddArmyListForRegistrationDialog(reg: Registration) {
 
+    console.log('test');
+
     const dialogRef = this.dialog.open(AddArmyListsDialogComponent, {
       data: {
         registration: reg,
         armyLists$: this.allArmyLists$
-      }
+      },
+      disableClose: true
     });
     const saveEventSubscribe = dialogRef.componentInstance.onSaveArmyListForRegistration.subscribe(
       (armyListRegistrationPush: ArmyListRegistrationPush) => {

@@ -66,10 +66,6 @@
     <a *ngIf="(!(auth$ | async).loggedIn)" class="auth-anchor" (click)="login()">Login</a>
   </md-toolbar>
 
-  <!--<div class="app-content">-->
-  <!--<router-outlet></router-outlet>-->
-  <!--</div>-->
-
   <ng-container *ngIf="!(auth$ | async)">
     <div class="heading">Try to Login...</div>
     <div class="loading-spinner-container">

@@ -1,4 +1,4 @@
-  import {Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 
 

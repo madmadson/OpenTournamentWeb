@@ -19,11 +19,11 @@ import {TeamUpdate} from '../../../../shared/dto/team-update';
 
 
 @Component({
-  selector: 'tournament-team-list',
+  selector: 'tournament-team-list2',
   templateUrl: './tournament-team-list.component.html',
   styleUrls: ['./tournament-team-list.component.scss']
 })
-export class TournamentTeamListComponent implements OnInit {
+export class TournamentTeamListComponentA implements OnInit {
 
   @Input() isAdmin: boolean;
   @Input() isCoOrganizer: boolean;

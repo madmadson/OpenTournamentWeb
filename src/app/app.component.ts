@@ -17,6 +17,7 @@ import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
 import {Tournament} from '../../shared/model/tournament';
 import {TournamentPushAction} from './store/actions/tournaments-actions';
 import {Player} from '../../shared/model/player';
+import {SET_REDIRECT_URL_ACTION} from "./store/reducers/redirectReducer";
 
 @Component({
   selector: 'app-root',
@@ -39,8 +40,8 @@ export class AppComponent implements OnDestroy {
   userPlayerData: Player;
   authSubscription: Subscription;
 
-  constructor(  public dialog: MdDialog,
-                private authService: AuthService,
+  constructor(private dialog: MdDialog,
+              private authService: AuthService,
               private router: Router,
               private store: Store<AppState>,
               private messageService: GlobalEventService,
@@ -85,9 +86,15 @@ export class AppComponent implements OnDestroy {
   logout() {
 
     this.store.dispatch(new LogoutAction());
+
+    this.router.navigate(['/home']);
   }
 
   login() {
+
+    console.log(this.router.url);
+
+    this.store.dispatch({type: SET_REDIRECT_URL_ACTION, payload: this.router.url});
 
     this.router.navigate(['/login']);
   }
@@ -97,6 +104,7 @@ export class AppComponent implements OnDestroy {
       this.sidenav.close();
     }
   }
+
   requestNewTournament(): void {
 
     if (this.smallScreen) {

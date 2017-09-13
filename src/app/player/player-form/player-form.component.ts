@@ -3,8 +3,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 
 import {Player} from '../../../../shared/model/player';
-
-import {PlayerPushAction} from '../../store/actions/players-actions';
 import {getAllCountries} from '../../../../shared/model/countries';
 import {AppState} from "../../store/reducers/index";
 import {PlayersService} from "../players.service";

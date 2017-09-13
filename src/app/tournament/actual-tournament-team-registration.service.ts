@@ -2,28 +2,23 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../store/reducers/index';
 import {Injectable} from '@angular/core';
 import {
-  ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION, ADD_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION,
-  ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION, ADD_ALL_ACTUAL_TOURNAMENT_TEAM_REGISTRATIONS_ACTION,
-  CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION, CHANGE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION,
-  CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION, CLEAR_ACTUAL_TOURNAMENT_TEAM_REGISTRATIONS_ACTION,
-  LOAD_REGISTRATIONS_FINISHED_ACTION, LOAD_TEAM_REGISTRATIONS_FINISHED_ACTION,
-  REMOVE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION, REMOVE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION
+  ADD_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION,
+  ADD_ALL_ACTUAL_TOURNAMENT_TEAM_REGISTRATIONS_ACTION,
+  CHANGE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION,
+  CLEAR_ACTUAL_TOURNAMENT_TEAM_REGISTRATIONS_ACTION,
+  LOAD_TEAM_REGISTRATIONS_FINISHED_ACTION,
+  REMOVE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION
 } from './store/tournament-actions';
 import {Registration} from '../../../shared/model/registration';
-
-
-import {RegistrationPush} from '../../../shared/dto/registration-push';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
-import {MdSnackBar} from '@angular/material';
 
 import * as _ from 'lodash';
 import * as firebase from 'firebase';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
-import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-change';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {TeamRegistrationPush} from '../../../shared/dto/team-registration-push';
-import {TeamRegistrationChange} from "../../../shared/dto/team-registration-change";
+import {TeamRegistrationChange} from '../../../shared/dto/team-registration-change';
 
 
 @Injectable()
@@ -32,8 +27,7 @@ export class ActualTournamentTeamRegistrationService {
   private tournamentTeamRegistrationsRef: firebase.database.Reference;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              private store: Store<AppState>,
-              private snackBar: MdSnackBar) {
+              private store: Store<AppState>) {
 
   }
 
@@ -147,15 +141,27 @@ export class ActualTournamentTeamRegistrationService {
 
   }
 
-  acceptRegistration(registration: Registration) {
-    const tournamentPlayer = TournamentPlayer.fromRegistration(registration);
+  acceptTeamRegistration(teamRegistrationPush: TeamRegistrationPush) {
+    const that = this;
 
-    const tournamentPlayers = this.afoDatabase.list('tournament-players/' + registration.tournamentId);
-    tournamentPlayers.push(tournamentPlayer);
+    const tournamentTeamsRegRef = this.afoDatabase.
+    object('tournament-teams/' + teamRegistrationPush.tournament.id + '/' + teamRegistrationPush.team.id);
+    tournamentTeamsRegRef.set(teamRegistrationPush.team);
 
-    const registrationRef = this.afoDatabase.object('tournament-registrations/' + registration.tournamentId + '/' + registration.id);
-    registrationRef.update({isTournamentPlayer: true});
+    const teamRegistrationRef = that.afoDatabase.
+    object('tournament-team-registrations/' + teamRegistrationPush.tournament.id + '/' + teamRegistrationPush.team.id);
+    teamRegistrationRef.update({isAcceptedTournamentTeam: true});
 
+    _.forEach(teamRegistrationPush.registrations, function (registration: Registration) {
+      const tournamentPlayer = TournamentPlayer.fromRegistration(registration);
+
+      const tournamentPlayers = that.afoDatabase.list('tournament-players/' + registration.tournamentId);
+      tournamentPlayers.push(tournamentPlayer);
+
+      const registrationRef = that.afoDatabase.
+      object('tournament-registrations/' + registration.tournamentId + '/' + registration.id);
+      registrationRef.update({isTournamentPlayer: true});
+    });
   }
 
   teamRegistrationChange(change: TeamRegistrationChange) {

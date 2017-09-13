@@ -8,7 +8,7 @@ import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
 import {ArmyListTournamentPlayerPush} from '../../../shared/dto/armyList-tournamentPlayer-push';
 import {getWMHOCaster} from '../../../shared/model/wa_ho-caster';
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'add-army-lists-dialog',
@@ -17,20 +17,20 @@ import {Subscription} from "rxjs/Subscription";
 })
 export class AddArmyListsDialogComponent {
 
+  @Output() onSaveArmyListForTournamentPlayer = new EventEmitter<ArmyListTournamentPlayerPush>();
+  @Output() onSaveArmyListForRegistration = new EventEmitter<ArmyListRegistrationPush>();
+  @Output() onDeleteArmyList = new EventEmitter<ArmyList>();
+
   registration: Registration;
   tournamentPlayer: TournamentPlayer;
   armyLists: ArmyList[];
-
 
   listOfCasterFaction: string[];
 
   armyListModel: ArmyList;
   selectedTab = 0;
 
-  @Output() onSaveArmyListForTournamentPlayer = new EventEmitter<ArmyListTournamentPlayerPush>();
-  @Output() onSaveArmyListForRegistration = new EventEmitter<ArmyListRegistrationPush>();
-  @Output() onDeleteArmyList = new EventEmitter<ArmyList>();
-  private armyListSubsciption: Subscription;
+  armyListSubscription: Subscription;
 
   constructor(public dialogRef: MdDialogRef<AddArmyListsDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
@@ -47,7 +47,7 @@ export class AddArmyListsDialogComponent {
         this.registration.id, this.registration.playerId, this.registration.playerName,
         this.registration.teamName, this.listOfCasterFaction[0], 'PAST HERE');
 
-      this.armyListSubsciption = data.armyLists$.subscribe(armyLists => {
+      this.armyListSubscription = data.armyLists$.subscribe(armyLists => {
         this.armyLists = _.filter(armyLists, function (armyList: ArmyList) {
           if (that.registration) {
             return armyList.playerId === that.registration.playerId;
@@ -62,7 +62,7 @@ export class AddArmyListsDialogComponent {
         '', this.tournamentPlayer.id, this.tournamentPlayer.playerId ? this.tournamentPlayer.playerId : '',
         this.tournamentPlayer.playerName, this.tournamentPlayer.teamName, this.listOfCasterFaction[0], 'PAST HERE');
 
-      this.armyListSubsciption = data.armyLists$.subscribe(armyLists => {
+      this.armyListSubscription = data.armyLists$.subscribe(armyLists => {
         this.armyLists = _.filter(armyLists, function (armyList: ArmyList) {
           if (that.tournamentPlayer) {
             if (that.tournamentPlayer.playerId) {
@@ -111,7 +111,7 @@ export class AddArmyListsDialogComponent {
 
   closeDialog() {
 
-    this.armyListSubsciption.unsubscribe();
+    this.armyListSubscription.unsubscribe();
     this.dialogRef.close();
   }
 }

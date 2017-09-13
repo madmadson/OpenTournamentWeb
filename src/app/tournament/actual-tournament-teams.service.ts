@@ -11,13 +11,15 @@ import * as firebase from 'firebase';
 
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {
-  ADD_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION, ADD_ALL_ACTUAL_TOURNAMENT_TEAMS_ACTION,
+  ADD_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION,
+  ADD_ALL_ACTUAL_TOURNAMENT_TEAMS_ACTION,
   CHANGE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION,
-  CLEAR_ACTUAL_TOURNAMENT_TEAMS_ACTION, LOAD_TEAMS_FINISHED_ACTION, REMOVE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION
+  CLEAR_ACTUAL_TOURNAMENT_TEAMS_ACTION,
+  LOAD_TEAMS_FINISHED_ACTION,
+  REMOVE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION
 } from './store/tournament-actions';
 import {TournamentTeamEraseModel} from '../../../shared/dto/tournament-team-erase';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
-
 
 
 @Injectable()

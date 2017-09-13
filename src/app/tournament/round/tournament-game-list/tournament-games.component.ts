@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnChanges,
   OnInit,
@@ -21,11 +20,9 @@ import {SwapGames} from '../../../../../shared/dto/swap-player';
 import {GameResult} from '../../../../../shared/dto/game-result';
 import {MdDialog, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
 import {WindowRefService} from '../../../service/window-ref-service';
-import {GlobalEventService} from '../../../service/global-event-service';
 import {ArmyList} from '../../../../../shared/model/armyList';
 import {Player} from '../../../../../shared/model/player';
 import {GamesDatabase, GamesDataSource} from '../../../../../shared/table-model/game';
-import {DOCUMENT} from '@angular/common';
 import {GameResultDialogComponent} from '../../../dialogs/game-result-dialog';
 import {SwappingService} from '../../swapping.service';
 

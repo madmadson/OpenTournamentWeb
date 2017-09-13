@@ -8,7 +8,10 @@ import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import * as firebase from 'firebase';
 import {AppState} from '../store/reducers/index';
 import {
-  ADD_ALL_PLAYERS_ACTION, ADD_PLAYER_ACTION, CHANGE_PLAYER_ACTION, CLEAR_ALL_PLAYERS_ACTION,
+  ADD_ALL_PLAYERS_ACTION,
+  ADD_PLAYER_ACTION,
+  CHANGE_PLAYER_ACTION,
+  CLEAR_ALL_PLAYERS_ACTION,
   LOAD_PLAYERS_FINISHED_ACTION,
   REMOVE_PLAYER_ACTION
 } from './players-actions';

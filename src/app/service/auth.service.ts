@@ -17,10 +17,10 @@ export class AuthService {
 
   private authSubscription: Subscription;
   private redirectUrlSubscription: Subscription;
-  private query: any;
   private redirectUrl: string;
 
-  firebaseAuth$: Observable<firebase.User>;
+  authState$: Observable<firebase.User>;
+  private actualUser: firebase.User;
 
   constructor(public afAuth: AngularFireAuth,
               private store: Store<AppState>,
@@ -34,26 +34,32 @@ export class AuthService {
     this.authSubscription.unsubscribe();
     this.redirectUrlSubscription.unsubscribe();
 
-    this.query.unsubscribe();
+    if (this.afAuth.auth) {
+      this.afAuth.auth.signOut();
+    }
   }
 
   subscribeOnAuthentication() {
 
-    this.firebaseAuth$ = this.afAuth.authState;
+
+    this.authState$ = this.afAuth.authState;
 
 
-    this.authSubscription = this.firebaseAuth$.subscribe(
-      (auth: firebase.User) => {
-        if (auth != null) {
+    this.authSubscription = this.authState$.subscribe(
+      (firebaseUser: firebase.User) => {
+        if (firebaseUser != null) {
+
+          this.actualUser = firebaseUser;
+
           console.log('authenticated!');
 
-          if (auth.emailVerified) {
+          if (firebaseUser.emailVerified) {
 
             this.store.dispatch(new SaveUserDataAction(
-              {uid: auth.uid, displayName: auth.displayName, photoURL: auth.photoURL, email: auth.email}
+              {uid: firebaseUser.uid, displayName: firebaseUser.displayName, photoURL: firebaseUser.photoURL, email: firebaseUser.email}
             ));
 
-            this.subscribeAsPlayer(auth.uid);
+            this.subscribeAsPlayer(firebaseUser.uid);
 
             this.snackBar.open('Login Successfully', '', {
               extraClasses: ['snackBar-success'],
@@ -61,12 +67,12 @@ export class AuthService {
             });
           } else {
             const snackBarRef = this.snackBar.open('Found account without verified email. Please verify your email first. ' +
-              'Check your spam folder for an email with \'noreply@devopentournament.firebaseapp.com\'', 'SEND EMAIL AGAIN', {
+              'Check your spam folder for an email with \'noreply@opentournament.de\'', 'SEND EMAIL AGAIN', {
               extraClasses: ['snackBar-info'],
               duration: 20000
             });
             snackBarRef.onAction().subscribe(() => {
-              auth.sendEmailVerification();
+              firebaseUser.sendEmailVerification();
               snackBarRef.dismiss();
             });
           }
@@ -74,7 +80,7 @@ export class AuthService {
       }
     );
 
-    this.redirectUrlSubscription = this.store.select(state => state.authentication.redirectUrl).subscribe(redirectUrl => {
+    this.redirectUrlSubscription = this.store.select(state => state.redirectUrl.redirectUrl).subscribe(redirectUrl => {
       this.redirectUrl = redirectUrl;
     });
   }
@@ -83,10 +89,10 @@ export class AuthService {
 
     const that = this;
 
-    this.query = firebase.database().ref('players').orderByChild('userUid')
+    const query = firebase.database().ref('players').orderByChild('userUid')
       .equalTo(userUid).limitToFirst(1);
 
-    this.query.once('child_added').then(function (snapshot) {
+    query.once('child_added').then(function (snapshot) {
       if (snapshot.val() != null) {
 
         const player = Player.fromJson(snapshot.val());
@@ -97,7 +103,7 @@ export class AuthService {
       }
     });
 
-    this.query.on('child_changed', function (snapshot) {
+    query.on('child_changed', function (snapshot) {
       const player = Player.fromJson(snapshot.val());
       player.id = snapshot.key;
       that.store.dispatch(new SaveUserPlayerDataAction(player));
@@ -127,6 +133,9 @@ export class AuthService {
   }
 
   loginWithEmailAndPassword(login: LoginModel) {
+
+    this.reSubscribeOnAuth();
+
     this.afAuth.auth.signInWithEmailAndPassword(login.email, login.password
     ).then(() => {
       if (this.redirectUrl !== undefined) {
@@ -148,18 +157,8 @@ export class AuthService {
 
   loginWithProvider(loginProvider ?: string) {
 
-    this.login(loginProvider);
+    this.reSubscribeOnAuth();
 
-  }
-
-  logout() {
-
-    this.afAuth.auth.signOut();
-
-    this.router.navigate(['/login']);
-  }
-
-  private login(loginProvider ?: string) {
     let provider;
     if (loginProvider === 'google') {
       provider = new firebase.auth.GoogleAuthProvider();
@@ -185,7 +184,17 @@ export class AuthService {
         duration: 5000
       });
     });
+
   }
+
+  logout() {
+    this.reSubscribeOnAuth();
+
+    this.afAuth.auth.signOut();
+
+    this.router.navigate(['/login']);
+  }
+
 
   resetPassword(email: string) {
     this.afAuth.auth.sendPasswordResetEmail(email);
@@ -195,5 +204,16 @@ export class AuthService {
       duration: 5000
     });
     this.router.navigate(['/login']);
+  }
+
+  private reSubscribeOnAuth() {
+
+    this.unsubscribeOnAuthentication();
+    this.subscribeOnAuthentication();
+  }
+
+  isLoggedIn(): boolean {
+
+    return !!this.actualUser;
   }
 }

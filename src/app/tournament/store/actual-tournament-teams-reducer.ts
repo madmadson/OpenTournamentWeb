@@ -1,7 +1,7 @@
 import {
   ADD_ACTUAL_TOURNAMENT_TEAM_ACTION,
   ADD_ALL_ACTUAL_TOURNAMENT_TEAMS_ACTION,
-  CHANGE_ACTUAL_TOURNAMENT_TEAM_ACTION,
+  CHANGE_ACTUAL_TOURNAMENT_TEAM_ACTION, CHANGE_SEARCH_FIELD_TOURNAMENT_TEAMS_ACTION,
   CLEAR_ACTUAL_TOURNAMENT_TEAMS_ACTION,
   LOAD_TEAMS_FINISHED_ACTION,
   REMOVE_ACTUAL_TOURNAMENT_TEAM_ACTION,
@@ -17,6 +17,7 @@ export interface ActualTournamentTeamsState {
   teams: TournamentTeam[];
 
   loadTeams: boolean;
+  teamsSearchField: string;
 }
 
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
   teams: [],
 
   loadTeams: true,
+  teamsSearchField: '',
 
 };
 
@@ -47,6 +49,8 @@ export function actualTournamentTeamsReducer(state = initialState, action): Actu
     case LOAD_TEAMS_FINISHED_ACTION:
       return handleLoadTeamRegistrationsFinishedAction(state);
 
+    case CHANGE_SEARCH_FIELD_TOURNAMENT_TEAMS_ACTION:
+      return handleSearchFieldTournamentTeamsAction(state, action);
 
     default:
       return state;
@@ -116,6 +120,15 @@ function handleLoadTeamRegistrationsFinishedAction(state: ActualTournamentTeamsS
 
   newStoreState.loadTeams = false;
 
+  return newStoreState;
+}
+
+function handleSearchFieldTournamentTeamsAction(state: ActualTournamentTeamsState, action): ActualTournamentTeamsState {
+  const newStoreState = _.cloneDeep(state);
+
+  if (action.payload !== undefined) {
+    newStoreState.teamsSearchField = action.payload;
+  }
   return newStoreState;
 }
 

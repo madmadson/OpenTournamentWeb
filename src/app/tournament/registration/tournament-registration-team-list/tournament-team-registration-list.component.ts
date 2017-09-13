@@ -1,4 +1,7 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges,
+  ViewChild
+} from '@angular/core';
 
 import {Player} from '../../../../../shared/model/player';
 import {MdDialog, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
@@ -13,15 +16,16 @@ import {ActualTournamentRegistrationService} from '../../actual-tournament-regis
 import {ShowTeamRegistrationDialogComponent} from '../../../dialogs/show-team-registration-dialog';
 import {Registration} from '../../../../../shared/model/registration';
 import {TeamRegistrationChange} from '../../../../../shared/dto/team-registration-change';
-import {ActualTournamentTeamRegistrationService} from "../../actual-tournament-team-registration.service";
-import {TeamRegistrationPush} from "../../../../../shared/dto/team-registration-push";
-import {ActualTournamentArmyListsState} from "../../store/actual-tournament-army-lists-reducer";
-import {ActualTournamentArmyListService} from "../../actual-tournament-army-list.service";
+import {ActualTournamentTeamRegistrationService} from '../../actual-tournament-team-registration.service';
+import {TeamRegistrationPush} from '../../../../../shared/dto/team-registration-push';
+
+import * as _ from 'lodash';
 
 @Component({
   selector: 'tournament-team-registration-list',
   templateUrl: './tournament-team-registration-list.component.html',
-  styleUrls: ['./tournament-team-registration-list.component.scss']
+  styleUrls: ['./tournament-team-registration-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TournamentTeamRegistrationListComponent implements OnInit, OnChanges {
 
@@ -141,7 +145,8 @@ export class TournamentTeamRegistrationListComponent implements OnInit, OnChange
         team: team,
         allRegistrations: this.allActualRegistrations,
         myTeam: this.myTeam,
-        isAdmin: this.isAdmin
+        isAdmin: this.isAdmin,
+        isCreator: (this.userPlayerData && team.creatorUid === this.userPlayerData.userUid)
       }
     });
 
@@ -153,8 +158,6 @@ export class TournamentTeamRegistrationListComponent implements OnInit, OnChange
           extraClasses: ['snackBar-success'],
           duration: 5000
         });
-
-        dialogRef.close();
 
         dialogRef.close();
       }
@@ -201,6 +204,46 @@ export class TournamentTeamRegistrationListComponent implements OnInit, OnChange
       kickEventSubscribe.unsubscribe();
       openArmyListForTeamMemberSubscribe.unsubscribe();
 
+    });
+  }
+
+  acceptTeamRegistration(event: any, team: TournamentTeam) {
+
+    const newTournamentTeam: TournamentTeam = {
+      id: team.id,
+      isRegisteredTeam: team.isRegisteredTeam,
+      tournamentId: team.tournamentId,
+      creatorUid: team.creatorUid,
+      teamName: team.teamName,
+      country: team.country,
+      meta: team.meta,
+      isAcceptedTournamentTeam: team.isAcceptedTournamentTeam,
+      armyListsChecked: team.armyListsChecked ? team.armyListsChecked : false,
+      paymentChecked: team.paymentChecked ? team.paymentChecked : false,
+      playerMarkedPayment: team.playerMarkedPayment ? team.playerMarkedPayment : false,
+      playerUploadedArmyLists: team.playerUploadedArmyLists ? team.playerUploadedArmyLists : false,
+      creatorMail: team.creatorMail ? team.creatorMail : 'noMail',
+      leaderName: team.leaderName ? team.leaderName : 'noLeader',
+      tournamentPlayerIds: team.tournamentPlayerIds,
+      registeredPlayerIds: team.registeredPlayerIds,
+      droppedInRound: 0
+    };
+
+    event.stopPropagation();
+
+    const allPlayersForTeam = _.filter(this.allActualRegistrations, function (reg: Registration) {
+      return reg.teamName === team.teamName;
+    });
+
+    this.teamRegistrationService.acceptTeamRegistration({
+      tournament: this.actualTournament,
+      team: newTournamentTeam,
+      registrations: allPlayersForTeam
+    });
+
+    this.snackBar.open('Team added successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
     });
   }
 }

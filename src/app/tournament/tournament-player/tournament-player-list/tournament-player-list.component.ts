@@ -37,6 +37,7 @@ export class TournamentPlayerListComponent implements OnInit, OnChanges  {
   @Input() isAdmin: boolean;
   @Input() isCoOrganizer: boolean;
   @Input() armyLists: ArmyList[];
+  @Input() isTeamTournament: boolean;
 
   @Output() onDeletePlayer = new EventEmitter<TournamentPlayer>();
   @Output() onAddArmyLists = new EventEmitter<TournamentPlayer>();

@@ -15,10 +15,15 @@
     <button md-menu-item disabled>
       Active -> Registrations
     </button>
-    <button *ngIf="isAdmin || isCoOrganizer"
+    <button *ngIf="(isAdmin || isCoOrganizer) && !isTeamTournament"
             md-menu-item
             (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
       Go to -> Players
+    </button>
+    <button *ngIf="(isAdmin || isCoOrganizer) && isTeamTournament"
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'teams']);">
+      Go to -> Teams
     </button>
     <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
             md-menu-item

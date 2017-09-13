@@ -11,9 +11,7 @@ import {
   DROP_TEAM_PUSH_ACTION,
   DropTeamPushAction,
   END_TEAM_TOURNAMENT_ACTION,
-  END_TOURNAMENT_ACTION,
   EndTeamTournamentAction,
-  EndTournamentAction,
   GAME_RESULT_ENTERED_ACTION,
   GameResultEnteredAction,
   PLAYER_REGISTRATION_CHANGE_ACTION,
@@ -21,11 +19,7 @@ import {
   PUBLISH_ROUND_ACTION,
   PublishRoundAction,
   REGISTRATION_ACCEPT_ACTION,
-  REGISTRATION_ERASE_ACTION,
-  REGISTRATION_PUSH_ACTION,
   RegistrationAcceptAction,
-  RegistrationEraseAction,
-  RegistrationPushAction,
   SCENARIO_SELECTED_ACTION,
   SCENARIO_SELECTED_TEAM_TOURNAMENT_ACTION,
   ScenarioSelectedAction,
@@ -54,14 +48,10 @@ import {
   TournamentPlayerPushAction,
   UNDO_DROP_TEAM_PUSH_ACTION,
   UNDO_TEAM_TOURNAMENT_END_ACTION,
-  UNDO_TOURNAMENT_END_ACTION,
   UndoDropTeamPushAction,
   UndoTeamTournamentEndAction,
-  UndoTournamentEndAction,
   UPLOAD_TEAM_TOURNAMENT_ACTION,
-  UPLOAD_TOURNAMENT_ACTION,
-  UploadTeamTournamentAction,
-  UploadTournamentAction
+  UploadTeamTournamentAction
 } from '../../tournament/store/tournament-actions';
 import {TournamentService} from '../../tournament/actual-tournament.service';
 import {CLEAR_TEAM_GAME_RESULT_ACTION, ClearTeamGameResultAction} from '../actions/tournament-team-games-actions';

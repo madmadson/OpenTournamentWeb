@@ -1,64 +1,51 @@
-@import '../../../../styles';
+@import "../../../../styles";
 
-.registrations-table-row{
+
+.team-table-row{
   font-size: 0.8em;
   letter-spacing: 0;
 }
-.registrations-table-row:hover{
+
+.team-table-row:hover{
   cursor: pointer;
   background-color: $color_info;
 }
 
+
 @media only screen and (min-width: 500px) {
 
-  .registrations-table-row{
+  .team-table-row{
     font-size: 1.2em;
   }
 }
 
-.registration-table-container{
+.team-table-container{
   margin: $halve_tick;
 }
 
 @media only screen and (min-width: 500px) {
-  .registration-table-container{
+  .team-table-container{
     min-width: 450px;
 
   }
 }
 
 @media only screen and (min-width: 800px) {
-  .registration-table-container{
+  .team-table-container{
     min-width: 600px;
 
   }
 }
 
-.isTeam{
-  background-color: $light_success_color;
-}
-
 .teamName-column{
-  flex: 3;
+  flex: 4;
   font-weight: bold;
 }
 
-.teamStatus-column{
-  flex: 1;
-}
-
 .locality-column{
-  flex: 2;
-}
-
-.armyList-column{
-  flex: 1;
-}
-
-.paid-column{
-  flex: 1;
+  flex: 3;
 }
 
 .actions-column{
-  flex: 1;
+  flex: 2;
 }

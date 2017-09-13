@@ -10,11 +10,11 @@
           class="color-info-background action-button"
           [mdMenuTriggerFor]="menu">
     <md-icon>more_vert</md-icon>
-    Players
+    Teams
   </button>
   <md-menu #menu="mdMenu">
     <button md-menu-item disabled>
-      Active -> Players
+      Active -> Teams
     </button>
     <button md-menu-item
             (click)="router.navigate(['/tournament', actualTournament?.id, 'registrations']);">
@@ -32,7 +32,7 @@
     </button>
   </md-menu>
 </div>
-<h2 class="heading">Players ({{(allTournamentPlayers$| async)?.length}})</h2>
+<h2 class="heading">Teams ({{(allTournamentTeams$| async)?.length}})</h2>
 
 <div class="action-card-container" *ngIf="isAdmin || isCoOrganizer">
   <md-card class="action-card action-button-wrapper">
@@ -50,7 +50,7 @@
       <md-icon>build</md-icon>
       Edit
     </button>
-    <button *ngIf="(allTournamentPlayers$ | async)?.length > 1 && actualTournament?.actualRound === 0 && !isTeamTournament"
+    <button *ngIf="(allTournamentPlayers$ | async)?.length > 1 && actualTournament?.actualRound === 0 && isTeamTournament"
             (click)="openStartTournamentDialog()"
             type="button"
             class=" color-positive-background action-button"
@@ -60,59 +60,58 @@
     </button>
 
     <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
-            (click)="createRandomPlayers()"
+            (click)="createRandomTeams()"
             type="button"
             class=" color-positive-background action-button"
             md-raised-button>
       <md-icon>play_arrow</md-icon>
-      !Random Players!
+      !Random Teams!
     </button>
   </md-card>
 </div>
 
 
 <div class="action-card-container">
-  <md-input-container class="players-search-container" floatPlaceholder="never">
-    <input class="search-field" mdInput #searchField placeholder="Search for PlayerName">
+  <md-input-container class="teams-search-container" floatPlaceholder="never">
+    <input class="search-field" mdInput #searchField placeholder="Search for TeamName">
   </md-input-container>
 
-  <button *ngIf="actualTournament?.actualRound === 0 && !isTeamTournament"
+  <button *ngIf="actualTournament?.actualRound === 0 && isTeamTournament"
           color="accent"
           class="action-button"
-          md-raised-button (click)="addTournamentPlayer()">
-    <md-icon>person_add</md-icon>
-    Add Player
+          md-raised-button (click)="addTeam()">
+    <md-icon>group_add</md-icon>
+    Add Team
   </button>
 </div>
 
-<ng-container *ngIf="(loadPlayers$ | async)">
-  <div class="heading">Load Players...</div>
+<ng-container *ngIf="(loadTeams$ | async)">
+  <div class="heading">Load Teams...</div>
   <div class="loading-spinner-container">
     <md-spinner></md-spinner>
   </div>
 </ng-container>
 
-<ng-container *ngIf="isTeamTournament">
+<ng-container *ngIf="!isTeamTournament">
   <div class="heading">
-    Player view only useful in solo tournament. Go to Teams.
+    Team view only useful in solo tournament. Go to Players.
   </div>
   <button md-raised-button
           class="color-info-background action-button"
-          (click)="router.navigate(['/tournament', actualTournament?.id, 'teams']);">
-    Go to -> Teams
+          (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
+    Go to -> Players
   </button>
 </ng-container>
-
-<tournament-player-list *ngIf="(allTournamentPlayersFiltered$ | async)?.length > 0 && !isTeamTournament"
+<tournament-team-list *ngIf="(allTournamentTeamsFiltered$ | async)?.length > 0"
                         [actualTournament]="actualTournament"
-                        [tournamentPlayers]="allTournamentPlayersFiltered$ | async"
+                        [tournamentTeams]="allTournamentTeamsFiltered$ | async"
                         [userPlayerData]="userPlayerData"
+                        [myTeam]="myTeam"
                         [armyLists]="allArmyLists$ | async"
+                        [allActualTournamentPlayers]="allActualTournamentPlayers"
                         [isAdmin]="isAdmin"
                         [isCoOrganizer]="isCoOrganizer"
-                        [isTeamTournament]="isTeamTournament"
-                        (onDeletePlayer)="handleDeletePlayer($event)"
                         (onAddArmyLists)="handleAddArmyLists($event)">
-</tournament-player-list>
+</tournament-team-list>
 
 

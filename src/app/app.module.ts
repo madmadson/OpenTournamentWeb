@@ -52,12 +52,13 @@ import {
   MdButtonModule,
   MdCardModule,
   MdCheckboxModule,
-  MdDialogModule,
   MdDatepickerModule,
+  MdDialogModule,
   MdIconModule,
   MdInputModule,
   MdListModule,
   MdMenuModule,
+  MdNativeDateModule,
   MdPaginatorModule,
   MdProgressSpinnerModule,
   MdSelectModule,
@@ -68,7 +69,7 @@ import {
   MdTableModule,
   MdTabsModule,
   MdToolbarModule,
-  MdTooltipModule, MdNativeDateModule,
+  MdTooltipModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
@@ -87,7 +88,6 @@ import {WindowRefService} from './service/window-ref-service';
 
 import {TournamentTeamService} from './service/tournament-team.service';
 import {TournamentTeamEffectService} from './store/effects/tournament-teams-effect.service';
-import {TournamentTeamListComponent} from './tournament/tournament-team-list/tournament-team-list.component';
 import {MdlExpansionPanelModule} from '@angular-mdl/expansion-panel';
 import {ShowTeamRegistrationDialogComponent} from './dialogs/show-team-registration-dialog';
 import {ShowTeamDialogComponent} from './dialogs/show-team-dialog';
@@ -143,8 +143,7 @@ import {SwappingService} from './tournament/swapping.service';
 import {TournamentRankingsComponent} from './tournament/rankings/tournament-ranking-list/tournament-rankings.component';
 import {TournamentRankingsOverviewComponent} from 'app/tournament/rankings/tournament-ranking-overview/tournament-ranking-overview.component';
 import {GamesListComponent} from './games/games-list/games-list.component';
-import {TournamentFinalRankingsOverviewComponent}
-  from 'app/tournament/final-rankings/tournament-final-ranking-overview/tournament-final-ranking-overview.component';
+import {TournamentFinalRankingsOverviewComponent} from 'app/tournament/final-rankings/tournament-final-ranking-overview/tournament-final-ranking-overview.component';
 import {EloService} from './tournament/elo.service';
 import {MySiteProfileComponent} from './my-site/profile/my-site-profile.component';
 import {MySiteTournamentsComponent} from 'app/my-site/tournaments/my-site-tournaments.component';
@@ -152,15 +151,16 @@ import {MyTournamentsService} from 'app/my-site/tournaments/my-tournaments.servi
 import {MyGamesService} from './my-site/games/my-games.service';
 import {MyRegistrationsService} from './my-site/registrations/my-registrations.service';
 import {MySiteRegistrationsComponent} from './my-site/registrations/my-site-registrations.component';
-import {MyRegistrationListComponent}
-  from './my-site/registrations/my-registrations-table/my-registration-list.component';
+import {MyRegistrationListComponent} from './my-site/registrations/my-registrations-table/my-registration-list.component';
 import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
 import {TeamMatchDialogComponent} from 'app/team-tournament/tournament-team-game-list/tournament-team-game-list.component';
 import {TournamentTeamGameListComponent} from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
 import {ActualTournamentTeamRegistrationService} from 'app/tournament/actual-tournament-team-registration.service';
 import {ActualTournamentTeamsService} from 'app/tournament/actual-tournament-teams.service';
-import {CreateTeamRegistrationDialogComponent} from "./dialogs/team/create-team-registration-dialog";
-import {TournamentTeamRegistrationListComponent} from "./tournament/registration/tournament-registration-team-list/tournament-team-registration-list.component";
+import {CreateTeamRegistrationDialogComponent} from './dialogs/team/create-team-registration-dialog';
+import {TournamentTeamRegistrationListComponent} from './tournament/registration/tournament-registration-team-list/tournament-team-registration-list.component';
+import {TournamentTeamOverviewComponent} from './tournament/tournament-team/tournament-team-overview/tournament-team-overview.component';
+import {TournamentTeamListComponent} from "app/tournament/tournament-team/tournament-team-list/tournament-team-list.component";
 
 
 @NgModule({
@@ -209,6 +209,7 @@ import {TournamentTeamRegistrationListComponent} from "./tournament/registration
     TournamentListOverviewComponent,
     TournamentRegistrationOverviewComponent,
     TournamentPlayerOverviewComponent,
+    TournamentTeamOverviewComponent,
     GamesListComponent,
     MySiteProfileComponent,
     MySiteTournamentsComponent,

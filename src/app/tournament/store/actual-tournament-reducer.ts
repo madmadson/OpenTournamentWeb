@@ -1,20 +1,10 @@
-import {
-  ADD_ACTUAL_TOURNAMENT_REGISTRATION_ACTION,
-  ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION,
-  CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION,
-  CLEAR_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION,
-  LOAD_REGISTRATIONS_FINISHED_ACTION,
-  REMOVE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION,
-  SET_ACTUAL_TOURNAMENT_ACTION,
-  UNSET_ACTUAL_TOURNAMENT_ACTION
-} from './tournament-actions';
+import {SET_ACTUAL_TOURNAMENT_ACTION, UNSET_ACTUAL_TOURNAMENT_ACTION} from './tournament-actions';
 import {Tournament} from '../../../../shared/model/tournament';
 
 
 import * as _ from 'lodash';
 import {TournamentGame} from '../../../../shared/model/tournament-game';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
-import {Registration} from '../../../../shared/model/registration';
 import {TournamentTeam} from '../../../../shared/model/tournament-team';
 
 export interface ActualTournamentState {

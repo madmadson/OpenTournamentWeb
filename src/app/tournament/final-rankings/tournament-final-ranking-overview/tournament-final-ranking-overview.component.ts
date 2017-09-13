@@ -17,8 +17,6 @@ import {Tournament} from '../../../../../shared/model/tournament';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
 import {compareRanking, TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {ArmyList} from '../../../../../shared/model/armyList';
-import {DropPlayerPush} from "../../../../../shared/dto/drop-player-push";
-import {PairingService} from "../../pairing.service";
 import {EloService} from "../../elo.service";
 import {Registration} from "../../../../../shared/model/registration";
 import {TournamentGame} from "../../../../../shared/model/tournament-game";

@@ -12,25 +12,14 @@ import {AppState} from '../../store/reducers/index';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss']
 })
-export class LoginPageComponent implements OnInit, OnDestroy {
-
-  private subscription: Subscription;
+export class LoginPageComponent  {
 
   loginForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
               private store: Store<AppState>,
               private router: Router) {
-    this.createForm();
 
-    this.subscription = store.select(state => state.authentication).subscribe(authenticationStoreState => {
-      if (authenticationStoreState.loggedIn !== false) {
-        this.router.navigate([authenticationStoreState.redirectUrl ? authenticationStoreState.redirectUrl : '/home']);
-      }
-     }
-   );
-  }
-  createForm() {
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required ],
       password: ['', Validators.required ],
@@ -38,12 +27,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnInit() {}
-
-  ngOnDestroy(): void {
-
-    this.subscription.unsubscribe();
-  }
 
   login() {
     this.store.dispatch(new LoginAction({email: this.loginForm.get('email').value, password: this.loginForm.get('password').value}));

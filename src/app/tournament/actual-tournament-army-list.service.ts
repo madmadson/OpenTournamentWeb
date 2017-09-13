@@ -15,7 +15,6 @@ import {MdSnackBar} from '@angular/material';
 import * as firebase from 'firebase';
 import {ArmyList} from '../../../shared/model/armyList';
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
-import {ArmyListTeamPush} from "../../../shared/dto/team-armyList-push";
 import {TournamentTeam} from "../../../shared/model/tournament-team";
 
 

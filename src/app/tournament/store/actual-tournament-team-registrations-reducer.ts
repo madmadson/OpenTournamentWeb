@@ -9,7 +9,6 @@ import {
 
 
 import * as _ from 'lodash';
-import {Registration} from '../../../../shared/model/registration';
 import {TournamentTeam} from "../../../../shared/model/tournament-team";
 
 
