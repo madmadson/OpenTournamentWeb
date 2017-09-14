@@ -239,8 +239,6 @@ import {TournamentTeamListComponent} from "app/tournament/tournament-team/tourna
 
     TournamentFinalRankingsComponent,
 
-
-
     TournamentGamesComponent,
     TournamentGameTableComponent,
 

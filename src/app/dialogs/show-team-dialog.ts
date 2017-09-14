@@ -9,6 +9,8 @@ import {Player} from '../../../shared/model/player';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {FormControl, Validators} from '@angular/forms';
 import {TeamUpdate} from '../../../shared/dto/team-update';
+import {ArmyList} from '../../../shared/model/armyList';
+import {WindowRefService} from "../service/window-ref-service";
 
 @Component({
   selector: 'show-team-dialog',
@@ -38,10 +40,25 @@ export class ShowTeamDialogComponent implements OnInit {
 
   teamNameFormControl: FormControl;
   metaFormControl: FormControl;
+  teamArmyLists: ArmyList[];
+
+  smallScreen: boolean;
+  truncateMax: number;
 
   constructor(public dialogRef: MdDialogRef<ShowTeamDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
+              @Inject(MD_DIALOG_DATA) public data: any,
+              private winRef: WindowRefService) {
 
+    if (this.winRef.nativeWindow.screen.width < 500) {
+      this.smallScreen = true;
+      this.truncateMax = 15;
+    } else if (this.winRef.nativeWindow.screen.width < 800) {
+      this.smallScreen = true;
+      this.truncateMax = 20;
+    } else {
+      this.smallScreen = false;
+      this.truncateMax = 40;
+    }
 
     this.isAdmin = data.isAdmin;
     this.isCoOrganizer = data.isCoOrganizer;
@@ -52,9 +69,9 @@ export class ShowTeamDialogComponent implements OnInit {
     this.myTeam = data.myTeam;
     this.tournamentTeams = data.tournamentTeams;
 
-    this.allTournamentPlayerForTeam = _.filter(data.allActualTournamentPlayers, function (player: TournamentPlayer) {
-      return player.teamName === data.team.teamName;
-    });
+    this.teamArmyLists = data.teamArmyLists;
+
+    this.allTournamentPlayerForTeam = this.getPlayersForTeam(data.team);
   }
 
   ngOnInit() {
@@ -101,7 +118,15 @@ export class ShowTeamDialogComponent implements OnInit {
 
     this.onUpdateTeam.emit({
       team: this.team,
-      tournamentPlayers: this.allTournamentPlayerForTeam
+      tournamentPlayers: this.allTournamentPlayerForTeam,
+      armyLists: this.teamArmyLists
+    });
+  }
+
+  getPlayersForTeam(team: TournamentTeam) {
+
+    return _.filter(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      return player.teamName === team.teamName;
     });
   }
 }

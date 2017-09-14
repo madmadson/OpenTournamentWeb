@@ -415,6 +415,11 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
           config.tournamentId = this.actualTournament.id;
           config.round = this.round;
           this.pairingService.pairRoundAgain(config, this.allActualTournamentPlayers, this.allTournamentRankings);
+
+          this.snackBar.open('Round created successfully again.', '', {
+            extraClasses: ['snackBar-success'],
+            duration: 5000
+          });
         }
       });
     dialogRef.afterClosed().subscribe(() => {
@@ -437,6 +442,12 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       .subscribe((config: TournamentManagementConfiguration) => {
         if (config !== undefined) {
           this.pairingService.pairNewRound(config, this.allActualTournamentPlayers, this.allTournamentRankings);
+
+          this.snackBar.open('Round created successfully.', '', {
+            extraClasses: ['snackBar-success'],
+            duration: 5000
+          });
+
         }
       });
     dialogRef.afterClosed().subscribe(() => {

@@ -78,46 +78,46 @@ export class TournamentTeamListComponentA implements OnInit {
 
   showTeam(team: TournamentTeam) {
 
-    const dialogRef = this.dialog.open(ShowTeamDialogComponent, {
-      data: {
-        isAdmin: this.isAdmin,
-        isCoOrganizer: this.isCoOrganizer,
-        actualTournament: this.actualTournament,
-        userPlayerData: this.userPlayerData,
-        allActualTournamentPlayers: this.allActualTournamentPlayers,
-        team: team,
-        tournamentTeams: this.actualTournamentTeams,
-      }
-    });
-
-    const updateTeamEventSubscribe = dialogRef.componentInstance.onUpdateTeam.subscribe((updatedTeam: TeamUpdate) => {
-
-      if (updatedTeam !== undefined) {
-        this.onUpdateTeam.emit(updatedTeam);
-      }
-      dialogRef.close();
-    });
-
-    const saveEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(tournamentPlayer => {
-
-      if (tournamentPlayer !== undefined) {
-        this.onAddArmyLists.emit(tournamentPlayer);
-      }
-    });
-
-    const kickEventSubscribe = dialogRef.componentInstance.onKickTournamentPlayer.subscribe(tournamentPlayer => {
-
-      if (tournamentPlayer !== undefined) {
-        this.onKickTournamentPlayer.emit(tournamentPlayer);
-      }
-      dialogRef.close();
-    });
-    dialogRef.afterClosed().subscribe(() => {
-
-      saveEventSubscribe.unsubscribe();
-      kickEventSubscribe.unsubscribe();
-      updateTeamEventSubscribe.unsubscribe();
-    });
+    // const dialogRef = this.dialog.open(ShowTeamDialogComponent, {
+    //   data: {
+    //     isAdmin: this.isAdmin,
+    //     isCoOrganizer: this.isCoOrganizer,
+    //     actualTournament: this.actualTournament,
+    //     userPlayerData: this.userPlayerData,
+    //     allActualTournamentPlayers: this.allActualTournamentPlayers,
+    //     team: team,
+    //     tournamentTeams: this.actualTournamentTeams,
+    //   }
+    // });
+    //
+    // const updateTeamEventSubscribe = dialogRef.componentInstance.onUpdateTeam.subscribe((updatedTeam: TeamUpdate) => {
+    //
+    //   if (updatedTeam !== undefined) {
+    //     this.onUpdateTeam.emit(updatedTeam);
+    //   }
+    //   dialogRef.close();
+    // });
+    //
+    // const saveEventSubscribe = dialogRef.componentInstance.onAddArmyLists.subscribe(tournamentPlayer => {
+    //
+    //   if (tournamentPlayer !== undefined) {
+    //     this.onAddArmyLists.emit(tournamentPlayer);
+    //   }
+    // });
+    //
+    // const kickEventSubscribe = dialogRef.componentInstance.onKickTournamentPlayer.subscribe(tournamentPlayer => {
+    //
+    //   if (tournamentPlayer !== undefined) {
+    //     this.onKickTournamentPlayer.emit(tournamentPlayer);
+    //   }
+    //   dialogRef.close();
+    // });
+    // dialogRef.afterClosed().subscribe(() => {
+    //
+    //   saveEventSubscribe.unsubscribe();
+    //   kickEventSubscribe.unsubscribe();
+    //   updateTeamEventSubscribe.unsubscribe();
+    // });
   }
 
   eraseTeam(event: any, team: TournamentTeam) {

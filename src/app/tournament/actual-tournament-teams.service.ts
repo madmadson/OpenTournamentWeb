@@ -4,22 +4,22 @@ import {Injectable} from '@angular/core';
 
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
-import {MdSnackBar} from '@angular/material';
-
 import * as _ from 'lodash';
 import * as firebase from 'firebase';
 
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {
-  ADD_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION,
+  ADD_ACTUAL_TOURNAMENT_TEAM_ACTION,
   ADD_ALL_ACTUAL_TOURNAMENT_TEAMS_ACTION,
-  CHANGE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION,
+  CHANGE_ACTUAL_TOURNAMENT_TEAM_ACTION,
   CLEAR_ACTUAL_TOURNAMENT_TEAMS_ACTION,
   LOAD_TEAMS_FINISHED_ACTION,
-  REMOVE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION
+  REMOVE_ACTUAL_TOURNAMENT_TEAM_ACTION
 } from './store/tournament-actions';
 import {TournamentTeamEraseModel} from '../../../shared/dto/tournament-team-erase';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {TeamUpdate} from '../../../shared/dto/team-update';
+import {ArmyList} from '../../../shared/model/armyList';
 
 
 @Injectable()
@@ -28,11 +28,7 @@ export class ActualTournamentTeamsService {
   private tournamentTeamsRef: firebase.database.Reference;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              private store: Store<AppState>,
-              private snackBar: MdSnackBar) {
-
-  }
-
+              private store: Store<AppState>) {}
 
   unsubscribeOnFirebase() {
 
@@ -59,7 +55,7 @@ export class ActualTournamentTeamsService {
       const team: TournamentTeam = TournamentTeam.fromJson(snapshot.val());
       team.id = snapshot.key;
 
-      that.store.dispatch({type: ADD_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION, payload: team});
+      that.store.dispatch({type: ADD_ACTUAL_TOURNAMENT_TEAM_ACTION, payload: team});
 
     });
 
@@ -72,7 +68,7 @@ export class ActualTournamentTeamsService {
       const team: TournamentTeam = TournamentTeam.fromJson(snapshot.val());
       team.id = snapshot.key;
 
-      that.store.dispatch({type: CHANGE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION, payload: team});
+      that.store.dispatch({type: CHANGE_ACTUAL_TOURNAMENT_TEAM_ACTION, payload: team});
     });
 
     this.tournamentTeamsRef.on('child_removed', function (snapshot) {
@@ -81,7 +77,7 @@ export class ActualTournamentTeamsService {
         return;
       }
 
-      that.store.dispatch({type: REMOVE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION, payload: snapshot.key});
+      that.store.dispatch({type: REMOVE_ACTUAL_TOURNAMENT_TEAM_ACTION, payload: snapshot.key});
     });
 
     this.tournamentTeamsRef.once('value', function (snapshot) {
@@ -104,13 +100,9 @@ export class ActualTournamentTeamsService {
   pushTournamentTeam(team: TournamentTeam) {
     const tournamentTeamsRef = this.afoDatabase.list('tournament-teams/' + team.tournamentId);
     tournamentTeamsRef.push(team);
-
-    this.snackBar.open('Team saved successfully', '', {
-      duration: 5000
-    });
   }
 
-  eraseTournamentTeam(tournamentTeamErase: TournamentTeamEraseModel) {
+  killTournamentTeam(tournamentTeamErase: TournamentTeamEraseModel) {
 
     const that = this;
 
@@ -129,9 +121,29 @@ export class ActualTournamentTeamsService {
       playerRef.remove();
     });
 
-    this.snackBar.open('Tournament Team deleted successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
+
+  }
+
+  updateTeam(teamUpdate: TeamUpdate) {
+    const that = this;
+
+    const teamRef = this.afoDatabase.object('tournament-teams/' + teamUpdate.team.tournamentId + '/' + teamUpdate.team.id);
+    teamRef.set(teamUpdate.team);
+
+    _.forEach(teamUpdate.tournamentPlayers, function (player: TournamentPlayer) {
+      const playerRef = that.afoDatabase.object('tournament-players/' + teamUpdate.team.tournamentId + '/' + player.id);
+      playerRef.update({
+        teamName: teamUpdate.team.teamName
+      });
+
+    });
+
+    _.forEach(teamUpdate.armyLists, function (armyList: ArmyList) {
+      const armyListRef = that.afoDatabase.object('tournament-armyLists/' + teamUpdate.team.tournamentId + '/' + armyList.id);
+      armyListRef.update({
+        teamName: teamUpdate.team.teamName
+      });
+
     });
   }
 }

@@ -12,7 +12,7 @@ import {
 import {WindowRefService} from '../../../service/window-ref-service';
 import {ArmyList} from '../../../../../shared/model/armyList';
 
-import {MdDialog, MdPaginator, MdSort} from '@angular/material';
+import {MdDialog, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
 import {
   TournamentPlayerDatabase,
@@ -22,10 +22,16 @@ import {Tournament} from '../../../../../shared/model/tournament';
 import {Player} from '../../../../../shared/model/player';
 
 import * as _ from 'lodash';
-import {TournamentTeam} from "../../../../../shared/model/tournament-team";
-import {TournamentTeamDatabase, TournamentTeamsDataSource} from "../../../../../shared/table-model/tournamentTeam";
-import {ShowTeamDialogComponent} from "../../../dialogs/show-team-dialog";
-import {TeamUpdate} from "../../../../../shared/dto/team-update";
+import {TournamentTeam} from '../../../../../shared/model/tournament-team';
+import {TournamentTeamDatabase, TournamentTeamsDataSource} from '../../../../../shared/table-model/tournamentTeam';
+import {ShowTeamDialogComponent} from '../../../dialogs/show-team-dialog';
+import {TeamUpdate} from '../../../../../shared/dto/team-update';
+import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
+import {ActualTournamentPlayersState} from '../../store/actual-tournament-players-reducer';
+import {ActualTournamentPlayerService} from 'app/tournament/actual-tournament-player.service';
+import {NewTournamentPlayerDialogComponent} from '../../../dialogs/add-tournament-player-dialog';
+import {ShowArmyListDialogComponent} from 'app/dialogs/show-army-lists-dialog';
+import {ActualTournamentRegistrationService} from "../../actual-tournament-registration.service";
 
 @Component({
   selector: 'tournament-team-list',
@@ -33,7 +39,7 @@ import {TeamUpdate} from "../../../../../shared/dto/team-update";
   styleUrls: ['./tournament-team-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TournamentTeamListComponent implements OnInit, OnChanges  {
+export class TournamentTeamListComponent implements OnInit, OnChanges {
 
   @Input() actualTournament: Tournament;
   @Input() tournamentTeams: TournamentTeam[];
@@ -47,7 +53,7 @@ export class TournamentTeamListComponent implements OnInit, OnChanges  {
   @Output() onAddArmyLists = new EventEmitter<TournamentTeam>();
 
   displayedColumns = [
-    'teamName', 'locality', 'actions'];
+    'teamName', 'teamStatus', 'locality', 'actions'];
   teamDb: TournamentTeamDatabase;
   dataSource: TournamentTeamsDataSource | null;
 
@@ -57,8 +63,13 @@ export class TournamentTeamListComponent implements OnInit, OnChanges  {
   smallScreen: boolean;
   truncateMax: number;
 
-  constructor(public dialog: MdDialog,
-              private winRef: WindowRefService) {
+  teamDeleteRequested: string;
+
+  constructor(private dialog: MdDialog,
+              private snackBar: MdSnackBar,
+              private winRef: WindowRefService,
+              private tournamentTeamService: ActualTournamentTeamsService,
+              private tournamentPlayerService: ActualTournamentPlayerService) {
 
     if (this.winRef.nativeWindow.screen.width < 500) {
       this.smallScreen = true;
@@ -73,7 +84,7 @@ export class TournamentTeamListComponent implements OnInit, OnChanges  {
 
     if (this.smallScreen) {
       this.displayedColumns = [
-        'teamName', 'actions'];
+        'teamName', 'teamStatus', 'actions'];
     }
   }
 
@@ -95,6 +106,19 @@ export class TournamentTeamListComponent implements OnInit, OnChanges  {
     }
   }
 
+  showTeamArmyLists(event: any, team: TournamentTeam) {
+
+    event.stopPropagation();
+
+    const teamArmyLists: ArmyList[] = this.getArmyListsForTeam(team);
+
+    this.dialog.open(ShowArmyListDialogComponent, {
+      data: {
+        tournamentTeam: team,
+        armyLists: teamArmyLists
+      }
+    });
+  }
 
 
   showTeam(team: TournamentTeam) {
@@ -108,6 +132,7 @@ export class TournamentTeamListComponent implements OnInit, OnChanges  {
         allActualTournamentPlayers: this.allActualTournamentPlayers,
         team: team,
         tournamentTeams: this.tournamentTeams,
+        teamArmyLists: this.getArmyListsForTeam(team)
       }
     });
 
@@ -115,6 +140,12 @@ export class TournamentTeamListComponent implements OnInit, OnChanges  {
 
       if (updatedTeam !== undefined) {
 
+        this.tournamentTeamService.updateTeam(updatedTeam);
+
+        this.snackBar.open('Team successfully updated', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
       }
       dialogRef.close();
     });
@@ -129,7 +160,13 @@ export class TournamentTeamListComponent implements OnInit, OnChanges  {
     const kickEventSubscribe = dialogRef.componentInstance.onKickTournamentPlayer.subscribe(tournamentPlayer => {
 
       if (tournamentPlayer !== undefined) {
+        this.tournamentPlayerService.killPlayer(tournamentPlayer);
 
+
+        this.snackBar.open('Player deleted successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
       }
       dialogRef.close();
     });
@@ -141,4 +178,90 @@ export class TournamentTeamListComponent implements OnInit, OnChanges  {
     });
   }
 
+  addPlayerToTeam(event: any, team: TournamentTeam) {
+
+    event.stopPropagation();
+
+    const dialogRef = this.dialog.open(NewTournamentPlayerDialogComponent, {
+      data: {
+        actualTournament: this.actualTournament,
+        allActualTournamentPlayers: this.allActualTournamentPlayers,
+        team: team
+      },
+      width: '800px',
+    });
+    const saveEventSubscribe = dialogRef.componentInstance.onSaveNewTournamentPlayer.subscribe((tournamentPlayer: TournamentPlayer) => {
+
+      if (tournamentPlayer !== undefined) {
+        this.tournamentPlayerService.pushTournamentPlayer(tournamentPlayer);
+
+        this.snackBar.open('Player saved successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+      saveEventSubscribe.unsubscribe();
+    });
+  }
+
+  teamDeleteRequestedClicked(event: any, team: TournamentTeam) {
+    event.stopPropagation();
+
+    this.teamDeleteRequested = team.teamName;
+  }
+
+  teamDeleteDeclinedClicked(event: any) {
+    event.stopPropagation();
+
+    this.teamDeleteRequested = '';
+  }
+
+  checkTournamentFull(team: TournamentTeam) {
+    const allPlayersForTeam = this.getPlayersForTeam(team);
+
+    return allPlayersForTeam.length === this.actualTournament.teamSize;
+  }
+
+  checkTournamentOver(team: TournamentTeam) {
+    const allPlayersForTeam = this.getPlayersForTeam(team);
+
+    return allPlayersForTeam.length > this.actualTournament.teamSize;
+  }
+
+  killTeam(event: any, team: TournamentTeam) {
+
+    event.stopPropagation();
+
+    this.teamDeleteRequested = '';
+
+    const allPlayersForTeam = this.getPlayersForTeam(team);
+
+    this.tournamentTeamService.killTournamentTeam({
+      team: team,
+      tournament: this.actualTournament,
+      players: allPlayersForTeam
+    });
+
+    this.snackBar.open('Tournament Team deleted successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  getArmyListsForTeam(team: TournamentTeam) {
+
+    return _.filter(this.armyLists, function (list: ArmyList) {
+      return (list.teamName === team.teamName);
+    });
+  }
+
+  getPlayersForTeam(team: TournamentTeam) {
+
+    return _.filter(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      return player.teamName === team.teamName;
+    });
+  }
 }

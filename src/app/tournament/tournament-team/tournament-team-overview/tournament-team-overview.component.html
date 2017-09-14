@@ -51,12 +51,20 @@
       Edit
     </button>
     <button *ngIf="(allTournamentPlayers$ | async)?.length > 1 && actualTournament?.actualRound === 0 && isTeamTournament"
-            (click)="openStartTournamentDialog()"
+            (click)="openStartTeamTournamentDialog()"
             type="button"
             class=" color-positive-background action-button"
             md-raised-button>
       <md-icon>play_arrow</md-icon>
       Start Tournament
+    </button>
+
+    <button (click)="kill()"
+            type="button"
+            class=" color-positive-background action-button"
+            md-raised-button>
+      <md-icon>play_arrow</md-icon>
+      KILL
     </button>
 
     <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
@@ -79,7 +87,7 @@
   <button *ngIf="actualTournament?.actualRound === 0 && isTeamTournament"
           color="accent"
           class="action-button"
-          md-raised-button (click)="addTeam()">
+          md-raised-button (click)="openCreateTeamDialog()">
     <md-icon>group_add</md-icon>
     Add Team
   </button>
@@ -106,7 +114,6 @@
                         [actualTournament]="actualTournament"
                         [tournamentTeams]="allTournamentTeamsFiltered$ | async"
                         [userPlayerData]="userPlayerData"
-                        [myTeam]="myTeam"
                         [armyLists]="allArmyLists$ | async"
                         [allActualTournamentPlayers]="allActualTournamentPlayers"
                         [isAdmin]="isAdmin"

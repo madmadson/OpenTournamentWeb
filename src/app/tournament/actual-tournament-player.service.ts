@@ -22,9 +22,7 @@ export class ActualTournamentPlayerService {
   private tournamentPlayersRef: firebase.database.Reference;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected store: Store<AppState>,
-              private snackBar: MdSnackBar) {
-
+              protected store: Store<AppState>) {
   }
 
   unsubscribeOnFirebase() {
@@ -103,19 +101,11 @@ export class ActualTournamentPlayerService {
         .object('tournament-registrations/' + player.tournamentId + '/' + player.registrationId);
       registrationRef.update({isTournamentPlayer: false});
     }
-    this.snackBar.open('Player deleted successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
+
   }
 
-  pushTournamentPlayer(tournamentPlayer: TournamentPlayer) {
+  pushTournamentPlayer(tournamentPlayer: TournamentPlayer): string {
     const tournamentPlayers = this.afoDatabase.list('tournament-players/' + tournamentPlayer.tournamentId);
-    tournamentPlayers.push(tournamentPlayer);
-
-    this.snackBar.open('Player saved successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
+    return tournamentPlayers.push(tournamentPlayer).getKey();
   }
 }

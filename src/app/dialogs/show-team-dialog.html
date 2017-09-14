@@ -41,15 +41,15 @@
       <h3 mdLine>{{player.playerName | truncate:truncateMax}} </h3>
       <p mdLine>{{player.faction}}</p>
       <p mdLine>
-        <img class="padding-fix-icon"src="../../assets/my_crown_small.png">
+        <img *ngIf="player.elo" src="../../assets/my_crown_small.png"/>
         {{player.elo}}
       </p>
-      <button md-icon-button *ngIf="isAdmin || isCoOrganizer || isCreator || myTeam">
+      <button md-icon-button *ngIf="isAdmin || isCoOrganizer">
         <md-icon class="color-positive list-action" (click)="addArmyLists(player)">
           playlist_add
         </md-icon>
       </button>
-      <button md-icon-button *ngIf="isAdmin || isCoOrganizer || isCreator">
+      <button md-icon-button *ngIf="(isAdmin || isCoOrganizer) && !player.registrationId">
         <md-icon class="color-negative list-action" (click)="kickPlayer(player)">
           delete
         </md-icon>

@@ -34,8 +34,10 @@ import {TournamentManagementConfiguration} from '../../../../../shared/dto/tourn
 import {TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {PairingService} from '../../pairing.service';
 import {getAllFactions} from '../../../../../shared/model/factions';
-import {TournamentTeam} from "../../../../../shared/model/tournament-team";
-import {ActualTournamentTeamsService} from "../../actual-tournament-teams.service";
+import {TournamentTeam} from '../../../../../shared/model/tournament-team';
+import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
+import {CreateTeamDialogComponent} from '../../tournament-preparation/tournament-preparation.component';
+import {ActualTournamentTeamRegistrationService} from '../../actual-tournament-team-registration.service';
 
 
 @Component({
@@ -59,8 +61,11 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
 
   allArmyLists$: Observable<ArmyList[]>;
 
+  allTournamentTeamsRegistrations$: Observable<TournamentTeam[]>;
+  allTournamentTeamsRegistrations: TournamentTeam[];
 
   allTournamentTeams$: Observable<TournamentTeam[]>;
+  allTournamentTeams: TournamentTeam[];
   allTournamentTeamsFiltered$: Observable<TournamentTeam[]>;
 
   loadTeams$: Observable<boolean>;
@@ -73,6 +78,8 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
   private userPlayerDataSub: Subscription;
   private allActualTournamentPlayersSub: Subscription;
   private allActualRegistrationsSub: Subscription;
+  private allActualTournamentTeamsSub: Subscription;
+  private allActualTournamentTeamRegsSub: Subscription;
 
   searchField$: Observable<string>;
 
@@ -80,12 +87,13 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
   private isTeamTournament: boolean;
 
 
-  constructor( private snackBar: MdSnackBar,
-               private dialog: MdDialog,
+  constructor(private snackBar: MdSnackBar,
+              private dialog: MdDialog,
               private tournamentService: TournamentService,
               private registrationService: ActualTournamentRegistrationService,
               private tournamentPlayerService: ActualTournamentPlayerService,
               private tournamentTeamService: ActualTournamentTeamsService,
+              private tournamentTeamRegService: ActualTournamentTeamRegistrationService,
               private armyListService: ActualTournamentArmyListService,
               private pairingService: PairingService,
               private store: Store<AppState>,
@@ -99,7 +107,8 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
         this.tournamentPlayerService.subscribeOnFirebase(params['id']);
         this.armyListService.subscribeOnFirebase(params['id']);
 
-        this.tournamentTeamService.subscribeOnFirebase(params['id'])
+        this.tournamentTeamService.subscribeOnFirebase(params['id']);
+        this.tournamentTeamRegService.subscribeOnFirebase(params['id']);
       }
     );
 
@@ -110,6 +119,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
 
     this.allTournamentTeams$ = this.store.select(state => state.actualTournamentTeams.teams);
+    this.allTournamentTeamsRegistrations$ = this.store.select(state => state.actualTournamentTeamRegistrations.teamRegistrations);
     this.loadTeams$ = this.store.select(state => state.actualTournamentTeams.loadTeams);
 
     this.searchField$ = this.store.select(state => state.actualTournamentTeams.teamsSearchField);
@@ -153,12 +163,23 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
       this.allActualRegistrations = allRegistrations;
     });
 
+    this.allActualTournamentTeamsSub = this.allTournamentTeams$.subscribe((allTeams: TournamentTeam[]) => {
+      this.allTournamentTeams = allTeams;
+    });
+
+    this.allActualTournamentTeamRegsSub = this.allTournamentTeamsRegistrations$.subscribe((allTeamRegs: TournamentTeam[]) => {
+      this.allTournamentTeamsRegistrations = allTeamRegs;
+    });
+
 
     Observable.fromEvent(this.searchField.nativeElement, 'keyup')
       .debounceTime(150)
       .distinctUntilChanged()
       .subscribe(() => {
-        this.store.dispatch({type: CHANGE_SEARCH_FIELD_TOURNAMENT_TEAMS_ACTION, payload: this.searchField.nativeElement.value});
+        this.store.dispatch({
+          type: CHANGE_SEARCH_FIELD_TOURNAMENT_TEAMS_ACTION,
+          payload: this.searchField.nativeElement.value
+        });
       });
   }
 
@@ -169,11 +190,14 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     this.tournamentPlayerService.unsubscribeOnFirebase();
     this.armyListService.unsubscribeOnFirebase();
     this.tournamentTeamService.unsubscribeOnFirebase();
+    this.tournamentTeamRegService.unsubscribeOnFirebase();
 
     this.actualTournamentSub.unsubscribe();
     this.userPlayerDataSub.unsubscribe();
     this.allActualTournamentPlayersSub.unsubscribe();
     this.allActualRegistrationsSub.unsubscribe();
+    this.allActualTournamentTeamsSub.unsubscribe();
+    this.allActualTournamentTeamRegsSub.unsubscribe();
   }
 
   getArrayForNumber(round: number): number[] {
@@ -255,18 +279,24 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
 
   }
 
-  addTeam() {
-    const dialogRef = this.dialog.open(NewTournamentPlayerDialogComponent, {
+  openCreateTeamDialog() {
+    const dialogRef = this.dialog.open(CreateTeamDialogComponent, {
       data: {
         actualTournament: this.actualTournament,
-        allActualTournamentPlayers: this.allActualTournamentPlayers
-      },
-      width: '800px',
+        userPlayerData: this.userPlayerData,
+        tournamentTeamRegistrations: this.allTournamentTeamsRegistrations,
+        tournamentTeams: this.allTournamentTeams
+      }
     });
-    const saveEventSubscribe = dialogRef.componentInstance.onSaveNewTournamentPlayer.subscribe((tournamentPlayer: TournamentPlayer) => {
 
-      if (tournamentPlayer !== undefined) {
-        this.tournamentPlayerService.pushTournamentPlayer(tournamentPlayer);
+    const saveEventSubscribe = dialogRef.componentInstance.onCreateTeamForTeamTournament.subscribe(team => {
+
+      if (team !== undefined) {
+        this.tournamentTeamService.pushTournamentTeam(team);
+
+        this.snackBar.open('Team created successfully', '', {
+          duration: 5000
+        });
       }
     });
     dialogRef.afterClosed().subscribe(() => {
@@ -331,13 +361,13 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  openStartTournamentDialog() {
+  openStartTeamTournamentDialog() {
 
 
     const dialogRef = this.dialog.open(StartTournamentDialogComponent, {
       data: {
         allActualTournamentPlayers: this.allActualTournamentPlayers,
-        allActualTournamentTeams: [],
+        allActualTournamentTeams: this.allTournamentTeams,
         actualTournament: this.actualTournament,
       },
       width: '600px',
@@ -346,48 +376,87 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
       if (config !== undefined) {
         config.tournamentId = this.actualTournament.id;
         config.round = 1;
-        if (this.actualTournament.teamSize === 0) {
 
-          const newRankings: TournamentRanking[] =
-            this.pairingService.pushRankingForRound(config, this.allActualTournamentPlayers, []);
-          const success: boolean = this.pairingService.pushGamesForRound(config, newRankings);
+        // first player rankings
+        const newPlayerRankings: TournamentRanking[] =
+          this.pairingService.pushRankingForRound(config, this.allActualTournamentPlayers, []);
 
-          if (success) {
-            this.tournamentService.startTournament(config);
+        const newRankings: TournamentRanking[] =
+          this.pairingService.pushTeamRankingForRound(config, this.allTournamentTeams, []);
+        const success: boolean = this.pairingService.createTeamGamesForRound(
+          this.actualTournament, this.allActualTournamentPlayers, [], config,
+          newRankings, newPlayerRankings);
 
-            this.router.navigate(['/tournament', this.actualTournament.id, 'round', 1]);
-          } else {
-
-            this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
-              extraClasses: ['snackBar-fail'],
-              duration: 5000
-            });
-
-            this.pairingService.killRankingsForRound(config);
-            this.pairingService.killGamesForRound(config);
-          }
-
+        if (success) {
+          // this.tournamentService.startTournament(config);
+          //
+          // this.router.navigate(['/tournament', this.actualTournament.id, 'round', 1]);
+          //
+          console.log('Success!');
         } else {
-          // this.onStartTeamTournament.emit(config);
+
+          this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
+            extraClasses: ['snackBar-fail'],
+            duration: 5000
+          });
+
+          this.pairingService.killRankingsForRound(config);
+          this.pairingService.killTeamRankingsForRound(config);
+          this.pairingService.killGamesForRound(config);
+          this.pairingService.killTeamGamesForRound(config);
         }
+
+
       }
     });
 
     dialogRef.afterClosed().subscribe(() => {
       startTournamentSub.unsubscribe();
     });
+  }
 
+  kill() {
+
+    const conf = {
+      tournamentId: this.actualTournament.id,
+      teamRestriction: false,
+      metaRestriction: false,
+      originRestriction: false,
+      countryRestriction: false,
+      round: 1
+    };
+
+    this.pairingService.killRankingsForRound(conf);
+    this.pairingService.killTeamRankingsForRound(conf);
+    this.pairingService.killGamesForRound(conf);
+    this.pairingService.killTeamGamesForRound(conf);
   }
 
   createRandomTeams() {
 
-    for (let i = 0; i < 100; i++) {
+    const allFactions = getAllFactions();
 
-      const allFactions = getAllFactions();
-      const randomFaction = allFactions[Math.floor(Math.random() * allFactions.length)];
+    for (let i = 0; i < 1; i++) {
 
-      const newPlayer = new TournamentPlayer(this.actualTournament.id, '', '', '', 'GeneratedPlayer ' + (i + 1), '', '', '', '', 0, randomFaction, 0);
-      this.tournamentPlayerService.pushTournamentPlayer(newPlayer);
+      const newTeam = new TournamentTeam(false, this.actualTournament.id, '',
+        'Gen Team ' + (i + 1), '', '', false, [], [], '', '', false, false, false, false, 0);
+
+      for (let j = 0; j < this.actualTournament.teamSize; j++) {
+
+        const randomFaction = allFactions[Math.floor(Math.random() * allFactions.length)];
+
+        const newPlayer = new TournamentPlayer(this.actualTournament.id, '', '', '',
+          newTeam.teamName + ' Player ' + (j + 1), '', '', newTeam.teamName, '', 0, randomFaction, 0);
+        const newId = this.tournamentPlayerService.pushTournamentPlayer(newPlayer);
+
+        newTeam.tournamentPlayerIds.push(newId);
+
+        // console.log('new Player: ' + JSON.stringify(newPlayer));
+      }
+
+      // console.log('new Team: ' + JSON.stringify(newTeam));
+
+      this.tournamentTeamService.pushTournamentTeam(newTeam);
     }
 
   }

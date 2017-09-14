@@ -631,12 +631,8 @@ export class CreateTeamDialogComponent implements OnInit {
     this.actualTournament = data.actualTournament;
 
     this.actualTournament = data.actualTournament;
-    data.tournamentTeamRegistrations$.subscribe((teamRegs: TournamentTeam[]) => {
-      this.tournamentTeamRegistrations = teamRegs;
-    });
-    data.tournamentTeams$.subscribe((teams: TournamentTeam[]) => {
-      this.tournamentTeams = teams;
-    });
+    this.tournamentTeamRegistrations = data.tournamentTeamRegistrations;
+    this.tournamentTeams = data.tournamentTeam;
   }
 
   ngOnInit(): void {
@@ -685,13 +681,13 @@ export class CreateTeamDialogComponent implements OnInit {
 
     that.byeNotAllowed = that.createTournamentForm.get('teamName').value.toLowerCase() === 'bye';
 
-    _.each(this.tournamentTeams, function (team: TournamentTeam) {
+    _.forEach(this.tournamentTeams, function (team: TournamentTeam) {
       if (team.teamName.toLowerCase() === that.createTournamentForm.get('teamName').value.toLowerCase()) {
         that.teamNameAlreadyInUse = true;
       }
     });
 
-    _.each(this.tournamentTeamRegistrations, function (team: TournamentTeam) {
+    _.forEach(this.tournamentTeamRegistrations, function (team: TournamentTeam) {
       if (team.teamName.toLowerCase() === that.createTournamentForm.get('teamName').value.toLowerCase()) {
         that.teamNameAlreadyInUse = true;
       }

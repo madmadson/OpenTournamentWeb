@@ -70,8 +70,8 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
   private isTeamTournament: boolean;
 
 
-  constructor( private snackBar: MdSnackBar,
-               private dialog: MdDialog,
+  constructor(private snackBar: MdSnackBar,
+              private dialog: MdDialog,
               private tournamentService: TournamentService,
               private registrationService: ActualTournamentRegistrationService,
               private tournamentPlayerService: ActualTournamentPlayerService,
@@ -143,7 +143,10 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
       .debounceTime(150)
       .distinctUntilChanged()
       .subscribe(() => {
-        this.store.dispatch({type: CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION, payload: this.searchField.nativeElement.value});
+        this.store.dispatch({
+          type: CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION,
+          payload: this.searchField.nativeElement.value
+        });
       });
   }
 
@@ -205,7 +208,15 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleDeletePlayer(player: TournamentPlayer) {
-    this.tournamentPlayerService.killPlayer(player);
+
+    if (player) {
+      this.tournamentPlayerService.killPlayer(player);
+      this.snackBar.open('Player deleted successfully', '', {
+        extraClasses: ['snackBar-success'],
+        duration: 5000
+      });
+    }
+
   }
 
   handleAddArmyLists(player: TournamentPlayer) {
@@ -251,6 +262,11 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
       if (tournamentPlayer !== undefined) {
         this.tournamentPlayerService.pushTournamentPlayer(tournamentPlayer);
+
+        this.snackBar.open('Player saved successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
       }
     });
     dialogRef.afterClosed().subscribe(() => {
@@ -330,29 +346,30 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
       if (config !== undefined) {
         config.tournamentId = this.actualTournament.id;
         config.round = 1;
-        if (this.actualTournament.teamSize === 0) {
 
-          const newRankings: TournamentRanking[] =
-            this.pairingService.pushRankingForRound(config, this.allActualTournamentPlayers, []);
-          const success: boolean = this.pairingService.pushGamesForRound(config, newRankings);
+        const newRankings: TournamentRanking[] =
+          this.pairingService.pushRankingForRound(config, this.allActualTournamentPlayers, []);
+        const success: boolean = this.pairingService.pushGamesForRound(config, [], newRankings);
 
-          if (success) {
-            this.tournamentService.startTournament(config);
+        if (success) {
+          this.tournamentService.startTournament(config);
 
-            this.router.navigate(['/tournament', this.actualTournament.id, 'round', 1]);
-          } else {
+          this.router.navigate(['/tournament', this.actualTournament.id, 'round', 1]);
 
-            this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
-              extraClasses: ['snackBar-fail'],
-              duration: 5000
-            });
-
-            this.pairingService.killRankingsForRound(config);
-            this.pairingService.killGamesForRound(config);
-          }
+          this.snackBar.open('Round created successfully.', '', {
+            extraClasses: ['snackBar-success'],
+            duration: 5000
+          });
 
         } else {
-          // this.onStartTeamTournament.emit(config);
+
+          this.snackBar.open('Failed to create Parings. Check Pairing Options.', '', {
+            extraClasses: ['snackBar-fail'],
+            duration: 5000
+          });
+
+          this.pairingService.killRankingsForRound(config);
+          this.pairingService.killGamesForRound(config);
         }
       }
     });
@@ -365,9 +382,9 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
   createRandomPlayers() {
 
-    for (let i = 0; i < 100; i++) {
+    const allFactions = getAllFactions();
 
-      const allFactions = getAllFactions();
+    for (let i = 0; i < 100; i++) {
       const randomFaction = allFactions[Math.floor(Math.random() * allFactions.length)];
 
       const newPlayer = new TournamentPlayer(this.actualTournament.id, '', '', '', 'GeneratedPlayer ' + (i + 1), '', '', '', '', 0, randomFaction, 0);

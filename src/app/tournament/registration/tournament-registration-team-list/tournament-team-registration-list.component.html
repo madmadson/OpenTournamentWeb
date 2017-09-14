@@ -15,19 +15,12 @@
         Status
       </md-header-cell>
       <md-cell *cdkCellDef="let team" class="teamStatus-column">
-        <button *ngIf="userPlayerData && teamJoinAble(team) && !smallScreen && !team.isAcceptedTournamentTeam"
+        <button *ngIf="userPlayerData && teamJoinAble(team) && !team.isAcceptedTournamentTeam"
                 (click)="joinTeam($event, team)"
                 class="color-positive-background"
                 md-raised-button>
           <md-icon>add</md-icon>
-          Join Team
-        </button>
-        <button *ngIf="userPlayerData && teamJoinAble(team) && smallScreen && !team.isAcceptedTournamentTeam"
-                (click)="joinTeam($event, team)"
-                class="color-positive-background"
-                md-raised-button>
-          <md-icon>add</md-icon>
-          Join
+          {{smallScreen ? 'Join': 'Join Team'}}
         </button>
         <div *ngIf="actualTournament?.teamSize <= team.registeredPlayerIds.length"
              class="align-fix color-positive team-capacity">

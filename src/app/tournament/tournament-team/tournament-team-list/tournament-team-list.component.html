@@ -14,8 +14,31 @@
       </md-cell>
     </ng-container>
 
+    <ng-container cdkColumnDef="teamStatus">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="teamStatus-column">
+        Status
+      </md-header-cell>
+      <md-cell *cdkCellDef="let team" class="teamStatus-column">
+        <div *ngIf="checkTournamentFull(team)"
+             class="align-fix color-positive team-capacity">
+          Team Full
+        </div>
+        <div *ngIf="checkTournamentOver(team)"
+             class="align-fix color-negative team-capacity">
+          TeamSize Over9000!
+        </div>
+        <button *ngIf="!checkTournamentFull(team)"
+                (click)="addPlayerToTeam($event, team)"
+                class="color-positive-background"
+                md-raised-button>
+          <md-icon>add</md-icon>
+          Add Player
+        </button>
+      </md-cell>
+    </ng-container>
 
-    <ng-container *ngIf="!smallScreen"  cdkColumnDef="locality">
+
+    <ng-container *ngIf="!smallScreen" cdkColumnDef="locality">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="locality-column">
         Locality
       </md-header-cell>
@@ -29,6 +52,33 @@
         Actions
       </md-header-cell>
       <md-cell *cdkCellDef="let team" class="actions-column">
+        <md-icon *ngIf="teamDeleteRequested != team.teamName"
+                 class="list-action"
+                 (click)="showTeamArmyLists($event, team)">
+          list
+        </md-icon>
+        <md-icon *ngIf="teamDeleteRequested != team.teamName && actualTournament?.actualRound === 0"
+                 md-tooltip="Delete Team"
+                 class="color-negative list-action"
+                 (click)="teamDeleteRequestedClicked($event, team)">
+          delete
+        </md-icon>
+        <button *ngIf="teamDeleteRequested === team.teamName"
+                (click)="killTeam($event, team)"
+                class="color-negative-background"
+                type="button"
+                md-raised-button>
+          <md-icon>delete</md-icon>
+          {{smallScreen ? 'Sure?': 'Really delete?'}}
+        </button>
+        <button *ngIf="teamDeleteRequested === team.teamName"
+                (click)="teamDeleteDeclinedClicked($event)"
+                class="color-positive-background"
+                type="button"
+                md-raised-button>
+          <md-icon>not_interested</md-icon>
+          No
+        </button>
 
       </md-cell>
     </ng-container>

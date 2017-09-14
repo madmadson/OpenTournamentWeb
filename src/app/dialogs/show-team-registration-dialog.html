@@ -38,7 +38,7 @@
     <h3 mdLine>{{registration.playerName | truncate:truncateMax}} </h3>
     <p mdLine>{{registration.faction}}</p>
     <p mdLine>
-      <img class="padding-fix-icon"src="../../assets/my_crown_small.png">
+      <img src="../../assets/my_crown_small.png">
       {{registration.elo}}
     </p>
     <button md-icon-button *ngIf="isAdmin || isCoOrganizer || isCreator || myTeam">

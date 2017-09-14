@@ -11,6 +11,8 @@ import {PublishRound} from '../../../shared/dto/publish-round';
 import {Observable} from 'rxjs/Observable';
 import {TournamentService} from './actual-tournament.service';
 import {Router} from '@angular/router';
+import {TournamentTeam} from '../../../shared/model/tournament-team';
+import {Tournament} from '../../../shared/model/tournament';
 
 @Injectable()
 export class PairingService {
@@ -77,8 +79,59 @@ export class PairingService {
     return newRankings;
   }
 
+  pushTeamRankingForRound(config: TournamentManagementConfiguration,
+                          allTeams: TournamentTeam[],
+                          allTeamRankings: TournamentRanking[]): TournamentRanking[] {
 
-  pushGamesForRound(config: TournamentManagementConfiguration, newRankings: TournamentRanking[]): boolean {
+    const that = this;
+    const newRankings: TournamentRanking[] = [];
+
+
+    const lastRoundTeamRankings: TournamentRanking[] = _.filter(allTeamRankings, function (ranking: TournamentRanking) {
+      return (ranking.tournamentRound === (config.round - 1));
+    });
+
+    _.forEach(allTeams, function (team: TournamentTeam) {
+      const newTournamentRanking = new TournamentRanking(
+        team.tournamentId,
+        team.id,
+        '',
+        team.teamName,
+        '',
+        '',
+        '',
+        team.meta ? team.meta : '',
+        team.country ? team.country : '',
+        0, 0, 0, 0, 0, 0, 1, [],
+        team.droppedInRound ? team.droppedInRound : 0);
+
+      _.forEach(lastRoundTeamRankings, function (lastRoundRanking: TournamentRanking) {
+
+        if (lastRoundRanking.tournamentPlayerId === team.id) {
+
+          newTournamentRanking.score = lastRoundRanking.score;
+          newTournamentRanking.secondScore = lastRoundRanking.secondScore;
+          newTournamentRanking.sos = lastRoundRanking.sos;
+          newTournamentRanking.controlPoints = lastRoundRanking.controlPoints;
+          newTournamentRanking.victoryPoints = lastRoundRanking.victoryPoints;
+          newTournamentRanking.tournamentRound = config.round;
+          newTournamentRanking.opponentTournamentPlayerIds = lastRoundRanking.opponentTournamentPlayerIds;
+        }
+      });
+      const tournamentRankingsRef = that.afoDatabase
+        .list('tournament-team-rankings/' + newTournamentRanking.tournamentId);
+      tournamentRankingsRef.push(newTournamentRanking);
+
+      newRankings.push(newTournamentRanking);
+    });
+
+    return newRankings;
+  }
+
+
+  pushGamesForRound(config: TournamentManagementConfiguration,
+                    allRankings: TournamentRanking[],
+                    newRankings: TournamentRanking[]): boolean {
 
     const that = this;
 
@@ -89,7 +142,7 @@ export class PairingService {
 
     const newGames: TournamentGame[] = [];
 
-    const megaSuccess = this.gameMatchingService.matchGame(config, sortedRankings, newGames, true);
+    const megaSuccess = this.gameMatchingService.matchGame(config, sortedRankings, newGames, false);
 
     if (!megaSuccess) {
       return false;
@@ -118,13 +171,19 @@ export class PairingService {
         _.forEach(newRankings, function (ranking: TournamentRanking) {
 
           if (ranking.tournamentPlayerId === newGame.playerTwoTournamentPlayerId) {
+
+            const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
+              return (rank.tournamentRound === (config.round - 1) &&
+              rank.tournamentPlayerId === ranking.tournamentPlayerId);
+            });
+
             const playerTwoRankingRef = that.afoDatabase
               .object('tournament-rankings/' + newGame.tournamentId + '/' + ranking.id);
             playerTwoRankingRef.update(
               {
-                score: 1,
-                controlPoints: 3,
-                victoryPoints: 38,
+                score: lastRoundRanking.score + 1,
+                controlPoints: lastRoundRanking.controlPoints + 3,
+                victoryPoints: lastRoundRanking.victoryPoints + 38,
               });
           }
         });
@@ -139,13 +198,19 @@ export class PairingService {
         _.forEach(newRankings, function (ranking: TournamentRanking) {
 
           if (ranking.tournamentPlayerId === newGame.playerOneTournamentPlayerId) {
+
+            const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
+              return (rank.tournamentRound === (config.round - 1) &&
+                rank.tournamentPlayerId === ranking.tournamentPlayerId);
+            });
+
             const playerOneRankingRef = that.afoDatabase
               .object('tournament-rankings/' + newGame.tournamentId + '/' + ranking.id);
             playerOneRankingRef.update(
               {
-                score: 1,
-                controlPoints: 3,
-                victoryPoints: 38,
+                score: lastRoundRanking.score + 1,
+                controlPoints: lastRoundRanking.controlPoints + 3,
+                victoryPoints: lastRoundRanking.victoryPoints + 38,
               });
           }
         });
@@ -156,6 +221,108 @@ export class PairingService {
 
     return true;
   }
+
+  createTeamGamesForRound(actualTournament: Tournament,
+                          allPlayers: TournamentPlayer[],
+                          allRankings: TournamentRanking[],
+                          config: TournamentManagementConfiguration,
+                          newRankings: TournamentRanking[],
+                          newPlayerRankings: TournamentRanking[]): boolean {
+    const that = this;
+
+    const shuffledRankings = _.shuffle(newRankings);
+    const rankingsWithByeIfUneven = this.addByeIfPlayersUneven(shuffledRankings);
+
+    const sortedRankings = _.orderBy(rankingsWithByeIfUneven, ['score'], ['desc']);
+
+    const newTeamGames = [];
+
+    const megaSuccess = this.gameMatchingService.matchGame(config, sortedRankings, newTeamGames, true);
+
+    if (!megaSuccess) {
+      return false;
+    }
+    _.reverse(newTeamGames);
+
+    const tournamentTeamGamesRef = this.afoDatabase
+      .list('tournament-team-games/' + config.tournamentId);
+
+    const listOfTables = _.range(1, (newTeamGames.length + 1));
+
+    _.forEach(newTeamGames, function (newTeamGame: TournamentGame) {
+
+      const randomIndex = Math.floor(Math.random() * listOfTables.length);
+      const tableNumber: number = listOfTables[randomIndex];
+      listOfTables.splice(randomIndex, 1);
+      newTeamGame.playingField = tableNumber;
+
+      if (newTeamGame.playerOneTournamentPlayerId === 'bye') {
+        newTeamGame.playerTwoScore = 1;
+        newTeamGame.playerTwoIntermediateResult = actualTournament.teamSize;
+        newTeamGame.playerTwoControlPoints = (3 * actualTournament.teamSize);
+        newTeamGame.playerTwoVictoryPoints = (38 * actualTournament.teamSize);
+        newTeamGame.finished = true;
+
+        _.forEach(newRankings, function (ranking: TournamentRanking) {
+
+          if (ranking.tournamentPlayerId === newTeamGame.playerTwoTournamentPlayerId) {
+
+            const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
+              return (rank.tournamentRound === (config.round - 1) &&
+                rank.tournamentPlayerId === ranking.tournamentPlayerId);
+            });
+
+            const playerTwoRankingRef = that.afoDatabase
+              .object('tournament-team-rankings/' + newTeamGame.tournamentId + '/' + ranking.id);
+            playerTwoRankingRef.update(
+              {
+                score: lastRoundRanking.score + 1,
+                secondScore: lastRoundRanking.secondScore + actualTournament.teamSize,
+                controlPoints: lastRoundRanking.controlPoints + (actualTournament.teamSize * 3),
+                victoryPoints: lastRoundRanking.victoryPoints + (actualTournament.teamSize * 38)
+              });
+          }
+        });
+      }
+
+      if (newTeamGame.playerTwoTournamentPlayerId === 'bye') {
+        newTeamGame.playerOneScore = 1;
+        newTeamGame.playerOneIntermediateResult = actualTournament.teamSize;
+        newTeamGame.playerOneControlPoints = (3 * actualTournament.teamSize);
+        newTeamGame.playerOneVictoryPoints = (38 + actualTournament.teamSize);
+        newTeamGame.finished = true;
+
+        _.forEach(newRankings, function (ranking: TournamentRanking) {
+
+          if (ranking.tournamentPlayerId === newTeamGame.playerOneTournamentPlayerId) {
+
+            const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
+              return (rank.tournamentRound === (config.round - 1) &&
+                rank.tournamentPlayerId === ranking.tournamentPlayerId);
+            });
+
+            const playerOneRankingRef = that.afoDatabase
+              .object('tournament-team-rankings/' + newTeamGame.tournamentId + '/' + ranking.id);
+            playerOneRankingRef.update(
+              {
+                score: lastRoundRanking.score + 1,
+                secondScore: lastRoundRanking.secondScore + actualTournament.teamSize,
+                controlPoints: lastRoundRanking.controlPoints + (actualTournament.teamSize * 3),
+                victoryPoints: lastRoundRanking.victoryPoints + (actualTournament.teamSize * 38)
+              });
+          }
+        });
+      }
+
+      tournamentTeamGamesRef.push(newTeamGame);
+
+      that.createPlayerGamesForTeamMatch(newTeamGame, allRankings, newPlayerRankings, allPlayers, true);
+    });
+
+    return true;
+
+  }
+
 
   private addByeIfPlayersUneven(sortedRankings: TournamentRanking[]): TournamentRanking[] {
 
@@ -192,7 +359,21 @@ export class PairingService {
           this.afoDatabase.object('tournament-games/' + config.tournamentId + '/' + game.$key).remove();
         }
       });
-      console.log('all games killed');
+      console.log('all games for round ' + config.round + ' killed');
+    });
+    return query;
+  }
+
+  killTeamGamesForRound(config: TournamentManagementConfiguration): Observable<any[]> {
+
+    const query = this.afoDatabase.list('tournament-team-games/' + config.tournamentId).take(1);
+    query.subscribe((gamesRef: any) => {
+      gamesRef.forEach((game) => {
+        if (game.tournamentRound === config.round) {
+          this.afoDatabase.object('tournament-team-games/' + config.tournamentId + '/' + game.$key).remove();
+        }
+      });
+      console.log('all team games for round ' + config.round + ' killed');
     });
     return query;
   }
@@ -207,6 +388,21 @@ export class PairingService {
         }
       });
       console.log('all rankings for round ' + config.round + ' killed');
+    });
+
+    return query;
+  }
+
+  killTeamRankingsForRound(config: TournamentManagementConfiguration): Observable<any[]> {
+
+    const query = this.afoDatabase.list('tournament-team-rankings/' + config.tournamentId).take(1);
+    query.subscribe((rankingRef: any) => {
+      rankingRef.forEach((ranking) => {
+        if (ranking.tournamentRound === config.round) {
+          this.afoDatabase.object('tournament-team-rankings/' + config.tournamentId + '/' + ranking.$key).remove();
+        }
+      });
+      console.log('all team rankings for round ' + config.round + ' killed');
     });
 
     return query;
@@ -241,7 +437,7 @@ export class PairingService {
       })
       .subscribe((r) => {
         const newRankings: TournamentRanking[] = this.pushRankingForRound(config, allPlayers, allRankings);
-        const success: boolean = this.pushGamesForRound(config, newRankings);
+        const success: boolean = this.pushGamesForRound(config, allRankings, newRankings);
 
         if (!success) {
           this.killRankingsForRound(config);
@@ -261,7 +457,7 @@ export class PairingService {
       })
       .subscribe(() => {
         const newRankings: TournamentRanking[] = this.pushRankingForRound(config, allPlayers, allRankings);
-        const success: boolean = this.pushGamesForRound(config, newRankings);
+        const success: boolean = this.pushGamesForRound(config, allRankings, newRankings);
 
         if (success) {
           console.log('pairNewRound successfull');
@@ -272,5 +468,131 @@ export class PairingService {
           this.killRankingsForRound(config);
         }
       });
+  }
+
+  createPlayerGamesForTeamMatch(teamMatch: TournamentGame,
+                                allRankings: TournamentRanking[],
+                                newPlayerRankings: TournamentRanking[],
+                                allPlayers: TournamentPlayer[],
+                                debug: boolean) {
+
+    const that = this;
+
+    const teamGamesRef = this.afoDatabase.list('tournament-games/' + teamMatch.tournamentId);
+
+    const teamOnePlayers = _.filter(allPlayers, function (player: TournamentPlayer) {
+      return teamMatch.playerOnePlayerName === player.teamName;
+    });
+    const teamTwoPlayers = _.filter(allPlayers, function (player: TournamentPlayer) {
+      return teamMatch.playerTwoPlayerName === player.teamName;
+    });
+
+    if (teamMatch.playerOneTournamentPlayerId === 'bye') {
+      _.forEach(teamTwoPlayers, function (playerTwo: TournamentPlayer, index: number) {
+        const newTeamGame = new TournamentGame(
+          teamMatch.tournamentId,
+          '',
+          'bye',
+          'Bye',
+          'Bye',
+          0,
+          '',
+          0, 0, 0, '', 0, 0,
+          playerTwo.playerId ? playerTwo.playerId : '', playerTwo.id,
+          playerTwo.playerName, playerTwo.teamName,
+          playerTwo.elo ? playerTwo.elo : 0, playerTwo.faction,
+          1, 3, 38, '', 0, 0,
+          teamMatch.tournamentRound, index + 1, true, '');
+
+        teamGamesRef.push(newTeamGame);
+
+        _.forEach(newPlayerRankings, function (ranking: TournamentRanking) {
+
+          if (ranking.tournamentPlayerId === newTeamGame.playerTwoTournamentPlayerId) {
+
+            const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
+              return (rank.tournamentRound === (teamMatch.tournamentRound - 1) &&
+                rank.tournamentPlayerId === ranking.tournamentPlayerId);
+            });
+
+            const playerOneRankingRef = that.afoDatabase
+              .object('tournament-rankings/' + newTeamGame.tournamentId + '/' + ranking.id);
+            playerOneRankingRef.update(
+              {
+                score: lastRoundRanking.score + 1,
+                controlPoints: lastRoundRanking.controlPoints + 3,
+                victoryPoints: lastRoundRanking.victoryPoints + 38
+              });
+          }
+        });
+      });
+    }
+
+    if (teamMatch.playerTwoTournamentPlayerId === 'bye') {
+      _.forEach(teamOnePlayers, function (playerOne: TournamentPlayer, index: number) {
+        const newTeamGame = new TournamentGame(
+          teamMatch.tournamentId,
+          playerOne.playerId ? playerOne.playerId : '', playerOne.id,
+          playerOne.playerName, playerOne.teamName,
+          playerOne.elo ? playerOne.elo : 0, playerOne.faction,
+          1, 3, 38, '', 0, 0,
+          '',
+          'bye',
+          'Bye',
+          'Bye',
+          0,
+          '',
+          0, 0, 0, '', 0, 0,
+          teamMatch.tournamentRound, index + 1, true, '');
+
+        teamGamesRef.push(newTeamGame);
+
+        _.forEach(newPlayerRankings, function (ranking: TournamentRanking) {
+
+          if (ranking.tournamentPlayerId === newTeamGame.playerOneTournamentPlayerId) {
+
+            const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
+              return (rank.tournamentRound === (teamMatch.tournamentRound - 1) &&
+                rank.tournamentPlayerId === ranking.tournamentPlayerId);
+            });
+
+            const playerOneRankingRef = that.afoDatabase
+              .object('tournament-rankings/' + newTeamGame.tournamentId + '/' + ranking.id);
+            playerOneRankingRef.update(
+              {
+                score: lastRoundRanking.score + 1,
+                controlPoints: lastRoundRanking.controlPoints + 3,
+                victoryPoints: lastRoundRanking.victoryPoints + 38
+              });
+          }
+        });
+      });
+    }
+
+    if (teamMatch.playerOneTournamentPlayerId !== 'bye' && teamMatch.playerTwoTournamentPlayerId !== 'bye') {
+      _.forEach(teamOnePlayers, function (playerOne: TournamentPlayer, index: number) {
+
+        const newPlayerTeamGame = new TournamentGame(
+          teamMatch.tournamentId,
+          playerOne.playerId ? playerOne.playerId : '', playerOne.id,
+          playerOne.playerName, playerOne.teamName,
+          playerOne.elo ? playerOne.elo : 0, playerOne.faction,
+          0, 0, 0, '', 0, 0,
+          teamTwoPlayers[index].playerId ? teamTwoPlayers[index].playerId : '',
+          teamTwoPlayers[index].id,
+          teamTwoPlayers[index].playerName,
+          teamTwoPlayers[index].teamName,
+          teamTwoPlayers[index].elo ? teamTwoPlayers[index].elo : 0,
+          teamTwoPlayers[index].faction,
+          0, 0, 0, '', 0, 0,
+          teamMatch.tournamentRound, index + 1, false, '');
+
+        if (debug) {
+          console.log('found game : ' + newPlayerTeamGame.playerOnePlayerName + ' VS ' + newPlayerTeamGame.playerTwoPlayerName);
+        }
+
+        teamGamesRef.push(newPlayerTeamGame);
+      });
+    }
   }
 }
