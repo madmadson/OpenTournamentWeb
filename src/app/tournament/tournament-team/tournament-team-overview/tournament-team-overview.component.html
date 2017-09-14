@@ -59,9 +59,10 @@
       Start Tournament
     </button>
 
-    <button (click)="kill()"
+    <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
+            (click)="kill()"
             type="button"
-            class=" color-positive-background action-button"
+            class=" color-negative-background action-button"
             md-raised-button>
       <md-icon>play_arrow</md-icon>
       KILL

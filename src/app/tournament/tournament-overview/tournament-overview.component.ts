@@ -25,7 +25,6 @@ import {
   PublishRoundAction,
   RegistrationAcceptAction,
   RegistrationEraseAction,
-  RegistrationPushAction,
   ScenarioSelectedAction,
   ScenarioSelectedTeamTournamentAction,
   SwapPlayerAction,
@@ -88,7 +87,6 @@ import {CoOrganizatorPush} from '../../../../shared/dto/co-organizator-push';
 import {TeamUpdate} from '../../../../shared/dto/team-update';
 import {AppState} from '../../store/reducers/index';
 import {TournamentService} from '../actual-tournament.service';
-import {ActualTournamentRegistrationService} from "../actual-tournament-registration.service";
 
 @Component({
   selector: 'tournament-overview',
@@ -133,7 +131,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
 
   constructor(private tournamentService: TournamentService,
-              private registrationService: ActualTournamentRegistrationService,
+
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
               private messageService: GlobalEventService,
@@ -150,7 +148,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
     this.activeRouter.params.subscribe(
       params => {
         this.tournamentService.subscribeOnFirebase(params['id']);
-        this.registrationService.subscribeOnFirebase(params['id']);
+        // this.registrationService.subscribeOnFirebase(params['id']);
       }
     );
 
@@ -243,7 +241,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.tournamentService.unsubscribeOnFirebase();
-    this.registrationService.unsubscribeOnFirebase();
+   // this.registrationService.unsubscribeOnFirebase();
     this.fullScreenModeSub.unsubscribe();
     this.swapPlayerModeSub.unsubscribe();
   }
@@ -383,7 +381,7 @@ export class TournamentOverviewComponent implements OnInit, OnDestroy {
 
   handleAddTournamentRegistration(registrationPush: RegistrationPush) {
     console.log('add reg ' + JSON.stringify(registrationPush));
-    this.store.dispatch(new RegistrationPushAction(registrationPush));
+   //  this.store.dispatch(new RegistrationPushAction(registrationPush));
   }
 
   handleAddArmyListForRegistration(armyListRegistrationPush: ArmyListRegistrationPush) {

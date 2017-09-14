@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import {TournamentPlayer} from './tournament-player';
 
 export class TournamentGame {
 
@@ -120,4 +121,45 @@ export function clearTournamentGame(gameBefore: TournamentGame): TournamentGame 
   playerGameToClear.finished = false;
 
   return playerGameToClear;
+}
+
+
+export function getGameVsBye(player: TournamentPlayer,
+                             firstPlayerIsBye: boolean,
+                             roundOfGame: number,
+                             playingField: number): TournamentGame {
+
+  if (firstPlayerIsBye) {
+    return new TournamentGame(
+      player.tournamentId,
+      '',
+      'bye',
+      'Bye',
+      'Bye',
+      0,
+      '',
+      0, 0, 0, '', 0, 0,
+      player.playerId ? player.playerId : '', player.id,
+      player.playerName, player.teamName,
+      player.elo ? player.elo : 0, player.faction,
+      1, 3, 38, '', 0, 0,
+      roundOfGame, playingField, true, '');
+  } else {
+    return new TournamentGame(
+      player.tournamentId,
+      player.playerId ? player.playerId : '', player.id,
+      player.playerName, player.teamName,
+      player.elo ? player.elo : 0, player.faction,
+      1, 3, 38, '', 0, 0,
+      '',
+      'bye',
+      'Bye',
+      'Bye',
+      0,
+      '',
+      0, 0, 0, '', 0, 0,
+      roundOfGame, playingField, true, '');
+  }
+
+
 }

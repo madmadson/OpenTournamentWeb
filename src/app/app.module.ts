@@ -161,6 +161,9 @@ import {CreateTeamRegistrationDialogComponent} from './dialogs/team/create-team-
 import {TournamentTeamRegistrationListComponent} from './tournament/registration/tournament-registration-team-list/tournament-team-registration-list.component';
 import {TournamentTeamOverviewComponent} from './tournament/tournament-team/tournament-team-overview/tournament-team-overview.component';
 import {TournamentTeamListComponent} from "app/tournament/tournament-team/tournament-team-list/tournament-team-list.component";
+import {TeamPairingService} from "app/tournament/team-pairing.service";
+import {TournamentTeamGamesComponent} from "app/tournament/round/tournament-team-game-list/tournament-team-games.component";
+import {ActualTournamentTeamGamesService} from "app/tournament/actual-tournament-team-games.service";
 
 
 @NgModule({
@@ -234,6 +237,7 @@ import {TournamentTeamListComponent} from "app/tournament/tournament-team/tourna
     TournamentRankingsOverviewComponent,
     TournamentRankingsComponent,
     TruncatePipe,
+    TournamentTeamGamesComponent,
 
     TournamentFinalRankingsOverviewComponent,
 
@@ -299,7 +303,9 @@ import {TournamentTeamListComponent} from "app/tournament/tournament-team/tourna
     SwappingService,
     EloService,
     ActualTournamentTeamRegistrationService,
-    ActualTournamentTeamsService
+    ActualTournamentTeamsService,
+    TeamPairingService,
+    ActualTournamentTeamGamesService
   ],
   entryComponents: [
     AddArmyListsDialogComponent,

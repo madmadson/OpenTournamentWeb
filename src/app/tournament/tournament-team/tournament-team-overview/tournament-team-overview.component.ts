@@ -38,6 +38,7 @@ import {TournamentTeam} from '../../../../../shared/model/tournament-team';
 import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
 import {CreateTeamDialogComponent} from '../../tournament-preparation/tournament-preparation.component';
 import {ActualTournamentTeamRegistrationService} from '../../actual-tournament-team-registration.service';
+import {TeamPairingService} from "../../team-pairing.service";
 
 
 @Component({
@@ -96,6 +97,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
               private tournamentTeamRegService: ActualTournamentTeamRegistrationService,
               private armyListService: ActualTournamentArmyListService,
               private pairingService: PairingService,
+              private teamPairingService: TeamPairingService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
               private router: Router) {
@@ -382,16 +384,16 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
           this.pairingService.pushRankingForRound(config, this.allActualTournamentPlayers, []);
 
         const newRankings: TournamentRanking[] =
-          this.pairingService.pushTeamRankingForRound(config, this.allTournamentTeams, []);
-        const success: boolean = this.pairingService.createTeamGamesForRound(
+          this.teamPairingService.pushTeamRankingForRound(config, this.allTournamentTeams, []);
+        const success: boolean = this.teamPairingService.createTeamGamesForRound(
           this.actualTournament, this.allActualTournamentPlayers, [], config,
           newRankings, newPlayerRankings);
 
         if (success) {
-          // this.tournamentService.startTournament(config);
-          //
-          // this.router.navigate(['/tournament', this.actualTournament.id, 'round', 1]);
-          //
+          this.tournamentService.startTournament(config);
+
+          this.router.navigate(['/tournament', this.actualTournament.id, 'round', 1]);
+
           console.log('Success!');
         } else {
 
@@ -401,9 +403,9 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
           });
 
           this.pairingService.killRankingsForRound(config);
-          this.pairingService.killTeamRankingsForRound(config);
+          this.teamPairingService.killTeamRankingsForRound(config);
           this.pairingService.killGamesForRound(config);
-          this.pairingService.killTeamGamesForRound(config);
+          this.teamPairingService.killTeamGamesForRound(config);
         }
 
 
@@ -427,9 +429,9 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     };
 
     this.pairingService.killRankingsForRound(conf);
-    this.pairingService.killTeamRankingsForRound(conf);
+    this.teamPairingService.killTeamRankingsForRound(conf);
     this.pairingService.killGamesForRound(conf);
-    this.pairingService.killTeamGamesForRound(conf);
+    this.teamPairingService.killTeamGamesForRound(conf);
   }
 
   createRandomTeams() {
