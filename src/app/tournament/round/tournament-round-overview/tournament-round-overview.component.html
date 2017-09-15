@@ -19,10 +19,15 @@
             (click)="router.navigate(['/tournament', actualTournament?.id, 'registrations']);">
       Go to -> Registrations
     </button>
-    <button *ngIf="isAdmin || isCoOrganizer"
+    <button *ngIf="(isAdmin || isCoOrganizer) && !teamTournament"
             md-menu-item
             (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
       Go to -> Players
+    </button>
+    <button *ngIf="(isAdmin || isCoOrganizer) && teamTournament"
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'teams']);">
+      Go to -> Teams
     </button>
     <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
             md-menu-item
@@ -42,7 +47,7 @@
 
 <ng-container *ngIf="round <= actualTournament?.actualRound">
   <h2 class="heading">
-    Round {{round}} Team: {{isTeamTournament}}
+    Round {{round}} Team: {{isTeamTournament}} MyTeam: {{myTeam}}
   </h2>
 
 
@@ -51,69 +56,78 @@
     Page will reload when he publish the new round.
   </h3>
   <div class="action-card-container">
-    <ng-container *ngIf="(round === actualTournament?.actualRound) && (isAdmin || isCoOrganizer)">
-      <button *ngIf="(finishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
-              (click)="openPairAgainDialog()"
-              type="button"
-              class="color-positive-background action-button"
-              md-raised-button>
-        <md-icon>undo</md-icon>
-        Pair Again
-      </button>
-      <button *ngIf="(unfinishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
-              (click)="openNewRoundDialog()"
-              type="button"
-              class="color-positive-background action-button"
-              md-raised-button>
-        <md-icon>play_arrow</md-icon>
-        New Round
-      </button>
-      <button *ngIf="(unfinishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
-              (click)="openFinishTournamentDialog()"
-              type="button"
-              class="color-positive-background action-button"
-              md-raised-button>
-        <md-icon>flag</md-icon>
-        End Tournament
-      </button>
-      <button *ngIf="(actualTournament$ | async).visibleRound < (actualTournament$ | async).actualRound"
-              (click)="publishRound()"
-              type="button"
-              class="color-positive-background action-button"
-              md-raised-button>
-        <md-icon>cloud_upload</md-icon>
-        Publish Round
-      </button>
-      <button *ngIf="(isAdmin || isCoOrganizer) && !actualTournament?.finished"
-              (click)="openKillRoundDialog()"
-              type="button"
-              class="color-negative-background action-button"
-              md-raised-button>
-        <md-icon>warning</md-icon>
-        Kill Round
-      </button>
-      <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
-              (click)="doRandomGameResultsForAllGames()"
-              type="button"
-              class="color-negative-background action-button"
-              md-raised-button>
-        <md-icon>warning</md-icon>
-        !Random Results!
-      </button>
-    </ng-container>
-    <button (click)="showRankingsOfRound()"
-            type="button"
-            class="color-info-background action-button"
-            md-raised-button>
-      <md-icon>list</md-icon>
-      Show Rankings
-    </button>
+    <md-card class="action-card action-button-wrapper">
+      <ng-container *ngIf="(round === actualTournament?.actualRound) && (isAdmin || isCoOrganizer)">
 
+        <button *ngIf="(finishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
+                (click)="openPairAgainDialog()"
+                type="button"
+                class="color-positive-background action-button"
+                md-raised-button>
+          <md-icon>undo</md-icon>
+          Pair Again
+        </button>
+        <button *ngIf="(unfinishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
+                (click)="openNewRoundDialog()"
+                type="button"
+                class="color-positive-background action-button"
+                md-raised-button>
+          <md-icon>play_arrow</md-icon>
+          New Round
+        </button>
+        <button *ngIf="(unfinishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
+                (click)="openFinishTournamentDialog()"
+                type="button"
+                class="color-positive-background action-button"
+                md-raised-button>
+          <md-icon>flag</md-icon>
+          End Tournament
+        </button>
+        <button *ngIf="(actualTournament$ | async).visibleRound < (actualTournament$ | async).actualRound"
+                (click)="publishRound()"
+                type="button"
+                class="color-positive-background action-button"
+                md-raised-button>
+          <md-icon>cloud_upload</md-icon>
+          Publish Round
+        </button>
+        <button *ngIf="(isAdmin || isCoOrganizer) && !actualTournament?.finished"
+                (click)="openKillRoundDialog()"
+                type="button"
+                class="color-negative-background action-button"
+                md-raised-button>
+          <md-icon>warning</md-icon>
+          Kill Round
+        </button>
+        <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
+                (click)="doRandomGameResultsForAllGames()"
+                type="button"
+                class="color-negative-background action-button"
+                md-raised-button>
+          <md-icon>warning</md-icon>
+          !Random Results!
+        </button>
+      </ng-container>
+      <button (click)="showRankingsOfRound()"
+              type="button"
+              class="color-info-background action-button"
+              md-raised-button>
+        <md-icon>list</md-icon>
+        Show Rankings
+      </button>
+    </md-card>
   </div>
 </ng-container>
 
-<ng-container *ngIf="(loadGames$ | async)">
+<ng-container *ngIf="(loadGames$ | async) && !teamTournament">
   <div class="heading">Load Games...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="(loadTeamGames$ | async) && teamTournament">
+  <div class="heading">Load TeamGames...</div>
   <div class="loading-spinner-container">
     <md-spinner></md-spinner>
   </div>
@@ -121,7 +135,8 @@
 
 <ng-container *ngIf="(!isAdmin && !isCoOrganizer) &&
                       actualTournament?.actualRound > actualTournament?.visibleRound &&
-                      (allTournamentGamesFiltered$ | async).length > 0">
+                      ((allTournamentGamesFiltered$ | async)?.length > 0 ||
+                      (allTournamentTeamGamesFiltered$ | async)?.length > 0)">
   <md-input-container
     class="full-width-with-padding">
     <input mdInput disabled placeholder="Scenario" value="{{selectedScenario}}">
@@ -156,7 +171,7 @@
           type="button"
           md-tooltip="Show only MyGame" (click)="showOnlyMyGame(true)"
           md-raised-button>
-    Show only MyGame
+    Show only {{isTeamTournament ? 'TeamMatch' : 'MyGame'}}
   </button>
   <button *ngIf="isTournamentPlayer && (onlyMyGameFilter$ | async)"
           class="my-game-button color-secondary-background"
@@ -172,7 +187,7 @@
 
 <ng-container *ngIf="!isTeamTournament">
   <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
-    <tournament-games *ngIf="(allTournamentGamesFiltered$ | async).length > 0 && actualTournament"
+    <tournament-games *ngIf="(allTournamentGamesFiltered$ | async)?.length > 0 && actualTournament"
                       [isAdmin]="isAdmin"
                       [isCoOrganizer]="isCoOrganizer"
                       [actualTournament]="actualTournament"
@@ -190,19 +205,22 @@
 </ng-container>
 
 <ng-container *ngIf="isTeamTournament">
+
   <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
-    <tournament-team-games *ngIf="(allTournamentGamesFiltered$ | async).length > 0 && actualTournament"
-                      [isAdmin]="isAdmin"
-                      [isCoOrganizer]="isCoOrganizer"
-                      [actualTournament]="actualTournament"
-                      [gamesForRound]="teamGamesForRound$ | async"
-                      [rankingsForRound]="rankingsForRound$ | async"
-                      [armyLists]="allArmyLists$ | async"
-                      [userPlayerData]="userPlayerData"
-                      (onGameResultEntered)="handleGameResultEntered($event)"
-                      (onDeletePlayer)="handleDeletePlayer($event)"
-                      (onAddArmyLists)="handleAddArmyLists($event)"
-                      (onClearPlayerGameResult)="handleClearPlayerGameResult($event)">
+    <tournament-team-games *ngIf="(allTournamentTeamGamesFiltered$ | async)?.length > 0 && actualTournament"
+                           [isAdmin]="isAdmin"
+                           [isCoOrganizer]="isCoOrganizer"
+                           [myTeam]="myTeam"
+                           [actualTournament]="actualTournament"
+                           [teamGamesForRound]="allTournamentTeamGamesFiltered$ | async"
+                           [playerGamesForRound]="gamesForRound$ | async"
+                           [rankingsForRound]="rankingsForRound$ | async"
+                           [armyLists]="allArmyLists$ | async"
+                           [userPlayerData]="userPlayerData"
+                           (onGameResultEntered)="handleGameResultEntered($event)"
+                           (onDeletePlayer)="handleDeletePlayer($event)"
+                           (onAddArmyLists)="handleAddArmyLists($event)"
+                           (onClearTeamGameResult)="handleClearTeamGameResult($event)">
     </tournament-team-games>
 
   </ng-container>

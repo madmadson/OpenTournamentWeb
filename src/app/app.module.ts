@@ -160,10 +160,11 @@ import {ActualTournamentTeamsService} from 'app/tournament/actual-tournament-tea
 import {CreateTeamRegistrationDialogComponent} from './dialogs/team/create-team-registration-dialog';
 import {TournamentTeamRegistrationListComponent} from './tournament/registration/tournament-registration-team-list/tournament-team-registration-list.component';
 import {TournamentTeamOverviewComponent} from './tournament/tournament-team/tournament-team-overview/tournament-team-overview.component';
-import {TournamentTeamListComponent} from "app/tournament/tournament-team/tournament-team-list/tournament-team-list.component";
-import {TeamPairingService} from "app/tournament/team-pairing.service";
-import {TournamentTeamGamesComponent} from "app/tournament/round/tournament-team-game-list/tournament-team-games.component";
-import {ActualTournamentTeamGamesService} from "app/tournament/actual-tournament-team-games.service";
+import {TournamentTeamListComponent} from 'app/tournament/tournament-team/tournament-team-list/tournament-team-list.component';
+import {TeamPairingService} from 'app/tournament/team-pairing.service';
+import {TournamentTeamGamesComponent} from 'app/tournament/round/tournament-team-game-list/tournament-team-games.component';
+import {ActualTournamentTeamGamesService} from 'app/tournament/actual-tournament-team-games.service';
+import {ActualTournamentTeamRankingService} from './tournament/actual-tournament-team-ranking.service';
 
 
 @NgModule({
@@ -305,7 +306,8 @@ import {ActualTournamentTeamGamesService} from "app/tournament/actual-tournament
     ActualTournamentTeamRegistrationService,
     ActualTournamentTeamsService,
     TeamPairingService,
-    ActualTournamentTeamGamesService
+    ActualTournamentTeamGamesService,
+    ActualTournamentTeamRankingService
   ],
   entryComponents: [
     AddArmyListsDialogComponent,

@@ -4,7 +4,7 @@
 
     <ng-container cdkColumnDef="playingField">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="playing-field-column">
-        Table Hallo
+        Table
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="playing-field-column">
         {{game.playingField}}
@@ -12,23 +12,23 @@
     </ng-container>
 
 
-    <ng-container cdkColumnDef="playerOnePlayerName">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
-        <div>Player 1</div>
+    <ng-container cdkColumnDef="teamOneTeamName">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="team-column">
+        Team 1
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="player-column right-align"
+      <md-cell *cdkCellDef="let game" class="team-column right-align"
                [ngClass]="{
-               'game-table-won': (playerOneWon(game)),
-               'game-table-lost': (playerTwoWon(game)),
+               'game-table-lead': (teamOneWon(game)),
+               'game-table-tie': (teamTie(game)),
+               'game-table-behind': (teamTwoWon(game)),
                'drag-started':  draggedTournamentPlayerId === game.playerOneTournamentPlayerId,
                'drop-possible': draggedTournamentPlayerId && dropPossible(game, game.playerOneTournamentPlayerId),
                'drop-not-possible':  draggedTournamentPlayerId && !dropPossible(game, game.playerOneTournamentPlayerId)
                }"
                (click)="confirmDropPlayer($event, game, game.playerOneTournamentPlayerId)">
-        <div class="big-text">{{game.playerOnePlayerName | truncate:truncateMax}}</div>
+        <div>{{game.playerOnePlayerName | truncate:truncateMax}}</div>
         <div class="small-text">
           (SC:{{game.playerOneScore}}/CP:{{game.playerOneControlPoints}}/VP:{{game.playerOneVictoryPoints}})
-          {{game.playerOneArmyList | truncate:truncateMax}}
         </div>
       </md-cell>
     </ng-container>
@@ -52,10 +52,28 @@
       </md-cell>
     </ng-container>
 
+    <ng-container cdkColumnDef="result-team-one">
+      <md-header-cell *cdkHeaderCellDef class="result-team-column">
+        SGW Team1
+      </md-header-cell>
+      <md-cell *cdkCellDef="let game" class="result-team-column">
+        {{game.playerOneIntermediateResult}}
+      </md-cell>
+    </ng-container>
+
     <ng-container cdkColumnDef="vs">
       <md-header-cell *cdkHeaderCellDef class="vs-column">
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="vs-column">VS</md-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="result-team-two">
+      <md-header-cell *cdkHeaderCellDef class="result-team-column">
+        SGW Team2
+      </md-header-cell>
+      <md-cell *cdkCellDef="let game" class="result-team-column">
+        {{game.playerTwoIntermediateResult}}
+      </md-cell>
     </ng-container>
 
     <ng-container cdkColumnDef="swapPlayerTwo">
@@ -76,25 +94,23 @@
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="playerTwoPlayerName">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
-        Player 2
+    <ng-container cdkColumnDef="teamTwoTeamName">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="team-column">
+        Team 2
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="player-column"
+      <md-cell *cdkCellDef="let game" class="team-column"
                [ngClass]="{
-               'game-table-won': (playerTwoWon(game)),
-               'game-table-lost': (playerOneWon(game)),
+                'game-table-lead': (teamOneWon(game)),
+               'game-table-tie': (teamTie(game)),
+               'game-table-behind': (teamTwoWon(game)),
                'drag-started': draggedTournamentPlayerId === game.playerTwoTournamentPlayerId,
                'drop-possible':draggedTournamentPlayerId && dropPossible(game, game.playerTwoTournamentPlayerId),
                'drop-not-possible': draggedTournamentPlayerId && !dropPossible(game, game.playerTwoTournamentPlayerId)
                }"
                (click)="confirmDropPlayer($event, game, game.playerTwoTournamentPlayerId)">
-        <div class="big-text">{{game.playerTwoPlayerName | truncate:truncateMax}}</div>
+        <div>{{game.playerTwoPlayerName | truncate:truncateMax}}</div>
         <div class="small-text">
           (SC:{{game.playerTwoScore}}/CP:{{game.playerTwoControlPoints}}/VP:{{game.playerTwoVictoryPoints}})
-        </div>
-        <div class="small-text">
-          {{game.playerTwoArmyList | truncate:truncateMax}}
         </div>
       </md-cell>
     </ng-container>
@@ -138,8 +154,8 @@
       <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
       <md-row *cdkRowDef="let game; columns: displayedColumns;  let even = even"
               [ngClass]="{'even': even,
-                          'my-item':isItMyGame(game),
-                          'clickable-row': (!draggedTournamentPlayerId && (isItMyGame(game) || isAdmin || isCoOrganizer) &&  !actualTournament?.finished)}"
+                          'my-item':isItMyTeam(game),
+                          'clickable-row': (!draggedTournamentPlayerId && (isItMyTeam(game) || isAdmin || isCoOrganizer) &&  !actualTournament?.finished)}"
               (click)="openGameResultDialog(game)">
       </md-row>
     </ng-container>

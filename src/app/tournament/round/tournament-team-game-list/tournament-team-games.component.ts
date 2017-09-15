@@ -25,6 +25,8 @@ import {Player} from '../../../../../shared/model/player';
 import {GamesDatabase, GamesDataSource} from '../../../../../shared/table-model/game';
 import {GameResultDialogComponent} from '../../../dialogs/game-result-dialog';
 import {SwappingService} from '../../swapping.service';
+import {TeamMatchClearModel} from '../../../../../shared/dto/team-match-clear';
+import {TournamentTeam} from '../../../../../shared/model/tournament-team';
 
 
 @Component({
@@ -42,18 +44,21 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   @Input() round: number;
   @Input() teamMatch: boolean;
 
+  @Input() myTeam: string;
+
   @Input() userPlayerData: Player;
   @Input() actualTournament: Tournament;
 
   @Input() armyLists: ArmyList[];
-  @Input() gamesForRound: TournamentGame[];
+  @Input() teamGamesForRound: TournamentGame[];
+  @Input() playerGamesForRound: TournamentGame[];
   @Input() rankingsForRound: TournamentRanking[];
 
   @Output() onGameResultEntered = new EventEmitter<GameResult>();
   @Output() onSwapPlayer = new EventEmitter<SwapGames>();
   @Output() onScenarioSelected = new EventEmitter<ScenarioSelectedModel>();
 
-  @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
+  @Output() onClearTeamGameResult = new EventEmitter<TeamMatchClearModel>();
 
   draggedTournamentPlayerCurrentOpponentId: string;
 
@@ -67,8 +72,8 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   draggedTournamentPlayerId = '';
   draggedTournamentPlayerOpponentIds: string[] = [];
 
-  displayedColumns = ['playingField', 'playerOnePlayerName', 'swapPlayerOne', 'vs',
-                      'swapPlayerTwo', 'playerTwoPlayerName', 'actions'];
+  displayedColumns = ['playingField', 'teamOneTeamName', 'swapPlayerOne', 'result-team-one',
+                       'vs', 'result-team-two', 'swapPlayerTwo', 'teamTwoTeamName', 'actions'];
 
   gamesDb: GamesDatabase;
   dataSource: GamesDataSource | null;
@@ -79,6 +84,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
 
   smallScreen: boolean;
   truncateMax: number;
+
 
   constructor(private dialog: MdDialog,
               private snackBar: MdSnackBar,
@@ -99,7 +105,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
 
   ngOnInit() {
 
-    this.gamesDb = new GamesDatabase(this.gamesForRound);
+    this.gamesDb = new GamesDatabase(this.teamGamesForRound);
 
     this.dataSource = new GamesDataSource(this.gamesDb, this.sort, this.paginator);
   }
@@ -108,7 +114,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     for (const propName in changes) {
       if (changes.hasOwnProperty(propName)) {
         const change = changes[propName];
-        if (this.gamesDb && propName === 'gamesForRound') {
+        if (this.gamesDb && propName === 'teamGamesForRound') {
           this.gamesDb.resetDatabase(change.currentValue);
         }
       }
@@ -116,21 +122,24 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   }
 
 
-  playerOneWon(game: TournamentGame): boolean {
-    return game.playerOneScore > game.playerTwoScore;
+  teamOneWon(game: TournamentGame): boolean {
+    return game.playerOneIntermediateResult > game.playerTwoIntermediateResult;
+  }
+
+  teamTie(game: TournamentGame): boolean {
+    return game.playerOneIntermediateResult === game.playerTwoIntermediateResult;
 
   }
 
-  playerTwoWon(game: TournamentGame): boolean {
-    return game.playerOneScore < game.playerTwoScore;
+  teamTwoWon(game: TournamentGame): boolean {
+    return game.playerOneIntermediateResult < game.playerTwoIntermediateResult;
 
   }
 
-  isItMyGame(game: TournamentGame) {
-    if (this.userPlayerData) {
-      return (game.playerOnePlayerId === this.userPlayerData.id) ||
-        (game.playerTwoPlayerId === this.userPlayerData.id);
-    }
+  isItMyTeam(game: TournamentGame) {
+
+    return game.playerOneTeamName === this.myTeam ||
+      game.playerTwoTeamName === this.myTeam;
   }
 
 
@@ -140,12 +149,16 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     this.requestClearGame = game.id;
   }
 
-  clearGameResultConfirm(event: any, game: TournamentGame) {
+  clearGameResultConfirm(event: any, teamMatch: TournamentGame) {
 
     event.stopPropagation();
 
     this.requestClearGame = '';
-    this.onClearPlayerGameResult.emit(game);
+
+    this.onClearTeamGameResult.emit({
+      teamMatch: teamMatch,
+      playerMatchesForTeamOne: this.getPlayerMatchesForTeamOne(teamMatch)
+    });
   }
 
   clearGameResultDecline(event: any) {
@@ -155,7 +168,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
 
   openGameResultDialog(selectedGame: TournamentGame) {
 
-    if (!this.draggedTournamentPlayerId && (this.isItMyGame(selectedGame) || this.isAdmin || this.isCoOrganizer) && !this.actualTournament.finished) {
+    if (!this.draggedTournamentPlayerId && (this.isItMyTeam(selectedGame) || this.isAdmin || this.isCoOrganizer) && !this.actualTournament.finished) {
 
       const dialogRef = this.dialog.open(GameResultDialogComponent, {
         data: {
@@ -269,5 +282,11 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     }
   }
 
+  getPlayerMatchesForTeamOne(teamMatch: TournamentGame): TournamentGame[] {
 
+    return _.filter(this.playerGamesForRound, function (playerMatch: TournamentGame) {
+
+      return teamMatch.playerOnePlayerName === playerMatch.playerOneTeamName;
+    });
+  }
 }

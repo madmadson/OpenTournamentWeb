@@ -307,4 +307,39 @@ export class TeamPairingService {
     this.killTeamGamesForRound(config);
 
   }
+
+  pairTeamRoundAgain(config: TournamentManagementConfiguration,
+                     actualTournament: Tournament,
+                     allTournamentTeams: TournamentTeam[],
+                     allPlayers: TournamentPlayer[],
+                     allPlayerRankings: TournamentRanking[],
+                     allTeamRankings: TournamentRanking[]) {
+
+    console.log('pairTeamRoundAgain');
+
+    Observable
+      .zip(this.pairingService.killRankingsForRound(config),
+           this.pairingService.killGamesForRound(config),
+           this.killTeamRankingsForRound(config),
+           this.killTeamGamesForRound(config),
+           (a: any, b: any, c: any, d: any) => {
+        return {a: a, b: b, c: c, d: d};
+      })
+      .subscribe((r) => {
+
+        const newPlayerRankings: TournamentRanking[] =
+          this.pairingService.pushRankingForRound(config, allPlayers, allPlayerRankings);
+
+        const newTeamRankings: TournamentRanking[] =
+          this.pushTeamRankingForRound(config, allTournamentTeams, allTeamRankings);
+        const success: boolean = this.createTeamGamesForRound(
+          actualTournament, allPlayers, [], config,
+          newTeamRankings, newPlayerRankings);
+
+        if (!success) {
+          this.pairingService.killRankingsForRound(config);
+          this.killTeamRankingsForRound(config);
+        }
+      });
+  }
 }

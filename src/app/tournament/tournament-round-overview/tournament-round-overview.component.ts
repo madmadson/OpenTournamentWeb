@@ -257,29 +257,29 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  openPairAgainDialog() {
-    const dialogRef = this.dialog.open(PairAgainDialogComponent, {
-      data: {
-        round: this.round,
-        teamMatch: false
-      },
-      width: '600px',
-    });
-    const eventSubscribe = dialogRef.componentInstance.onPairAgain
-      .subscribe((config: TournamentManagementConfiguration) => {
-
-        if (config !== undefined) {
-          console.log('pair again');
-          config.tournamentId = this.actualTournament.id;
-          config.round = this.round;
-          this.onPairAgain.emit(config);
-        }
-      });
-    dialogRef.afterClosed().subscribe(() => {
-
-      eventSubscribe.unsubscribe();
-    });
-  }
+  // openPairAgainDialog() {
+  //   const dialogRef = this.dialog.open(PairAgainDialogComponent, {
+  //     data: {
+  //       round: this.round,
+  //       teamMatch: false
+  //     },
+  //     width: '600px',
+  //   });
+  //   const eventSubscribe = dialogRef.componentInstance.onPairAgain
+  //     .subscribe((config: TournamentManagementConfiguration) => {
+  //
+  //       if (config !== undefined) {
+  //         console.log('pair again');
+  //         config.tournamentId = this.actualTournament.id;
+  //         config.round = this.round;
+  //         this.onPairAgain.emit(config);
+  //       }
+  //     });
+  //   dialogRef.afterClosed().subscribe(() => {
+  //
+  //     eventSubscribe.unsubscribe();
+  //   });
+  // }
 
   openNewRoundDialog() {
     const dialogRef = this.dialog.open(NewRoundDialogComponent, {

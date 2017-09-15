@@ -22,8 +22,17 @@
   flex: 1;
 }
 
-.player-column{
-  flex: 5;
+.team-column{
+  flex: 4;
+  font-weight: bold;
+}
+
+.result-team-column{
+  flex: 1;
+  font-weight: bold;
+  text-align: center;
+  margin-left: $halve_tick;
+  margin-right: $halve_tick;
 }
 
 .actions-column{
@@ -44,17 +53,21 @@
   margin-right: $halve_tick;
 }
 
-md-header-cell.mat-column-playerOnePlayerName {
+md-header-cell.mat-column-teamOneTeamName{
   display: flex;
   text-align: right;
   justify-content: flex-end;
 }
 
-.game-table-won {
+.game-table-lead {
   color:  $success_color;
 }
 
-.game-table-lost {
+.game-table-tie{
+  color: $color_secondary;
+}
+
+.game-table-behind{
   color: $fail_color;
 }
 

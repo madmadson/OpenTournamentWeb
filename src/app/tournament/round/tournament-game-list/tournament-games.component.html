@@ -11,10 +11,9 @@
       </md-cell>
     </ng-container>
 
-
     <ng-container cdkColumnDef="playerOnePlayerName">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
-        <div>Player 1</div>
+        Player 1
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="player-column right-align"
                [ngClass]="{
@@ -28,6 +27,8 @@
         <div class="big-text">{{game.playerOnePlayerName | truncate:truncateMax}}</div>
         <div class="small-text">
           (SC:{{game.playerOneScore}}/CP:{{game.playerOneControlPoints}}/VP:{{game.playerOneVictoryPoints}})
+        </div>
+        <div class="small-text">
           {{game.playerOneArmyList | truncate:truncateMax}}
         </div>
       </md-cell>
