@@ -763,7 +763,7 @@ export class TournamentService {
     registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
   }
 
-  scenarioSelected(scenarioSelected: ScenarioSelectedModel) {
+  wholeRoundScenarioSelected(scenarioSelected: ScenarioSelectedModel) {
     const query = this.afoDatabase.list('tournament-games/' + scenarioSelected.tournamentId).take(1);
 
     query.subscribe((gamesRef: any) => {

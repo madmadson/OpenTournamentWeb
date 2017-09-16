@@ -787,19 +787,19 @@ export class ActualTournamentGamesService {
 
     // const that = this;
     //
-    // const teamGamesRef = this.afoDatabase.list('tournament-games/' + teamMatch.tournamentId);
+    // const teamGamesRef = this.afoDatabase.list('tournament-games/' + isTeamMatch.tournamentId);
     //
     // const teamOnePlayers = _.filter(this.allPlayers, function (player: TournamentPlayer) {
-    //   return teamMatch.playerOnePlayerName === player.teamName;
+    //   return isTeamMatch.playerOnePlayerName === player.teamName;
     // });
     // const teamTwoPlayers = _.filter(this.allPlayers, function (player: TournamentPlayer) {
-    //   return teamMatch.playerTwoPlayerName === player.teamName;
+    //   return isTeamMatch.playerTwoPlayerName === player.teamName;
     // });
     //
-    // if (teamMatch.playerOneTournamentPlayerId === 'bye') {
+    // if (isTeamMatch.playerOneTournamentPlayerId === 'bye') {
     //   _.each(teamTwoPlayers, function (playerTwo: TournamentPlayer, index: number) {
     //     const newTeamGame = new TournamentGame(
-    //       teamMatch.tournamentId,
+    //       isTeamMatch.tournamentId,
     //       '',
     //       'bye',
     //       'Bye',
@@ -811,7 +811,7 @@ export class ActualTournamentGamesService {
     //       playerTwo.playerName, playerTwo.teamName,
     //       playerTwo.elo ? playerTwo.elo : 0, playerTwo.faction,
     //       0, 0, 0, '', 0, 0,
-    //       teamMatch.tournamentRound, index + 1, true, '');
+    //       isTeamMatch.tournamentRound, index + 1, true, '');
     //
     //     teamGamesRef.push(newTeamGame);
     //
@@ -841,10 +841,10 @@ export class ActualTournamentGamesService {
     //   });
     // }
     //
-    // if (teamMatch.playerTwoTournamentPlayerId === 'bye') {
+    // if (isTeamMatch.playerTwoTournamentPlayerId === 'bye') {
     //   _.each(teamOnePlayers, function (playerOne: TournamentPlayer, index: number) {
     //     const newTeamGame = new TournamentGame(
-    //       teamMatch.tournamentId,
+    //       isTeamMatch.tournamentId,
     //       playerOne.playerId ? playerOne.playerId : '', playerOne.id,
     //       playerOne.playerName, playerOne.teamName,
     //       playerOne.elo ? playerOne.elo : 0, playerOne.faction,
@@ -856,7 +856,7 @@ export class ActualTournamentGamesService {
     //       0,
     //       '',
     //       0, 0, 0, '', 0, 0,
-    //       teamMatch.tournamentRound, index + 1, true, '');
+    //       isTeamMatch.tournamentRound, index + 1, true, '');
     //
     //     teamGamesRef.push(newTeamGame);
     //
@@ -886,11 +886,11 @@ export class ActualTournamentGamesService {
     //     );
     //   });
     // }
-    // if (teamMatch.playerOneTournamentPlayerId !== 'bye' && teamMatch.playerTwoTournamentPlayerId !== 'bye') {
+    // if (isTeamMatch.playerOneTournamentPlayerId !== 'bye' && isTeamMatch.playerTwoTournamentPlayerId !== 'bye') {
     //   _.each(teamOnePlayers, function (playerOne: TournamentPlayer, index: number) {
     //
     //     const newTeamGame = new TournamentGame(
-    //       teamMatch.tournamentId,
+    //       isTeamMatch.tournamentId,
     //       playerOne.playerId ? playerOne.playerId : '', playerOne.id,
     //       playerOne.playerName, playerOne.teamName,
     //       playerOne.elo ? playerOne.elo : 0, playerOne.faction,
@@ -902,7 +902,7 @@ export class ActualTournamentGamesService {
     //       teamTwoPlayers[index].elo ? teamTwoPlayers[index].elo : 0,
     //       teamTwoPlayers[index].faction,
     //       0, 0, 0, '', 0, 0,
-    //       teamMatch.tournamentRound, index + 1, false, '');
+    //       isTeamMatch.tournamentRound, index + 1, false, '');
     //
     //     teamGamesRef.push(newTeamGame);
     //   });
@@ -914,7 +914,7 @@ export class ActualTournamentGamesService {
     // const that = this;
     //
     // const tournamentTeamGamesRef = this.afoDatabase
-    //   .object('tournament-team-games/' + teamMatch.tournamentId + '/' + teamMatch.id);
+    //   .object('tournament-team-games/' + isTeamMatch.tournamentId + '/' + isTeamMatch.id);
     //
     // tournamentTeamGamesRef.update({
     //   'playerOneScore': 0,
@@ -929,8 +929,8 @@ export class ActualTournamentGamesService {
     // });
     //
     // const teamOneGames = _.filter(this.allGames, function (game: TournamentGame) {
-    //   return teamMatch.playerOnePlayerName === game.playerOneTeamName &&
-    //          teamMatch.tournamentRound === game.tournamentRound;
+    //   return isTeamMatch.playerOnePlayerName === game.playerOneTeamName &&
+    //          isTeamMatch.tournamentRound === game.tournamentRound;
     // });
     //
     // _.each(teamOneGames, function (game: TournamentGame) {
@@ -984,59 +984,59 @@ export class ActualTournamentGamesService {
     // let teamOneWon = 0;
     // let teamTwoWon = 0;
     //
-    // _.each(this.allTeamGames, function (teamMatch: TournamentGame) {
+    // _.each(this.allTeamGames, function (isTeamMatch: TournamentGame) {
     //
-    //   if (teamMatch.tournamentRound === gameResult.gameAfter.tournamentRound &&
-    //     (teamMatch.playerOnePlayerName === gameResult.gameAfter.playerOneTeamName ||
-    //     teamMatch.playerOnePlayerName === gameResult.gameAfter.playerTwoTeamName)) {
+    //   if (isTeamMatch.tournamentRound === gameResult.gameAfter.tournamentRound &&
+    //     (isTeamMatch.playerOnePlayerName === gameResult.gameAfter.playerOneTeamName ||
+    //     isTeamMatch.playerOnePlayerName === gameResult.gameAfter.playerTwoTeamName)) {
     //
     //     if (!gameResult.gameBefore.finished) {
     //
-    //       if (teamMatchFinished && ((teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore) >
-    //         (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore))) {
+    //       if (teamMatchFinished && ((isTeamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore) >
+    //         (isTeamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore))) {
     //
     //         teamOneWon = 1;
     //       }
-    //       if (teamMatchFinished && ((teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore) <
-    //         (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore))) {
+    //       if (teamMatchFinished && ((isTeamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore) <
+    //         (isTeamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore))) {
     //
     //         teamTwoWon = 1;
     //       }
     //
-    //       const teamMatchRef = that.afoDatabase.object('tournament-team-games/' + teamMatch.tournamentId + '/' + teamMatch.id);
+    //       const teamMatchRef = that.afoDatabase.object('tournament-team-games/' + isTeamMatch.tournamentId + '/' + isTeamMatch.id);
     //       teamMatchRef.update({
-    //         'playerOneIntermediateResult': teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore,
-    //         'playerOneControlPoints': teamMatch.playerOneControlPoints + gameResult.gameAfter.playerOneControlPoints,
-    //         'playerOneVictoryPoints': teamMatch.playerOneVictoryPoints + gameResult.gameAfter.playerOneVictoryPoints,
+    //         'playerOneIntermediateResult': isTeamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore,
+    //         'playerOneControlPoints': isTeamMatch.playerOneControlPoints + gameResult.gameAfter.playerOneControlPoints,
+    //         'playerOneVictoryPoints': isTeamMatch.playerOneVictoryPoints + gameResult.gameAfter.playerOneVictoryPoints,
     //         'playerOneScore': teamMatchFinished ? teamOneWon : '0',
-    //         'playerTwoIntermediateResult': teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore,
-    //         'playerTwoControlPoints': teamMatch.playerTwoControlPoints + gameResult.gameAfter.playerTwoControlPoints,
-    //         'playerTwoVictoryPoints': teamMatch.playerTwoVictoryPoints + gameResult.gameAfter.playerTwoVictoryPoints,
+    //         'playerTwoIntermediateResult': isTeamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore,
+    //         'playerTwoControlPoints': isTeamMatch.playerTwoControlPoints + gameResult.gameAfter.playerTwoControlPoints,
+    //         'playerTwoVictoryPoints': isTeamMatch.playerTwoVictoryPoints + gameResult.gameAfter.playerTwoVictoryPoints,
     //         'playerTwoScore': teamMatchFinished ? teamTwoWon : '0',
     //         'finished': teamMatchFinished
     //       });
     //     } else {
     //
-    //       if (teamMatchFinished && ((teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore) >
-    //         (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore))) {
+    //       if (teamMatchFinished && ((isTeamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore) >
+    //         (isTeamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore))) {
     //
     //         teamOneWon = 1;
     //       }
-    //       if (teamMatchFinished && ((teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore) <
-    //         (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore))) {
+    //       if (teamMatchFinished && ((isTeamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore) <
+    //         (isTeamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore))) {
     //
     //         teamTwoWon = 1;
     //       }
     //
-    //       const teamMatchRef = that.afoDatabase.object('tournament-team-games/' + teamMatch.tournamentId + '/' + teamMatch.id);
+    //       const teamMatchRef = that.afoDatabase.object('tournament-team-games/' + isTeamMatch.tournamentId + '/' + isTeamMatch.id);
     //       teamMatchRef.update({
-    //         'playerOneIntermediateResult': (teamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore),
-    //         'playerOneControlPoints': (teamMatch.playerOneControlPoints + gameResult.gameAfter.playerOneControlPoints - gameResult.gameBefore.playerOneControlPoints),
-    //         'playerOneVictoryPoints': (teamMatch.playerOneVictoryPoints + gameResult.gameAfter.playerOneVictoryPoints - gameResult.gameBefore.playerOneVictoryPoints),
+    //         'playerOneIntermediateResult': (isTeamMatch.playerOneIntermediateResult + gameResult.gameAfter.playerOneScore - gameResult.gameBefore.playerOneScore),
+    //         'playerOneControlPoints': (isTeamMatch.playerOneControlPoints + gameResult.gameAfter.playerOneControlPoints - gameResult.gameBefore.playerOneControlPoints),
+    //         'playerOneVictoryPoints': (isTeamMatch.playerOneVictoryPoints + gameResult.gameAfter.playerOneVictoryPoints - gameResult.gameBefore.playerOneVictoryPoints),
     //         'playerOneScore': teamMatchFinished ? teamOneWon : '0',
-    //         'playerTwoIntermediateResult': (teamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore),
-    //         'playerTwoControlPoints': (teamMatch.playerTwoControlPoints + gameResult.gameAfter.playerTwoControlPoints - gameResult.gameBefore.playerTwoControlPoints),
-    //         'playerTwoVictoryPoints': (teamMatch.playerTwoVictoryPoints + gameResult.gameAfter.playerTwoVictoryPoints - gameResult.gameBefore.playerTwoVictoryPoints),
+    //         'playerTwoIntermediateResult': (isTeamMatch.playerTwoIntermediateResult + gameResult.gameAfter.playerTwoScore - gameResult.gameBefore.playerTwoScore),
+    //         'playerTwoControlPoints': (isTeamMatch.playerTwoControlPoints + gameResult.gameAfter.playerTwoControlPoints - gameResult.gameBefore.playerTwoControlPoints),
+    //         'playerTwoVictoryPoints': (isTeamMatch.playerTwoVictoryPoints + gameResult.gameAfter.playerTwoVictoryPoints - gameResult.gameBefore.playerTwoVictoryPoints),
     //         'playerTwoScore': teamMatchFinished ? teamTwoWon : '0',
     //         'finished': teamMatchFinished
     //       });

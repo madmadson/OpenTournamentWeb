@@ -10,7 +10,8 @@ import {TournamentGame} from '../../../shared/model/tournament-game';
 @Injectable()
 export class SwappingService {
 
-  constructor(private afoDatabase: AngularFireOfflineDatabase) {}
+  constructor(private afoDatabase: AngularFireOfflineDatabase) {
+  }
 
   swapPlayer(rankingsForRound: TournamentRanking[],
              draggedGame: TournamentGame,
@@ -26,8 +27,8 @@ export class SwappingService {
     this.handlePlayerOneIsBye(newGameTwo, rankingsForRound);
     this.handlePlayerTwoIsBye(newGameTwo, rankingsForRound);
 
-    // console.log('newGameOne: ' + JSON.stringify(newGameOne));
-    // console.log('newGameTwo: ' + JSON.stringify(newGameTwo));
+    console.log('newGameOne: ' + JSON.stringify(newGameOne));
+    console.log('newGameTwo: ' + JSON.stringify(newGameTwo));
 
     const gameOneRef = this.afoDatabase.object('tournament-games/' + newGameOne.tournamentId + '/' + newGameOne.id);
     gameOneRef.update(newGameOne);
@@ -88,11 +89,10 @@ export class SwappingService {
     }
   }
 
-  private createGameOne(
-    draggedGame: TournamentGame,
-    draggedTournamentPlayerId: string,
-    droppedGame: TournamentGame,
-    droppedTournamentPlayerId: string): TournamentGame {
+  private createGameOne(draggedGame: TournamentGame,
+                        draggedTournamentPlayerId: string,
+                        droppedGame: TournamentGame,
+                        droppedTournamentPlayerId: string): TournamentGame {
 
     let gameOnePlayerOneAffected = false;
     let gameOnePlayerTwoAffected = false;
@@ -170,11 +170,10 @@ export class SwappingService {
     };
   }
 
-  private createGameTwo(
-    draggedGame: TournamentGame,
-    draggedTournamentPlayerId: string,
-    droppedGame: TournamentGame,
-    droppedTournamentPlayerId: string): TournamentGame {
+  private createGameTwo(draggedGame: TournamentGame,
+                        draggedTournamentPlayerId: string,
+                        droppedGame: TournamentGame,
+                        droppedTournamentPlayerId: string): TournamentGame {
     let gameOnePlayerOneAffected = false;
     let gameOnePlayerTwoAffected = false;
     let gameTwoPlayerOneAffected = false;

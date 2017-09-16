@@ -50,6 +50,10 @@ md-header-cell.mat-column-playerOnePlayerName {
   justify-content: flex-end;
 }
 
+.game-finished{
+  box-shadow: inset 0 0 20px $color_dark_primary;
+}
+
 .game-table-won {
   color:  $success_color;
 }

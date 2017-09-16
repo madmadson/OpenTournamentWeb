@@ -4,10 +4,10 @@
 .game-result-table {
   width: 100%;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 
 .game-result-table th {
-
   text-align: center;
   border: 1px solid black;
 }
@@ -24,11 +24,17 @@
   min-width:36px;
   max-width:36px;
   font-size:48px;
-  margin-top: $main_tick;
+}
+
+@media only screen and (min-width: 800px) {
+  .game-result-button {
+    font-size:48px;
+  }
 }
 
 .add-button{
   color: $success_color;
+  padding-right: $main_tick;
 }
 
 .remove-button {
@@ -37,18 +43,15 @@
 
 .game-result-input {
   height: 20px;
-  width: 40px;
+  width: 35px;
   margin-left: $main_tick;
-  font-size: 24px;
+  font-size: 18px;
   padding-bottom: $main_tick;
 }
 
 @media only screen and (min-width: 800px) {
   .game-result-input {
     width: 60px;
+    font-size: 24px;
   }
-}
-
-.mat-input-wrapper{
-  padding-bottom: 0 !important;
 }

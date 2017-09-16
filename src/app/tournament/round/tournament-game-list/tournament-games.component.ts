@@ -40,7 +40,7 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
   @Input() isCoOrganizer: boolean;
 
   @Input() round: number;
-  @Input() teamMatch: boolean;
+  @Input() isTeamMatch: boolean;
 
   @Input() userPlayerData: Player;
   @Input() actualTournament: Tournament;
@@ -50,21 +50,14 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
   @Input() rankingsForRound: TournamentRanking[];
 
   @Output() onGameResultEntered = new EventEmitter<GameResult>();
-  @Output() onSwapPlayer = new EventEmitter<SwapGames>();
-  @Output() onScenarioSelected = new EventEmitter<ScenarioSelectedModel>();
-
   @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
-
-  draggedTournamentPlayerCurrentOpponentId: string;
-
-  draggedGame: TournamentGame;
-
-  swapPlayerMode: boolean;
-  selectedScenario: string;
 
   requestClearGame: string;
 
+  draggedTournamentPlayerCurrentOpponentId: string;
+  draggedGame: TournamentGame;
   draggedTournamentPlayerId = '';
+  draggedTournamentTeamName = '';
   draggedTournamentPlayerOpponentIds: string[] = [];
 
   displayedColumns = ['playingField', 'playerOnePlayerName', 'swapPlayerOne', 'vs',
@@ -155,38 +148,57 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
   openGameResultDialog(selectedGame: TournamentGame) {
 
-    if (!this.draggedTournamentPlayerId && (this.isItMyGame(selectedGame) || this.isAdmin || this.isCoOrganizer) && !this.actualTournament.finished) {
+    const nextUnfinishedGame: TournamentGame = _.find(this.gamesForRound, function (game: TournamentGame) {
+      return !game.finished;
+    });
+
+
+    if (!this.draggedTournamentPlayerId && (this.isItMyGame(selectedGame) || this.isAdmin
+        || this.isCoOrganizer) && !this.actualTournament.finished) {
 
       const dialogRef = this.dialog.open(GameResultDialogComponent, {
         data: {
           selectedGame: selectedGame,
           armyLists: this.armyLists,
           isAdmin: this.isAdmin,
-          isCoOrganizer: this.isCoOrganizer
-        },
-        width: '800px'
+          isCoOrganizer: this.isCoOrganizer,
+          isTeamMatch: this.isTeamMatch,
+          nextUnfinishedGame: nextUnfinishedGame
+        }
       });
-      const eventSubscribe = dialogRef.componentInstance.onGameResult
+      const onGameResult = dialogRef.componentInstance.onGameResult
         .subscribe((gameResult: GameResult) => {
 
           if (gameResult !== undefined) {
 
-            if (this.selectedScenario) {
-              gameResult.gameAfter.scenario = this.selectedScenario;
-            }
-
             this.onGameResultEntered.emit(gameResult);
-            if (!this.teamMatch) {
+            if (!this.isTeamMatch) {
               this.dialog.closeAll();
             } else {
               dialogRef.close();
             }
           }
         });
+
+      const onGameResultAndNext = dialogRef.componentInstance.onGameResultAndNext
+        .subscribe((gameResult: GameResult) => {
+
+          if (gameResult !== undefined) {
+
+            this.onGameResultEntered.emit(gameResult);
+            if (!this.isTeamMatch) {
+              this.dialog.closeAll();
+            } else {
+              dialogRef.close();
+            }
+            this.openGameResultDialog(nextUnfinishedGame);
+          }
+        });
       dialogRef.afterClosed().subscribe(() => {
 
-        eventSubscribe.unsubscribe();
-        if (!this.teamMatch) {
+        onGameResult.unsubscribe();
+        onGameResultAndNext.unsubscribe();
+        if (!this.isTeamMatch) {
           this.dialog.closeAll();
         }
       });
@@ -203,6 +215,8 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
     this.draggedTournamentPlayerId = game.playerOneTournamentPlayerId;
     this.draggedTournamentPlayerCurrentOpponentId = game.playerTwoTournamentPlayerId;
     this.draggedGame = game;
+    this.draggedTournamentTeamName = game.playerOneTeamName;
+
 
     _.forEach(this.rankingsForRound, function (ranking: TournamentRanking) {
       if (ranking.opponentTournamentPlayerIds && ranking.tournamentPlayerId === game.playerOneTournamentPlayerId) {
@@ -225,6 +239,7 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
     this.draggedTournamentPlayerId = game.playerTwoTournamentPlayerId;
     this.draggedTournamentPlayerCurrentOpponentId = game.playerOneTournamentPlayerId;
     this.draggedGame = game;
+    this.draggedTournamentTeamName = game.playerTwoTeamName;
 
     _.forEach(this.rankingsForRound, function (ranking: TournamentRanking) {
       if (ranking.opponentTournamentPlayerIds && ranking.tournamentPlayerId === game.playerTwoTournamentPlayerId) {
@@ -242,16 +257,24 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
   }
 
-  dropPossible(game: TournamentGame, playerId: string): boolean {
+  dropPossible(game: TournamentGame, playerId: string, playerTeam: string): boolean {
 
-    return !game.finished && !this.draggedTournamentPlayerOpponentIds[playerId] &&
-      this.draggedTournamentPlayerCurrentOpponentId !== playerId &&
-      this.draggedTournamentPlayerId !== playerId;
+    if ( this.isTeamMatch) {
+      return !game.finished && this.draggedTournamentPlayerId !== playerId &&
+        this.draggedTournamentTeamName === playerTeam;
+    } else {
+      return !game.finished && !this.draggedTournamentPlayerOpponentIds[playerId] &&
+        this.draggedTournamentPlayerCurrentOpponentId !== playerId &&
+        this.draggedTournamentPlayerId !== playerId;
+    }
   }
 
-  confirmDropPlayer(event: any, droppedGame: TournamentGame, droppedPlayerId: string) {
+  confirmDropPlayer(event: any,
+                    droppedGame: TournamentGame,
+                    droppedPlayerId: string,
+                    droppedPlayerTeam: string) {
 
-    if (this.draggedTournamentPlayerId && this.dropPossible(droppedGame, droppedPlayerId)) {
+    if (this.draggedTournamentPlayerId && this.dropPossible(droppedGame, droppedPlayerId, droppedPlayerTeam)) {
       event.stopPropagation();
 
       console.log('confirmDropPlayerOne');

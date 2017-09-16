@@ -1,0 +1,18 @@
+<h3 md-dialog-title class="heading">{{selectedTeamMatch.playerOnePlayerName}} VS {{selectedTeamMatch.playerTwoPlayerName}}</h3>
+
+<md-dialog-content>
+  <tournament-games [isAdmin]="isAdmin"
+                    [isCoOrganizer]="isCoOrganizer"
+                    [actualTournament]="actualTournament"
+                    [gamesForRound]="playerGamesForTeam$ | async"
+                    [rankingsForRound]="rankingsForRound"
+                    [armyLists]="armyLists"
+                    [userPlayerData]="userPlayerData"
+                    [isTeamMatch]="true"
+                    (onGameResultEntered)="handlePlayerGameResult($event)"
+                    (onClearPlayerGameResult)="handleClearPlayerGameResult($event)">
+  </tournament-games>
+</md-dialog-content>
+<div md-dialog-actions>
+  <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+</div>

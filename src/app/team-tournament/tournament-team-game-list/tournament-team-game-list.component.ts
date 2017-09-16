@@ -429,60 +429,8 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
   }
 
 
-  openTeamMatchDialog(selectedGame: TournamentGame) {
+  openTeamMatchDialog(selectedTeamMatch: TournamentGame) {
 
-
-      const dialogRef = this.dialog.open(TeamMatchDialogComponent, {
-        data: {
-          isAdmin: this.isAdmin,
-          isCoOrganizer: this.isCoOrganizer,
-          round: this.round,
-          selectedGame: selectedGame,
-          actualTournament: this.actualTournament,
-          authenticationStoreState$: this.authenticationStoreState$,
-          actualTournamentArmyLists$: this.armyLists$,
-          playerGamesForRound$: this.playerGamesForRound$,
-          rankingsForRound$: this.rankingsForRound$,
-          actualTournamentTeams$: this.actualTournamentTeams$
-        },
-      });
-      const gameResultEvent = dialogRef.componentInstance.onGameResult
-        .subscribe((gameResult: GameResult) => {
-
-          if (gameResult !== undefined) {
-
-            if (this.selectedScenario) {
-              gameResult.gameAfter.scenario = this.selectedScenario;
-            }
-
-            this.onTeamMatchGameResult.emit(gameResult);
-          }
-        });
-
-      const swapPlayerEvent = dialogRef.componentInstance.onSwapPlayer
-        .subscribe((swap: SwapGames) => {
-
-          if (swap !== undefined) {
-
-            this.onSwapPlayer.emit(swap);
-          }
-        });
-
-    const clearPlayerGameEvent = dialogRef.componentInstance.onClearPlayerGameResult
-      .subscribe((game: TournamentGame) => {
-
-        if (game !== undefined) {
-
-          this.onClearPlayerGameResult.emit(game);
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-
-        gameResultEvent.unsubscribe();
-        swapPlayerEvent.unsubscribe();
-        clearPlayerGameEvent.unsubscribe();
-      });
 
 
   }
@@ -495,67 +443,3 @@ export class TournamentTeamGameListComponent implements OnInit, AfterContentChec
   }
 }
 
-
-@Component({
-  selector: 'team-match-dialog',
-  templateUrl: './team-match-dialog.html'
-})
-export class TeamMatchDialogComponent {
-
-  isAdmin: boolean;
-  isCoOrganizer: boolean;
-  round: number;
-
-  selectedGame: TournamentGame;
-  actualTournament: Tournament;
-  authenticationStoreState$: Observable<AuthenticationStoreState>;
-  actualTournamentArmyLists$: Observable<ArmyList[]>;
-  playerGamesForTeam: TournamentGame[];
-  rankingsForRound$: Observable<TournamentRanking[]>;
-  actualTournamentTeams$: Observable<TournamentTeam[]>;
-
-  @Output() onGameResult = new EventEmitter<GameResult>();
-  @Output() onSwapPlayer = new EventEmitter<SwapGames>();
-
-  @Output() onClearPlayerGameResult = new EventEmitter<TournamentGame>();
-
-  constructor(public dialogRef: MdDialogRef<TeamMatchDialogComponent>,
-              @Inject(MD_DIALOG_DATA) public data: any) {
-
-    this.selectedGame = data.selectedGame;
-    this.isAdmin = data.isAdmin;
-    this.isCoOrganizer = data.isCoOrganizer;
-    this.round = data.round;
-
-    this.actualTournament = data.actualTournament;
-    this.authenticationStoreState$ = data.authenticationStoreState$;
-    this.actualTournamentArmyLists$ = data.actualTournamentArmyLists$;
-    this.actualTournamentTeams$ = data.actualTournamentTeams$;
-
-    data.playerGamesForRound$.subscribe((games: TournamentGame[]) => {
-      this.playerGamesForTeam = _.filter(games, function (game: TournamentGame) {
-        return game.playerOneTeamName === data.selectedGame.playerOnePlayerName ||
-          game.playerTwoTeamName === data.selectedGame.playerOnePlayerName ||
-          game.playerOneTeamName === data.selectedGame.playerTwoPlayerName ||
-          game.playerTwoTeamName === data.selectedGame.playerTwoPlayerName;
-      });
-    });
-
-    this.rankingsForRound$ = data.rankingsForRound$;
-  }
-
-  handlePlayerGameResult(result: GameResult) {
-
-    this.onGameResult.emit(result);
-  }
-
-  handlePlayerSwap(swapPlayer: SwapGames) {
-
-    this.onSwapPlayer.emit(swapPlayer);
-  }
-
-  handleClearPlayerGameResult(game: TournamentGame) {
-
-    this.onClearPlayerGameResult.emit(game);
-  }
-}

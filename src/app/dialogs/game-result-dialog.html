@@ -37,7 +37,6 @@
       <tr>
         <td>CP:</td>
         <td>
-          <md-input-container>
             <md-icon
               mdPrefix
               class="game-result-button remove-button"
@@ -58,11 +57,8 @@
               (click)="increasePlayerOneCP()">
               add_circle_outline
             </md-icon>
-          </md-input-container>
-
         </td>
         <td>
-          <md-input-container>
             <md-icon
               mdPrefix
               class="game-result-button remove-button"
@@ -83,13 +79,12 @@
               (click)="increasePlayerTwoCP()">
               add_circle_outline
             </md-icon>
-          </md-input-container>
         </td>
       </tr>
       <tr>
         <td>VP:</td>
         <td>
-          <md-input-container>
+
             <md-icon
               mdPrefix
               class="game-result-button remove-button"
@@ -110,10 +105,10 @@
               (click)="increasePlayerOneVP()">
               add_circle_outline
             </md-icon>
-          </md-input-container>
+
         </td>
         <td>
-          <md-input-container>
+
             <md-icon
               mdPrefix
               class="game-result-button remove-button"
@@ -134,7 +129,6 @@
               (click)="increasePlayerTwoVP()">
               add_circle_outline
             </md-icon>
-          </md-input-container>
         </td>
       </tr>
     </table>
@@ -157,6 +151,7 @@
         truncate:truncateMax}}</p>
     </ng-container>
   </ng-container>
+  NG: {{nextUnfinishedGame | json}}
 </md-dialog-content>
 
 <md-dialog-actions>
@@ -164,21 +159,28 @@
     <button class="big-button" type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog
     </button>
     <button *ngIf="sureButton"
-            (click)="pushGameResult()"
+            (click)="createGameResult()"
             class="right-align-button big-button color-positive-background"
             type="button"
             md-raised-button>
       <md-icon>check</md-icon>
       Really no winner?
     </button>
-    <button *ngIf="!sureButton  && ((isConnected$ | async) || isAdmin || isCoOrganizer)"
-            (click)="enterGameResultSubmitted()"
+    <button *ngIf="nextUnfinishedGame && !sureButton  && ((isConnected$ | async) || isAdmin || isCoOrganizer)"
+            (click)="enterGameAndNextResultSubmitted()"
             class="right-align-button big-button"
-            type="button"
             color="accent"
             md-raised-button>
       <md-icon>check</md-icon>
-      Enter Game Result
+      Enter & Next
+    </button>
+    <button *ngIf="!sureButton  && ((isConnected$ | async) || isAdmin || isCoOrganizer)"
+            (click)="enterGameResultSubmitted()"
+            class="right-align-button big-button"
+            color="accent"
+            md-raised-button>
+      <md-icon>check</md-icon>
+      Enter
     </button>
   </div>
 </md-dialog-actions>

@@ -18,9 +18,11 @@
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="team-column right-align"
                [ngClass]="{
-               'game-table-lead': (teamOneWon(game)),
+               'game-table-won': (teamOneWon(game)),
+               'game-table-lead': (teamOneLead(game)),
                'game-table-tie': (teamTie(game)),
-               'game-table-behind': (teamTwoWon(game)),
+               'game-table-behind': (teamTwoLead(game)),
+               'game-table-lost': (teamTwoWon(game)),
                'drag-started':  draggedTournamentPlayerId === game.playerOneTournamentPlayerId,
                'drop-possible': draggedTournamentPlayerId && dropPossible(game, game.playerOneTournamentPlayerId),
                'drop-not-possible':  draggedTournamentPlayerId && !dropPossible(game, game.playerOneTournamentPlayerId)
@@ -56,7 +58,14 @@
       <md-header-cell *cdkHeaderCellDef class="result-team-column">
         SGW Team1
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="result-team-column">
+      <md-cell *cdkCellDef="let game"
+               class="result-team-column"
+               [ngClass]="{
+               'game-table-won': (teamOneWon(game)),
+               'game-table-lead': (teamOneLead(game)),
+               'game-table-tie': (teamTie(game)),
+               'game-table-behind': (teamTwoLead(game)),
+               'game-table-lost': (teamTwoWon(game))}">
         {{game.playerOneIntermediateResult}}
       </md-cell>
     </ng-container>
@@ -71,7 +80,14 @@
       <md-header-cell *cdkHeaderCellDef class="result-team-column">
         SGW Team2
       </md-header-cell>
-      <md-cell *cdkCellDef="let game" class="result-team-column">
+      <md-cell *cdkCellDef="let game"
+               class="result-team-column"
+               [ngClass]="{
+               'game-table-won': (teamTwoWon(game)),
+               'game-table-lead': (teamTwoLead(game)),
+               'game-table-tie': (teamTie(game)),
+               'game-table-behind': (teamOneLead(game)),
+               'game-table-lost': (teamOneWon(game))}">
         {{game.playerTwoIntermediateResult}}
       </md-cell>
     </ng-container>
@@ -100,9 +116,11 @@
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="team-column"
                [ngClass]="{
-                'game-table-lead': (teamOneWon(game)),
+               'game-table-won': (teamTwoWon(game)),
+               'game-table-lead': (teamTwoLead(game)),
                'game-table-tie': (teamTie(game)),
-               'game-table-behind': (teamTwoWon(game)),
+               'game-table-behind': (teamOneLead(game)),
+               'game-table-lost': (teamOneWon(game)),
                'drag-started': draggedTournamentPlayerId === game.playerTwoTournamentPlayerId,
                'drop-possible':draggedTournamentPlayerId && dropPossible(game, game.playerTwoTournamentPlayerId),
                'drop-not-possible': draggedTournamentPlayerId && !dropPossible(game, game.playerTwoTournamentPlayerId)
@@ -154,9 +172,10 @@
       <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
       <md-row *cdkRowDef="let game; columns: displayedColumns;  let even = even"
               [ngClass]="{'even': even,
+                          'game-finished': game.finished,
                           'my-item':isItMyTeam(game),
-                          'clickable-row': (!draggedTournamentPlayerId && (isItMyTeam(game) || isAdmin || isCoOrganizer) &&  !actualTournament?.finished)}"
-              (click)="openGameResultDialog(game)">
+                          'clickable-row': (!draggedTournamentPlayerId)}"
+              (click)="openTeamGameResultDialog(game)">
       </md-row>
     </ng-container>
   </md-table>

@@ -17,6 +17,7 @@ import * as _ from 'lodash';
 export class GameResultDialogComponent {
 
   @Output() onGameResult = new EventEmitter<GameResult>();
+  @Output() onGameResultAndNext = new EventEmitter<GameResult>();
 
   gameModel: TournamentGame;
   givenGame: TournamentGame;
@@ -36,6 +37,8 @@ export class GameResultDialogComponent {
   truncateMax: number;
 
   selectedWinner: number;
+  isTeamMatch: boolean;
+  nextUnfinishedGame: TournamentGame;
 
   constructor(public dialogRef: MdDialogRef<GameResultDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any,
@@ -56,6 +59,8 @@ export class GameResultDialogComponent {
     this.givenGame = data.selectedGame;
     this.isAdmin = data.isAdmin;
     this.isCoOrganizer = data.isCoOrganizer;
+    this.isTeamMatch = data.isTeamMatch;
+    this.nextUnfinishedGame = data.nextUnfinishedGame;
 
     this.gameModel = TournamentGame.fromJson(this.givenGame);
 
@@ -91,7 +96,7 @@ export class GameResultDialogComponent {
     });
   }
 
-  changeWinner(){
+  changeWinner() {
 
     this.sureButton = false;
   }
@@ -199,11 +204,21 @@ export class GameResultDialogComponent {
     if (this.selectedWinner === 0) {
       this.sureButton = true;
     } else {
-      this.pushGameResult();
+      this.createGameResult();
+      this.onGameResult.emit({gameBefore: this.givenGame, gameAfter: this.gameModel});
     }
   }
 
-  private pushGameResult() {
+  enterGameAndNextResultSubmitted() {
+    if (this.selectedWinner === 0) {
+      this.sureButton = true;
+    } else {
+      this.createGameResult();
+      this.onGameResultAndNext.emit({gameBefore: this.givenGame, gameAfter: this.gameModel});
+    }
+  }
+
+  private createGameResult() {
     this.gameModel.id = this.givenGame.id;
     this.gameModel.finished = true;
 
@@ -232,8 +247,6 @@ export class GameResultDialogComponent {
     }
 
     console.log('gameAfter: ' + JSON.stringify(this.gameModel));
-
-    this.onGameResult.emit({gameBefore: this.givenGame, gameAfter: this.gameModel});
 
   }
 }

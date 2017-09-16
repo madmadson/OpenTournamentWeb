@@ -153,7 +153,6 @@ import {MyRegistrationsService} from './my-site/registrations/my-registrations.s
 import {MySiteRegistrationsComponent} from './my-site/registrations/my-site-registrations.component';
 import {MyRegistrationListComponent} from './my-site/registrations/my-registrations-table/my-registration-list.component';
 import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
-import {TeamMatchDialogComponent} from 'app/team-tournament/tournament-team-game-list/tournament-team-game-list.component';
 import {TournamentTeamGameListComponent} from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
 import {ActualTournamentTeamRegistrationService} from 'app/tournament/actual-tournament-team-registration.service';
 import {ActualTournamentTeamsService} from 'app/tournament/actual-tournament-teams.service';
@@ -165,6 +164,7 @@ import {TeamPairingService} from 'app/tournament/team-pairing.service';
 import {TournamentTeamGamesComponent} from 'app/tournament/round/tournament-team-game-list/tournament-team-games.component';
 import {ActualTournamentTeamGamesService} from 'app/tournament/actual-tournament-team-games.service';
 import {ActualTournamentTeamRankingService} from './tournament/actual-tournament-team-ranking.service';
+import {TeamMatchDialogComponent} from 'app/dialogs/team-game-result-dialog';
 
 
 @NgModule({

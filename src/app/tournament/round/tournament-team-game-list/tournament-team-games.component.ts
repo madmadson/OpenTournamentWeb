@@ -23,10 +23,12 @@ import {WindowRefService} from '../../../service/window-ref-service';
 import {ArmyList} from '../../../../../shared/model/armyList';
 import {Player} from '../../../../../shared/model/player';
 import {GamesDatabase, GamesDataSource} from '../../../../../shared/table-model/game';
-import {GameResultDialogComponent} from '../../../dialogs/game-result-dialog';
+
 import {SwappingService} from '../../swapping.service';
 import {TeamMatchClearModel} from '../../../../../shared/dto/team-match-clear';
 import {TournamentTeam} from '../../../../../shared/model/tournament-team';
+import {TeamMatchDialogComponent} from '../../../dialogs/team-game-result-dialog';
+import {Observable} from 'rxjs/Observable';
 
 
 @Component({
@@ -52,28 +54,23 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   @Input() armyLists: ArmyList[];
   @Input() teamGamesForRound: TournamentGame[];
   @Input() playerGamesForRound: TournamentGame[];
+  @Input() playerGamesForRound$: Observable<TournamentGame[]>;
   @Input() rankingsForRound: TournamentRanking[];
+  @Input() actualTournamentTeams: TournamentTeam[];
 
-  @Output() onGameResultEntered = new EventEmitter<GameResult>();
-  @Output() onSwapPlayer = new EventEmitter<SwapGames>();
-  @Output() onScenarioSelected = new EventEmitter<ScenarioSelectedModel>();
-
+  @Output() onTeamMatchGameResult = new EventEmitter<GameResult>();
   @Output() onClearTeamGameResult = new EventEmitter<TeamMatchClearModel>();
-
-  draggedTournamentPlayerCurrentOpponentId: string;
-
-  draggedGame: TournamentGame;
-
-  swapPlayerMode: boolean;
-  selectedScenario: string;
+  @Output() onClearTeamPlayerGameResult = new EventEmitter<TournamentGame>();
 
   requestClearGame: string;
 
+  draggedTournamentPlayerCurrentOpponentId: string;
+  draggedGame: TournamentGame;
   draggedTournamentPlayerId = '';
   draggedTournamentPlayerOpponentIds: string[] = [];
 
   displayedColumns = ['playingField', 'teamOneTeamName', 'swapPlayerOne', 'result-team-one',
-                       'vs', 'result-team-two', 'swapPlayerTwo', 'teamTwoTeamName', 'actions'];
+    'vs', 'result-team-two', 'swapPlayerTwo', 'teamTwoTeamName', 'actions'];
 
   gamesDb: GamesDatabase;
   dataSource: GamesDataSource | null;
@@ -121,25 +118,30 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     }
   }
 
-
   teamOneWon(game: TournamentGame): boolean {
-    return game.playerOneIntermediateResult > game.playerTwoIntermediateResult;
+    return game.playerOneScore > game.playerTwoScore;
+  }
+
+  teamOneLead(game: TournamentGame): boolean {
+    return game.playerOneIntermediateResult > game.playerTwoIntermediateResult && !game.finished;
   }
 
   teamTie(game: TournamentGame): boolean {
     return game.playerOneIntermediateResult === game.playerTwoIntermediateResult;
+  }
 
+  teamTwoLead(game: TournamentGame): boolean {
+    return game.playerOneIntermediateResult < game.playerTwoIntermediateResult  && !game.finished;
   }
 
   teamTwoWon(game: TournamentGame): boolean {
-    return game.playerOneIntermediateResult < game.playerTwoIntermediateResult;
-
+    return game.playerOneScore < game.playerTwoScore;
   }
 
-  isItMyTeam(game: TournamentGame) {
+  isItMyTeam(teamMatch: TournamentGame) {
 
-    return game.playerOneTeamName === this.myTeam ||
-      game.playerTwoTeamName === this.myTeam;
+    return teamMatch.playerOnePlayerName === this.myTeam ||
+      teamMatch.playerTwoPlayerName === this.myTeam;
   }
 
 
@@ -166,45 +168,47 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     this.requestClearGame = '';
   }
 
-  openGameResultDialog(selectedGame: TournamentGame) {
+  openTeamGameResultDialog(selectedTeamMatch: TournamentGame) {
 
-    if (!this.draggedTournamentPlayerId && (this.isItMyTeam(selectedGame) || this.isAdmin || this.isCoOrganizer) && !this.actualTournament.finished) {
+    const dialogRef = this.dialog.open(TeamMatchDialogComponent, {
+      data: {
+        selectedTeamMatch: selectedTeamMatch,
+        isAdmin: this.isAdmin,
+        isCoOrganizer: this.isCoOrganizer,
+        userPlayerData: this.userPlayerData,
+        round: this.round,
 
-      const dialogRef = this.dialog.open(GameResultDialogComponent, {
-        data: {
-          selectedGame: selectedGame,
-          armyLists: this.armyLists,
-          isAdmin: this.isAdmin,
-          isCoOrganizer: this.isCoOrganizer
-        },
-        width: '800px'
-      });
-      const eventSubscribe = dialogRef.componentInstance.onGameResult
-        .subscribe((gameResult: GameResult) => {
+        actualTournament: this.actualTournament,
+        armyLists: this.armyLists,
+        playerGamesForTeam$: this.getPlayerMatchesForBothTeams(selectedTeamMatch),
+        rankingsForRound: this.rankingsForRound,
+        actualTournamentTeams: this.actualTournamentTeams
+      },
+    });
+    const gameResultEvent = dialogRef.componentInstance.onGameResultEntered
+      .subscribe((gameResult: GameResult) => {
 
-          if (gameResult !== undefined) {
+        if (gameResult !== undefined) {
 
-            if (this.selectedScenario) {
-              gameResult.gameAfter.scenario = this.selectedScenario;
-            }
-
-            this.onGameResultEntered.emit(gameResult);
-            if (!this.teamMatch) {
-              this.dialog.closeAll();
-            } else {
-              dialogRef.close();
-            }
-          }
-        });
-      dialogRef.afterClosed().subscribe(() => {
-
-        eventSubscribe.unsubscribe();
-        if (!this.teamMatch) {
-          this.dialog.closeAll();
+          this.onTeamMatchGameResult.emit(gameResult);
         }
       });
 
-    }
+
+    const clearPlayerGameEvent = dialogRef.componentInstance.onClearPlayerGameResult
+      .subscribe((game: TournamentGame) => {
+
+        if (game !== undefined) {
+
+           this.onClearTeamPlayerGameResult.emit(game);
+        }
+      });
+
+    dialogRef.afterClosed().subscribe(() => {
+
+      gameResultEvent.unsubscribe();
+      clearPlayerGameEvent.unsubscribe();
+    });
   }
 
   swapPlayerOne(event: any, game: TournamentGame) {
@@ -269,7 +273,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
 
       console.log('confirmDropPlayerOne');
 
-     this.swappingService.swapPlayer(this.rankingsForRound, this.draggedGame, this.draggedTournamentPlayerId, droppedGame, droppedPlayerId);
+      this.swappingService.swapPlayer(this.rankingsForRound, this.draggedGame, this.draggedTournamentPlayerId, droppedGame, droppedPlayerId);
 
       this.snackBar.open('Players successfully swapped ', '', {
         extraClasses: ['snackBar-success'],
@@ -286,7 +290,20 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
 
     return _.filter(this.playerGamesForRound, function (playerMatch: TournamentGame) {
 
-      return teamMatch.playerOnePlayerName === playerMatch.playerOneTeamName;
+      return teamMatch.playerOnePlayerName === playerMatch.playerOneTeamName ||
+        teamMatch.playerTwoPlayerName === playerMatch.playerOneTeamName;
+    });
+  }
+
+  getPlayerMatchesForBothTeams(teamMatch: TournamentGame): Observable<TournamentGame[]> {
+
+    return this.playerGamesForRound$.map(games => {
+      return games.filter((playerMatch: TournamentGame ) => {
+        return teamMatch.playerOnePlayerName === playerMatch.playerOneTeamName ||
+          teamMatch.playerTwoPlayerName === playerMatch.playerOneTeamName ||
+          teamMatch.playerOnePlayerName === playerMatch.playerTwoTeamName ||
+          teamMatch.playerTwoPlayerName === playerMatch.playerTwoTeamName;
+      });
     });
   }
 }

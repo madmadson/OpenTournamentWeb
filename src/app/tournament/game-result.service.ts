@@ -34,6 +34,8 @@ export class GameResultService {
                         allGames: TournamentGame[],
                         allTeamGames: TournamentGame[]) {
 
+    console.log('team result entered');
+
     const afoGame = this.afoDatabase.object('/tournament-games/' + gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
     afoGame.update(gameResult.gameAfter);
 
@@ -345,9 +347,11 @@ export class GameResultService {
     _.forEach(allGames, function (playerGame: TournamentGame) {
 
       if (playerGame.tournamentRound === gameResult.gameAfter.tournamentRound &&
-        playerGame.playerOneTeamName === gameResult.gameAfter.playerOneTeamName) {
+        playerGame.playerOneTeamName === gameResult.gameAfter.playerOneTeamName &&
+        playerGame.playerOneTournamentPlayerId !== gameResult.gameAfter.playerOneTournamentPlayerId) {
 
         if (!playerGame.finished) {
+          // console.log(' found unfinished game:' + JSON.stringify(playerGame));
           teamMatchFinished = false;
         }
       }

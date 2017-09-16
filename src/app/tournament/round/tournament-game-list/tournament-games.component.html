@@ -20,10 +20,10 @@
                'game-table-won': (playerOneWon(game)),
                'game-table-lost': (playerTwoWon(game)),
                'drag-started':  draggedTournamentPlayerId === game.playerOneTournamentPlayerId,
-               'drop-possible': draggedTournamentPlayerId && dropPossible(game, game.playerOneTournamentPlayerId),
-               'drop-not-possible':  draggedTournamentPlayerId && !dropPossible(game, game.playerOneTournamentPlayerId)
+               'drop-possible': draggedTournamentPlayerId && dropPossible(game, game.playerOneTournamentPlayerId, game.playerOneTeamName),
+               'drop-not-possible':  draggedTournamentPlayerId && !dropPossible(game, game.playerOneTournamentPlayerId, game.playerOneTeamName)
                }"
-               (click)="confirmDropPlayer($event, game, game.playerOneTournamentPlayerId)">
+               (click)="confirmDropPlayer($event, game, game.playerOneTournamentPlayerId, game.playerOneTeamName)">
         <div class="big-text">{{game.playerOnePlayerName | truncate:truncateMax}}</div>
         <div class="small-text">
           (SC:{{game.playerOneScore}}/CP:{{game.playerOneControlPoints}}/VP:{{game.playerOneVictoryPoints}})
@@ -86,10 +86,10 @@
                'game-table-won': (playerTwoWon(game)),
                'game-table-lost': (playerOneWon(game)),
                'drag-started': draggedTournamentPlayerId === game.playerTwoTournamentPlayerId,
-               'drop-possible':draggedTournamentPlayerId && dropPossible(game, game.playerTwoTournamentPlayerId),
-               'drop-not-possible': draggedTournamentPlayerId && !dropPossible(game, game.playerTwoTournamentPlayerId)
+               'drop-possible':draggedTournamentPlayerId && dropPossible(game, game.playerTwoTournamentPlayerId, game.playerTwoTeamName),
+               'drop-not-possible': draggedTournamentPlayerId && !dropPossible(game, game.playerTwoTournamentPlayerId, game.playerTwoTeamName)
                }"
-               (click)="confirmDropPlayer($event, game, game.playerTwoTournamentPlayerId)">
+               (click)="confirmDropPlayer($event, game, game.playerTwoTournamentPlayerId, game.playerTwoTeamName)">
         <div class="big-text">{{game.playerTwoPlayerName | truncate:truncateMax}}</div>
         <div class="small-text">
           (SC:{{game.playerTwoScore}}/CP:{{game.playerTwoControlPoints}}/VP:{{game.playerTwoVictoryPoints}})
@@ -140,6 +140,7 @@
       <md-row *cdkRowDef="let game; columns: displayedColumns;  let even = even"
               [ngClass]="{'even': even,
                           'my-item':isItMyGame(game),
+                          'game-finished': game.finished,
                           'clickable-row': (!draggedTournamentPlayerId && (isItMyGame(game) || isAdmin || isCoOrganizer) &&  !actualTournament?.finished)}"
               (click)="openGameResultDialog(game)">
       </md-row>

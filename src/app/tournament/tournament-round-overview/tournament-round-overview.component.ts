@@ -261,7 +261,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   //   const dialogRef = this.dialog.open(PairAgainDialogComponent, {
   //     data: {
   //       round: this.round,
-  //       teamMatch: false
+  //       isTeamMatch: false
   //     },
   //     width: '600px',
   //   });

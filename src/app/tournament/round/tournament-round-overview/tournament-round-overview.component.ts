@@ -70,7 +70,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   loadGames$: Observable<boolean>;
 
-
   allTournamentTeamGames$: Observable<TournamentGame[]>;
   allTournamentTeamGamesFiltered$: Observable<TournamentGame[]>;
   allTournamentTeamGames: TournamentGame[];
@@ -90,7 +89,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   allGamesFinished: boolean;
   allGamesUntouched: boolean;
-
 
   showOnlyMyGameState: boolean;
 
@@ -393,7 +391,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   changeScenario(): void {
 
-    this.tournamentService.scenarioSelected({
+    this.tournamentService.wholeRoundScenarioSelected({
       scenario: this.selectedScenario,
       tournamentId: this.actualTournament.id,
       round: this.round
@@ -647,6 +645,25 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  handleClearTeamPlayerGameResult(teamMatchClear: TeamMatchClearModel) {
+
+    console.log('teamplayergame: ' + JSON.stringify(teamMatchClear.playerMatchesForTeamOne[0]));
+
+    // this.gameResultService.clearGameForTeamMatchOnly(teamMatchClear.teamMatch);
+
+    const clearedGame = clearTournamentGame(teamMatchClear.playerMatchesForTeamOne[0]);
+
+    this.gameResultService.gameResultEntered(
+      {
+        gameBefore: teamMatchClear.playerMatchesForTeamOne[0],
+        gameAfter: clearedGame
+      },
+      this.actualTournament,
+      this.allTournamentRankings,
+      this.allTournamentGames
+    );
+  }
+
   handleClearTeamGameResult(teamMatchClear: TeamMatchClearModel) {
 
     const that = this;
@@ -674,6 +691,11 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   handleGameResultEntered(gameResult: GameResult) {
 
+
+    if (this.selectedScenario) {
+      gameResult.gameAfter.scenario = this.selectedScenario;
+    }
+
     this.gameResultService.gameResultEntered(
       gameResult,
       this.actualTournament,
@@ -681,6 +703,27 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       this.allTournamentGames);
 
     this.snackBar.open('GameResult entered successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
+  handleTeamGameResultEntered(gameResult: GameResult) {
+
+    if (this.selectedScenario) {
+      gameResult.gameAfter.scenario = this.selectedScenario;
+    }
+
+    this.gameResultService.teamGameResultEntered(
+      gameResult,
+      this.actualTournament,
+      this.allTournamentRankings,
+      this.allTournamentTeamRankings,
+      this.allTournamentGames,
+      this.allTournamentTeamGames);
+
+
+    this.snackBar.open('TeamGameResult entered successfully', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
     });
