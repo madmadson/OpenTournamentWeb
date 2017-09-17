@@ -1,0 +1,68 @@
+@import "../../../../styles";
+
+.ranking-table-container{
+  margin: $halve_tick;
+}
+
+@media only screen and (min-width: 500px) {
+  .ranking-table-container{
+    min-width: 450px;
+
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .ranking-table-container{
+    min-width: 600px;
+
+  }
+}
+
+.rank-column{
+  flex: 1;
+}
+
+.team-column{
+  flex: 5;
+}
+
+.faction-column{
+  flex: 2;
+}
+
+.score-column{
+  flex: 1;
+}
+
+.sgw-column{
+  flex: 1;
+}
+
+.cp-column{
+  flex: 1;
+}
+
+.vp-column{
+  flex: 1;
+}
+
+.action-column{
+  flex: 3;
+}
+
+@media only screen and (min-width: 800px) {
+  .action-column{
+    flex: 2;
+  }
+}
+
+
+.mat-header-row{
+  padding-left: $main_tick;
+  padding-right: $main_tick;
+}
+
+.mat-row{
+  padding-left: $main_tick;
+  padding-right: $main_tick;
+}

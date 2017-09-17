@@ -30,17 +30,16 @@ import {DropPlayerPush} from "../../../../../shared/dto/drop-player-push";
 
 
 @Component({
-  selector: 'tournament-rankings',
-  templateUrl: './tournament-rankings.component.html',
-  styleUrls: ['./tournament-rankings.component.scss'],
+  selector: 'team-tournament-rankings',
+  templateUrl: './tournament-team-rankings.component.html',
+  styleUrls: ['./tournament-team-rankings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TournamentRankingsComponent implements OnInit, OnChanges {
+export class TournamentTeamRankingsComponent implements OnInit, OnChanges {
 
 
   @Input() isAdmin: boolean;
   @Input() isCoOrganizer: boolean;
-  @Input() isTeamTournament: boolean;
 
   @Input() round: number;
 
@@ -57,7 +56,7 @@ export class TournamentRankingsComponent implements OnInit, OnChanges {
   onReachTopOfPageEvent: EventEmitter<boolean>;
 
 
-  displayedColumns = ['rank', 'playerName', 'faction', 'score', 'sos', 'cp', 'vp', 'action'];
+  displayedColumns = ['rank', 'teamName', 'score', 'sgw', 'cp', 'vp', 'action'];
 
   rankingsDb: RankingsDatabase;
   dataSource: RankingsDataSource | null;
@@ -104,20 +103,20 @@ export class TournamentRankingsComponent implements OnInit, OnChanges {
     }
   }
 
-  showArmyList(ranking: TournamentRanking) {
+  showTeamArmyList(team: TournamentRanking) {
 
-    const myArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
-      if (list.tournamentPlayerId) {
-        return (list.tournamentPlayerId === ranking.tournamentPlayerId);
-      } else {
-        return (list.playerId === ranking.playerId);
+    event.stopPropagation();
+
+    const teamArmyLists: ArmyList[] = _.filter(this.armyLists, function (list: ArmyList) {
+      if (list.teamName) {
+        return (list.teamName === team.playerName);
       }
     });
 
     this.dialog.open(ShowArmyListDialogComponent, {
       data: {
-        ranking: ranking,
-        armyLists: myArmyLists
+        tournamentRank: team,
+        armyLists: teamArmyLists
       }
     });
   }
@@ -205,4 +204,5 @@ export class TournamentRankingsComponent implements OnInit, OnChanges {
     });
     this.pageScrollService.start(pageScrollInstance);
   }
+
 }

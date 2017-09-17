@@ -12,7 +12,7 @@ import {Observable} from 'rxjs/Observable';
 
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {Tournament} from '../../../shared/model/tournament';
-import {PairingService} from "./pairing.service";
+import {PairingService} from './pairing.service';
 
 @Injectable()
 export class TeamPairingService {
@@ -64,7 +64,7 @@ export class TeamPairingService {
       });
       const tournamentRankingsRef = that.afoDatabase
         .list('tournament-team-rankings/' + newTournamentRanking.tournamentId);
-      tournamentRankingsRef.push(newTournamentRanking);
+      newTournamentRanking.id = tournamentRankingsRef.push(newTournamentRanking).getKey();
 
       newRankings.push(newTournamentRanking);
     });

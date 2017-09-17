@@ -1,5 +1,5 @@
 <div id="top"></div>
-<button *ngIf="!isTeamTournament"
+<button
   (click)="startAutoScroll()"
   type="button"
   class="color-secondary-background"
@@ -20,23 +20,13 @@
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="playerName">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="player-column">
-        Player
+    <ng-container cdkColumnDef="teamName">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="team-column">
+        Team
       </md-header-cell>
-      <md-cell *cdkCellDef="let ranking" class="player-column">
+      <md-cell *cdkCellDef="let ranking" class="team-column">
         <div class="big-text">{{ranking.playerName | truncate:truncateMax}}</div>
-        <div *ngIf="smallScreen">{{ranking.faction}}</div>
         <div class="color-negative" *ngIf="ranking.droppedInRound">Dropped in round {{ranking.droppedInRound}}</div>
-      </md-cell>
-    </ng-container>
-
-    <ng-container *ngIf="!smallScreen" cdkColumnDef="faction">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="faction-column">
-        Faction
-      </md-header-cell>
-      <md-cell *cdkCellDef="let ranking; " class="faction-column">
-        {{ranking.faction}}
       </md-cell>
     </ng-container>
 
@@ -49,12 +39,12 @@
       </md-cell>
     </ng-container>
 
-    <ng-container cdkColumnDef="sos">
-      <md-header-cell *cdkHeaderCellDef md-sort-header class="sos-column">
-        SoS
+    <ng-container cdkColumnDef="sgw">
+      <md-header-cell *cdkHeaderCellDef md-sort-header class="sgw-column">
+        SGW
       </md-header-cell>
-      <md-cell *cdkCellDef="let ranking" class="sos-column">
-        {{ranking.sos}}
+      <md-cell *cdkCellDef="let ranking" class="sgw-column">
+        {{ranking.secondScore}}
       </md-cell>
     </ng-container>
 
@@ -83,13 +73,13 @@
       <md-cell *cdkCellDef="let ranking" class="action-column">
         <md-icon  *ngIf="!dropRequest"
                   class="list-action"
-                 (click)="showArmyList(ranking)">
+                 (click)="showTeamArmyList(ranking)">
           list</md-icon>
 
         <ng-container *ngIf="(isAdmin || isCoOrganizer) && !dropRequest && !actualTournament?.finished">
-          <md-icon *ngIf="isDroppable(ranking) && !isTeamTournament"
+          <md-icon *ngIf="isDroppable(ranking)"
                    class="list-action color-negative"
-                   mdTooltip="Drop Player"
+                   mdTooltip="Drop Team"
                    (click)="clickDropPlayerRequest(ranking)">
             delete</md-icon>
           <md-icon *ngIf="isUndoDroppable(ranking)"

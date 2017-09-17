@@ -41,13 +41,13 @@
     </button>
   </md-menu>
 </div>
-<h3 class="heading" *ngIf="round > actualTournament?.actualRound">
+<h3 class="heading" *ngIf="round > actualTournament?.actualRound && (loadGames$ | async)">
   No data for round {{round}} found
 </h3>
 
 <ng-container *ngIf="round <= actualTournament?.actualRound">
   <h2 class="heading">
-    Round {{round}} Team: {{isTeamTournament}} MyTeam: {{myTeam}}
+    Round {{round}}
   </h2>
 
 

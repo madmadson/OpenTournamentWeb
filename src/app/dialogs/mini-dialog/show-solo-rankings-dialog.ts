@@ -2,7 +2,6 @@ import {Component, Inject} from '@angular/core';
 import {ArmyList} from '../../../../shared/model/armyList';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 import {TournamentRanking} from '../../../../shared/model/tournament-ranking';
-import {Observable} from 'rxjs/Observable';
 import {Tournament} from '../../../../shared/model/tournament';
 import {Player} from '../../../../shared/model/player';
 
@@ -12,14 +11,17 @@ import {Player} from '../../../../shared/model/player';
   template: `
     <h3>Solo Rankings for {{actualTournament.name}}</h3>
     <md-dialog-content>
-    <tournament-ranking-list
+    <tournament-rankings
       [isAdmin]="isAdmin"
+      [isCoOrganizer]="isCoOrganizer"
+      [isTeamTournament]="true"
       [round]="actualTournament.actualRound"
-      [actualTournament]="actualTournament"
-      [actualTournamentArmyList$]="actualTournamentArmyList$"
-      [rankingsForRound$]="rankingsForRound$"
       [userPlayerData]="userPlayerData"
-    ></tournament-ranking-list>
+      [actualTournament]="actualTournament"
+      [rankingsForRound]="rankingsForRound"
+      [armyLists]="allArmyLists">
+      
+    </tournament-rankings>
     </md-dialog-content>
     <div md-dialog-actions>
       <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
@@ -29,19 +31,22 @@ import {Player} from '../../../../shared/model/player';
 export class ShowSoloRankingsComponent {
 
   isAdmin: boolean;
+  isCoOrganizer: boolean;
   actualTournament: Tournament;
   userPlayerData: Player;
 
-  rankingsForRound$: Observable<TournamentRanking[]>;
-  actualTournamentArmyList$: Observable<ArmyList[]>;
+  rankingsForRound: TournamentRanking[];
+  allArmyLists: ArmyList[];
+
 
   constructor(public dialogRef: MdDialogRef<ShowSoloRankingsComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
 
     this.isAdmin = data.isAdmin;
+    this.isCoOrganizer = data.isCoOrganizer;
     this.actualTournament = data.actualTournament;
     this.userPlayerData = data.userPlayerData;
-    this.rankingsForRound$ = data.rankingsForRound$;
-    this.actualTournamentArmyList$ = data.actualTournamentArmyList$;
+    this.rankingsForRound = data.rankingsForRound;
+    this.allArmyLists = data.allArmyLists;
   }
 }
