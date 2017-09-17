@@ -441,14 +441,14 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     for (let i = 0; i < 1; i++) {
 
       const newTeam = new TournamentTeam(false, this.actualTournament.id, '',
-        'Gen Team ' + (i + 1), '', '', false, [], [], '', '', false, false, false, false, 0);
+        'Gen Team ' + (i + 1 + this.allTournamentTeams.length), '', '', false, [], [], '', '', false, false, false, false, 0);
 
       for (let j = 0; j < this.actualTournament.teamSize; j++) {
 
         const randomFaction = allFactions[Math.floor(Math.random() * allFactions.length)];
 
         const newPlayer = new TournamentPlayer(this.actualTournament.id, '', '', '',
-          newTeam.teamName + ' Player ' + (j + 1), '', '', newTeam.teamName, '', 0, randomFaction, 0);
+          newTeam.teamName + ' Player ' + (j + 1 + this.allTournamentTeams.length), '', '', newTeam.teamName, '', 0, randomFaction, 0);
         const newId = this.tournamentPlayerService.pushTournamentPlayer(newPlayer);
 
         newTeam.tournamentPlayerIds.push(newId);

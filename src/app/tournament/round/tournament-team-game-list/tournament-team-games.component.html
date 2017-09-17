@@ -27,7 +27,7 @@
                'drop-possible': draggedTournamentPlayerId && dropPossible(game, game.playerOneTournamentPlayerId),
                'drop-not-possible':  draggedTournamentPlayerId && !dropPossible(game, game.playerOneTournamentPlayerId)
                }"
-               (click)="confirmDropPlayer($event, game, game.playerOneTournamentPlayerId)">
+               (click)="confirmDropTeam($event, game, game.playerOneTournamentPlayerId)">
         <div>{{game.playerOnePlayerName | truncate:truncateMax}}</div>
         <div class="small-text">
           (SC:{{game.playerOneScore}}/CP:{{game.playerOneControlPoints}}/VP:{{game.playerOneVictoryPoints}})
@@ -41,13 +41,13 @@
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="swap-column">
         <md-icon *ngIf="!game.finished && !draggedTournamentPlayerId && (isAdmin || isCoOrganizer)"
-                 (click)="swapPlayerOne($event, game)"
-                 mdTooltip="Swap Player {{game.playerOnePlayerName}}"
+                 (click)="swapTeamOne($event, game)"
+                 mdTooltip="Swap Team {{game.playerOnePlayerName}}"
                  class="swap-player-icon">swap_vert
         </md-icon>
 
         <md-icon *ngIf="draggedTournamentPlayerId === game.playerOneTournamentPlayerId"
-                 (click)="endSwapPlayer($event, game)"
+                 (click)="endSwapTeam($event, game)"
                  mdTooltip="Cancel swap"
                  class="cancel-swap-player-icon">cancel
         </md-icon>
@@ -97,13 +97,13 @@
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="swap-column">
         <md-icon *ngIf="!game.finished && !draggedTournamentPlayerId && (isAdmin || isCoOrganizer)"
-                 (click)="swapPlayerTwo($event, game)"
-                 mdTooltip="Swap Player {{game.playerTwoPlayerName}}"
+                 (click)="swapTeamTwo($event, game)"
+                 mdTooltip="Swap Te {{game.playerTwoPlayerName}}"
                  class="swap-player-icon">swap_vert
         </md-icon>
 
         <md-icon *ngIf="draggedTournamentPlayerId === game.playerTwoTournamentPlayerId"
-                 (click)="endSwapPlayer($event, game)"
+                 (click)="endSwapTeam($event, game)"
                  mdTooltip="Cancel swap"
                  class="cancel-swap-player-icon">cancel
         </md-icon>
@@ -125,7 +125,7 @@
                'drop-possible':draggedTournamentPlayerId && dropPossible(game, game.playerTwoTournamentPlayerId),
                'drop-not-possible': draggedTournamentPlayerId && !dropPossible(game, game.playerTwoTournamentPlayerId)
                }"
-               (click)="confirmDropPlayer($event, game, game.playerTwoTournamentPlayerId)">
+               (click)="confirmDropTeam($event, game, game.playerTwoTournamentPlayerId)">
         <div>{{game.playerTwoPlayerName | truncate:truncateMax}}</div>
         <div class="small-text">
           (SC:{{game.playerTwoScore}}/CP:{{game.playerTwoControlPoints}}/VP:{{game.playerTwoVictoryPoints}})

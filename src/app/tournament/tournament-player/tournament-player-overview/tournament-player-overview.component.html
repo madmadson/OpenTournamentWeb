@@ -1,13 +1,12 @@
-<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
-<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isTournamentPlayer" class="sub-heading">Hello Player</h4>
+<h4 class="heading">{{actualTournament?.name}}</h4>
+<h4 *ngIf="isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="isTournamentPlayer" class="sub-heading">Hello Player</h4>
 
 <div class="actual-tournament-nav-container">
-  <button *ngIf="!fullscreenMode"
-          type="button"
+  <button type="button"
           md-raised-button
-          class="color-info-background action-button"
+          class="color-primary-background action-button"
           [mdMenuTriggerFor]="menu">
     <md-icon>more_vert</md-icon>
     Players
@@ -50,11 +49,12 @@
       <md-icon>build</md-icon>
       Edit
     </button>
-    <button *ngIf="(allTournamentPlayers$ | async)?.length > 1 && actualTournament?.actualRound === 0 && !isTeamTournament"
-            (click)="openStartTournamentDialog()"
-            type="button"
-            class=" color-positive-background action-button"
-            md-raised-button>
+    <button
+      *ngIf="(allTournamentPlayers$ | async)?.length > 1 && actualTournament?.actualRound === 0 && !isTeamTournament"
+      (click)="openStartTournamentDialog()"
+      type="button"
+      class=" color-positive-background action-button"
+      md-raised-button>
       <md-icon>play_arrow</md-icon>
       Start Tournament
     </button>
@@ -97,7 +97,7 @@
     Player view only useful in solo tournament. Go to Teams.
   </div>
   <button md-raised-button
-          class="color-info-background action-button"
+          class="color-primary-background action-button"
           (click)="router.navigate(['/tournament', actualTournament?.id, 'teams']);">
     Go to -> Teams
   </button>

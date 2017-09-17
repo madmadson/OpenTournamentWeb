@@ -6,6 +6,7 @@ import {GameResult} from '../../../shared/dto/game-result';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {TournamentGame} from '../../../shared/model/tournament-game';
 import {Tournament} from '../../../shared/model/tournament';
+import {PlayerInTeamMatchClearModel} from "../../../shared/dto/team-match-clear";
 
 @Injectable()
 export class GameResultService {
@@ -715,5 +716,32 @@ export class GameResultService {
         }
       }
     }
+  }
+
+  clearGameForTeamMatchOnly(gameToReset: TournamentGame, teamMatch: TournamentGame) {
+
+    const tournamentTeamGamesRef = this.afoDatabase
+      .object('tournament-team-games/' + teamMatch.tournamentId + '/' + teamMatch.id);
+
+    const newInterPlayerOne = teamMatch.playerOneIntermediateResult - gameToReset.playerOneScore;
+    const newControlPlayerOne = teamMatch.playerOneControlPoints - gameToReset.playerOneControlPoints;
+    const newVictoryPlayerOne = teamMatch.playerOneVictoryPoints - gameToReset.playerOneVictoryPoints;
+
+    const newInterPlayerTwo = teamMatch.playerTwoIntermediateResult - gameToReset.playerTwoScore;
+    const newControlPlayerTwo = teamMatch.playerTwoControlPoints - gameToReset.playerTwoControlPoints;
+    const newVictoryPlayerTwo = teamMatch.playerTwoVictoryPoints - gameToReset.playerTwoVictoryPoints;
+
+    tournamentTeamGamesRef.update({
+      'playerOneScore': 0,
+      'playerOneIntermediateResult': newInterPlayerOne,
+      'playerOneControlPoints': newControlPlayerOne,
+      'playerOneVictoryPoints': newVictoryPlayerOne,
+      'playerTwoScore': 0,
+      'playerTwoIntermediateResult': newInterPlayerTwo,
+      'playerTwoControlPoints': newControlPlayerTwo,
+      'playerTwoVictoryPoints': newVictoryPlayerTwo,
+      'finished': false
+    });
+
   }
 }

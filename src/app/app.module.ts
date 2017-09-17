@@ -165,6 +165,7 @@ import {TournamentTeamGamesComponent} from 'app/tournament/round/tournament-team
 import {ActualTournamentTeamGamesService} from 'app/tournament/actual-tournament-team-games.service';
 import {ActualTournamentTeamRankingService} from './tournament/actual-tournament-team-ranking.service';
 import {TeamMatchDialogComponent} from 'app/dialogs/team-game-result-dialog';
+import {ByeService} from "./tournament/bye-service";
 
 
 @NgModule({
@@ -307,7 +308,8 @@ import {TeamMatchDialogComponent} from 'app/dialogs/team-game-result-dialog';
     ActualTournamentTeamsService,
     TeamPairingService,
     ActualTournamentTeamGamesService,
-    ActualTournamentTeamRankingService
+    ActualTournamentTeamRankingService,
+    ByeService
   ],
   entryComponents: [
     AddArmyListsDialogComponent,

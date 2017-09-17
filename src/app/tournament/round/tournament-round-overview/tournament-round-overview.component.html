@@ -6,7 +6,7 @@
 <div class="actual-tournament-nav-container">
   <button type="button"
           md-raised-button
-          class="color-info-background action-button"
+          class="color-primary-background action-button"
           [mdMenuTriggerFor]="menu">
     <md-icon>more_vert</md-icon>
     Round {{round}}
@@ -110,7 +110,7 @@
       </ng-container>
       <button (click)="showRankingsOfRound()"
               type="button"
-              class="color-info-background action-button"
+              class="color-primary-background action-button"
               md-raised-button>
         <md-icon>list</md-icon>
         Show Rankings
@@ -161,20 +161,20 @@
   <button
     (click)="startAutoScroll()"
     type="button"
-    class="color-info-background"
+    class="color-primary-background"
     md-raised-button>
     <md-icon>play_arrow</md-icon>
     AutoScroll
   </button>
   <button *ngIf="isTournamentPlayer && !(onlyMyGameFilter$ | async)"
-          class="my-game-button color-info-background"
+          class="my-game-button color-primary-background"
           type="button"
           md-tooltip="Show only MyGame" (click)="showOnlyMyGame(true)"
           md-raised-button>
     Show only {{isTeamTournament ? 'TeamMatch' : 'MyGame'}}
   </button>
   <button *ngIf="isTournamentPlayer && (onlyMyGameFilter$ | async)"
-          class="my-game-button color-info-background"
+          class="my-game-button color-primary-background"
           type="button"
           md-tooltip="Show all" (click)="showOnlyMyGame(false)"
           md-raised-button>
@@ -204,6 +204,7 @@
 </ng-container>
 
 <ng-container *ngIf="isTeamTournament">
+  PGL: {{(gamesForRound$ | async)?.length}}
 
   <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
     <tournament-team-games *ngIf="(allTournamentTeamGamesFiltered$ | async)?.length > 0 && actualTournament"
@@ -218,6 +219,7 @@
                            [armyLists]="allArmyLists$ | async"
                            [userPlayerData]="userPlayerData"
                            [actualTournamentTeams]="allTeams"
+                           [actualTournamentPlayers]="allActualTournamentPlayers"
                            (onTeamMatchGameResult)="handleTeamGameResultEntered($event)"
                            (onClearTeamPlayerGameResult)="handleClearTeamPlayerGameResult($event)"
                            (onClearTeamGameResult)="handleClearTeamGameResult($event)">

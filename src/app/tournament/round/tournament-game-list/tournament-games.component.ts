@@ -73,6 +73,8 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
   smallScreen: boolean;
   truncateMax: number;
 
+  nextUnfinishedGame: TournamentGame;
+
   constructor(private dialog: MdDialog,
               private snackBar: MdSnackBar,
               private winRef: WindowRefService,
@@ -103,6 +105,10 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
         const change = changes[propName];
         if (this.gamesDb && propName === 'gamesForRound') {
           this.gamesDb.resetDatabase(change.currentValue);
+
+          if (this.nextUnfinishedGame) {
+           this.openGameResultDialog(this.nextUnfinishedGame);
+          }
         }
       }
     }
@@ -148,10 +154,11 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
   openGameResultDialog(selectedGame: TournamentGame) {
 
-    const nextUnfinishedGame: TournamentGame = _.find(this.gamesForRound, function (game: TournamentGame) {
-      return !game.finished;
-    });
+    this.nextUnfinishedGame = undefined;
 
+    const nextUnfinishedGame: TournamentGame = _.find(this.gamesForRound, function (game: TournamentGame) {
+      return !game.finished && game.id !== selectedGame.id;
+    });
 
     if (!this.draggedTournamentPlayerId && (this.isItMyGame(selectedGame) || this.isAdmin
         || this.isCoOrganizer) && !this.actualTournament.finished) {
@@ -191,7 +198,8 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
             } else {
               dialogRef.close();
             }
-            this.openGameResultDialog(nextUnfinishedGame);
+
+            this.nextUnfinishedGame = nextUnfinishedGame;
           }
         });
       dialogRef.afterClosed().subscribe(() => {

@@ -2,12 +2,11 @@
 
 
 
-
 import {TournamentGame} from '../model/tournament-game';
 
-export class PlayerInTeamMatchClearModel {
+export class TeamMatchClearModel {
 
   teamMatch: TournamentGame;
-  gameToReset: TournamentGame;
+  playerMatchesForTeamOne: TournamentGame[];
 
 }

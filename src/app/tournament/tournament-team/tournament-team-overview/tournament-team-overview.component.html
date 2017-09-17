@@ -7,7 +7,7 @@
   <button *ngIf="!fullscreenMode"
           type="button"
           md-raised-button
-          class="color-info-background action-button"
+          class="color-primary-background action-button"
           [mdMenuTriggerFor]="menu">
     <md-icon>more_vert</md-icon>
     Teams
@@ -106,7 +106,7 @@
     Team view only useful in solo tournament. Go to Players.
   </div>
   <button md-raised-button
-          class="color-info-background action-button"
+          class="color-primary-background action-button"
           (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
     Go to -> Players
   </button>

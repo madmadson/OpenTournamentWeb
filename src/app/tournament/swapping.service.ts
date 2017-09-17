@@ -5,12 +5,17 @@ import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import * as _ from 'lodash';
 
 import {TournamentGame} from '../../../shared/model/tournament-game';
+import {SwapGames} from '../../../shared/dto/swap-player';
+import {TournamentPlayer} from '../../../shared/model/tournament-player';
+import {ByeService} from './bye-service';
+import {Tournament} from '../../../shared/model/tournament';
 
 
 @Injectable()
 export class SwappingService {
 
-  constructor(private afoDatabase: AngularFireOfflineDatabase) {
+  constructor(private afoDatabase: AngularFireOfflineDatabase,
+              private byeService: ByeService) {
   }
 
   swapPlayer(rankingsForRound: TournamentRanking[],
@@ -22,10 +27,11 @@ export class SwappingService {
     const newGameOne = this.createGameOne(draggedGame, draggedTournamentPlayerId, droppedGame, droppedPlayerId);
     const newGameTwo = this.createGameTwo(draggedGame, draggedTournamentPlayerId, droppedGame, droppedPlayerId);
 
-    this.handlePlayerOneIsBye(newGameOne, rankingsForRound);
-    this.handlePlayerTwoIsBye(newGameOne, rankingsForRound);
-    this.handlePlayerOneIsBye(newGameTwo, rankingsForRound);
-    this.handlePlayerTwoIsBye(newGameTwo, rankingsForRound);
+    this.byeService.handlePlayerOneIsBye(newGameOne, rankingsForRound);
+    this.byeService.handlePlayerTwoIsBye(newGameOne, rankingsForRound);
+    this.byeService.handlePlayerOneIsBye(newGameTwo, rankingsForRound);
+    this.byeService.handlePlayerTwoIsBye(newGameTwo, rankingsForRound);
+
 
     console.log('newGameOne: ' + JSON.stringify(newGameOne));
     console.log('newGameTwo: ' + JSON.stringify(newGameTwo));
@@ -35,58 +41,6 @@ export class SwappingService {
 
     const gameTwoRef = this.afoDatabase.object('tournament-games/' + newGameTwo.tournamentId + '/' + newGameTwo.id);
     gameTwoRef.update(newGameTwo);
-  }
-
-  private handlePlayerOneIsBye(game: TournamentGame, rankingsForRound: TournamentRanking[]) {
-
-    const that = this;
-
-    if (game.playerOneTournamentPlayerId === 'bye') {
-      game.playerTwoScore = 1;
-      game.playerTwoControlPoints = 3;
-      game.playerTwoVictoryPoints = 38;
-      game.finished = true;
-
-      _.forEach(rankingsForRound, function (ranking: TournamentRanking) {
-
-        if (ranking.tournamentPlayerId === game.playerTwoTournamentPlayerId) {
-          const playerTwoRankingRef = that.afoDatabase
-            .object('tournament-rankings/' + game.tournamentId + '/' + ranking.id);
-          playerTwoRankingRef.update(
-            {
-              score: (ranking.score + 1),
-              controlPoints: (ranking.controlPoints + 3),
-              victoryPoints: (ranking.controlPoints + 38),
-            });
-        }
-      });
-    }
-  }
-
-  private handlePlayerTwoIsBye(game: TournamentGame, rankingsForRound: TournamentRanking[]) {
-
-    const that = this;
-
-    if (game.playerTwoTournamentPlayerId === 'bye') {
-      game.playerOneScore = 1;
-      game.playerOneControlPoints = 3;
-      game.playerOneVictoryPoints = 38;
-      game.finished = true;
-
-      _.forEach(rankingsForRound, function (ranking: TournamentRanking) {
-
-        if (ranking.tournamentPlayerId === game.playerOneTournamentPlayerId) {
-          const playerTwoRankingRef = that.afoDatabase
-            .object('tournament-rankings/' + game.tournamentId + '/' + ranking.id);
-          playerTwoRankingRef.update(
-            {
-              score: (ranking.score + 1),
-              controlPoints: (ranking.controlPoints + 3),
-              victoryPoints: (ranking.controlPoints + 38),
-            });
-        }
-      });
-    }
   }
 
   private createGameOne(draggedGame: TournamentGame,
@@ -251,4 +205,145 @@ export class SwappingService {
       scenario: droppedGame.scenario
     };
   }
+
+  swapTeam(actualTournament: Tournament,
+           draggedGame: TournamentGame,
+           draggedTournamentPlayerId: string,
+           droppedGame: TournamentGame,
+           droppedTournamentPlayerId: string,
+           allGamesForRound: TournamentGame[],
+           allPlayers: TournamentPlayer[],
+           allRankingsForRound: TournamentRanking[]) {
+
+    const newGameOne = this.createGameOne(draggedGame,
+      draggedTournamentPlayerId,
+      droppedGame,
+      droppedTournamentPlayerId);
+    const newGameTwo = this.createGameTwo(draggedGame,
+      draggedTournamentPlayerId,
+      droppedGame,
+      droppedTournamentPlayerId);
+
+    this.newPlayerGamesForTeamMatch(newGameOne,
+                                    newGameTwo,
+                                    allGamesForRound,
+                                    allPlayers,
+                                    allRankingsForRound);
+
+    if (newGameOne.playerOneTournamentPlayerId === 'bye') {
+      newGameOne.playerTwoScore = 1;
+      newGameOne.playerTwoIntermediateResult = actualTournament.teamSize;
+      newGameOne.playerTwoControlPoints = actualTournament.teamSize * 3;
+      newGameOne.playerTwoVictoryPoints = actualTournament.teamSize * 38;
+      newGameOne.finished = true;
+    }
+
+    if (newGameOne.playerTwoTournamentPlayerId === 'bye') {
+      newGameOne.playerOneScore = 1;
+      newGameOne.playerOneIntermediateResult = actualTournament.teamSize;
+      newGameOne.playerOneControlPoints = actualTournament.teamSize * 3;
+      newGameOne.playerOneVictoryPoints = actualTournament.teamSize * 38;
+      newGameOne.finished = true;
+    }
+    const gameOneRef = this.afoDatabase.object('tournament-team-games/' + newGameOne.tournamentId + '/' + newGameOne.id);
+    gameOneRef.update(newGameOne);
+
+    if (newGameTwo.playerOneTournamentPlayerId === 'bye') {
+      newGameTwo.playerTwoScore = 1;
+      newGameTwo.playerTwoIntermediateResult = actualTournament.teamSize;
+      newGameTwo.playerTwoControlPoints = actualTournament.teamSize * 3;
+      newGameTwo.playerTwoVictoryPoints = actualTournament.teamSize * 38;
+      newGameTwo.finished = true;
+    }
+
+    if (newGameTwo.playerTwoTournamentPlayerId === 'bye') {
+      newGameTwo.playerOneScore = 1;
+      newGameTwo.playerOneIntermediateResult = actualTournament.teamSize;
+      newGameTwo.playerOneControlPoints = actualTournament.teamSize * 3;
+      newGameTwo.playerOneVictoryPoints = actualTournament.teamSize * 38;
+      newGameTwo.finished = true;
+    }
+
+    console.log('newTeamMatch1: ' + JSON.stringify(newGameOne));
+    console.log('newTeamMatch2: ' + JSON.stringify(newGameTwo));
+
+    const gameTwoRef = this.afoDatabase.object('tournament-team-games/' + newGameOne.tournamentId + '/' + newGameTwo.id);
+    gameTwoRef.update(newGameTwo);
+
+  }
+
+  newPlayerGamesForTeamMatch(gameOne: TournamentGame,
+                             gameTwo: TournamentGame,
+                             allGamesForRound: TournamentGame[],
+                             allPlayers: TournamentPlayer[],
+                             allRankingsForRound: TournamentRanking[]) {
+
+    const that = this;
+
+    _.forEach(allGamesForRound, function (game: TournamentGame) {
+      if (game.tournamentRound === gameOne.tournamentRound) {
+        if (game.playerOneTeamName === gameOne.playerOnePlayerName ||
+          game.playerTwoTeamName === gameOne.playerOnePlayerName ||
+          game.playerOneTeamName === gameOne.playerTwoPlayerName ||
+          game.playerTwoTeamName === gameOne.playerTwoPlayerName ||
+          game.playerOneTeamName === gameTwo.playerOnePlayerName ||
+          game.playerTwoTeamName === gameTwo.playerOnePlayerName ||
+          game.playerOneTeamName === gameTwo.playerTwoPlayerName ||
+          game.playerTwoTeamName === gameTwo.playerTwoPlayerName) {
+
+          const playerGame = that.afoDatabase.object('tournament-games/' + gameOne.tournamentId + '/' + game.id);
+          playerGame.remove();
+        }
+      }
+    });
+
+    this.createPlayerGamesForTeamMatch(gameOne, allPlayers, allRankingsForRound);
+    this.createPlayerGamesForTeamMatch(gameTwo, allPlayers, allRankingsForRound);
+  }
+
+  createPlayerGamesForTeamMatch(teamMatch: TournamentGame,
+                                allPlayers: TournamentPlayer[],
+                                allRankingsForRound: TournamentRanking[]) {
+
+    const teamGamesRef = this.afoDatabase.list('tournament-games/' + teamMatch.tournamentId);
+
+    const teamOnePlayers = _.filter(allPlayers, function (player: TournamentPlayer) {
+      return teamMatch.playerOnePlayerName === player.teamName;
+    });
+    const teamTwoPlayers = _.filter(allPlayers, function (player: TournamentPlayer) {
+      return teamMatch.playerTwoPlayerName === player.teamName;
+    });
+
+    if (teamMatch.playerOneTournamentPlayerId === 'bye') {
+      this.byeService.handleTeamOneIsBye(teamMatch, teamTwoPlayers, allRankingsForRound);
+    }
+
+    if (teamMatch.playerTwoTournamentPlayerId === 'bye') {
+      this.byeService.handleTeamTwoIsBye(teamMatch, teamOnePlayers, allRankingsForRound);
+    }
+    if (teamMatch.playerOneTournamentPlayerId !== 'bye' && teamMatch.playerTwoTournamentPlayerId !== 'bye') {
+      _.forEach(teamOnePlayers, function (playerOne: TournamentPlayer, index: number) {
+
+        const newTeamGame = new TournamentGame(
+          teamMatch.tournamentId,
+          playerOne.playerId ? playerOne.playerId : '', playerOne.id,
+          playerOne.playerName, playerOne.teamName,
+          playerOne.elo ? playerOne.elo : 0, playerOne.faction,
+          0, 0, 0, '', 0, 0,
+          teamTwoPlayers[index].playerId ? teamTwoPlayers[index].playerId : '',
+          teamTwoPlayers[index].id,
+          teamTwoPlayers[index].playerName,
+          teamTwoPlayers[index].teamName,
+          teamTwoPlayers[index].elo ? teamTwoPlayers[index].elo : 0,
+          teamTwoPlayers[index].faction,
+          0, 0, 0, '', 0, 0,
+          teamMatch.tournamentRound, index + 1, false, '');
+
+        console.log('newPlayerGame: ' + JSON.stringify(newTeamGame));
+
+        teamGamesRef.push(newTeamGame);
+      });
+    }
+  }
+
 }

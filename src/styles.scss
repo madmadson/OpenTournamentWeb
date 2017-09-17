@@ -8,6 +8,7 @@ $fail_color: #ff4846;
 $color_info: deepskyblue;
 $hover_color: #1e05ff;
 $color_dark_primary: #512DA8;
+$color_primary: #673AB7;
 $color_secondary: #FFC107;
 
 $game_finished_color: rgba(93, 85, 255, 0.6);
@@ -190,6 +191,11 @@ button:hover {
 
 .color-info-background {
   background-color: $color_info;
+}
+
+.color-primary-background {
+  background-color: $color_primary;
+  color: white;
 }
 
 .color-negative {

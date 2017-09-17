@@ -15,8 +15,6 @@ import * as _ from 'lodash';
 import {Tournament} from '../../../../../shared/model/tournament';
 import {TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {TournamentGame} from '../../../../../shared/model/tournament-game';
-import {ScenarioSelectedModel} from '../../../../../shared/dto/scenario-selected-model';
-import {SwapGames} from '../../../../../shared/dto/swap-player';
 import {GameResult} from '../../../../../shared/dto/game-result';
 import {MdDialog, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
 import {WindowRefService} from '../../../service/window-ref-service';
@@ -25,10 +23,12 @@ import {Player} from '../../../../../shared/model/player';
 import {GamesDatabase, GamesDataSource} from '../../../../../shared/table-model/game';
 
 import {SwappingService} from '../../swapping.service';
-import {TeamMatchClearModel} from '../../../../../shared/dto/team-match-clear';
+import {PlayerInTeamMatchClearModel} from '../../../../../shared/dto/team-match-clear';
 import {TournamentTeam} from '../../../../../shared/model/tournament-team';
 import {TeamMatchDialogComponent} from '../../../dialogs/team-game-result-dialog';
 import {Observable} from 'rxjs/Observable';
+import {TeamMatchClearModel} from '../../../../../shared/dto/player-match-team-clear-model';
+import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
 
 
 @Component({
@@ -57,6 +57,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   @Input() playerGamesForRound$: Observable<TournamentGame[]>;
   @Input() rankingsForRound: TournamentRanking[];
   @Input() actualTournamentTeams: TournamentTeam[];
+  @Input() actualTournamentPlayers: TournamentPlayer[];
 
   @Output() onTeamMatchGameResult = new EventEmitter<GameResult>();
   @Output() onClearTeamGameResult = new EventEmitter<TeamMatchClearModel>();
@@ -127,11 +128,12 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   }
 
   teamTie(game: TournamentGame): boolean {
-    return game.playerOneIntermediateResult === game.playerTwoIntermediateResult;
+    return game.playerOneIntermediateResult === game.playerTwoIntermediateResult &&
+      (game.playerOneIntermediateResult + game.playerTwoIntermediateResult !== 0);
   }
 
   teamTwoLead(game: TournamentGame): boolean {
-    return game.playerOneIntermediateResult < game.playerTwoIntermediateResult  && !game.finished;
+    return game.playerOneIntermediateResult < game.playerTwoIntermediateResult && !game.finished;
   }
 
   teamTwoWon(game: TournamentGame): boolean {
@@ -200,7 +202,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
 
         if (game !== undefined) {
 
-           this.onClearTeamPlayerGameResult.emit(game);
+          this.onClearTeamPlayerGameResult.emit(game);
         }
       });
 
@@ -211,7 +213,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     });
   }
 
-  swapPlayerOne(event: any, game: TournamentGame) {
+  swapTeamOne(event: any, game: TournamentGame) {
 
     const that = this;
 
@@ -233,7 +235,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     });
   }
 
-  swapPlayerTwo(event: any, game: TournamentGame) {
+  swapTeamTwo(event: any, game: TournamentGame) {
 
     const that = this;
 
@@ -250,7 +252,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     });
   }
 
-  endSwapPlayer(event: any) {
+  endSwapTeam(event: any) {
     event.stopPropagation();
 
     this.draggedTournamentPlayerId = '';
@@ -266,16 +268,24 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
       this.draggedTournamentPlayerId !== playerId;
   }
 
-  confirmDropPlayer(event: any, droppedGame: TournamentGame, droppedPlayerId: string) {
+  confirmDropTeam(event: any, droppedGame: TournamentGame, droppedTournamentPlayerId: string) {
 
-    if (this.draggedTournamentPlayerId && this.dropPossible(droppedGame, droppedPlayerId)) {
+    if (this.draggedTournamentPlayerId &&
+        this.dropPossible(droppedGame, droppedTournamentPlayerId)) {
       event.stopPropagation();
 
-      console.log('confirmDropPlayerOne');
+      console.log('confirmDropTeam');
 
-      this.swappingService.swapPlayer(this.rankingsForRound, this.draggedGame, this.draggedTournamentPlayerId, droppedGame, droppedPlayerId);
+      this.swappingService.swapTeam(this.actualTournament,
+        this.draggedGame,
+        this.draggedTournamentPlayerId,
+        droppedGame,
+        droppedTournamentPlayerId,
+        this.playerGamesForRound,
+        this.actualTournamentPlayers,
+        this.rankingsForRound);
 
-      this.snackBar.open('Players successfully swapped ', '', {
+      this.snackBar.open('Teams successfully swapped ', '', {
         extraClasses: ['snackBar-success'],
         duration: 5000
       });
@@ -298,7 +308,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   getPlayerMatchesForBothTeams(teamMatch: TournamentGame): Observable<TournamentGame[]> {
 
     return this.playerGamesForRound$.map(games => {
-      return games.filter((playerMatch: TournamentGame ) => {
+      return games.filter((playerMatch: TournamentGame) => {
         return teamMatch.playerOnePlayerName === playerMatch.playerOneTeamName ||
           teamMatch.playerTwoPlayerName === playerMatch.playerOneTeamName ||
           teamMatch.playerOnePlayerName === playerMatch.playerTwoTeamName ||

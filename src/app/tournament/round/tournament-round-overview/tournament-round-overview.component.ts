@@ -33,10 +33,11 @@ import {DOCUMENT} from '@angular/common';
 import {FinishTournamentDialogComponent} from '../../../dialogs/finish-tournament-dialog';
 import {TeamPairingService} from '../../team-pairing.service';
 import {ActualTournamentTeamGamesService} from '../../actual-tournament-team-games.service';
-import {TeamMatchClearModel} from '../../../../../shared/dto/team-match-clear';
+import {PlayerInTeamMatchClearModel} from '../../../../../shared/dto/team-match-clear';
 import {TournamentTeam} from '../../../../../shared/model/tournament-team';
 import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
 import {ActualTournamentTeamRankingService} from '../../actual-tournament-team-ranking.service';
+import {TeamMatchClearModel} from '../../../../../shared/dto/player-match-team-clear-model';
 
 
 @Component({
@@ -645,23 +646,29 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleClearTeamPlayerGameResult(teamMatchClear: TeamMatchClearModel) {
+  handleClearTeamPlayerGameResult(gameToReset: TournamentGame) {
 
-    console.log('teamplayergame: ' + JSON.stringify(teamMatchClear.playerMatchesForTeamOne[0]));
+    const teamMatch = _.find(this.allTournamentTeamGames, function (teamGame: TournamentGame) {
+      return teamGame.playerOnePlayerName === gameToReset.playerOneTeamName;
+    });
+    this.gameResultService.clearGameForTeamMatchOnly(gameToReset, teamMatch);
 
-    // this.gameResultService.clearGameForTeamMatchOnly(teamMatchClear.teamMatch);
-
-    const clearedGame = clearTournamentGame(teamMatchClear.playerMatchesForTeamOne[0]);
+    const clearedGame = clearTournamentGame(gameToReset);
 
     this.gameResultService.gameResultEntered(
       {
-        gameBefore: teamMatchClear.playerMatchesForTeamOne[0],
+        gameBefore: gameToReset,
         gameAfter: clearedGame
       },
       this.actualTournament,
       this.allTournamentRankings,
       this.allTournamentGames
     );
+
+    this.snackBar.open('TeamGame cleared successfully', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
   }
 
   handleClearTeamGameResult(teamMatchClear: TeamMatchClearModel) {
