@@ -36,7 +36,7 @@
     </button>
   </md-menu>
 </div>
-<h3 class="heading" *ngIf="round > actualTournament?.actualRound && (loadRanking$ | async)">
+<h3 class="heading" *ngIf="round > actualTournament?.actualRound">
   No data for round {{round}} found
 </h3>
 
@@ -75,7 +75,8 @@
       <md-icon>list</md-icon>
       Show Games
     </button>
-    <button (click)="showPlayerRankings()"
+    <button *ngIf="isTeamTournament"
+            (click)="showPlayerRankings()"
             type="button"
             class="color-primary-background action-button"
             md-raised-button>

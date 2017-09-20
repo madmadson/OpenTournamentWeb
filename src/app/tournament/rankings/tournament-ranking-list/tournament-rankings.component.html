@@ -25,9 +25,13 @@
         Player
       </md-header-cell>
       <md-cell *cdkCellDef="let ranking" class="player-column">
-        <div class="big-text">{{ranking.playerName | truncate:truncateMax}}</div>
+        <div class="big-text">
+          <md-icon class="align-fix" md-tooltip="Already played against: {{ranking.opponentNames}}">info</md-icon>
+          {{ranking.playerName | truncate:truncateMax}}
+        </div>
         <div *ngIf="smallScreen">{{ranking.faction}}</div>
         <div class="color-negative" *ngIf="ranking.droppedInRound">Dropped in round {{ranking.droppedInRound}}</div>
+        <div></div>
       </md-cell>
     </ng-container>
 

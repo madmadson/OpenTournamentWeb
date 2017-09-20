@@ -1019,7 +1019,7 @@ export class TournamentGameService {
         '',
         '',
         0,
-        0, 0, 0, 0, 0, 1, [], 0);
+        0, 0, 0, 0, 0, 1, [],[], 0);
 
       notDroppedPlayers.push(bye);
     }

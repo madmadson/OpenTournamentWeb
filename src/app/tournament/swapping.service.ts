@@ -213,7 +213,9 @@ export class SwappingService {
            droppedTournamentPlayerId: string,
            allGamesForRound: TournamentGame[],
            allPlayers: TournamentPlayer[],
-           allRankingsForRound: TournamentRanking[]) {
+           playerRankingsForRound: TournamentRanking[],
+           teamRankingsForRound: TournamentRanking[],
+           allTeamRankings: TournamentRanking[]) {
 
     const newGameOne = this.createGameOne(draggedGame,
       draggedTournamentPlayerId,
@@ -228,7 +230,7 @@ export class SwappingService {
                                     newGameTwo,
                                     allGamesForRound,
                                     allPlayers,
-                                    allRankingsForRound);
+                                    playerRankingsForRound);
 
     if (newGameOne.playerOneTournamentPlayerId === 'bye') {
       newGameOne.playerTwoScore = 1;
@@ -236,6 +238,9 @@ export class SwappingService {
       newGameOne.playerTwoControlPoints = actualTournament.teamSize * 3;
       newGameOne.playerTwoVictoryPoints = actualTournament.teamSize * 38;
       newGameOne.finished = true;
+
+      this.byeService.pushTeamRankingForByeMatch(actualTournament,
+        newGameOne.playerTwoTournamentPlayerId, teamRankingsForRound, allTeamRankings, newGameOne.tournamentRound);
     }
 
     if (newGameOne.playerTwoTournamentPlayerId === 'bye') {
@@ -244,6 +249,9 @@ export class SwappingService {
       newGameOne.playerOneControlPoints = actualTournament.teamSize * 3;
       newGameOne.playerOneVictoryPoints = actualTournament.teamSize * 38;
       newGameOne.finished = true;
+
+      this.byeService.pushTeamRankingForByeMatch(actualTournament,
+        newGameOne.playerOneTournamentPlayerId, teamRankingsForRound, allTeamRankings, newGameOne.tournamentRound);
     }
     const gameOneRef = this.afoDatabase.object('tournament-team-games/' + newGameOne.tournamentId + '/' + newGameOne.id);
     gameOneRef.update(newGameOne);
@@ -254,6 +262,9 @@ export class SwappingService {
       newGameTwo.playerTwoControlPoints = actualTournament.teamSize * 3;
       newGameTwo.playerTwoVictoryPoints = actualTournament.teamSize * 38;
       newGameTwo.finished = true;
+
+      this.byeService.pushTeamRankingForByeMatch(actualTournament,
+        newGameTwo.playerTwoTournamentPlayerId, teamRankingsForRound, allTeamRankings, newGameOne.tournamentRound);
     }
 
     if (newGameTwo.playerTwoTournamentPlayerId === 'bye') {
@@ -262,6 +273,9 @@ export class SwappingService {
       newGameTwo.playerOneControlPoints = actualTournament.teamSize * 3;
       newGameTwo.playerOneVictoryPoints = actualTournament.teamSize * 38;
       newGameTwo.finished = true;
+
+      this.byeService.pushTeamRankingForByeMatch(actualTournament,
+        newGameTwo.playerOneTournamentPlayerId, teamRankingsForRound, allTeamRankings, newGameOne.tournamentRound);
     }
 
     console.log('newTeamMatch1: ' + JSON.stringify(newGameOne));
@@ -315,11 +329,11 @@ export class SwappingService {
     });
 
     if (teamMatch.playerOneTournamentPlayerId === 'bye') {
-      this.byeService.handleTeamOneIsBye(teamMatch, teamTwoPlayers, allRankingsForRound);
+      this.byeService.handlePlayerMatchTeamOneIsBye(teamMatch, teamTwoPlayers, allRankingsForRound);
     }
 
     if (teamMatch.playerTwoTournamentPlayerId === 'bye') {
-      this.byeService.handleTeamTwoIsBye(teamMatch, teamOnePlayers, allRankingsForRound);
+      this.byeService.handlePlayerMatchTeamTwoIsBye(teamMatch, teamOnePlayers, allRankingsForRound);
     }
     if (teamMatch.playerOneTournamentPlayerId !== 'bye' && teamMatch.playerTwoTournamentPlayerId !== 'bye') {
       _.forEach(teamOnePlayers, function (playerOne: TournamentPlayer, index: number) {

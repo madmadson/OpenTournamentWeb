@@ -1,6 +1,8 @@
 import { RouterStateSerializer } from '@ngrx/router-store';
 import { RouterStateSnapshot, Params } from '@angular/router';
 
+import * as _ from 'lodash';
+
 /**
  * The RouterStateSerializer takes the current RouterStateSnapshot
  * and returns any pertinent information needed. The snapshot contains
@@ -23,4 +25,9 @@ export class CustomRouterStateSerializer
 
     return { url, queryParams };
   }
+}
+
+export function getArrayForNumber(round: number): number[] {
+
+  return round ? _.range(1, (round + 1)) : [];
 }

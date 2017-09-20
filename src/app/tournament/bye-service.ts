@@ -5,6 +5,7 @@ import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 
 import * as _ from 'lodash';
+import {Tournament} from "../../../shared/model/tournament";
 
 @Injectable()
 export class ByeService {
@@ -27,12 +28,28 @@ export class ByeService {
         if (ranking.tournamentPlayerId === game.playerTwoTournamentPlayerId) {
           const playerTwoRankingRef = that.afoDatabase
             .object('tournament-rankings/' + game.tournamentId + '/' + ranking.id);
+
+          let newListOfOpponentIds = ['bye'];
+          let newListOfOpponentNames = ['Bye'];
+
+          if (ranking.opponentTournamentPlayerIds) {
+            newListOfOpponentIds =
+              _.union(newListOfOpponentIds, ranking.opponentTournamentPlayerIds);
+          }
+          if (ranking.opponentNames) {
+            newListOfOpponentNames =
+              _.union(newListOfOpponentNames, ranking.opponentNames);
+          }
           playerTwoRankingRef.update(
             {
               score: (ranking.score + 1),
               controlPoints: (ranking.controlPoints + 3),
               victoryPoints: (ranking.controlPoints + 38),
+              opponentNames: newListOfOpponentNames,
+              opponentTournamentPlayerIds: newListOfOpponentIds
             });
+
+          console.log('newByeRanking: ' + ranking.playerName);
         }
       });
     }
@@ -53,20 +70,38 @@ export class ByeService {
         if (ranking.tournamentPlayerId === game.playerOneTournamentPlayerId) {
           const playerTwoRankingRef = that.afoDatabase
             .object('tournament-rankings/' + game.tournamentId + '/' + ranking.id);
+
+          let newListOfOpponentIds = ['bye'];
+          let newListOfOpponentNames = ['Bye'];
+
+          if (ranking.opponentTournamentPlayerIds) {
+            newListOfOpponentIds =
+              _.union(newListOfOpponentIds, ranking.opponentTournamentPlayerIds);
+          }
+
+          if (ranking.opponentNames) {
+            newListOfOpponentNames =
+              _.union(newListOfOpponentNames, ranking.opponentNames);
+          }
+
           playerTwoRankingRef.update(
             {
               score: (ranking.score + 1),
               controlPoints: (ranking.controlPoints + 3),
               victoryPoints: (ranking.controlPoints + 38),
+              opponentNames: newListOfOpponentNames,
+              opponentTournamentPlayerIds: newListOfOpponentIds
             });
+
+          console.log('newByeRanking: ' + ranking.playerName);
         }
       });
     }
   }
 
-  handleTeamOneIsBye(teamMatch: TournamentGame,
-                     teamTwoPlayers: TournamentPlayer[],
-                     rankingsForRound: TournamentRanking[]) {
+  handlePlayerMatchTeamOneIsBye(teamMatch: TournamentGame,
+                                teamTwoPlayers: TournamentPlayer[],
+                                rankingsForRound: TournamentRanking[]) {
 
     const that = this;
 
@@ -83,9 +118,9 @@ export class ByeService {
 
   }
 
-  handleTeamTwoIsBye(teamMatch: TournamentGame,
-                     teamOnePlayers: TournamentPlayer[],
-                     rankingsForRound: TournamentRanking[]) {
+  handlePlayerMatchTeamTwoIsBye(teamMatch: TournamentGame,
+                                teamOnePlayers: TournamentPlayer[],
+                                rankingsForRound: TournamentRanking[]) {
 
     const that = this;
 
@@ -98,9 +133,94 @@ export class ByeService {
       console.log('newByeGame: ' + JSON.stringify(newPlayerGame));
 
       teamGamesRef.push(newPlayerGame);
-      that.handlePlayerOneIsBye(newPlayerGame, rankingsForRound);
+      that.handlePlayerTwoIsBye(newPlayerGame, rankingsForRound);
     });
 
   }
 
+  pushRankingForByeMatch(tournamentPlayerIdToUpdate: string,
+                         newRankings: TournamentRanking[],
+                         allRankings: TournamentRanking[],
+                         round: number) {
+
+    const that = this;
+
+    _.forEach(newRankings, function (ranking: TournamentRanking) {
+
+      if (ranking.tournamentPlayerId === tournamentPlayerIdToUpdate) {
+
+        const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
+          return (rank.tournamentRound === round &&
+            rank.tournamentPlayerId === ranking.tournamentPlayerId);
+        });
+
+        let newListOfOpponentIds = ['bye'];
+        let newListOfOpponentNames = ['Bye'];
+
+        if (lastRoundRanking) {
+          newListOfOpponentIds =
+            _.union(newListOfOpponentIds, lastRoundRanking.opponentTournamentPlayerIds);
+          newListOfOpponentNames =
+            _.union(newListOfOpponentNames, lastRoundRanking.opponentNames);
+        }
+
+        const playerOneRankingRef = that.afoDatabase
+          .object('tournament-rankings/' + ranking.tournamentId + '/' + ranking.id);
+        playerOneRankingRef.update(
+          {
+            score: lastRoundRanking ? lastRoundRanking.score + 1 : 1,
+            controlPoints: lastRoundRanking ? lastRoundRanking.controlPoints + 3 : 3,
+            victoryPoints: lastRoundRanking ? lastRoundRanking.victoryPoints + 38 : 38,
+            opponentTournamentPlayerIds: newListOfOpponentIds,
+            opponentNames: newListOfOpponentNames
+          });
+
+        console.log('newByeRanking: ' + ranking.playerName);
+      }
+    });
+  }
+
+  pushTeamRankingForByeMatch(actualTournament: Tournament,
+                             tournamentPlayerIdToUpdate: string,
+                             teamRankingsForRound: TournamentRanking[],
+                             allTeamRankings: TournamentRanking[],
+                             round: number) {
+
+    const that = this;
+
+    _.forEach(teamRankingsForRound, function (ranking: TournamentRanking) {
+
+      if (ranking.tournamentPlayerId === tournamentPlayerIdToUpdate) {
+
+        const lastRoundRanking: TournamentRanking = _.find(allTeamRankings, function (rank: TournamentRanking) {
+          return (rank.tournamentRound === (round - 1) &&
+            rank.tournamentPlayerId === ranking.tournamentPlayerId);
+        });
+
+        let newListOfOpponentIds = ['bye'];
+        let newListOfOpponentNames = ['Bye'];
+
+        if (lastRoundRanking) {
+          newListOfOpponentIds =
+            _.union(newListOfOpponentIds, lastRoundRanking.opponentTournamentPlayerIds);
+          newListOfOpponentNames =
+            _.union(newListOfOpponentNames, lastRoundRanking.opponentNames);
+        }
+
+        const playerTwoRankingRef = that.afoDatabase
+          .object('tournament-team-rankings/' + ranking.tournamentId + '/' + ranking.id);
+        playerTwoRankingRef.update(
+          {
+            score: lastRoundRanking ? lastRoundRanking.score + 1 : 1,
+            secondScore: lastRoundRanking ? lastRoundRanking.secondScore + actualTournament.teamSize : actualTournament.teamSize,
+            controlPoints: lastRoundRanking ? lastRoundRanking.controlPoints + (actualTournament.teamSize * 3) : (actualTournament.teamSize * 3),
+            victoryPoints: lastRoundRanking ? lastRoundRanking.victoryPoints + (actualTournament.teamSize * 38) : (actualTournament.teamSize * 38),
+            opponentTournamentPlayerIds: newListOfOpponentIds,
+            opponentNames: newListOfOpponentNames
+          });
+
+        console.log('newByeRanking: ' + ranking.playerName);
+      }
+    });
+  }
 }

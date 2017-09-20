@@ -19,12 +19,12 @@
             (click)="router.navigate(['/tournament', actualTournament?.id, 'registrations']);">
       Go to -> Registrations
     </button>
-    <button *ngIf="(isAdmin || isCoOrganizer) && !teamTournament"
+    <button *ngIf="(isAdmin || isCoOrganizer) && !isTeamTournament"
             md-menu-item
             (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
       Go to -> Players
     </button>
-    <button *ngIf="(isAdmin || isCoOrganizer) && teamTournament"
+    <button *ngIf="(isAdmin || isCoOrganizer) && isTeamTournament"
             md-menu-item
             (click)="router.navigate(['/tournament', actualTournament?.id, 'teams']);">
       Go to -> Teams
@@ -41,7 +41,7 @@
     </button>
   </md-menu>
 </div>
-<h3 class="heading" *ngIf="round > actualTournament?.actualRound && (loadGames$ | async)">
+<h3 class="heading" *ngIf="round > actualTournament?.actualRound">
   No data for round {{round}} found
 </h3>
 
@@ -135,15 +135,15 @@
 
 <ng-container *ngIf="(!isAdmin && !isCoOrganizer) &&
                       actualTournament?.actualRound > actualTournament?.visibleRound &&
-                      ((allTournamentGamesFiltered$ | async)?.length > 0 ||
-                      (allTournamentTeamGamesFiltered$ | async)?.length > 0)">
+                      ((allPlayerGamesFiltered$ | async)?.length > 0 ||
+                      (allTeamGamesFiltered$ | async)?.length > 0)">
   <md-input-container
     class="full-width-with-padding">
     <input mdInput disabled placeholder="Scenario" value="{{selectedScenario}}">
   </md-input-container>
 </ng-container>
 
-<ng-container *ngIf="(isAdmin || isCoOrganizer) && (allTournamentGamesFiltered$ | async).length > 0">
+<ng-container *ngIf="(isAdmin || isCoOrganizer) && (allPlayerGamesFiltered$ | async).length > 0">
   <md-select
     placeholder="Scenario"
     class="full-width-with-padding"
@@ -187,12 +187,12 @@
 
 <ng-container *ngIf="!isTeamTournament">
   <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
-    <tournament-games *ngIf="(allTournamentGamesFiltered$ | async)?.length > 0 && actualTournament"
+    <tournament-games *ngIf="(allPlayerGamesFiltered$ | async)?.length > 0 && actualTournament"
                       [isAdmin]="isAdmin"
                       [isCoOrganizer]="isCoOrganizer"
                       [actualTournament]="actualTournament"
-                      [gamesForRound]="allTournamentGamesFiltered$ | async"
-                      [rankingsForRound]="rankingsForRound$ | async"
+                      [gamesForRound]="allPlayerGamesFiltered$ | async"
+                      [rankingsForRound]="playerRankingsForRound$ | async"
                       [armyLists]="allArmyLists$ | async"
                       [userPlayerData]="userPlayerData"
                       [isTeamMatch]="false"
@@ -204,18 +204,19 @@
 </ng-container>
 
 <ng-container *ngIf="isTeamTournament">
-  PGL: {{(gamesForRound$ | async)?.length}}
-
   <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
-    <tournament-team-games *ngIf="(allTournamentTeamGamesFiltered$ | async)?.length > 0 && actualTournament"
+    <tournament-team-games *ngIf="(allTeamGamesFiltered$ | async)?.length > 0 && actualTournament"
                            [isAdmin]="isAdmin"
                            [isCoOrganizer]="isCoOrganizer"
                            [myTeam]="myTeam"
                            [actualTournament]="actualTournament"
-                           [teamGamesForRound]="allTournamentTeamGamesFiltered$ | async"
+                           [teamGamesForRound]="allTeamGamesFiltered$ | async"
                            [playerGamesForRound]="gamesForRound$ | async"
                            [playerGamesForRound$]="gamesForRound$"
-                           [rankingsForRound]="rankingsForRound$ | async"
+                           [playerRankingsForRound]="playerRankingsForRound$ | async"
+                           [allPlayerRankings]="allPlayerRankings$ | async"
+                           [teamRankingsForRound]="teamRankingsForRound$ | async"
+                           [allTeamRankings]="allTournamentTeamRankings$ | async"
                            [armyLists]="allArmyLists$ | async"
                            [userPlayerData]="userPlayerData"
                            [actualTournamentTeams]="allTeams"

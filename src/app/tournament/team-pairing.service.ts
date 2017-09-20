@@ -13,6 +13,9 @@ import {Observable} from 'rxjs/Observable';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {Tournament} from '../../../shared/model/tournament';
 import {PairingService} from './pairing.service';
+import {Router} from '@angular/router';
+import {TournamentService} from './actual-tournament.service';
+import {ByeService} from './bye-service';
 
 @Injectable()
 export class TeamPairingService {
@@ -20,7 +23,10 @@ export class TeamPairingService {
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               private pairingService: PairingService,
-              private gameMatchingService: GameMatchingService) {
+              private tournamentService: TournamentService,
+              private router: Router,
+              private gameMatchingService: GameMatchingService,
+              private byeService: ByeService) {
   }
 
   pushTeamRankingForRound(config: TournamentManagementConfiguration,
@@ -46,7 +52,7 @@ export class TeamPairingService {
         '',
         team.meta ? team.meta : '',
         team.country ? team.country : '',
-        0, 0, 0, 0, 0, 0, 1, [],
+        0, 0, 0, 0, 0, 0, 1, [], [],
         team.droppedInRound ? team.droppedInRound : 0);
 
       _.forEach(lastRoundTeamRankings, function (lastRoundRanking: TournamentRanking) {
@@ -74,13 +80,13 @@ export class TeamPairingService {
 
   createTeamGamesForRound(actualTournament: Tournament,
                           allPlayers: TournamentPlayer[],
-                          allRankings: TournamentRanking[],
+                          allTeamRankings: TournamentRanking[],
                           config: TournamentManagementConfiguration,
-                          newRankings: TournamentRanking[],
+                          teamRankingsForRound: TournamentRanking[],
                           newPlayerRankings: TournamentRanking[]): boolean {
     const that = this;
 
-    const shuffledRankings = _.shuffle(newRankings);
+    const shuffledRankings = _.shuffle(teamRankingsForRound);
     const rankingsWithByeIfUneven = this.addByeIfPlayersUneven(shuffledRankings);
 
     const sortedRankings = _.orderBy(rankingsWithByeIfUneven, ['score'], ['desc']);
@@ -113,26 +119,8 @@ export class TeamPairingService {
         newTeamGame.playerTwoVictoryPoints = (38 * actualTournament.teamSize);
         newTeamGame.finished = true;
 
-        _.forEach(newRankings, function (ranking: TournamentRanking) {
-
-          if (ranking.tournamentPlayerId === newTeamGame.playerTwoTournamentPlayerId) {
-
-            const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
-              return (rank.tournamentRound === (config.round - 1) &&
-                rank.tournamentPlayerId === ranking.tournamentPlayerId);
-            });
-
-            const playerTwoRankingRef = that.afoDatabase
-              .object('tournament-team-rankings/' + newTeamGame.tournamentId + '/' + ranking.id);
-            playerTwoRankingRef.update(
-              {
-                score: lastRoundRanking ? lastRoundRanking.score + 1 : 1,
-                secondScore: lastRoundRanking ? lastRoundRanking.secondScore + actualTournament.teamSize : actualTournament.teamSize,
-                controlPoints: lastRoundRanking ? lastRoundRanking.controlPoints + (actualTournament.teamSize * 3) : (actualTournament.teamSize * 3),
-                victoryPoints: lastRoundRanking ? lastRoundRanking.victoryPoints + (actualTournament.teamSize * 38) : (actualTournament.teamSize * 38)
-              });
-          }
-        });
+        that.byeService.pushTeamRankingForByeMatch(actualTournament,
+          newTeamGame.playerTwoTournamentPlayerId, teamRankingsForRound, allTeamRankings, config.round);
       }
 
       if (newTeamGame.playerTwoTournamentPlayerId === 'bye') {
@@ -142,31 +130,13 @@ export class TeamPairingService {
         newTeamGame.playerOneVictoryPoints = (38 * actualTournament.teamSize);
         newTeamGame.finished = true;
 
-        _.forEach(newRankings, function (ranking: TournamentRanking) {
-
-          if (ranking.tournamentPlayerId === newTeamGame.playerOneTournamentPlayerId) {
-
-            const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
-              return (rank.tournamentRound === (config.round - 1) &&
-                rank.tournamentPlayerId === ranking.tournamentPlayerId);
-            });
-
-            const playerOneRankingRef = that.afoDatabase
-              .object('tournament-team-rankings/' + newTeamGame.tournamentId + '/' + ranking.id);
-            playerOneRankingRef.update(
-              {
-                score: lastRoundRanking ? lastRoundRanking.score + 1 : 1,
-                secondScore: lastRoundRanking ? lastRoundRanking.secondScore + actualTournament.teamSize : actualTournament.teamSize,
-                controlPoints: lastRoundRanking ? lastRoundRanking.controlPoints + (actualTournament.teamSize * 3) : (actualTournament.teamSize * 3),
-                victoryPoints: lastRoundRanking ? lastRoundRanking.victoryPoints + (actualTournament.teamSize * 38) : (actualTournament.teamSize * 38)
-              });
-          }
-        });
+        that.byeService.pushTeamRankingForByeMatch(actualTournament,
+          newTeamGame.playerOneTournamentPlayerId, teamRankingsForRound, allTeamRankings, config.round);
       }
 
       tournamentTeamGamesRef.push(newTeamGame);
 
-      that.createPlayerGamesForTeamMatch(newTeamGame, allRankings, newPlayerRankings, allPlayers, true);
+      that.createPlayerGamesForTeamMatch(newTeamGame, allTeamRankings, newPlayerRankings, allPlayers, true);
     });
 
     return true;
@@ -192,7 +162,7 @@ export class TeamPairingService {
         '',
         '',
         0,
-        0, 0, 0, 0, 0, 1, [], 0);
+        0, 0, 0, 0, 0, 1, [], [], 0);
 
       notDroppedPlayers.push(bye);
     }
@@ -206,6 +176,9 @@ export class TeamPairingService {
     const query = this.afoDatabase.list('tournament-team-games/' + config.tournamentId).take(1);
     query.subscribe((gamesRef: any) => {
       gamesRef.forEach((game) => {
+
+        console.log('check game: ' + JSON.stringify(game));
+
         if (game.tournamentRound === config.round) {
           this.afoDatabase.object('tournament-team-games/' + config.tournamentId + '/' + game.$key).remove();
         }
@@ -253,7 +226,7 @@ export class TeamPairingService {
 
         const newTeamGame = getGameVsBye(playerTwo, true, teamMatch.tournamentRound, index + 1);
 
-        that.pairingService.pushRankingForByeMatch(newTeamGame.playerOneTournamentPlayerId,
+        that.byeService.pushRankingForByeMatch(newTeamGame.playerOneTournamentPlayerId,
           newPlayerRankings, allRankings, (teamMatch.tournamentRound - 1));
 
         teamGamesRef.push(newTeamGame);
@@ -265,7 +238,7 @@ export class TeamPairingService {
 
         const newTeamGame = getGameVsBye(playerOne, false, teamMatch.tournamentRound, index + 1);
 
-        that.pairingService.pushRankingForByeMatch(newTeamGame.playerOneTournamentPlayerId,
+        that.byeService.pushRankingForByeMatch(newTeamGame.playerOneTournamentPlayerId,
           newPlayerRankings, allRankings, (teamMatch.tournamentRound - 1));
 
         teamGamesRef.push(newTeamGame);
@@ -308,23 +281,23 @@ export class TeamPairingService {
 
   }
 
-  pairTeamRoundAgain(config: TournamentManagementConfiguration,
-                     actualTournament: Tournament,
-                     allTournamentTeams: TournamentTeam[],
-                     allPlayers: TournamentPlayer[],
-                     allPlayerRankings: TournamentRanking[],
-                     allTeamRankings: TournamentRanking[]) {
+  pairTeamRound(config: TournamentManagementConfiguration,
+                actualTournament: Tournament,
+                allTournamentTeams: TournamentTeam[],
+                allPlayers: TournamentPlayer[],
+                allPlayerRankings: TournamentRanking[],
+                allTeamRankings: TournamentRanking[]) {
 
-    console.log('pairTeamRoundAgain');
+    console.log('pairTeamRound');
 
     Observable
       .zip(this.pairingService.killRankingsForRound(config),
-           this.pairingService.killGamesForRound(config),
-           this.killTeamRankingsForRound(config),
-           this.killTeamGamesForRound(config),
-           (a: any, b: any, c: any, d: any) => {
-        return {a: a, b: b, c: c, d: d};
-      })
+        this.pairingService.killGamesForRound(config),
+        this.killTeamRankingsForRound(config),
+        this.killTeamGamesForRound(config),
+        (a: any, b: any, c: any, d: any) => {
+          return {a: a, b: b, c: c, d: d};
+        })
       .subscribe((r) => {
 
         const newPlayerRankings: TournamentRanking[] =
@@ -333,13 +306,19 @@ export class TeamPairingService {
         const newTeamRankings: TournamentRanking[] =
           this.pushTeamRankingForRound(config, allTournamentTeams, allTeamRankings);
         const success: boolean = this.createTeamGamesForRound(
-          actualTournament, allPlayers, [], config,
+          actualTournament, allPlayers, allTeamRankings, config,
           newTeamRankings, newPlayerRankings);
 
-        if (!success) {
+        if (success) {
+          console.log('pairRound successfull');
+
+          this.tournamentService.newRound(config);
+          this.router.navigate(['/tournament', config.tournamentId, 'round', config.round]);
+        } else {
           this.pairingService.killRankingsForRound(config);
           this.killTeamRankingsForRound(config);
         }
       });
   }
+
 }

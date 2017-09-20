@@ -15,7 +15,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Tournament} from '../../../../../shared/model/tournament';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
-import {compareRanking, TournamentRanking} from '../../../../../shared/model/tournament-ranking';
+import {compareRanking, compareTeamRanking, TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {ArmyList} from '../../../../../shared/model/armyList';
 import {DropPlayerPush} from '../../../../../shared/dto/drop-player-push';
 import {ActualTournamentTeamRankingService} from '../../actual-tournament-team-ranking.service';
@@ -102,8 +102,7 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
       rankings => rankings.filter(r => r.tournamentRound === this.round).sort(compareRanking).reverse());
 
     this.teamRankingsForRound$ = this.allTeamRankings$.map(
-      rankings => rankings.filter(r => r.tournamentRound === this.round).sort(compareRanking).reverse());
-
+      rankings => rankings.filter(r => r.tournamentRound === this.round).sort(compareTeamRanking).reverse());
 
     this.loadRanking$ = this.store.select(state => state.actualTournamentRankings.loadRankings);
     this.loadTeamRanking$ = this.store.select(state => state.actualTournamentRankings.loadRankings);

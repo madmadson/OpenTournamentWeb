@@ -11,6 +11,7 @@ import {PublishRound} from '../../../shared/dto/publish-round';
 import {Observable} from 'rxjs/Observable';
 import {TournamentService} from './actual-tournament.service';
 import {Router} from '@angular/router';
+import {ByeService} from "./bye-service";
 
 @Injectable()
 export class PairingService {
@@ -19,6 +20,7 @@ export class PairingService {
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               private tournamentService: TournamentService,
               private gameMatchingService: GameMatchingService,
+              private byeServive: ByeService,
               private router: Router) {
   }
 
@@ -48,7 +50,7 @@ export class PairingService {
           tournamentPlayer.meta ? tournamentPlayer.meta : '',
           tournamentPlayer.country ? tournamentPlayer.country : '',
           tournamentPlayer.elo ? tournamentPlayer.elo : 0,
-          0, 0, 0, 0, 0, 1, [],
+          0, 0, 0, 0, 0, 1, [], [],
           tournamentPlayer.droppedInRound ? tournamentPlayer.droppedInRound : 0);
 
 
@@ -63,6 +65,8 @@ export class PairingService {
             newTournamentRanking.tournamentRound = config.round;
             newTournamentRanking.opponentTournamentPlayerIds =
               lastRoundRanking.opponentTournamentPlayerIds ? lastRoundRanking.opponentTournamentPlayerIds : [];
+            newTournamentRanking.opponentNames =
+              lastRoundRanking.opponentNames ? lastRoundRanking.opponentNames : [];
           }
         });
 
@@ -82,6 +86,7 @@ export class PairingService {
                     allRankings: TournamentRanking[],
                     newRankings: TournamentRanking[]): boolean {
 
+    const that = this;
 
     const shuffledRankings = _.shuffle(newRankings);
     const rankingsWithByeIfUneven = this.addByeIfPlayersUneven(shuffledRankings);
@@ -112,22 +117,26 @@ export class PairingService {
 
       if (newGame.playerOneTournamentPlayerId === 'bye') {
 
-        this.pushRankingForByeMatch(newGame.playerTwoTournamentPlayerId,
+        that.byeServive.pushRankingForByeMatch(newGame.playerTwoTournamentPlayerId,
           newRankings, allRankings, (config.round - 1));
 
           newGame.playerTwoScore = 1;
           newGame.playerTwoControlPoints = 3;
           newGame.playerTwoVictoryPoints = 38;
+
+          newGame.finished = true;
       }
 
       if (newGame.playerTwoTournamentPlayerId === 'bye') {
 
-        this.pushRankingForByeMatch(newGame.playerOneTournamentPlayerId,
-          newGame, newRankings, allRankings, (config.round - 1));
+        that.byeServive.pushRankingForByeMatch(newGame.playerOneTournamentPlayerId,
+          newRankings, allRankings, (config.round - 1));
 
         newGame.playerOneScore = 1;
         newGame.playerOneControlPoints = 3;
         newGame.playerOneVictoryPoints = 38;
+
+        newGame.finished = true;
       }
 
       tournamentGamesRef.push(newGame);
@@ -155,7 +164,7 @@ export class PairingService {
         '',
         '',
         0,
-        0, 0, 0, 0, 0, 1, [], 0);
+        0, 0, 0, 0, 0, 1, [], [], 0);
 
       notDroppedPlayers.push(bye);
     }
@@ -218,7 +227,8 @@ export class PairingService {
     console.log('pairRoundAgain');
 
     Observable
-      .zip(this.killRankingsForRound(config), this.killGamesForRound(config), (a: any, b: any) => {
+      .zip(this.killRankingsForRound(config),
+        this.killGamesForRound(config), (a: any, b: any) => {
         return {a: a, b: b};
       })
       .subscribe((r) => {
@@ -238,7 +248,8 @@ export class PairingService {
     console.log('pairNewRound');
 
     Observable
-      .zip(this.killRankingsForRound(config), this.killGamesForRound(config), (a: any, b: any) => {
+      .zip(this.killRankingsForRound(config),
+        this.killGamesForRound(config), (a: any, b: any) => {
         return {a: a, b: b};
       })
       .subscribe(() => {
@@ -254,33 +265,5 @@ export class PairingService {
           this.killRankingsForRound(config);
         }
       });
-  }
-
-  pushRankingForByeMatch(tournamentPlayerIdToUpdate: string,
-                         newRankings: TournamentRanking[],
-                         allRankings: TournamentRanking[],
-                         round: number) {
-
-    const that = this;
-
-    _.forEach(newRankings, function (ranking: TournamentRanking) {
-
-      if (ranking.tournamentPlayerId === tournamentPlayerIdToUpdate) {
-
-        const lastRoundRanking: TournamentRanking = _.find(allRankings, function (rank: TournamentRanking) {
-          return (rank.tournamentRound === (round - 1) &&
-            rank.tournamentPlayerId === ranking.tournamentPlayerId);
-        });
-
-        const playerOneRankingRef = that.afoDatabase
-          .object('tournament-rankings/' + ranking.tournamentId + '/' + ranking.id);
-        playerOneRankingRef.update(
-          {
-            score: lastRoundRanking ? lastRoundRanking.score + 1 : 1,
-            controlPoints: lastRoundRanking ? lastRoundRanking.controlPoints + 3 : 3,
-            victoryPoints: lastRoundRanking ? lastRoundRanking.victoryPoints + 38 : 38
-          });
-      }
-    });
   }
 }

@@ -15,8 +15,6 @@ import * as _ from 'lodash';
 import {Tournament} from '../../../../../shared/model/tournament';
 import {TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {TournamentGame} from '../../../../../shared/model/tournament-game';
-import {ScenarioSelectedModel} from '../../../../../shared/dto/scenario-selected-model';
-import {SwapGames} from '../../../../../shared/dto/swap-player';
 import {GameResult} from '../../../../../shared/dto/game-result';
 import {MdDialog, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
 import {WindowRefService} from '../../../service/window-ref-service';
@@ -61,7 +59,7 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
   draggedTournamentPlayerOpponentIds: string[] = [];
 
   displayedColumns = ['playingField', 'playerOnePlayerName', 'swapPlayerOne', 'vs',
-                      'swapPlayerTwo', 'playerTwoPlayerName', 'actions'];
+    'swapPlayerTwo', 'playerTwoPlayerName', 'actions'];
 
   gamesDb: GamesDatabase;
   dataSource: GamesDataSource | null;
@@ -107,7 +105,8 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
           this.gamesDb.resetDatabase(change.currentValue);
 
           if (this.nextUnfinishedGame) {
-           this.openGameResultDialog(this.nextUnfinishedGame);
+            console.log('open ' + JSON.stringify(this.nextUnfinishedGame));
+            this.openGameResultDialog(this.nextUnfinishedGame);
           }
         }
       }
@@ -179,11 +178,7 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
           if (gameResult !== undefined) {
 
             this.onGameResultEntered.emit(gameResult);
-            if (!this.isTeamMatch) {
-              this.dialog.closeAll();
-            } else {
-              dialogRef.close();
-            }
+            dialogRef.close();
           }
         });
 
@@ -193,12 +188,7 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
           if (gameResult !== undefined) {
 
             this.onGameResultEntered.emit(gameResult);
-            if (!this.isTeamMatch) {
-              this.dialog.closeAll();
-            } else {
-              dialogRef.close();
-            }
-
+            dialogRef.close();
             this.nextUnfinishedGame = nextUnfinishedGame;
           }
         });
@@ -206,9 +196,6 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
         onGameResult.unsubscribe();
         onGameResultAndNext.unsubscribe();
-        if (!this.isTeamMatch) {
-          this.dialog.closeAll();
-        }
       });
 
     }
@@ -267,7 +254,7 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
   dropPossible(game: TournamentGame, playerId: string, playerTeam: string): boolean {
 
-    if ( this.isTeamMatch) {
+    if (this.isTeamMatch) {
       return !game.finished && this.draggedTournamentPlayerId !== playerId &&
         this.draggedTournamentTeamName === playerTeam;
     } else {
@@ -287,7 +274,7 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
       console.log('confirmDropPlayerOne');
 
-     this.swappingService.swapPlayer(this.rankingsForRound, this.draggedGame, this.draggedTournamentPlayerId, droppedGame, droppedPlayerId);
+      this.swappingService.swapPlayer(this.rankingsForRound, this.draggedGame, this.draggedTournamentPlayerId, droppedGame, droppedPlayerId);
 
       this.snackBar.open('Players successfully swapped ', '', {
         extraClasses: ['snackBar-success'],

@@ -38,6 +38,8 @@ import {TournamentTeam} from '../../../../../shared/model/tournament-team';
 import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
 import {ActualTournamentTeamRankingService} from '../../actual-tournament-team-ranking.service';
 import {TeamMatchClearModel} from '../../../../../shared/dto/player-match-team-clear-model';
+import {getArrayForNumber} from '../../../../../shared/utils';
+import {TeamGameResult} from '../../../../../shared/dto/team-game-result';
 
 
 @Component({
@@ -62,25 +64,25 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   allTeams$: Observable<TournamentTeam[]>;
   allTeams: TournamentTeam[];
 
-  allTournamentGames$: Observable<TournamentGame[]>;
-  allTournamentGamesFiltered$: Observable<TournamentGame[]>;
-  allTournamentGames: TournamentGame[];
+  allPlayerGames$: Observable<TournamentGame[]>;
+  allPlayerGamesFiltered$: Observable<TournamentGame[]>;
+  allPlayerGames: TournamentGame[];
   gamesForRound$: Observable<TournamentGame[]>;
   finishedGamesForRound$: Observable<TournamentGame[]>;
   unfinishedGamesForRound$: Observable<TournamentGame[]>;
 
   loadGames$: Observable<boolean>;
 
-  allTournamentTeamGames$: Observable<TournamentGame[]>;
-  allTournamentTeamGamesFiltered$: Observable<TournamentGame[]>;
-  allTournamentTeamGames: TournamentGame[];
+  allTeamGames$: Observable<TournamentGame[]>;
+  allTeamGamesFiltered$: Observable<TournamentGame[]>;
+  allTeamGames: TournamentGame[];
   teamGamesForRound$: Observable<TournamentGame[]>;
 
   loadTeamGames$: Observable<boolean>;
 
-  allTournamentRankings$: Observable<TournamentRanking[]>;
+  allPlayerRankings$: Observable<TournamentRanking[]>;
   allTournamentRankings: TournamentRanking[];
-  rankingsForRound$: Observable<TournamentRanking[]>;
+  playerRankingsForRound$: Observable<TournamentRanking[]>;
 
   allTournamentTeamRankings$: Observable<TournamentRanking[]>;
   allTournamentTeamRankings: TournamentRanking[];
@@ -96,6 +98,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   isAdmin: boolean;
   isCoOrganizer: boolean;
   isTournamentPlayer: boolean;
+  isTeamTournament: boolean;
+  myTeam: string;
 
   selectedScenario: string;
 
@@ -117,8 +121,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   onReachBottomOfPageEvent: EventEmitter<boolean>;
   onReachTopOfPageEvent: EventEmitter<boolean>;
 
-  private isTeamTournament: boolean;
-  private myTeam: string;
+
 
   constructor(@Inject(DOCUMENT) private document: any,
               private snackBar: MdSnackBar,
@@ -151,13 +154,13 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
     this.allTeams$ = this.store.select(state => state.actualTournamentTeams.teams);
 
-    this.allTournamentRankings$ = this.store.select(state => state.actualTournamentRankings.rankings);
+    this.allPlayerRankings$ = this.store.select(state => state.actualTournamentRankings.rankings);
     this.allTournamentTeamRankings$ = this.store.select(state => state.actualTournamentTeamRankings.teamRankings);
 
-    this.allTournamentGames$ = this.store.select(state => state.actualTournamentGames.games);
+    this.allPlayerGames$ = this.store.select(state => state.actualTournamentGames.games);
     this.loadGames$ = this.store.select(state => state.actualTournamentGames.loadGames);
 
-    this.allTournamentTeamGames$ = this.store.select(state => state.actualTournamentTeamGames.teamGames);
+    this.allTeamGames$ = this.store.select(state => state.actualTournamentTeamGames.teamGames);
     this.loadTeamGames$ = this.store.select(state => state.actualTournamentTeamGames.loadTeamGames);
 
     this.searchField$ = this.store.select(state => state.actualTournamentGames.gamesSearch);
@@ -262,15 +265,15 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.allActualTournamentGamesSub = this.allTournamentGames$.subscribe((allTournamentGames: TournamentGame[]) => {
-      this.allTournamentGames = allTournamentGames;
+    this.allActualTournamentGamesSub = this.allPlayerGames$.subscribe((allTournamentGames: TournamentGame[]) => {
+      this.allPlayerGames = allTournamentGames;
     });
 
-    this.allActualTournamentTeamGamesSub = this.allTournamentTeamGames$.subscribe((allTournamentTeamGames: TournamentGame[]) => {
-      this.allTournamentTeamGames = allTournamentTeamGames;
+    this.allActualTournamentTeamGamesSub = this.allTeamGames$.subscribe((allTournamentTeamGames: TournamentGame[]) => {
+      this.allTeamGames = allTournamentTeamGames;
     });
 
-    this.allActualTournamentRankingsSub = this.allTournamentRankings$.subscribe((rankings: TournamentRanking[]) => {
+    this.allActualTournamentRankingsSub = this.allPlayerRankings$.subscribe((rankings: TournamentRanking[]) => {
       this.allTournamentRankings = rankings;
     });
 
@@ -282,19 +285,19 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   private createDataObservables(incomingRound: number) {
 
-    this.gamesForRound$ = this.allTournamentGames$.map(
+    this.gamesForRound$ = this.allPlayerGames$.map(
       games => games.filter((game: TournamentGame) => {
         return game.tournamentRound === incomingRound;
       }));
 
 
-    this.teamGamesForRound$ = this.allTournamentTeamGames$.map(
+    this.teamGamesForRound$ = this.allTeamGames$.map(
       games => games.filter((game: TournamentGame) => {
         return game.tournamentRound === incomingRound;
       }));
 
-    this.allTournamentTeamGamesFiltered$ = Observable.combineLatest(
-      this.allTournamentTeamGames$,
+    this.allTeamGamesFiltered$ = Observable.combineLatest(
+      this.allTeamGames$,
       this.searchField$,
       this.onlyMyGameFilter$,
       (allTeamGames, searchField, onlyMyGameFilter) => {
@@ -322,8 +325,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       });
 
 
-    this.allTournamentGamesFiltered$ = Observable.combineLatest(
-      this.allTournamentGames$,
+    this.allPlayerGamesFiltered$ = Observable.combineLatest(
+      this.allPlayerGames$,
       this.searchField$,
       this.onlyMyGameFilter$,
       (allGames, searchField, onlyMyGameFilter) => {
@@ -352,13 +355,13 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       });
 
 
-    this.finishedGamesForRound$ = this.allTournamentGames$.map(
+    this.finishedGamesForRound$ = this.allPlayerGames$.map(
       games => games.filter(t => t.tournamentRound === incomingRound && t.finished));
 
-    this.unfinishedGamesForRound$ = this.allTournamentGames$.map(
+    this.unfinishedGamesForRound$ = this.allPlayerGames$.map(
       games => games.filter(t => t.tournamentRound === incomingRound && !t.finished));
 
-    this.rankingsForRound$ = this.allTournamentRankings$.map(
+    this.playerRankingsForRound$ = this.allPlayerRankings$.map(
       rankings => rankings.filter(r => r.tournamentRound === incomingRound));
 
     this.teamRankingsForRound$ = this.allTournamentTeamRankings$.map(
@@ -409,10 +412,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.store.dispatch({type: SHOW_ONLY_MY_GAME_ACTION, payload: show});
   }
 
-  getArrayForNumber(round: number): number[] {
 
-    return round ? _.range(1, (round + 1)) : [];
-  };
 
   setIsAdmin(): void {
     if (this.actualTournament && this.userPlayerData) {
@@ -552,7 +552,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
           if (!this.isTeamTournament) {
             this.pairingService.pairRoundAgain(config, this.allActualTournamentPlayers, this.allTournamentRankings);
           } else {
-            this.teamPairingService.pairTeamRoundAgain(config,
+            this.teamPairingService.pairTeamRound(config,
               this.actualTournament, this.allTeams, this.allActualTournamentPlayers,
               this.allTournamentRankings, this.allTournamentTeamRankings);
           }
@@ -575,15 +575,25 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         actualTournament: this.actualTournament,
         round: this.round,
         allActualTournamentPlayers: this.allActualTournamentPlayers,
-        teamMatch: false
+        teamMatch: this.isTeamTournament
       },
       width: '600px',
     });
     const eventSubscribe = dialogRef.componentInstance.onNewRound
       .subscribe((config: TournamentManagementConfiguration) => {
         if (config !== undefined) {
-          this.pairingService.pairNewRound(config, this.allActualTournamentPlayers, this.allTournamentRankings);
 
+          if (!this.isTeamTournament) {
+            this.pairingService.pairNewRound(config, this.allActualTournamentPlayers, this.allTournamentRankings);
+          } else {
+            this.teamPairingService.pairTeamRound(
+              config,
+              this.actualTournament,
+              this.allTeams,
+              this.allActualTournamentPlayers,
+              this.allTournamentRankings,
+              this.allTournamentTeamRankings);
+          }
           this.snackBar.open('Round created successfully.', '', {
             extraClasses: ['snackBar-success'],
             duration: 5000
@@ -637,7 +647,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       },
       this.actualTournament,
       this.allTournamentRankings,
-      this.allTournamentGames
+      this.allPlayerGames,
+      true
     );
 
     this.snackBar.open('Game cleared successfully', '', {
@@ -648,7 +659,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   handleClearTeamPlayerGameResult(gameToReset: TournamentGame) {
 
-    const teamMatch = _.find(this.allTournamentTeamGames, function (teamGame: TournamentGame) {
+    const teamMatch = _.find(this.allTeamGames, function (teamGame: TournamentGame) {
       return teamGame.playerOnePlayerName === gameToReset.playerOneTeamName;
     });
     this.gameResultService.clearGameForTeamMatchOnly(gameToReset, teamMatch);
@@ -662,7 +673,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       },
       this.actualTournament,
       this.allTournamentRankings,
-      this.allTournamentGames
+      this.allPlayerGames,
+      true
     );
 
     this.snackBar.open('TeamGame cleared successfully', '', {
@@ -676,6 +688,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     const that = this;
 
     this.gameResultService.clearGameForTeamMatch(teamMatchClear.teamMatch);
+    this.gameResultService.clearRankingForTeamMatch(teamMatchClear.teamMatch,
+      this.allTournamentTeamRankings);
 
     _.forEach(teamMatchClear.playerMatchesForTeamOne, function (playerGame: TournamentGame) {
       const clearedGame = clearTournamentGame(playerGame);
@@ -687,7 +701,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         },
         that.actualTournament,
         that.allTournamentRankings,
-        that.allTournamentGames
+        that.allPlayerGames,
+        true
       );
     });
     this.snackBar.open('TeamGame cleared successfully', '', {
@@ -707,7 +722,9 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       gameResult,
       this.actualTournament,
       this.allTournamentRankings,
-      this.allTournamentGames);
+      this.allPlayerGames,
+      false
+    );
 
     this.snackBar.open('GameResult entered successfully', '', {
       extraClasses: ['snackBar-success'],
@@ -715,19 +732,27 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleTeamGameResultEntered(gameResult: GameResult) {
+  handleTeamGameResultEntered(teamGameResult: GameResult) {
 
     if (this.selectedScenario) {
-      gameResult.gameAfter.scenario = this.selectedScenario;
+      teamGameResult.gameAfter.scenario = this.selectedScenario;
     }
 
+    console.log('teamGameResult: ' + JSON.stringify(teamGameResult));
+
     this.gameResultService.teamGameResultEntered(
-      gameResult,
+      {
+        teamMatch: this.getTeamMatchForPlayerGame(teamGameResult.gameAfter),
+        gameBefore: teamGameResult.gameBefore,
+        gameAfter: teamGameResult.gameAfter
+      },
       this.actualTournament,
       this.allTournamentRankings,
       this.allTournamentTeamRankings,
-      this.allTournamentGames,
-      this.allTournamentTeamGames);
+      this.allPlayerGames,
+      this.allTeamGames,
+      false
+    );
 
 
     this.snackBar.open('TeamGameResult entered successfully', '', {
@@ -741,7 +766,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
     const that = this;
 
-    _.forEach(this.allTournamentGames, function (game: TournamentGame) {
+    _.forEach(this.allPlayerGames, function (game: TournamentGame) {
 
       if (!game.finished) {
 
@@ -759,14 +784,33 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         gameAfter.playerTwoScore = winner === 2 ? 1 : 0;
         gameAfter.finished = true;
 
-        that.gameResultService.gameResultEntered(
-          {
-            gameBefore: game,
-            gameAfter: gameAfter,
-          },
-          that.actualTournament,
-          that.allTournamentRankings,
-          that.allTournamentGames);
+        if (!that.isTeamTournament) {
+
+          that.gameResultService.gameResultEntered(
+            {
+              gameBefore: game,
+              gameAfter: gameAfter,
+            },
+            that.actualTournament,
+            that.allTournamentRankings,
+            that.allPlayerGames,
+            false
+          );
+        } else {
+          that.gameResultService.teamGameResultEntered(
+            {
+              teamMatch: that.getTeamMatchForPlayerGame(game),
+              gameBefore: game,
+              gameAfter: gameAfter,
+            },
+            that.actualTournament,
+            that.allTournamentRankings,
+            that.allTournamentTeamRankings,
+            that.allPlayerGames,
+            that.allTeamGames,
+            false
+          );
+        }
       }
     });
   };
@@ -820,6 +864,21 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.pageScrollService.start(pageScrollInstance);
   }
 
+  getArrayForNumber (round: number) {
+    return getArrayForNumber(round);
+  }
+
+  getTeamMatchForPlayerGame(game: TournamentGame): TournamentGame {
+
+    const that = this;
+
+    return _.find(this.allTeamGames, function (teamGame: TournamentGame) {
+
+      return teamGame.tournamentRound === that.round &&
+        (game.playerOneTeamName === teamGame.playerOnePlayerName ||
+          game.playerTwoTeamName === teamGame.playerTwoPlayerName);
+    });
+  }
 }
 
 

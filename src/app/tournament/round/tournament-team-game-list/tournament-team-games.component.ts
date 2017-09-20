@@ -29,6 +29,7 @@ import {TeamMatchDialogComponent} from '../../../dialogs/team-game-result-dialog
 import {Observable} from 'rxjs/Observable';
 import {TeamMatchClearModel} from '../../../../../shared/dto/player-match-team-clear-model';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
+import {TeamGameResult} from "../../../../../shared/dto/team-game-result";
 
 
 @Component({
@@ -55,7 +56,10 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   @Input() teamGamesForRound: TournamentGame[];
   @Input() playerGamesForRound: TournamentGame[];
   @Input() playerGamesForRound$: Observable<TournamentGame[]>;
-  @Input() rankingsForRound: TournamentRanking[];
+  @Input() playerRankingsForRound: TournamentRanking[];
+  @Input() allPlayerRankings: TournamentRanking[];
+  @Input() teamRankingsForRound: TournamentRanking[];
+  @Input() allTeamRankings: TournamentRanking[];
   @Input() actualTournamentTeams: TournamentTeam[];
   @Input() actualTournamentPlayers: TournamentPlayer[];
 
@@ -183,7 +187,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
         actualTournament: this.actualTournament,
         armyLists: this.armyLists,
         playerGamesForTeam$: this.getPlayerMatchesForBothTeams(selectedTeamMatch),
-        rankingsForRound: this.rankingsForRound,
+        rankingsForRound: this.playerRankingsForRound,
         actualTournamentTeams: this.actualTournamentTeams
       },
     });
@@ -192,7 +196,10 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
 
         if (gameResult !== undefined) {
 
-          this.onTeamMatchGameResult.emit(gameResult);
+          this.onTeamMatchGameResult.emit({
+            gameBefore: gameResult.gameBefore,
+            gameAfter: gameResult.gameAfter
+          });
         }
       });
 
@@ -223,7 +230,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     this.draggedTournamentPlayerCurrentOpponentId = game.playerTwoTournamentPlayerId;
     this.draggedGame = game;
 
-    _.forEach(this.rankingsForRound, function (ranking: TournamentRanking) {
+    _.forEach(this.teamRankingsForRound, function (ranking: TournamentRanking) {
       if (ranking.opponentTournamentPlayerIds && ranking.tournamentPlayerId === game.playerOneTournamentPlayerId) {
         that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
       }
@@ -245,7 +252,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     this.draggedTournamentPlayerCurrentOpponentId = game.playerOneTournamentPlayerId;
     this.draggedGame = game;
 
-    _.forEach(this.rankingsForRound, function (ranking: TournamentRanking) {
+    _.forEach(this.teamRankingsForRound, function (ranking: TournamentRanking) {
       if (ranking.opponentTournamentPlayerIds && ranking.tournamentPlayerId === game.playerTwoTournamentPlayerId) {
         that.draggedTournamentPlayerOpponentIds = ranking.opponentTournamentPlayerIds;
       }
@@ -283,7 +290,9 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
         droppedTournamentPlayerId,
         this.playerGamesForRound,
         this.actualTournamentPlayers,
-        this.rankingsForRound);
+        this.playerRankingsForRound,
+        this.teamRankingsForRound,
+        this.allTeamRankings);
 
       this.snackBar.open('Teams successfully swapped ', '', {
         extraClasses: ['snackBar-success'],
