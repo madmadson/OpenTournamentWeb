@@ -15,11 +15,14 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Tournament} from '../../../../../shared/model/tournament';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
-import {compareRanking, TournamentRanking} from '../../../../../shared/model/tournament-ranking';
+import {compareRanking, compareTeamRanking, TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {ArmyList} from '../../../../../shared/model/armyList';
-import {EloService} from "../../elo.service";
-import {Registration} from "../../../../../shared/model/registration";
-import {TournamentGame} from "../../../../../shared/model/tournament-game";
+import {EloService} from '../../elo.service';
+import {Registration} from '../../../../../shared/model/registration';
+import {TournamentGame} from '../../../../../shared/model/tournament-game';
+import {ShowSoloRankingsComponent} from '../../../dialogs/mini-dialog/show-solo-rankings-dialog';
+import {ActualTournamentTeamRankingService} from '../../actual-tournament-team-ranking.service';
+import {UploadTournamentDialogComponent} from '../../../dialogs/upload-tournament-dialog';
 
 
 @Component({
@@ -40,11 +43,15 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
   allTournamentPlayers$: Observable<TournamentPlayer[]>;
   allActualTournamentPlayers: TournamentPlayer[];
 
-  loadRanking$: Observable<boolean>;
+  allPlayerRankings$: Observable<TournamentRanking[]>;
+  playerRankingsForRound$: Observable<TournamentRanking[]>;
+  playerRankingsForRound: TournamentRanking[];
 
-  allTournamentRankings$: Observable<TournamentRanking[]>;
-  allTournamentRankings: TournamentRanking[];
-  rankingsForRound$: Observable<TournamentRanking[]>;
+  allTeamRankings$: Observable<TournamentRanking[]>;
+  teamRankingsForRound$: Observable<TournamentRanking[]>;
+
+  loadRanking$: Observable<boolean>;
+  loadTeamRanking$: Observable<boolean>;
 
   allRegistrations$: Observable<Registration[]>;
   allRegistrations: Registration[];
@@ -53,8 +60,8 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
   allTournamentGames: TournamentGame[];
 
   allArmyLists$: Observable<ArmyList[]>;
+  allArmyLists: ArmyList[];
 
-  swapPlayerMode: boolean;
   smallScreen: boolean;
 
   isAdmin: boolean;
@@ -66,7 +73,10 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
   private allActualTournamentPlayersSub: Subscription;
   private allActualRegistrationsSub: Subscription;
   private allActualTournamentGamesSub: Subscription;
+  private armyListSub: Subscription;
+  private playerRankingsSub: Subscription;
 
+  isTeamTournament: boolean;
 
   constructor(private snackBar: MdSnackBar,
               private dialog: MdDialog,
@@ -74,6 +84,7 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
               private armyListService: ActualTournamentArmyListService,
               private tournamentPlayerService: ActualTournamentPlayerService,
               private rankingService: ActualTournamentRankingService,
+              private teamRankingService: ActualTournamentTeamRankingService,
               private eloService: EloService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
@@ -85,23 +96,30 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
         this.tournamentPlayerService.subscribeOnFirebase(params['id']);
         this.armyListService.subscribeOnFirebase(params['id']);
         this.rankingService.subscribeOnFirebase(params['id']);
+        this.teamRankingService.subscribeOnFirebase(params['id']);
       }
     );
 
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
-    this.allTournamentPlayers$ = this.store.select(state => state.actualTournamentPlayers.players);
-    this.allTournamentRankings$ = this.store.select(state => state.actualTournamentRankings.rankings);
     this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
     this.allRegistrations$ = this.store.select(state => state.actualTournamentRegistrations.registrations);
-    this.allRegistrations$ = this.store.select(state => state.actualTournamentRegistrations.registrations);
+
+    this.allTournamentPlayers$ = this.store.select(state => state.actualTournamentPlayers.players);
+
+    this.allPlayerRankings$ = this.store.select(state => state.actualTournamentRankings.rankings);
+    this.allTeamRankings$ = this.store.select(state => state.actualTournamentTeamRankings.teamRankings);
+
     this.allTournamentGames$ = this.store.select(state => state.actualTournamentGames.games);
 
-
-    this.rankingsForRound$ = this.allTournamentRankings$.map(
+    this.playerRankingsForRound$ = this.allPlayerRankings$.map(
       rankings => rankings.filter(r => r.tournamentRound === this.round).sort(compareRanking).reverse());
 
+    this.teamRankingsForRound$ = this.allTeamRankings$.map(
+      rankings => rankings.filter(r => r.tournamentRound === this.round).sort(compareTeamRanking).reverse());
+
     this.loadRanking$ = this.store.select(state => state.actualTournamentRankings.loadRankings);
+    this.loadTeamRanking$ = this.store.select(state => state.actualTournamentTeamRankings.loadTeamRankings);
 
   }
 
@@ -116,6 +134,10 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
       this.setIsAdmin();
       this.setIsCoAdmin();
       this.setIsTournamentPlayer();
+
+      if (actualTournament) {
+        this.isTeamTournament = (actualTournament.teamSize > 0);
+      }
     });
     this.userPlayerDataSub = this.userPlayerData$.subscribe((player: Player) => {
       this.userPlayerData = player;
@@ -137,6 +159,13 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
       this.allTournamentGames = allTournamentGames;
     });
 
+    this.playerRankingsSub = this.playerRankingsForRound$.subscribe((rankings: TournamentRanking[]) => {
+      this.playerRankingsForRound = rankings;
+    });
+
+    this.armyListSub = this.allArmyLists$.subscribe((armyLists: ArmyList[]) => {
+      this.allArmyLists = armyLists;
+    });
   }
 
   ngOnDestroy() {
@@ -145,11 +174,14 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
     this.tournamentPlayerService.unsubscribeOnFirebase();
     this.armyListService.unsubscribeOnFirebase();
     this.rankingService.unsubscribeOnFirebase();
+    this.teamRankingService.unsubscribeOnFirebase();
 
     this.actualTournamentSub.unsubscribe();
     this.userPlayerDataSub.unsubscribe();
     this.allActualTournamentPlayersSub.unsubscribe();
     this.allActualRegistrationsSub.unsubscribe();
+    this.playerRankingsSub.unsubscribe();
+    this.armyListSub.unsubscribe();
   }
 
   getArrayForNumber(round: number): number[] {
@@ -207,17 +239,41 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
     this.router.navigate(['/tournament', this.actualTournament.id, 'round', this.actualTournament.actualRound]);
   }
 
-  publishTournament() {
-    this.tournamentService.uploadTournament(this.actualTournament.id);
-    this.eloService.calculateEloForTournament(this.actualTournament, this.allRegistrations, this.allTournamentGames);
 
-    this.snackBar.open('Upload Tournament successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
+  uploadTournament() {
+    const dialogRef = this.dialog.open(UploadTournamentDialogComponent);
+
+    const eventSubscribe = dialogRef.componentInstance.onUploadTournament
+      .subscribe(() => {
+
+        this.tournamentService.uploadTournament(this.actualTournament.id);
+        this.eloService.calculateEloForTournament(this.actualTournament, this.allRegistrations, this.allTournamentGames);
+
+        this.snackBar.open('Upload Tournament successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
+      });
+
+    dialogRef.afterClosed().subscribe(() => {
+
+      eventSubscribe.unsubscribe();
     });
+  }
 
-   }
-
+  showPlayerRankings() {
+    this.dialog.open(ShowSoloRankingsComponent, {
+      data: {
+        isAdmin: this.isAdmin,
+        isCoOrganizer: this.isCoOrganizer,
+        actualTournament: this.actualTournament,
+        userPlayerData: this.userPlayerData,
+        rankingsForRound: this.playerRankingsForRound,
+        allArmyLists: this.allArmyLists
+      },
+      width: '800px',
+    });
+  }
 }
 
 

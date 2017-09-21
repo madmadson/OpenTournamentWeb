@@ -173,9 +173,6 @@ button:hover {
   color: $hover_color !important;
 }
 
-.mdl-list__item .mdl-list__item-secondary-content {
-  margin-left: 3px;
-}
 
 .color-negative-background {
   background-color: $fail_color;
@@ -539,10 +536,6 @@ md-card {
   cursor: move;
 }
 
-.mdl-tabs__tab.disabled {
-  cursor: not-allowed !important;
-  opacity: 0.2 !important;
-}
 
 .player-name {
   letter-spacing: 0;
@@ -591,15 +584,6 @@ md-card {
   justify-content: center;
 }
 
-:host /deep/ .mdl-tabs__tab {
-  padding: 0 12px !important;
-}
-
-@media only screen and (min-width: 700px) {
-  :host /deep/ .mdl-tabs__tab {
-    padding: 0 24px !important;
-  }
-}
 
 .print-area {
   max-height: 300px;
@@ -621,9 +605,6 @@ snack-bar-container.snackBar-info {
   max-width: 100vw !important;
 }
 
-.mdl-list__item-primary-content {
-  line-height: 16px !important;
-}
 
 .info-icon {
   color: $color_info;

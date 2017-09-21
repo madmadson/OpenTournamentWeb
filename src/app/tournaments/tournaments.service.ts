@@ -108,10 +108,6 @@ export class TournamentsService  {
     });
   }
 
-  setTournament(tournament: Tournament) {
-
-  }
-
   addCoOrganizer(coOrganizer: CoOrganizatorPush) {
 
     const tournamentRef = this.afoDatabase.object('tournaments/' + coOrganizer.tournament.id);

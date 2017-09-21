@@ -15,9 +15,9 @@ import {AuthService} from './service/auth.service';
 import {AuthenticationState} from './store/reducers/authenticationReducer';
 import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
 import {Tournament} from '../../shared/model/tournament';
-import {TournamentPushAction} from './store/actions/tournaments-actions';
 import {Player} from '../../shared/model/player';
-import {SET_REDIRECT_URL_ACTION} from "./store/reducers/redirectReducer";
+import {SET_REDIRECT_URL_ACTION} from './store/reducers/redirectReducer';
+import {TournamentsService} from './tournaments/tournaments.service';
 
 @Component({
   selector: 'app-root',
@@ -45,6 +45,7 @@ export class AppComponent implements OnDestroy {
               private router: Router,
               private store: Store<AppState>,
               private messageService: GlobalEventService,
+              private tournamentsService: TournamentsService,
               private winRef: WindowRefService) {
 
     authService.subscribeOnAuthentication();
@@ -125,7 +126,7 @@ export class AppComponent implements OnDestroy {
 
     const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
       if (tournament) {
-        this.store.dispatch(new TournamentPushAction(tournament));
+        this.tournamentsService.pushTournament(tournament);
       }
       dialogRef.close();
     });

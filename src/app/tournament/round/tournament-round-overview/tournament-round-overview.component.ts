@@ -33,13 +33,11 @@ import {DOCUMENT} from '@angular/common';
 import {FinishTournamentDialogComponent} from '../../../dialogs/finish-tournament-dialog';
 import {TeamPairingService} from '../../team-pairing.service';
 import {ActualTournamentTeamGamesService} from '../../actual-tournament-team-games.service';
-import {PlayerInTeamMatchClearModel} from '../../../../../shared/dto/team-match-clear';
 import {TournamentTeam} from '../../../../../shared/model/tournament-team';
 import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
 import {ActualTournamentTeamRankingService} from '../../actual-tournament-team-ranking.service';
 import {TeamMatchClearModel} from '../../../../../shared/dto/player-match-team-clear-model';
 import {getArrayForNumber} from '../../../../../shared/utils';
-import {TeamGameResult} from '../../../../../shared/dto/team-game-result';
 
 
 @Component({
@@ -713,6 +711,10 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   handleGameResultEntered(gameResult: GameResult) {
 
+    if( this.round > this.actualTournament.visibleRound) {
+      this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
+    }
+
 
     if (this.selectedScenario) {
       gameResult.gameAfter.scenario = this.selectedScenario;
@@ -733,6 +735,11 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   }
 
   handleTeamGameResultEntered(teamGameResult: GameResult) {
+
+
+    if( this.round > this.actualTournament.visibleRound) {
+      this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
+    }
 
     if (this.selectedScenario) {
       teamGameResult.gameAfter.scenario = this.selectedScenario;

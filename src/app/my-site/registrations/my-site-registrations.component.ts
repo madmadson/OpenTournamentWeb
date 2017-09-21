@@ -12,7 +12,8 @@ import * as moment from 'moment';
 import {TournamentFormDialogComponent} from "../../dialogs/tournament-form-dialog";
 import {MdDialog} from "@angular/material";
 import {Tournament} from "../../../../shared/model/tournament";
-import {TournamentPushAction} from "../../store/actions/tournaments-actions";
+import {TournamentsService} from "../../tournaments/tournaments.service";
+
 
 @Component({
   selector: 'my-site-registrations',
@@ -35,6 +36,7 @@ export class MySiteRegistrationsComponent implements OnDestroy{
               private store: Store<AppState>,
               public dialog: MdDialog,
               private myRegistrationsService: MyRegistrationsService,
+              private tournamentsService: TournamentsService,
               private winRef: WindowRefService) {
 
     this.router = _router;
@@ -79,7 +81,7 @@ export class MySiteRegistrationsComponent implements OnDestroy{
 
     const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
       if (tournament) {
-        this.store.dispatch(new TournamentPushAction(tournament));
+      this.tournamentsService.pushTournament(tournament);
       }
       dialogRef.close();
     });

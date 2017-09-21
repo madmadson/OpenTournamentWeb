@@ -5,7 +5,6 @@ import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import * as _ from 'lodash';
 
 import {TournamentGame} from '../../../shared/model/tournament-game';
-import {SwapGames} from '../../../shared/dto/swap-player';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {ByeService} from './bye-service';
 import {Tournament} from '../../../shared/model/tournament';

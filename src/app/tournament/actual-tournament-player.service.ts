@@ -14,7 +14,6 @@ import {
 import * as firebase from 'firebase';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
-import {MdSnackBar} from '@angular/material';
 
 @Injectable()
 export class ActualTournamentPlayerService {

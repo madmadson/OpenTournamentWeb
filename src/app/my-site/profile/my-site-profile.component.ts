@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
 import {TournamentFormDialogComponent} from "../../dialogs/tournament-form-dialog";
 import {Tournament} from "../../../../shared/model/tournament";
 import {Subscription} from "rxjs/Subscription";
-import {TournamentPushAction} from "../../store/actions/tournaments-actions";
+import {TournamentsService} from "../../tournaments/tournaments.service";
 
 
 @Component({
@@ -31,6 +31,7 @@ export class MySiteProfileComponent {
 
   constructor(private _router: Router,
               private store: Store<AppState>,
+              private tournamentsService: TournamentsService,
               public dialog: MdDialog) {
 
     this.router = _router;
@@ -59,7 +60,7 @@ export class MySiteProfileComponent {
 
     const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
       if (tournament) {
-        this.store.dispatch(new TournamentPushAction(tournament));
+        this.tournamentsService.pushTournament(tournament);
       }
       dialogRef.close();
     });

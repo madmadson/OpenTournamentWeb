@@ -3,26 +3,16 @@ import {Store} from '@ngrx/store';
 
 import * as firebase from 'firebase';
 
-import {TournamentPlayer} from '../../../shared/model/tournament-player';
-
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
-
-import * as _ from 'lodash';
-import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
-import {TournamentGame} from '../../../shared/model/tournament-game';
-import {GameResult} from '../../../shared/dto/game-result';
-import {AngularFireOfflineDatabase} from 'angularfire2-offline/database';
 import {AppState} from '../store/reducers/index';
 import {
-  ADD_ACTUAL_TOURNAMENT_RANKING_ACTION, ADD_ACTUAL_TOURNAMENT_TEAM_RANKING_ACTION,
-  ADD_ALL_ACTUAL_TOURNAMENT_RANKINGS_ACTION, ADD_ALL_ACTUAL_TOURNAMENT_TEAM_RANKINGS_ACTION,
-  CHANGE_ACTUAL_TOURNAMENT_RANKING_ACTION, CHANGE_ACTUAL_TOURNAMENT_TEAM_RANKING_ACTION,
+  ADD_ACTUAL_TOURNAMENT_TEAM_RANKING_ACTION,
+  ADD_ALL_ACTUAL_TOURNAMENT_TEAM_RANKINGS_ACTION,
+  CHANGE_ACTUAL_TOURNAMENT_TEAM_RANKING_ACTION,
   CLEAR_ACTUAL_TOURNAMENT_RANKINGS_ACTION,
-  LOAD_TOURNAMENT_RANKINGS_FINISHED_ACTION, LOAD_TOURNAMENT_TEAM_RANKINGS_FINISHED_ACTION,
-  REMOVE_ACTUAL_TOURNAMENT_RANKING_ACTION, REMOVE_ACTUAL_TOURNAMENT_TEAM_RANKING_ACTION,
+  LOAD_TOURNAMENT_TEAM_RANKINGS_FINISHED_ACTION,
+  REMOVE_ACTUAL_TOURNAMENT_TEAM_RANKING_ACTION,
 } from 'app/tournament/store/tournament-actions';
-import {RankingUpdateModel} from "../../../shared/dto/ranking-update-model";
-import {DropPlayerPush} from "../../../shared/dto/drop-player-push";
 
 
 @Injectable()
@@ -30,8 +20,7 @@ export class ActualTournamentTeamRankingService {
 
   tournamentTeamRankingsRef: firebase.database.Reference;
 
-  constructor(private afoDatabase: AngularFireOfflineDatabase,
-              protected store: Store<AppState>) {}
+  constructor(protected store: Store<AppState>) {}
 
   unsubscribeOnFirebase() {
 

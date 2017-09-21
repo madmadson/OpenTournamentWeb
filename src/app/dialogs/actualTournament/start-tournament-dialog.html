@@ -2,54 +2,45 @@
   <ng-container *ngIf="(actualTournament.teamSize === 0)">
     <h3 class="heading">Start Tournament</h3>
     <div class="content-cards-container">
-      <mdl-card class="pairing-options-card-wide" mdl-shadow="4">
-        <mdl-card-title>
-          <h4 mdl-card-title-text>Pairing Options</h4>
-        </mdl-card-title>
-        <mdl-card-supporting-text>
-          <div class="full-width">
-            <mdl-switch [(ngModel)]="teamRestriction" mdl-ripple>
-              <span class="small-text margin-right">{{teamRestriction ? '(YES)' : '(NO)'}}</span>
-              <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
-                info
-              </md-icon>
-              Team Restriction*
-            </mdl-switch>
-          </div>
-          <div class="full-width">
-            <mdl-switch [(ngModel)]="metaRestriction" mdl-ripple>
-              <span class="small-text margin-right">{{metaRestriction ? '(YES)' : '(NO)'}}</span>
-              <md-icon class="align-fix" mdTooltip="Player/Team in same Locality don't play against each other">
-                info
-              </md-icon>
-              Locality Restriction*
-            </mdl-switch>
-          </div>
-          <div class="full-width">
-            <mdl-switch [(ngModel)]="countryRestriction" mdl-ripple>
-              <span class="small-text margin-right">{{countryRestriction ? '(YES)' : '(NO)'}}</span>
-              <md-icon class="align-fix" mdTooltip="Player in same Country don't play against each other">
-                info
-              </md-icon>
-              Country Restriction*
-            </mdl-switch>
-          </div>
-          <div class="full-width small-text">
-            * The pairing algorithm first try to prevent any team matches. If no pairing is possible, restriction will be ignored
-          </div>
-        </mdl-card-supporting-text>
-        <mdl-card-actions mdl-card-border>
-          <button
-            class="full-width-button"
-            (click)="startTournament()"
-            mdl-button
-            mdl-colored="accent"
-            mdl-button-type="raised"
-            mdl-ripple>
-            Start Tournament
-          </button>
-        </mdl-card-actions>
-      </mdl-card>
+      <h4 class="heading">Pairing Options</h4>
+      <div class="full-width">
+        <md-slide-toggle [(ngModel)]="teamRestriction">
+          <span class="small-text margin-right">{{teamRestriction ? '(YES)' : '(NO)'}}</span>
+          <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
+            info
+          </md-icon>
+          Team Restriction*
+        </md-slide-toggle>
+      </div>
+      <div class="full-width">
+        <md-slide-toggle [(ngModel)]="metaRestriction">
+          <span class="small-text margin-right">{{metaRestriction ? '(YES)' : '(NO)'}}</span>
+          <md-icon class="align-fix" mdTooltip="Player/Team in same Locality don't play against each other">
+            info
+          </md-icon>
+          Locality Restriction*
+        </md-slide-toggle>
+      </div>
+      <div class="full-width">
+        <md-slide-toggle [(ngModel)]="countryRestriction">
+          <span class="small-text margin-right">{{countryRestriction ? '(YES)' : '(NO)'}}</span>
+          <md-icon class="align-fix" mdTooltip="Player in same Country don't play against each other">
+            info
+          </md-icon>
+          Country Restriction*
+        </md-slide-toggle>
+      </div>
+      <div class="full-width small-text">
+        * The pairing algorithm first try to prevent any team matches. If no pairing is possible, restriction will be
+        ignored
+      </div>
+
+      <button class="full-width-button"
+        (click)="startTournament()"
+        type="button" color="accent"
+        md-raised-button>
+        Start Tournament
+      </button>
       <h4>
         There are {{allActualTournamentPlayers.length}} Players.
         We suggest {{suggestedRoundsToPlay}} Rounds to play.
@@ -62,42 +53,32 @@
     <ng-container *ngIf="checkAllTeamsAreFull() && !checkNoTeamIsOver9000()">
       <h3 class="heading">Start Team Tournament</h3>
       <div class="content-cards-container">
-        <mdl-card class="pairing-options-card-wide" mdl-shadow="4">
-          <mdl-card-title>
-            <h4 mdl-card-title-text>Pairing Options</h4>
-          </mdl-card-title>
-          <mdl-card-supporting-text>
-            <div class="full-width">
-              <mdl-switch [(ngModel)]="metaRestriction" mdl-ripple>
-                <span class="small-text margin-right">{{metaRestriction ? '(YES)' : '(NO)'}}</span>
-                <md-icon class="align-fix" mdTooltip="Player/Team in same Locality don't play against each other">
-                  info
-                </md-icon>
-                Locality Restriction
-              </mdl-switch>
-            </div>
-            <div class="full-width">
-              <mdl-switch [(ngModel)]="countryRestriction" mdl-ripple>
-                <span class="small-text margin-right">{{countryRestriction ? '(YES)' : '(NO)'}}</span>
-                <md-icon class="align-fix" mdTooltip="Player/Team in same Country don't play against each other">
-                  info
-                </md-icon>
-                Country Restriction
-              </mdl-switch>
-            </div>
-          </mdl-card-supporting-text>
-          <mdl-card-actions mdl-card-border>
-            <button
-              class="full-width-button"
-              (click)="startTournament()"
-              mdl-button
-              mdl-colored="accent"
-              mdl-button-type="raised"
-              mdl-ripple>
-              Start Tournament
-            </button>
-          </mdl-card-actions>
-        </mdl-card>
+        <h4 class="heading">Pairing Options</h4>
+        <div class="full-width">
+          <md-slide-toggle [(ngModel)]="metaRestriction">
+            <span class="small-text margin-right">{{metaRestriction ? '(YES)' : '(NO)'}}</span>
+            <md-icon class="align-fix" mdTooltip="Player/Team in same Locality don't play against each other">
+              info
+            </md-icon>
+            Locality Restriction
+          </md-slide-toggle>
+        </div>
+        <div class="full-width">
+          <md-slide-toggle [(ngModel)]="countryRestriction">
+            <span class="small-text margin-right">{{countryRestriction ? '(YES)' : '(NO)'}}</span>
+            <md-icon class="align-fix" mdTooltip="Player/Team in same Country don't play against each other">
+              info
+            </md-icon>
+            Country Restriction
+          </md-slide-toggle>
+        </div>
+
+        <button
+          class="full-width-button"
+          (click)="startTournament()"
+          type="button" color="primary" md-raised-button>
+          Start Tournament
+        </button>
         <h4>
           There are {{allActualTournamentTeams.length}} Teams.
           We suggest {{suggestedRoundsToPlay}} Rounds to play.

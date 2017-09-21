@@ -115,6 +115,22 @@
         <md-icon>list</md-icon>
         Show Rankings
       </button>
+      <button *ngIf="round < actualTournament?.actualRound"
+              (click)="router.navigate(['/tournament', actualTournament?.id, 'round', (round +1)]);"
+              type="button"
+              class="color-primary-background action-button"
+              md-raised-button>
+        <md-icon>list</md-icon>
+        NextRound
+      </button>
+      <button *ngIf="actualTournament?.finished"
+              (click)="router.navigate(['/tournament', actualTournament?.id, 'finalRankings']);"
+              type="button"
+              class="color-primary-background action-button"
+              md-raised-button>
+        <md-icon>list</md-icon>
+        FinalRankings
+      </button>
     </md-card>
   </div>
 </ng-container>
@@ -186,10 +202,11 @@
 </div>
 
 <ng-container *ngIf="!isTeamTournament">
-  <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
+  <ng-container *ngIf="isAdmin || isCoOrganizer || round <= actualTournament?.visibleRound">
     <tournament-games *ngIf="(allPlayerGamesFiltered$ | async)?.length > 0 && actualTournament"
                       [isAdmin]="isAdmin"
                       [isCoOrganizer]="isCoOrganizer"
+                      [round]="round"
                       [actualTournament]="actualTournament"
                       [gamesForRound]="allPlayerGamesFiltered$ | async"
                       [rankingsForRound]="playerRankingsForRound$ | async"
@@ -204,11 +221,12 @@
 </ng-container>
 
 <ng-container *ngIf="isTeamTournament">
-  <ng-container *ngIf="isAdmin || isCoOrganizer || actualTournament?.actualRound <= actualTournament?.visibleRound">
+  <ng-container *ngIf="isAdmin || isCoOrganizer || round <= actualTournament?.visibleRound">
     <tournament-team-games *ngIf="(allTeamGamesFiltered$ | async)?.length > 0 && actualTournament"
                            [isAdmin]="isAdmin"
                            [isCoOrganizer]="isCoOrganizer"
                            [myTeam]="myTeam"
+                           [round]="round"
                            [actualTournament]="actualTournament"
                            [teamGamesForRound]="allTeamGamesFiltered$ | async"
                            [playerGamesForRound]="gamesForRound$ | async"

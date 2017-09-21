@@ -9,7 +9,7 @@ import {TournamentFormDialogComponent} from '../../dialogs/tournament-form-dialo
 import {MdDialog} from '@angular/material';
 
 import {Tournament} from '../../../../shared/model/tournament';
-import {TournamentPushAction} from '../../store/actions/tournaments-actions';
+
 import {Component, OnDestroy} from '@angular/core';
 import {WindowRefService} from '../../service/window-ref-service';
 import {Player} from '../../../../shared/model/player';
@@ -17,6 +17,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../store/reducers/index';
 import {Router} from '@angular/router';
 import {MyTournamentsService} from './my-tournaments.service';
+import {TournamentsService} from "app/tournaments/tournaments.service";
 
 
 @Component({
@@ -39,6 +40,7 @@ export class MySiteTournamentsComponent implements OnDestroy {
               private store: Store<AppState>,
               public dialog: MdDialog,
               private myTournamentsService: MyTournamentsService,
+              private tournamentsService: TournamentsService,
               private winRef: WindowRefService) {
 
     this.router = _router;
@@ -60,7 +62,7 @@ export class MySiteTournamentsComponent implements OnDestroy {
     this.allMyTournamentsGrouped$ = this.allMyTournaments$.map((tournaments: Tournament[]) => {
       return _.chain(tournaments).sortBy(function (value) {
         return new Date(value.beginDate);
-      })
+      }).reverse()
         .groupBy(function (tournament) {
           return moment(tournament.beginDate).format('MMMM YYYY');
         }).toPairs()
@@ -96,7 +98,7 @@ export class MySiteTournamentsComponent implements OnDestroy {
 
     const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
       if (tournament) {
-        this.store.dispatch(new TournamentPushAction(tournament));
+        this.tournamentsService.pushTournament(tournament);
       }
       dialogRef.close();
     });

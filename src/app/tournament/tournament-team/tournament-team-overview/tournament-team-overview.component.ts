@@ -22,11 +22,7 @@ import {ActualTournamentArmyListService} from '../../actual-tournament-army-list
 import {ArmyList} from '../../../../../shared/model/armyList';
 
 import {ArmyListTournamentPlayerPush} from '../../../../../shared/dto/armyList-tournamentPlayer-push';
-import {
-  CHANGE_SEARCH_FIELD_TOURNAMENT_PLAYERS_ACTION,
-  CHANGE_SEARCH_FIELD_TOURNAMENT_TEAMS_ACTION
-} from '../../store/tournament-actions';
-import {NewTournamentPlayerDialogComponent} from '../../../dialogs/add-tournament-player-dialog';
+import {CHANGE_SEARCH_FIELD_TOURNAMENT_TEAMS_ACTION} from '../../store/tournament-actions';
 import {PrintArmyListsDialogComponent} from '../../../dialogs/print-army-lists-dialog';
 import {TournamentFormDialogComponent} from '../../../dialogs/tournament-form-dialog';
 import {StartTournamentDialogComponent} from '../../../dialogs/actualTournament/start-tournament-dialog';
@@ -36,9 +32,9 @@ import {PairingService} from '../../pairing.service';
 import {getAllFactions} from '../../../../../shared/model/factions';
 import {TournamentTeam} from '../../../../../shared/model/tournament-team';
 import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
-import {CreateTeamDialogComponent} from '../../tournament-preparation/tournament-preparation.component';
 import {ActualTournamentTeamRegistrationService} from '../../actual-tournament-team-registration.service';
-import {TeamPairingService} from "../../team-pairing.service";
+import {TeamPairingService} from '../../team-pairing.service';
+import {CreateTeamDialogComponent} from "../../../dialogs/create-team-dialog";
 
 
 @Component({

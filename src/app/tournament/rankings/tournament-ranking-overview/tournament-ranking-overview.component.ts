@@ -43,8 +43,8 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
   loadRanking$: Observable<boolean>;
   loadTeamRanking$: Observable<boolean>;
 
-  allTournamentRankings$: Observable<TournamentRanking[]>;
-  rankingsForRound$: Observable<TournamentRanking[]>;
+  allPlayerRankings$: Observable<TournamentRanking[]>;
+  playerRankingsForRound$: Observable<TournamentRanking[]>;
   playerRankingsForRound: TournamentRanking[];
 
   allTeamRankings$: Observable<TournamentRanking[]>;
@@ -53,7 +53,6 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
   allArmyLists$: Observable<ArmyList[]>;
   allArmyLists: ArmyList[];
 
-  swapPlayerMode: boolean;
   smallScreen: boolean;
 
   isAdmin: boolean;
@@ -94,18 +93,18 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
     this.userPlayerData$ = this.store.select(state => state.authentication.userPlayerData);
     this.actualTournament$ = this.store.select(state => state.actualTournament.actualTournament);
     this.allTournamentPlayers$ = this.store.select(state => state.actualTournamentPlayers.players);
-    this.allTournamentRankings$ = this.store.select(state => state.actualTournamentRankings.rankings);
+    this.allPlayerRankings$ = this.store.select(state => state.actualTournamentRankings.rankings);
     this.allTeamRankings$ = this.store.select(state => state.actualTournamentTeamRankings.teamRankings);
     this.allArmyLists$ = this.store.select(state => state.actualTournamentArmyLists.armyLists);
 
-    this.rankingsForRound$ = this.allTournamentRankings$.map(
+    this.playerRankingsForRound$ = this.allPlayerRankings$.map(
       rankings => rankings.filter(r => r.tournamentRound === this.round).sort(compareRanking).reverse());
 
     this.teamRankingsForRound$ = this.allTeamRankings$.map(
       rankings => rankings.filter(r => r.tournamentRound === this.round).sort(compareTeamRanking).reverse());
 
     this.loadRanking$ = this.store.select(state => state.actualTournamentRankings.loadRankings);
-    this.loadTeamRanking$ = this.store.select(state => state.actualTournamentRankings.loadRankings);
+    this.loadTeamRanking$ = this.store.select(state => state.actualTournamentTeamRankings.loadTeamRankings);
 
   }
 
@@ -134,7 +133,7 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
       this.setIsTournamentPlayer();
     });
 
-    this.playerRankingsSub = this.rankingsForRound$.subscribe((rankings: TournamentRanking[]) => {
+    this.playerRankingsSub = this.playerRankingsForRound$.subscribe((rankings: TournamentRanking[]) => {
       this.playerRankingsForRound = rankings;
     });
 
@@ -202,9 +201,11 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+
   showGamesOfRound() {
     this.router.navigate(['/tournament', this.actualTournament.id, 'round', (this.round )]);
   }
+
 
   handleDropPlayer(dropPush: DropPlayerPush) {
 
@@ -226,7 +227,7 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  showPlayerRankings(){
+  showPlayerRankings() {
     this.dialog.open(ShowSoloRankingsComponent, {
       data: {
         isAdmin: this.isAdmin,

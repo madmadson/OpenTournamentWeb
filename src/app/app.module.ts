@@ -19,7 +19,7 @@ import {EffectsModule} from '@ngrx/effects';
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
 
 import {AuthEffectService} from './store/effects/auth-effect.service';
-import {TournamentsEffectService} from './store/effects/tournaments-effect.service';
+
 import {AuthService} from './service/auth.service';
 import {TournamentsService} from './tournaments/tournaments.service';
 
@@ -33,11 +33,7 @@ import {AppRoutingModule} from './app-routing.module';
 import 'hammerjs';
 import {CustomFormsModule} from 'ng2-validation';
 import {AuthGuard} from './service/auth-guard.service';
-import {
-  CreateTeamDialogComponent,
-  TournamentPreparationComponent,
-} from './tournament/tournament-preparation/tournament-preparation.component';
-import {TournamentEffectService} from './store/effects/tournament-effect.service';
+
 import {TournamentService} from './tournament/actual-tournament.service';
 import {PlayerListOverviewComponent} from './player/player-list-overview/player-list-overview.component';
 import {PlayersService} from './player/players.service';
@@ -72,28 +68,21 @@ import {
   MdTooltipModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {TournamentOverviewComponent} from 'app/tournament/tournament-overview/tournament-overview.component';
 
 import {TournamentRoundOverviewComponent, } from './tournament/round/tournament-round-overview/tournament-round-overview.component';
-import {TournamentRankingListComponent} from './tournament/tournament-ranking-list/tournament-ranking-list.component';
-import {MdlModule} from 'angular2-mdl';
+
 import {TruncatePipe} from '../pipes/truncate-pise';
 import {TournamentFormDialogComponent} from './dialogs/tournament-form-dialog';
-import {TournamentFinalRankingsComponent} from './tournament/tournament-final-rankings/tournament-final-rankings.component';
 import {AboutComponent} from './about/about.component';
 
 import {GlobalEventService} from './service/global-event-service';
-import {TournamentGameTableComponent} from './tournament/tournament-game-table/tournament-game-table.component';
 import {WindowRefService} from './service/window-ref-service';
 
-import {TournamentTeamService} from './service/tournament-team.service';
-import {TournamentTeamEffectService} from './store/effects/tournament-teams-effect.service';
-import {MdlExpansionPanelModule} from '@angular-mdl/expansion-panel';
+
 import {ShowTeamRegistrationDialogComponent} from './dialogs/show-team-registration-dialog';
 import {ShowTeamDialogComponent} from './dialogs/show-team-dialog';
 import {NewTournamentPlayerDialogComponent} from './dialogs/add-tournament-player-dialog';
 import {PrintArmyListsDialogComponent} from './dialogs/print-army-lists-dialog';
-import {TournamentTeamRoundOverviewComponent} from './team-tournament/tournament-team-round-overview/tournament-team-round-overview.component';
 
 import {KillRoundDialogComponent} from './dialogs/round-overview/kill-round-dialog';
 import {PairAgainDialogComponent} from './dialogs/round-overview/pair-again-dialog';
@@ -101,17 +90,14 @@ import {PairAgainDialogComponent} from './dialogs/round-overview/pair-again-dial
 import {AddArmyListsDialogComponent} from './dialogs/add-army-lists-dialog';
 import {PrintRankingsDialogComponent} from './dialogs/print-rankings-dialog';
 import {PrintGamesDialogComponent} from './dialogs/print-games-dialog';
-import {TournamentTeamRankingListComponent} from './team-tournament/tournament-team-ranking-list/tournament-team-ranking-list.component';
-import {ShowTeamRankingDialogComponent} from './dialogs/show-team-ranking-dialog';
-import {MdlSelectModule} from '@angular-mdl/select';
+
 import {AngularFireOfflineModule} from 'angularfire2-offline';
 import {ShowArmyListDialogComponent} from './dialogs/show-army-lists-dialog';
 
 import {NewRoundDialogComponent} from './dialogs/round-overview/new-round-dialog';
 import {FinishTournamentDialogComponent} from './dialogs/finish-tournament-dialog';
-import {TournamentTeamFinalRankingsComponent} from './team-tournament/tournament-team-final-rankings/tournament-team-final-rankings.component';
 import {AngularFireModule} from 'angularfire2';
-import {NgxPaginationModule} from 'ngx-pagination';
+
 import {GameListOverviewComponent} from './games/game-list-overview/game-list-overview.component';
 
 import {TournamentInfoDialogComponent} from './dialogs/tournament-overview/tournament-info-dialog';
@@ -153,7 +139,6 @@ import {MyRegistrationsService} from './my-site/registrations/my-registrations.s
 import {MySiteRegistrationsComponent} from './my-site/registrations/my-site-registrations.component';
 import {MyRegistrationListComponent} from './my-site/registrations/my-registrations-table/my-registration-list.component';
 import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
-import {TournamentTeamGameListComponent} from './team-tournament/tournament-team-game-list/tournament-team-game-list.component';
 import {ActualTournamentTeamRegistrationService} from 'app/tournament/actual-tournament-team-registration.service';
 import {ActualTournamentTeamsService} from 'app/tournament/actual-tournament-teams.service';
 import {CreateTeamRegistrationDialogComponent} from './dialogs/team/create-team-registration-dialog';
@@ -167,6 +152,8 @@ import {ActualTournamentTeamRankingService} from './tournament/actual-tournament
 import {TeamMatchDialogComponent} from 'app/dialogs/team-game-result-dialog';
 import {ByeService} from './tournament/bye-service';
 import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournament-team-ranking-list/tournament-team-rankings.component';
+import {UploadTournamentDialogComponent} from './dialogs/upload-tournament-dialog';
+import {CreateTeamDialogComponent} from './dialogs/create-team-dialog';
 
 
 @NgModule({
@@ -179,10 +166,7 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     EffectsModule.forRoot([
-      AuthEffectService,
-      TournamentEffectService,
-      TournamentsEffectService,
-      TournamentTeamEffectService]),
+      AuthEffectService]),
     StoreModule.forRoot(reducers),
     StoreRouterConnectingModule,
     !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 50 }) : [],
@@ -191,16 +175,12 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
     CustomFormsModule,
     CdkTableModule,
     BrowserAnimationsModule,
-    MdlModule,
     MdButtonModule, MdCheckboxModule, MdCardModule, MdIconModule, MdSelectModule,
     MdSidenavModule, MdToolbarModule, MdSnackBarModule, MdInputModule, MdTabsModule,
     MdListModule, MdDialogModule, MdTooltipModule, MdSortModule, MdTableModule,
     MdMenuModule, MdProgressSpinnerModule, MdSlideToggleModule, MdDatepickerModule,
     MdPaginatorModule, MdNativeDateModule,
-    MdlExpansionPanelModule,
-    MdlSelectModule,
     AngularFireOfflineModule,
-    NgxPaginationModule,
     Ng2PageScrollModule
   ],
   declarations: [
@@ -223,7 +203,7 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
     MySiteGamesComponent,
     MyRegistrationListComponent,
 
-    TournamentPreparationComponent,
+
     PlayerListOverviewComponent,
     PlayerListComponent,
     PlayerFormComponent,
@@ -231,12 +211,10 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
     PasswordForgetComponent,
     TournamentRegistrationListComponent,
     TournamentPlayerListComponent,
-    AddArmyListsDialogComponent,
-    NewTournamentPlayerDialogComponent,
-    StartTournamentDialogComponent,
-    TournamentOverviewComponent,
+
+
     TournamentRoundOverviewComponent,
-    TournamentRankingListComponent,
+
     TournamentRankingsOverviewComponent,
     TournamentRankingsComponent,
     TruncatePipe,
@@ -244,21 +222,13 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
 
     TournamentFinalRankingsOverviewComponent,
 
-    TournamentFinalRankingsComponent,
-
     TournamentGamesComponent,
-    TournamentGameTableComponent,
 
     GameListOverviewComponent,
     ShowSoloRankingsComponent,
 
     TournamentTeamListComponent,
     TournamentTeamRegistrationListComponent,
-    TournamentTeamRoundOverviewComponent,
-
-    TournamentTeamRankingListComponent,
-    TournamentTeamGameListComponent,
-    TournamentTeamFinalRankingsComponent,
 
     PairAgainDialogComponent,
     GameResultDialogComponent,
@@ -270,7 +240,6 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
     PrintGamesDialogComponent,
     ShowTeamDialogComponent,
     ShowTeamRegistrationDialogComponent,
-    ShowTeamRankingDialogComponent,
     PrintRankingsDialogComponent,
     ShowArmyListDialogComponent,
     TournamentInfoDialogComponent,
@@ -281,7 +250,11 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
     AddCoOrganizatorDialogComponent,
     CreateTeamDialogComponent,
     CreateTeamRegistrationDialogComponent,
-    TournamentTeamRankingsComponent
+    TournamentTeamRankingsComponent,
+    UploadTournamentDialogComponent,
+    AddArmyListsDialogComponent,
+    NewTournamentPlayerDialogComponent,
+    StartTournamentDialogComponent,
   ],
   providers: [
     AuthService,
@@ -295,7 +268,6 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
     ActualTournamentGamesService,
     PlayersService,
     GamesService,
-    TournamentTeamService,
     MyGamesService,
     MyTournamentsService,
     MyRegistrationsService,
@@ -329,7 +301,6 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
     PrintArmyListsDialogComponent,
     PrintRankingsDialogComponent,
     PrintGamesDialogComponent,
-    ShowTeamRankingDialogComponent,
     ShowArmyListDialogComponent,
     TeamMatchDialogComponent,
     TournamentInfoDialogComponent,
@@ -338,7 +309,8 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
     ShowSingleArmyListDialogComponent,
     ShowSoloRankingsComponent,
     AddCoOrganizatorDialogComponent,
-    CreateTeamRegistrationDialogComponent
+    CreateTeamRegistrationDialogComponent,
+    UploadTournamentDialogComponent
   ],
   bootstrap: [AppComponent]
 })

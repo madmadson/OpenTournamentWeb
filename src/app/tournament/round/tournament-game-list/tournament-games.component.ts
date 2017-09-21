@@ -153,14 +153,14 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
   openGameResultDialog(selectedGame: TournamentGame) {
 
-    this.nextUnfinishedGame = undefined;
+    if (!this.draggedTournamentPlayerId && ((this.isItMyGame(selectedGame) && !selectedGame.finished)
+        || this.isAdmin || this.isCoOrganizer) && !this.actualTournament.finished) {
 
-    const nextUnfinishedGame: TournamentGame = _.find(this.gamesForRound, function (game: TournamentGame) {
-      return !game.finished && game.id !== selectedGame.id;
-    });
+      this.nextUnfinishedGame = undefined;
 
-    if (!this.draggedTournamentPlayerId && (this.isItMyGame(selectedGame) || this.isAdmin
-        || this.isCoOrganizer) && !this.actualTournament.finished) {
+      const nextUnfinishedGame: TournamentGame = _.find(this.gamesForRound, function (game: TournamentGame) {
+        return !game.finished && game.id !== selectedGame.id;
+      });
 
       const dialogRef = this.dialog.open(GameResultDialogComponent, {
         data: {

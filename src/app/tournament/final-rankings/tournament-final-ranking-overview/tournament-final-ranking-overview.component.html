@@ -1,11 +1,10 @@
-<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
-<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isTournamentPlayer" class="sub-heading">Hello Player</h4>
+<h4  class="heading">{{actualTournament?.name}}</h4>
+<h4 *ngIf="isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="isTournamentPlayer" class="sub-heading">Hello Player</h4>
 
 <div class="actual-tournament-nav-container">
-  <button *ngIf="!fullscreenMode"
-          type="button"
+  <button type="button"
           md-raised-button
           class="color-primary-background action-button"
           [mdMenuTriggerFor]="menu">
@@ -20,10 +19,15 @@
             (click)="router.navigate(['/tournament', actualTournament?.id, 'registrations']);">
       Go to -> Registrations
     </button>
-    <button *ngIf="isAdmin || isCoOrganizer"
+    <button *ngIf="isAdmin || isCoOrganizer && !isTeamTournament"
             md-menu-item
             (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);">
       Go to -> Players
+    </button>
+    <button *ngIf="(isAdmin || isCoOrganizer) && isTeamTournament"
+            md-menu-item
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'teams']);">
+      Go to -> Teams
     </button>
     <button *ngFor=" let round of getArrayForNumber(actualTournament?.actualRound) ;let index = index;"
             md-menu-item
@@ -37,6 +41,20 @@
   Tournament not yet finished
 </h3>
 
+<ng-container *ngIf="(loadRanking$ | async) && !isTeamTournament">
+  <div class="heading">Load Rankings...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="(loadTeamRanking$ | async) && isTeamTournament">
+  <div class="heading">Load TeamRankings...</div>
+  <div class="loading-spinner-container">
+    <md-spinner></md-spinner>
+  </div>
+</ng-container>
+
 <ng-container *ngIf="actualTournament?.finished">
   <h2 class="heading">
     Final Rankings
@@ -45,7 +63,7 @@
   <div class="action-card-container" *ngIf="(isAdmin || isCoOrganizer) && !actualTournament?.uploaded">
     <md-card class="action-card action-button-wrapper">
       <button
-              (click)="publishTournament()"
+              (click)="uploadTournament()"
               type="button"
               class="color-positive-background action-button"
               md-raised-button>
@@ -58,24 +76,36 @@
         <md-icon>list</md-icon>
         Undo end
       </button>
+      <button *ngIf="isTeamTournament"
+              (click)="showPlayerRankings()"
+              type="button"
+              class="color-primary-background action-button"
+              md-raised-button>
+        <md-icon>list</md-icon>
+        PlayerRankings
+      </button>
     </md-card>
   </div>
 
-  <ng-container *ngIf="(loadRanking$ | async)">
-    <div class="heading">Load FinalRankings...</div>
-    <div class="loading-spinner-container">
-      <md-spinner></md-spinner>
-    </div>
-  </ng-container>
 
-  <tournament-rankings *ngIf="(rankingsForRound$ | async).length > 0 && actualTournament"
+  <tournament-rankings *ngIf="(playerRankingsForRound$ | async)?.length > 0 && actualTournament  && !isTeamTournament"
                        [isAdmin]="isAdmin"
                        [isCoOrganizer]="isCoOrganizer"
                        [round]="round"
                        [userPlayerData]="userPlayerData"
                        [actualTournament]="actualTournament"
-                       [rankingsForRound]="rankingsForRound$ | async"
+                       [rankingsForRound]="playerRankingsForRound$ | async"
                        [armyLists]="allArmyLists$ | async">
   </tournament-rankings>
+
+  <team-tournament-rankings *ngIf="(teamRankingsForRound$ | async)?.length > 0 && actualTournament && isTeamTournament"
+                            [isAdmin]="isAdmin"
+                            [isCoOrganizer]="isCoOrganizer"
+                            [round]="round"
+                            [userPlayerData]="userPlayerData"
+                            [actualTournament]="actualTournament"
+                            [rankingsForRound]="teamRankingsForRound$ | async"
+                            [armyLists]="allArmyLists$ | async">
+  </team-tournament-rankings>
 </ng-container>
 

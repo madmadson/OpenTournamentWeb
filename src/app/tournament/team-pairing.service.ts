@@ -6,7 +6,7 @@ import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import * as _ from 'lodash';
 import {TournamentManagementConfiguration} from '../../../shared/dto/tournament-management-configuration';
 import {GameMatchingService} from './game-matching.service';
-import {TournamentGame, getGameVsBye} from '../../../shared/model/tournament-game';
+import {getGameVsBye, TournamentGame} from '../../../shared/model/tournament-game';
 
 import {Observable} from 'rxjs/Observable';
 

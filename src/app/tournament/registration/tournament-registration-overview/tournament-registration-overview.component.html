@@ -98,6 +98,18 @@
       <md-icon>build</md-icon>
       Edit
     </button>
+    <button *ngIf="(isAdmin || isCoOrganizer) && !isTeamTournament"
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'players']);"
+            class="color-primary-background action-button"
+            md-raised-button>
+      Show Players
+    </button>
+    <button *ngIf="(isAdmin || isCoOrganizer) && isTeamTournament"
+            (click)="router.navigate(['/tournament', actualTournament?.id, 'teams']);"
+            class="color-primary-background action-button"
+            md-raised-button>
+      Show Teams
+    </button>
   </md-card>
 </div>
 

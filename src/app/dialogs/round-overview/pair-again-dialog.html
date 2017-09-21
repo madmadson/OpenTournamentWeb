@@ -1,55 +1,48 @@
 <h3 class="heading">Pair Round {{data.round}} again</h3>
 
 <div class="content-cards-container">
-  <mdl-card class="pairing-options-card-wide" mdl-shadow="4">
-    <mdl-card-title>
-      <h4 mdl-card-title-text>Pairing Options</h4>
-    </mdl-card-title>
-    <mdl-card-supporting-text>
-      <div class="full-width" *ngIf="!teamMatch">
-        <mdl-switch [(ngModel)]="teamRestriction" mdl-ripple>
-          <span class="small-text margin-right">{{teamRestriction ? '(YES)' : '(NO)'}}</span>
-          <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
-            info
-          </md-icon>
-          Team Restriction*
-        </mdl-switch>
-      </div>
-      <div class="full-width">
-        <mdl-switch [(ngModel)]="metaRestriction" mdl-ripple>
-          <span class="small-text margin-right">{{metaRestriction ? '(YES)' : '(NO)'}}</span>
-          <md-icon class="align-fix" mdTooltip="Player in same Locality don't play against each other">
-            info
-          </md-icon>
-          Locality Restriction*
-        </mdl-switch>
-      </div>
-      <div class="full-width">
-        <mdl-switch [(ngModel)]="countryRestriction" mdl-ripple>
-          <span class="small-text margin-right">{{countryRestriction ? '(YES)' : '(NO)'}}</span>
-          <md-icon class="align-fix" mdTooltip="Player in same Country don't play against each other">
-            info
-          </md-icon>
-          Country Restriction*
-        </mdl-switch>
-      </div>
-      <div class="full-width small-text">
-        * The pairing algorithm first try to prevent any restricted matches.
-        If no pairing is possible, restriction will be ignored
-      </div>
-    </mdl-card-supporting-text>
-    <mdl-card-actions mdl-card-border>
-      <button
-        class="full-width-button"
-        (click)="pairRoundAgain()"
-        mdl-button
-        mdl-colored="accent"
-        mdl-button-type="raised"
-        mdl-ripple>
-        Pair Round again
-      </button>
-    </mdl-card-actions>
-  </mdl-card>
+
+  <h4 class="heading">Pairing Options</h4>
+
+  <div class="full-width" *ngIf="!teamMatch">
+    <md-slide-toggle [(ngModel)]="teamRestriction">
+      <span class="small-text margin-right">{{teamRestriction ? '(YES)' : '(NO)'}}</span>
+      <md-icon class="align-fix" mdTooltip="Player in same Team don't play against each other">
+        info
+      </md-icon>
+      Team Restriction*
+    </md-slide-toggle>
+  </div>
+  <div class="full-width">
+    <md-slide-toggle [(ngModel)]="metaRestriction" >
+      <span class="small-text margin-right">{{metaRestriction ? '(YES)' : '(NO)'}}</span>
+      <md-icon class="align-fix" mdTooltip="Player in same Locality don't play against each other">
+        info
+      </md-icon>
+      Locality Restriction*
+    </md-slide-toggle>
+  </div>
+  <div class="full-width">
+    <md-slide-toggle [(ngModel)]="countryRestriction" >
+      <span class="small-text margin-right">{{countryRestriction ? '(YES)' : '(NO)'}}</span>
+      <md-icon class="align-fix" mdTooltip="Player in same Country don't play against each other">
+        info
+      </md-icon>
+      Country Restriction*
+    </md-slide-toggle>
+  </div>
+  <div class="full-width small-text">
+    * The pairing algorithm first try to prevent any restricted matches.
+    If no pairing is possible, restriction will be ignored
+  </div>
+
+  <button
+    class="full-width-button"
+    (click)="pairRoundAgain()"
+    type="button" color="accent" md-raised-button>
+    Pair Round again
+  </button>
+
 </div>
 <div md-dialog-actions>
   <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>

@@ -25,10 +25,7 @@ export class ActualTournamentArmyListService {
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               private store: Store<AppState>,
-              private snackBar: MdSnackBar) {
-
-  }
-
+              private snackBar: MdSnackBar) {}
 
   unsubscribeOnFirebase() {
 

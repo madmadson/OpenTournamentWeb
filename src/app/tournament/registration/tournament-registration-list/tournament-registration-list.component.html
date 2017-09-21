@@ -71,7 +71,9 @@
         Actions
       </md-header-cell>
       <md-cell *cdkCellDef="let registration" class="actions-column">
-        <md-icon *ngIf="!registration.isTournamentPlayer && actualTournament?.actualRound === 0"
+        <md-icon *ngIf="(isAdmin || isCoOrganizer) &&
+                         actualTournament?.actualRound === 0 &&
+                         !registration.isTournamentPlayer"
                  class="color-positive list-action"
                  md-tooltip="Accept Registration"
           (click)="acceptRegistration(registration)">check_circle</md-icon>

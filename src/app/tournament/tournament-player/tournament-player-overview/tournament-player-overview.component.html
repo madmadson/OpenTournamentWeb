@@ -58,7 +58,6 @@
       <md-icon>play_arrow</md-icon>
       Start Tournament
     </button>
-
     <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
             (click)="createRandomPlayers()"
             type="button"
@@ -66,6 +65,11 @@
             md-raised-button>
       <md-icon>play_arrow</md-icon>
       !Random Players!
+    </button>
+    <button (click)="router.navigate(['/tournament', actualTournament?.id, 'registrations']);"
+            class="color-primary-background action-button"
+            md-raised-button>
+      Show Registrations
     </button>
   </md-card>
 </div>

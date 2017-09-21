@@ -23,28 +23,27 @@
 .game-result-button {
   min-width:36px;
   max-width:36px;
-  font-size:48px;
+  padding: $halve_tick;
 }
 
 @media only screen and (min-width: 800px) {
   .game-result-button {
-    font-size:48px;
+    min-width:48px;
+    max-width:48px;
   }
 }
 
 .add-button{
-  color: $success_color;
-  padding-right: $main_tick;
+  background-color: $success_color;
 }
 
 .remove-button {
-  color: $fail_color;
+  background-color: $fail_color;
 }
 
 .game-result-input {
   height: 20px;
   width: 35px;
-  margin-left: $main_tick;
   font-size: 18px;
   padding-bottom: $main_tick;
 }

@@ -23,13 +23,11 @@ import {Player} from '../../../../../shared/model/player';
 import {GamesDatabase, GamesDataSource} from '../../../../../shared/table-model/game';
 
 import {SwappingService} from '../../swapping.service';
-import {PlayerInTeamMatchClearModel} from '../../../../../shared/dto/team-match-clear';
 import {TournamentTeam} from '../../../../../shared/model/tournament-team';
 import {TeamMatchDialogComponent} from '../../../dialogs/team-game-result-dialog';
 import {Observable} from 'rxjs/Observable';
 import {TeamMatchClearModel} from '../../../../../shared/dto/player-match-team-clear-model';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
-import {TeamGameResult} from "../../../../../shared/dto/team-game-result";
 
 
 @Component({

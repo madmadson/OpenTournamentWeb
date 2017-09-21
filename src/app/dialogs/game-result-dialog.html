@@ -37,98 +37,103 @@
       <tr>
         <td>CP:</td>
         <td>
-            <md-icon
-              mdPrefix
-              class="game-result-button remove-button"
-              (click)="decreasePlayerOneCP()">
-              remove_circle_outline
-            </md-icon>
-            <input class="game-result-input"
-                   mdInput
-                   type="number"
-                   min="0"
-                   max="{{gameConfig.points[1].max}}"
-                   maxlength="2"
-                   (blur)="correctPlayerOneCPInput()"
-                   [(ngModel)]="gameModel.playerOneControlPoints">
-            <md-icon
-              mdSuffix
-              class="game-result-button add-button"
-              (click)="increasePlayerOneCP()">
-              add_circle_outline
-            </md-icon>
+          <button
+            mdPrefix
+            md-raised-button
+            (click)="decreasePlayerOneCP()"
+            class="game-result-button remove-button">
+            <md-icon>remove_circle_outline</md-icon>
+          </button>
+          <input class="game-result-input"
+                 mdInput
+                 type="number"
+                 min="0"
+                 max="{{gameConfig.points[1].max}}"
+                 maxlength="2"
+                 (blur)="correctPlayerOneCPInput()"
+                 [(ngModel)]="gameModel.playerOneControlPoints">
+          <button
+            mdSuffix
+            md-raised-button
+            (click)="increasePlayerOneCP()"
+            class="game-result-button add-button">
+            <md-icon> add_circle_outline</md-icon>
+          </button>
         </td>
         <td>
-            <md-icon
-              mdPrefix
-              class="game-result-button remove-button"
-              (click)="decreasePlayerTwoCP()">
-              remove_circle_outline
-            </md-icon>
-            <input class="game-result-input"
-                   mdInput
-                   type="number"
-                   min="0"
-                   maxlength="2"
-                   max="{{gameConfig.points[1].max}}"
-                   (blur)="correctPlayerTwoCPInput()"
-                   [(ngModel)]="gameModel.playerTwoControlPoints">
-            <md-icon
-              mdSuffix
-              class="game-result-button add-button"
-              (click)="increasePlayerTwoCP()">
-              add_circle_outline
-            </md-icon>
+          <button
+            mdPrefix
+            md-raised-button
+            (click)="decreasePlayerTwoCP()"
+            class="game-result-button remove-button">
+            <md-icon>remove_circle_outline</md-icon>
+          </button>
+          <input class="game-result-input"
+                 mdInput
+                 type="number"
+                 min="0"
+                 maxlength="2"
+                 max="{{gameConfig.points[1].max}}"
+                 (blur)="correctPlayerTwoCPInput()"
+                 [(ngModel)]="gameModel.playerTwoControlPoints">
+          <button
+            mdSuffix
+            md-raised-button
+            (click)="increasePlayerTwoCP()"
+            class="game-result-button add-button">
+            <md-icon> add_circle_outline</md-icon>
+          </button>
         </td>
       </tr>
       <tr>
         <td>VP:</td>
         <td>
-
-            <md-icon
-              mdPrefix
-              class="game-result-button remove-button"
-              (click)="decreasePlayerOneVP()">
-              remove_circle_outline
-            </md-icon>
-            <input class="game-result-input"
-                   mdInput
-                   type="number"
-                   min="0"
-                   maxlength="3"
-                   max="{{gameConfig.points[2].max}}"
-                   (blur)="correctPlayerOneVPInput()"
-                   [(ngModel)]="gameModel.playerOneVictoryPoints">
-            <md-icon
-              mdSuffix
-              class="game-result-button add-button"
-              (click)="increasePlayerOneVP()">
-              add_circle_outline
-            </md-icon>
-
+          <button
+            mdPrefix
+            md-raised-button
+            (click)="decreasePlayerOneVP()"
+            class="game-result-button remove-button">
+            <md-icon>remove_circle_outline</md-icon>
+          </button>
+          <input class="game-result-input"
+                 mdInput
+                 type="number"
+                 min="0"
+                 maxlength="3"
+                 max="{{gameConfig.points[2].max}}"
+                 (blur)="correctPlayerOneVPInput()"
+                 [(ngModel)]="gameModel.playerOneVictoryPoints">
+          <button
+            mdSuffix
+            md-raised-button
+            (click)="increasePlayerOneVP()"
+            class="game-result-button add-button">
+            <md-icon> add_circle_outline</md-icon>
+          </button>
         </td>
         <td>
-
-            <md-icon
-              mdPrefix
-              class="game-result-button remove-button"
-              (click)="decreasePlayerTwoVP()">
-              remove_circle_outline
-            </md-icon>
-            <input class="game-result-input"
-                   mdInput
-                   type="number"
-                   min="0"
-                   max="{{gameConfig.points[2].max}}"
-                   maxlength="3"
-                   (blur)="correctPlayerTwoVPInput()"
-                   [(ngModel)]="gameModel.playerTwoVictoryPoints">
-            <md-icon
-              mdSuffix
-              class="game-result-button add-button"
-              (click)="increasePlayerTwoVP()">
-              add_circle_outline
-            </md-icon>
+          <button
+            mdPrefix
+            md-raised-button
+            (click)="decreasePlayerTwoVP()"
+            class="game-result-button remove-button">
+            <md-icon>remove_circle_outline</md-icon>
+          </button>
+          <input class="game-result-input"
+                 mdInput
+                 type="number"
+                 min="0"
+                 max="{{gameConfig.points[2].max}}"
+                 maxlength="3"
+                 (blur)="correctPlayerTwoVPInput()"
+                 [(ngModel)]="gameModel.playerTwoVictoryPoints">
+          <button
+            mdSuffix
+            md-raised-button
+            (click)="increasePlayerTwoVP()"
+            class="game-result-button add-button">
+            <md-icon> add_circle_outline</md-icon>
+          </button>
         </td>
       </tr>
     </table>
@@ -164,7 +169,7 @@
       <md-icon>check</md-icon>
       Really no winner?
     </button>
-    <button *ngIf="nextUnfinishedGame && !sureButton  && ((isConnected$ | async) || isAdmin || isCoOrganizer)"
+    <button *ngIf="nextUnfinishedGame && !sureButton && (isAdmin || isCoOrganizer)"
             (click)="enterGameAndNextResultSubmitted()"
             class="right-align-button big-button"
             color="accent"

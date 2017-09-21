@@ -44,7 +44,10 @@ export class GameResultDialogComponent {
               @Inject(MD_DIALOG_DATA) public data: any,
               private winRef: WindowRefService) {
 
-    if (this.winRef.nativeWindow.screen.width < 800) {
+    if (this.winRef.nativeWindow.screen.width < 500) {
+      this.smallScreen = true;
+      this.truncateMax = 15;
+    } else if (this.winRef.nativeWindow.screen.width < 800) {
       this.smallScreen = true;
       this.truncateMax = 20;
     } else {

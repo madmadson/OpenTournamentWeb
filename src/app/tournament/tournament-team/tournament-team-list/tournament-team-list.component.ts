@@ -14,10 +14,6 @@ import {ArmyList} from '../../../../../shared/model/armyList';
 
 import {MdDialog, MdPaginator, MdSnackBar, MdSort} from '@angular/material';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
-import {
-  TournamentPlayerDatabase,
-  TournamentPlayersDataSource
-} from '../../../../../shared/table-model/tournamentPlayer';
 import {Tournament} from '../../../../../shared/model/tournament';
 import {Player} from '../../../../../shared/model/player';
 
@@ -27,11 +23,9 @@ import {TournamentTeamDatabase, TournamentTeamsDataSource} from '../../../../../
 import {ShowTeamDialogComponent} from '../../../dialogs/show-team-dialog';
 import {TeamUpdate} from '../../../../../shared/dto/team-update';
 import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
-import {ActualTournamentPlayersState} from '../../store/actual-tournament-players-reducer';
 import {ActualTournamentPlayerService} from 'app/tournament/actual-tournament-player.service';
 import {NewTournamentPlayerDialogComponent} from '../../../dialogs/add-tournament-player-dialog';
 import {ShowArmyListDialogComponent} from 'app/dialogs/show-army-lists-dialog';
-import {ActualTournamentRegistrationService} from "../../actual-tournament-registration.service";
 
 @Component({
   selector: 'tournament-team-list',

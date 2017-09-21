@@ -11,7 +11,6 @@ import {PlayerListOverviewComponent} from './player/player-list-overview/player-
 import {PlayerFormComponent} from './player/player-form/player-form.component';
 import {RegisterPageComponent} from './auth/register-page/register-page.component';
 import {PasswordForgetComponent} from './auth/password-forget/password-forget.component';
-import {TournamentOverviewComponent} from './tournament/tournament-overview/tournament-overview.component';
 import {AboutComponent} from './about/about.component';
 import {GameListOverviewComponent} from './games/game-list-overview/game-list-overview.component';
 import {TournamentRegistrationOverviewComponent} from './tournament/registration/tournament-registration-overview/tournament-registration-overview.component';
@@ -23,7 +22,7 @@ import {MySiteProfileComponent} from './my-site/profile/my-site-profile.componen
 import {MySiteTournamentsComponent} from './my-site/tournaments/my-site-tournaments.component';
 import {MySiteRegistrationsComponent} from './my-site/registrations/my-site-registrations.component';
 import {MySiteGamesComponent} from './my-site/games/my-site-games.component';
-import {TournamentTeamOverviewComponent} from "./tournament/tournament-team/tournament-team-overview/tournament-team-overview.component";
+import {TournamentTeamOverviewComponent} from './tournament/tournament-team/tournament-team-overview/tournament-team-overview.component';
 
 
 const routes: Routes = [
@@ -39,7 +38,6 @@ const routes: Routes = [
   {path: 'my-site/profile', component: MySiteProfileComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'my-site/registrations', component: MySiteRegistrationsComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
   {path: 'my-site/games', component: MySiteGamesComponent, canLoad: [AuthGuard], canActivate: [AuthGuard]},
-  {path: 'tournament/:id', component: TournamentOverviewComponent},
   {path: 'tournament/:id/registrations', component: TournamentRegistrationOverviewComponent},
   {path: 'tournament/:id/players', component: TournamentPlayerOverviewComponent},
   {path: 'tournament/:id/teams', component: TournamentTeamOverviewComponent},
