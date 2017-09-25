@@ -30,11 +30,12 @@ import {TournamentManagementConfiguration} from '../../../../../shared/dto/tourn
 import {TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {PairingService} from '../../pairing.service';
 import {getAllFactions} from '../../../../../shared/model/factions';
-import {TournamentTeam} from '../../../../../shared/model/tournament-team';
+import {compareTeam, TournamentTeam} from '../../../../../shared/model/tournament-team';
 import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
 import {ActualTournamentTeamRegistrationService} from '../../actual-tournament-team-registration.service';
 import {TeamPairingService} from '../../team-pairing.service';
-import {CreateTeamDialogComponent} from "../../../dialogs/create-team-dialog";
+import {CreateTeamDialogComponent} from '../../../dialogs/create-team-dialog';
+import {ShowPlayerListDialogComponent} from '../../../dialogs/mini-dialog/show-player-list-dialog';
 
 
 @Component({
@@ -57,6 +58,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
   allTournamentPlayers$: Observable<TournamentPlayer[]>;
 
   allArmyLists$: Observable<ArmyList[]>;
+  allArmyLists: ArmyList[];
 
   allTournamentTeamsRegistrations$: Observable<TournamentTeam[]>;
   allTournamentTeamsRegistrations: TournamentTeam[];
@@ -70,6 +72,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
   isAdmin: boolean;
   isCoOrganizer: boolean;
   isTournamentPlayer: boolean;
+  isTeamTournament: boolean;
 
   private actualTournamentSub: Subscription;
   private userPlayerDataSub: Subscription;
@@ -77,12 +80,11 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
   private allActualRegistrationsSub: Subscription;
   private allActualTournamentTeamsSub: Subscription;
   private allActualTournamentTeamRegsSub: Subscription;
+  private allArmyListsSub: Subscription;
 
   searchField$: Observable<string>;
 
   @ViewChild('searchField') searchField: ElementRef;
-  private isTeamTournament: boolean;
-
 
   constructor(private snackBar: MdSnackBar,
               private dialog: MdDialog,
@@ -96,7 +98,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
               private teamPairingService: TeamPairingService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
-              private router: Router) {
+              public router: Router) {
 
     this.activeRouter.params.subscribe(
       params => {
@@ -129,7 +131,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
         return allPlayers.filter((p: TournamentTeam) => {
           const searchStr = p.teamName.toLowerCase();
           return searchStr.startsWith(searchField.toLowerCase());
-        });
+        }).sort(compareTeam);
       });
   }
 
@@ -155,6 +157,10 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
 
     this.allActualTournamentPlayersSub = this.allTournamentPlayers$.subscribe((allTournamentPlayers: TournamentPlayer[]) => {
       this.allActualTournamentPlayers = allTournamentPlayers;
+    });
+
+    this.allArmyListsSub = this.allArmyLists$.subscribe((allLists: ArmyList[]) => {
+      this.allArmyLists = allLists;
     });
 
     this.allActualRegistrationsSub = this.allRegistrations$.subscribe((allRegistrations: Registration[]) => {
@@ -191,6 +197,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     this.tournamentTeamRegService.unsubscribeOnFirebase();
 
     this.actualTournamentSub.unsubscribe();
+    this.allArmyListsSub.unsubscribe();
     this.userPlayerDataSub.unsubscribe();
     this.allActualTournamentPlayersSub.unsubscribe();
     this.allActualRegistrationsSub.unsubscribe();
@@ -240,10 +247,6 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
         }
       });
     }
-  }
-
-  handleDeletePlayer(player: TournamentPlayer) {
-    this.tournamentPlayerService.killPlayer(player);
   }
 
   handleAddArmyLists(player: TournamentPlayer) {
@@ -300,6 +303,21 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(() => {
 
       saveEventSubscribe.unsubscribe();
+    });
+  }
+
+  openShowPlayersDialog() {
+    this.dialog.open(ShowPlayerListDialogComponent, {
+      data: {
+        isAdmin: this.isAdmin,
+        isCoOrganizer: this.isCoOrganizer,
+        actualTournament: this.actualTournament,
+        userPlayerData: this.userPlayerData,
+        players: this.allActualTournamentPlayers,
+        allArmyLists: this.allArmyLists,
+        isTeamTournament: this.isTeamTournament
+      },
+      width: '800px'
     });
   }
 
@@ -434,7 +452,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
 
     const allFactions = getAllFactions();
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 30; i++) {
 
       const newTeam = new TournamentTeam(false, this.actualTournament.id, '',
         'Gen Team ' + (i + 1 + this.allTournamentTeams.length), '', '', false, [], [], '', '', false, false, false, false, 0);

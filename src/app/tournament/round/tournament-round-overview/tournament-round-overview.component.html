@@ -135,14 +135,14 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="(loadGames$ | async) && !teamTournament">
+<ng-container *ngIf="(loadGames$ | async) && !isTeamTournament">
   <div class="heading">Load Games...</div>
   <div class="loading-spinner-container">
     <md-spinner></md-spinner>
   </div>
 </ng-container>
 
-<ng-container *ngIf="(loadTeamGames$ | async) && teamTournament">
+<ng-container *ngIf="(loadTeamGames$ | async) && isTeamTournament">
   <div class="heading">Load TeamGames...</div>
   <div class="loading-spinner-container">
     <md-spinner></md-spinner>

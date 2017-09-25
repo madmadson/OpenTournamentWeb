@@ -39,6 +39,7 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
   @Input() round: number;
   @Input() isTeamMatch: boolean;
+  @Input() myTeam: string;
 
   @Input() userPlayerData: Player;
   @Input() actualTournament: Tournament;
@@ -131,6 +132,12 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
     }
   }
 
+  isItMyTeam(playerGame: TournamentGame) {
+
+    return this.isTeamMatch && (playerGame.playerOneTeamName === this.myTeam ||
+      playerGame.playerTwoTeamName === this.myTeam);
+  }
+
 
   requestClearGameResult(event: any, game: TournamentGame) {
     event.stopPropagation();
@@ -170,7 +177,8 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
           isCoOrganizer: this.isCoOrganizer,
           isTeamMatch: this.isTeamMatch,
           nextUnfinishedGame: nextUnfinishedGame
-        }
+        },
+        width: '800px'
       });
       const onGameResult = dialogRef.componentInstance.onGameResult
         .subscribe((gameResult: GameResult) => {

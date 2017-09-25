@@ -67,7 +67,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
   searchField$: Observable<string>;
 
   @ViewChild('searchField') searchField: ElementRef;
-  private isTeamTournament: boolean;
+  isTeamTournament: boolean;
 
 
   constructor(private snackBar: MdSnackBar,
@@ -79,7 +79,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
               private pairingService: PairingService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
-              private router: Router) {
+              public router: Router) {
 
     this.activeRouter.params.subscribe(
       params => {

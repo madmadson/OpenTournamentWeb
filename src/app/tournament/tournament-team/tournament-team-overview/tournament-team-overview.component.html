@@ -1,11 +1,10 @@
-<h4 *ngIf="!fullscreenMode" class="heading">{{actualTournament?.name}}</h4>
-<h4 *ngIf="!fullscreenMode && isAdmin" class="sub-heading">Hello Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
-<h4 *ngIf="!fullscreenMode && isTournamentPlayer" class="sub-heading">Hello Player</h4>
+<h4 class="heading">{{actualTournament?.name}}</h4>
+<h4 *ngIf="isAdmin" class="sub-heading">Hello Organizer</h4>
+<h4 *ngIf="isCoOrganizer" class="sub-heading">Hello Co-Organizer</h4>
+<h4 *ngIf="isTournamentPlayer" class="sub-heading">Hello Player</h4>
 
 <div class="actual-tournament-nav-container">
-  <button *ngIf="!fullscreenMode"
-          type="button"
+  <button type="button"
           md-raised-button
           class="color-primary-background action-button"
           [mdMenuTriggerFor]="menu">
@@ -95,6 +94,12 @@
           md-raised-button (click)="openCreateTeamDialog()">
     <md-icon>group_add</md-icon>
     Add Team
+  </button>
+  <button *ngIf="actualTournament?.actualRound === 0 && isTeamTournament"
+          class="color-primary-background action-button"
+          md-raised-button (click)="openShowPlayersDialog()">
+    <md-icon>person</md-icon>
+   Show Players
   </button>
 </div>
 

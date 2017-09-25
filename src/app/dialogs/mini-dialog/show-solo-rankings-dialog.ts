@@ -11,17 +11,16 @@ import {Player} from '../../../../shared/model/player';
   template: `
     <h3>Solo Rankings for {{actualTournament.name}}</h3>
     <md-dialog-content>
-    <tournament-rankings
-      [isAdmin]="isAdmin"
-      [isCoOrganizer]="isCoOrganizer"
-      [isTeamTournament]="true"
-      [round]="actualTournament.actualRound"
-      [userPlayerData]="userPlayerData"
-      [actualTournament]="actualTournament"
-      [rankingsForRound]="rankingsForRound"
-      [armyLists]="allArmyLists">
-      
-    </tournament-rankings>
+      <tournament-rankings
+        [isAdmin]="isAdmin"
+        [isCoOrganizer]="isCoOrganizer"
+        [isTeamTournament]="true"
+        [round]="actualTournament.actualRound"
+        [userPlayerData]="userPlayerData"
+        [actualTournament]="actualTournament"
+        [rankingsForRound]="rankingsForRound"
+        [armyLists]="allArmyLists">
+      </tournament-rankings>
     </md-dialog-content>
     <div md-dialog-actions>
       <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>

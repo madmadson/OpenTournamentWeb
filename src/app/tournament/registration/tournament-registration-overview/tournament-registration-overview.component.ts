@@ -76,13 +76,12 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
   private allActualTeamRegistrationsSub: Subscription;
   private allActualTeamsSub: Subscription;
 
-  private allTeamNames: string[] = [];
+  allTeamNames: string[] = [];
 
-  private router: Router;
-  private isTeamTournament: boolean;
-  private myTeam: TournamentTeam;
-  private teamICreated: TournamentTeam;
-
+   router: Router;
+   isTeamTournament: boolean;
+   myTeam: TournamentTeam;
+   teamICreated: TournamentTeam;
 
   constructor(private _router: Router,
               private snackBar: MdSnackBar,

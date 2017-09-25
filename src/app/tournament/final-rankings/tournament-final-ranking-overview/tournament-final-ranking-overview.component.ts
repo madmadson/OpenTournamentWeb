@@ -88,7 +88,7 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
               private eloService: EloService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
-              private router: Router) {
+              public router: Router) {
 
     this.activeRouter.params.subscribe(
       params => {

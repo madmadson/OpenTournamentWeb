@@ -76,7 +76,7 @@ export class TournamentRankingsOverviewComponent implements OnInit, OnDestroy {
               private teamRankingService: ActualTournamentTeamRankingService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
-              private router: Router) {
+              public router: Router) {
 
     this.round = +this.activeRouter.snapshot.paramMap.get('round');
 

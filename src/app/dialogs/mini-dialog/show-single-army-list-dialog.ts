@@ -7,7 +7,12 @@ import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
   selector: 'single-list-dialog',
   template: `
     <h3>{{armyList.name}}</h3>
-    <pre>{{armyList.list}}</pre>
+    <md-dialog-content>
+      <pre>{{armyList.list}}</pre>
+    </md-dialog-content>
+    <div md-dialog-actions>
+      <button type="button" color="primary" md-raised-button (click)="dialogRef.close()">Close Dialog</button>
+    </div>
   `
 })
 export class ShowSingleArmyListDialogComponent {

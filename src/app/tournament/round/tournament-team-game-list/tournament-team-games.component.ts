@@ -181,6 +181,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
         isCoOrganizer: this.isCoOrganizer,
         userPlayerData: this.userPlayerData,
         round: this.round,
+        myTeam: this.myTeam,
 
         actualTournament: this.actualTournament,
         armyLists: this.armyLists,

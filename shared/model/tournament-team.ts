@@ -54,3 +54,11 @@ export class TournamentTeam {
     this.droppedInRound = droppedInRound;
   }
 }
+
+export function compareTeam(teamOne: TournamentTeam, teamTwo: TournamentTeam): number {
+  if (teamOne.tournamentPlayerIds.length < teamTwo.tournamentPlayerIds.length) {
+    return -1;
+  } else if (teamOne.tournamentPlayerIds.length > teamTwo.tournamentPlayerIds.length) {
+    return 1;
+  }
+}

@@ -19,7 +19,7 @@ export class PlayerListOverviewComponent implements OnInit, OnDestroy {
   allPlayer$: Observable<Player[]>;
   allPlayerFiltered$: Observable<Player[]>;
 
-  playersLoaded$: Observable<boolean>;
+  loadPlayers$: Observable<boolean>;
   searchField$: Observable<string>;
 
   @ViewChild('searchField') searchField: ElementRef;
@@ -35,7 +35,7 @@ export class PlayerListOverviewComponent implements OnInit, OnDestroy {
       });
       return data;
     });
-    this.playersLoaded$ = this.store.select(state => state.players.loadPlayers);
+    this.loadPlayers$ = this.store.select(state => state.players.loadPlayers);
     this.searchField$ = this.store.select(state => state.players.searchField);
 
 

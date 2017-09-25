@@ -39,7 +39,7 @@
       <md-header-cell *cdkHeaderCellDef class="swap-column">
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="swap-column">
-        <md-icon *ngIf="!game.finished && !draggedTournamentPlayerId && (isAdmin || isCoOrganizer)"
+        <md-icon *ngIf="!game.finished && !draggedTournamentPlayerId && (isAdmin || isCoOrganizer || isItMyTeam(game))"
                  (click)="swapPlayerOne($event, game)"
                  mdTooltip="Swap Player {{game.playerOnePlayerName}}"
                  class="swap-player-icon">swap_vert
@@ -63,7 +63,7 @@
       <md-header-cell *cdkHeaderCellDef class="swap-column">
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="swap-column">
-        <md-icon *ngIf="!game.finished && !draggedTournamentPlayerId && (isAdmin || isCoOrganizer)"
+        <md-icon *ngIf="!game.finished && !draggedTournamentPlayerId && (isAdmin || isCoOrganizer || isItMyTeam(game))"
                  (click)="swapPlayerTwo($event, game)"
                  mdTooltip="Swap Player {{game.playerTwoPlayerName}}"
                  class="swap-player-icon">swap_vert

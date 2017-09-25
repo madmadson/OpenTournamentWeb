@@ -7,6 +7,7 @@
       </md-header-cell>
       <md-cell *cdkCellDef="let tournamentPlayer" class="playerName-column">
         <md-icon *ngIf="!tournamentPlayer?.playerId"
+                 class="align-fix"
                  md-tooltip="Offline Player">
           cloud_off
         </md-icon>
@@ -14,7 +15,7 @@
       </md-cell>
     </ng-container>
 
-    <ng-container *ngIf="!smallScreen"  cdkColumnDef="team">
+    <ng-container *ngIf="!smallScreen" cdkColumnDef="team">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="team-column">
         Team
       </md-header-cell>
@@ -23,7 +24,7 @@
       </md-cell>
     </ng-container>
 
-    <ng-container *ngIf="!smallScreen"  cdkColumnDef="locality">
+    <ng-container *ngIf="!smallScreen" cdkColumnDef="locality">
       <md-header-cell *cdkHeaderCellDef md-sort-header class="locality-column">
         Locality
       </md-header-cell>
@@ -46,14 +47,17 @@
         Actions
       </md-header-cell>
       <md-cell *cdkCellDef="let tournamentPlayer" class="actions-column">
-        <md-icon [ngClass]="{'color-negative':!playerHasArmyList(tournamentPlayer),
+        <md-icon *ngIf="actualTournament?.actualRound === 0 && !isTeamTournament"
+                 [ngClass]="{'color-negative':!playerHasArmyList(tournamentPlayer),
                              'color-positive':playerHasArmyList(tournamentPlayer)} "
                  class="list-action"
-                 (click)="addArmyLists(tournamentPlayer)">playlist_add</md-icon>
+                 (click)="addArmyLists(tournamentPlayer)">playlist_add
+        </md-icon>
         <md-icon *ngIf="actualTournament?.actualRound === 0 && !isTeamTournament"
                  class="color-negative list-action"
                  md-tooltip="Delete Player"
-                 (click)="deleteTournamentPlayer(tournamentPlayer)">delete</md-icon>
+                 (click)="deleteTournamentPlayer(tournamentPlayer)">delete
+        </md-icon>
       </md-cell>
     </ng-container>
 

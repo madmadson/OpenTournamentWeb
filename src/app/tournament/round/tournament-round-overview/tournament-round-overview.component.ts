@@ -88,11 +88,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   allArmyLists$: Observable<ArmyList[]>;
 
-  allGamesFinished: boolean;
-  allGamesUntouched: boolean;
-
-  showOnlyMyGameState: boolean;
-
   isAdmin: boolean;
   isCoOrganizer: boolean;
   isTournamentPlayer: boolean;
@@ -137,7 +132,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
               private gameResultService: GameResultService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
-              private router: Router,
+              public router: Router,
               private pageScrollService: PageScrollService) {
 
     this.round = +this.activeRouter.snapshot.paramMap.get('round');
@@ -711,10 +706,9 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   handleGameResultEntered(gameResult: GameResult) {
 
-    if( this.round > this.actualTournament.visibleRound) {
+    if ( this.round > this.actualTournament.visibleRound) {
       this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
     }
-
 
     if (this.selectedScenario) {
       gameResult.gameAfter.scenario = this.selectedScenario;

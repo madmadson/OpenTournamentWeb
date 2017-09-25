@@ -1,18 +1,13 @@
 import {Component, EventEmitter, Inject, Output} from '@angular/core';
 import {GameResult} from '../../../shared/dto/game-result';
 import {TournamentGame} from '../../../shared/model/tournament-game';
-import {GameConfig, getWarmachineConfig} from '../../../shared/dto/game-config';
 import {ArmyList} from '../../../shared/model/armyList';
 import {Observable} from 'rxjs/Observable';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
-import {WindowRefService} from '../service/window-ref-service';
-
-import * as _ from 'lodash';
 import {Tournament} from '../../../shared/model/tournament';
 import {TournamentRanking} from '../../../shared/model/tournament-ranking';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
-import {SwapGames} from '../../../shared/dto/swap-player';
-import {Player} from "../../../shared/model/player";
+import {Player} from '../../../shared/model/player';
 
 @Component({
   selector: 'team-game-result-dialog',
@@ -25,6 +20,7 @@ export class TeamMatchDialogComponent {
   isCoOrganizer: boolean;
   userPlayerData: Player;
   round: number;
+  myTeam: string;
 
   selectedTeamMatch: TournamentGame;
   actualTournament: Tournament;
@@ -44,6 +40,8 @@ export class TeamMatchDialogComponent {
     this.isCoOrganizer = data.isCoOrganizer;
     this.round = data.round;
     this.userPlayerData = data.userPlayerData;
+    this.myTeam = data.myTeam;
+    this.round = data.round;
 
     this.actualTournament = data.actualTournament;
 
