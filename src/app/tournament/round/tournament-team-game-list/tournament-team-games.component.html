@@ -139,7 +139,7 @@
       </md-header-cell>
       <md-cell *cdkCellDef="let game" class="actions-column">
         <div>
-          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && !swapPlayerMode  &&
+          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer)  &&
                          !requestClearGame && !actualTournament?.finished && actualTournament?.actualRound === round"
                   (click)="requestClearGameResult($event, game)"
                   class="color-negative-background"
@@ -148,7 +148,7 @@
             <md-icon>clear</md-icon>
             <ng-container *ngIf="!smallScreen">Reset</ng-container>
           </button>
-          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && !swapPlayerMode &&  requestClearGame === game.id"
+          <button *ngIf="draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && requestClearGame === game.id"
                   (click)="clearGameResultConfirm($event, game)"
                   class="color-positive-background"
                   [ngClass]="{'small-button': smallScreen}"
@@ -156,7 +156,7 @@
             <md-icon>check</md-icon>
             <ng-container *ngIf="!smallScreen">ok</ng-container>
           </button>
-          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && !swapPlayerMode &&  requestClearGame === game.id"
+          <button *ngIf="draggedTournamentPlayerId && (isAdmin || isCoOrganizer)  &&  requestClearGame === game.id"
                   (click)="clearGameResultDecline($event, game)"
                   class="color-negative-background"
                   [ngClass]="{'small-button': smallScreen}"

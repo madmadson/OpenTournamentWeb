@@ -4,7 +4,6 @@ import {Injectable} from '@angular/core';
 
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
-import * as _ from 'lodash';
 import * as firebase from 'firebase';
 
 import {TournamentTeam} from '../../../shared/model/tournament-team';
@@ -21,11 +20,15 @@ import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {TeamUpdate} from '../../../shared/dto/team-update';
 import {ArmyList} from '../../../shared/model/armyList';
 
+import * as _ from 'lodash';
+import {Subscription} from 'rxjs/Subscription';
+
 
 @Injectable()
 export class ActualTournamentTeamsService {
 
   private tournamentTeamsRef: firebase.database.Reference;
+  private offlineSub: Subscription;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               private store: Store<AppState>) {}
@@ -36,6 +39,32 @@ export class ActualTournamentTeamsService {
     if (this.tournamentTeamsRef) {
       this.tournamentTeamsRef.off();
     }
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+  subscribeOnOfflineFirebase(tournamentId: string) {
+
+    const that = this;
+
+    this.offlineSub = this.afoDatabase.list('tournament-teams/' + tournamentId)
+      .subscribe((teams) => {
+
+        const allTournamentTeams: TournamentTeam[] = [];
+
+        _.forEach(teams, function (team) {
+          // console.log('team: ' + JSON.stringify(team));
+          const newTeam: TournamentTeam = TournamentTeam.fromJson(team);
+          newTeam.id = team.$key;
+          allTournamentTeams.push(newTeam);
+        });
+
+        that.store.dispatch({type: LOAD_TEAMS_FINISHED_ACTION});
+        that.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_TEAMS_ACTION, payload: allTournamentTeams});
+
+      });
+
   }
 
   subscribeOnFirebase(tournamentId: string) {
@@ -106,13 +135,11 @@ export class ActualTournamentTeamsService {
 
     const that = this;
 
-    const tournamentTeamsRef = this.afoDatabase.
-    object('tournament-teams/' + tournamentTeamErase.tournament.id + '/' + tournamentTeamErase.team.id);
+    const tournamentTeamsRef = this.afoDatabase.object('tournament-teams/' + tournamentTeamErase.tournament.id + '/' + tournamentTeamErase.team.id);
     tournamentTeamsRef.remove();
 
     if (tournamentTeamErase.team.isRegisteredTeam) {
-      const tournamentTeamsRegRef = that.afoDatabase.
-      object('tournament-team-registrations/' + tournamentTeamErase.tournament.id + '/' + tournamentTeamErase.team.id);
+      const tournamentTeamsRegRef = that.afoDatabase.object('tournament-team-registrations/' + tournamentTeamErase.tournament.id + '/' + tournamentTeamErase.team.id);
       tournamentTeamsRegRef.update({isAcceptedTournamentTeam: false});
     }
 
@@ -146,4 +173,6 @@ export class ActualTournamentTeamsService {
 
     });
   }
+
+
 }

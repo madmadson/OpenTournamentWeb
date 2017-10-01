@@ -134,6 +134,8 @@ export class TeamPairingService {
           newTeamGame.playerOneTournamentPlayerId, teamRankingsForRound, allTeamRankings, config.round);
       }
 
+      // console.log('push team game: ' + JSON.stringify(newTeamGame));
+
       tournamentTeamGamesRef.push(newTeamGame);
 
       that.createPlayerGamesForTeamMatch(newTeamGame, allTeamRankings, newPlayerRankings, allPlayers, true);
@@ -171,37 +173,29 @@ export class TeamPairingService {
   }
 
 
-  killTeamGamesForRound(config: TournamentManagementConfiguration): Observable<any[]> {
+  killTeamGamesForRound(config: TournamentManagementConfiguration, teamGamesForRound: TournamentGame[]) {
+    const that = this;
+    console.log('killTeamGamesForRound for round: ' + config.round);
+    console.log('TeamGames to kill ' + JSON.stringify(teamGamesForRound));
 
-    const query = this.afoDatabase.list('tournament-team-games/' + config.tournamentId).take(1);
-    query.subscribe((gamesRef: any) => {
-      gamesRef.forEach((game) => {
-
-        console.log('check game: ' + JSON.stringify(game));
-
-        if (game.tournamentRound === config.round) {
-          this.afoDatabase.object('tournament-team-games/' + config.tournamentId + '/' + game.$key).remove();
-        }
-      });
-      console.log('all team games for round ' + config.round + ' killed');
+    _.forEach(teamGamesForRound, function (game: TournamentGame) {
+      that.afoDatabase.list('tournament-team-games/' + game.tournamentId).remove(game.id);
     });
-    return query;
+
+    // console.log('this.afoDatabase.listCache ' + JSON.stringify(this.afoDatabase.listCache));
+    // this.afoDatabase.processWrites();
   }
 
 
-  killTeamRankingsForRound(config: TournamentManagementConfiguration): Observable<any[]> {
+  killTeamRankingsForRound(config: TournamentManagementConfiguration, teamRankingsForRound: TournamentRanking[]) {
 
-    const query = this.afoDatabase.list('tournament-team-rankings/' + config.tournamentId).take(1);
-    query.subscribe((rankingRef: any) => {
-      rankingRef.forEach((ranking) => {
-        if (ranking.tournamentRound === config.round) {
-          this.afoDatabase.object('tournament-team-rankings/' + config.tournamentId + '/' + ranking.$key).remove();
-        }
-      });
-      console.log('all team rankings for round ' + config.round + ' killed');
+    const that = this;
+    console.log('killTeamRankingsForRound for round: ' + config.round);
+    console.log('TeamRankings to kill ' + teamRankingsForRound.length);
+
+    _.forEach(teamRankingsForRound, function (ranking: TournamentRanking) {
+      that.afoDatabase.list('tournament-team-rankings/' + ranking.tournamentId).remove(ranking.id);
     });
-
-    return query;
   }
 
   createPlayerGamesForTeamMatch(teamMatch: TournamentGame,
@@ -274,51 +268,72 @@ export class TeamPairingService {
     }
   }
 
-  killTeamRankingsAndGames(config: TournamentManagementConfiguration) {
+  killTeamRankingsAndGames(config: TournamentManagementConfiguration,
+                           teamRankingsForRound: TournamentRanking[],
+                           teamGamesForRound: TournamentGame[]) {
 
-    this.killTeamRankingsForRound(config);
-    this.killTeamGamesForRound(config);
-
+    this.killTeamRankingsForRound(config, teamRankingsForRound);
+    this.killTeamGamesForRound(config, teamGamesForRound);
   }
 
-  pairTeamRound(config: TournamentManagementConfiguration,
-                actualTournament: Tournament,
-                allTournamentTeams: TournamentTeam[],
-                allPlayers: TournamentPlayer[],
-                allPlayerRankings: TournamentRanking[],
-                allTeamRankings: TournamentRanking[]) {
+  pairTeamRoundAgain(config: TournamentManagementConfiguration,
+                     actualTournament: Tournament,
+                     teamRankingsForRound: TournamentRanking[],
+                     teamGamesForRound: TournamentGame[],
+                     allTeams: TournamentTeam[],
+                     allPlayers: TournamentPlayer[],
+                     allPlayerRankings: TournamentRanking[],
+                     allTeamRankings: TournamentRanking[]) {
 
-    console.log('pairTeamRound');
+    console.log('pairTeamRoundAgain');
 
-    Observable
-      .zip(this.pairingService.killRankingsForRound(config),
-        this.pairingService.killGamesForRound(config),
-        this.killTeamRankingsForRound(config),
-        this.killTeamGamesForRound(config),
-        (a: any, b: any, c: any, d: any) => {
-          return {a: a, b: b, c: c, d: d};
-        })
-      .subscribe((r) => {
+    this.killTeamRankingsForRound(config, teamRankingsForRound);
+    this.killTeamGamesForRound(config, teamGamesForRound);
 
-        const newPlayerRankings: TournamentRanking[] =
-          this.pairingService.pushRankingForRound(config, allPlayers, allPlayerRankings);
+    const newPlayerRankings: TournamentRanking[] =
+      this.pairingService.pushRankingForRound(config, allPlayers, allPlayerRankings);
 
-        const newTeamRankings: TournamentRanking[] =
-          this.pushTeamRankingForRound(config, allTournamentTeams, allTeamRankings);
-        const success: boolean = this.createTeamGamesForRound(
-          actualTournament, allPlayers, allTeamRankings, config,
-          newTeamRankings, newPlayerRankings);
+    const newTeamRankings: TournamentRanking[] =
+      this.pushTeamRankingForRound(config, allTeams, allTeamRankings);
+    const success: boolean = this.createTeamGamesForRound(
+      actualTournament, allPlayers, allTeamRankings, config,
+      newTeamRankings, newPlayerRankings);
 
-        if (success) {
-          console.log('pairRound successfull');
-
-          this.tournamentService.newRound(config);
-          this.router.navigate(['/tournament', config.tournamentId, 'round', config.round]);
-        } else {
-          this.pairingService.killRankingsForRound(config);
-          this.killTeamRankingsForRound(config);
-        }
-      });
+    if (!success) {
+      this.pairingService.killPlayerRankings( newPlayerRankings);
+      this.killTeamRankingsForRound(config, newTeamRankings);
+    }
   }
 
+  pairNewTeamRound(config: TournamentManagementConfiguration,
+                   actualTournament: Tournament,
+                   allTournamentTeams: TournamentTeam[],
+                   allPlayers: TournamentPlayer[],
+                   allPlayerRankings: TournamentRanking[],
+                   allTeamRankings: TournamentRanking[]) {
+
+    console.log('pairNewTeamRound');
+
+
+    const newPlayerRankings: TournamentRanking[] =
+      this.pairingService.pushRankingForRound(config, allPlayers, allPlayerRankings);
+
+    const newTeamRankings: TournamentRanking[] =
+      this.pushTeamRankingForRound(config, allTournamentTeams, allTeamRankings);
+
+    const success: boolean = this.createTeamGamesForRound(
+      actualTournament, allPlayers, allTeamRankings, config,
+      newTeamRankings, newPlayerRankings);
+
+    if (success) {
+      console.log('pairRound successfully');
+
+      this.tournamentService.newRound(config);
+      this.router.navigate(['/tournament', config.tournamentId, 'round', config.round]);
+    } else {
+      this.pairingService.killPlayerRankings(newPlayerRankings);
+      this.killTeamRankingsForRound(config, newTeamRankings);
+    }
+
+  }
 }

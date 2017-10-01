@@ -7,7 +7,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Player} from '../../../../../shared/model/player';
 import {MdDialog, MdSnackBar} from '@angular/material';
 import {TournamentService} from '../../actual-tournament.service';
-import {ActualTournamentPlayerService} from '../../actual-tournament-player.service';
+import {TournamentPlayersService} from '../../actual-tournament-players.service';
 import {ActualTournamentArmyListService} from '../../actual-tournament-army-list.service';
 import {ActualTournamentRankingService} from 'app/tournament/actual-tournament-ranking.service';
 import {AppState} from '../../../store/reducers/index';
@@ -82,7 +82,7 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
               private dialog: MdDialog,
               private tournamentService: TournamentService,
               private armyListService: ActualTournamentArmyListService,
-              private tournamentPlayerService: ActualTournamentPlayerService,
+              private tournamentPlayerService: TournamentPlayersService,
               private rankingService: ActualTournamentRankingService,
               private teamRankingService: ActualTournamentTeamRankingService,
               private eloService: EloService,
@@ -92,11 +92,11 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
 
     this.activeRouter.params.subscribe(
       params => {
-        this.tournamentService.subscribeOnFirebase(params['id']);
-        this.tournamentPlayerService.subscribeOnFirebase(params['id']);
-        this.armyListService.subscribeOnFirebase(params['id']);
-        this.rankingService.subscribeOnFirebase(params['id']);
-        this.teamRankingService.subscribeOnFirebase(params['id']);
+        this.tournamentService.subscribeOnOfflineFirebase(params['id']);
+        this.tournamentPlayerService.subscribeOnOfflineFirebase(params['id']);
+        this.armyListService.subscribeOnOfflineFirebase(params['id']);
+        this.rankingService.subscribeOnOfflineFirebase(params['id']);
+        this.teamRankingService.subscribeOnOfflineFirebase(params['id']);
       }
     );
 

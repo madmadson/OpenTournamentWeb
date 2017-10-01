@@ -1,6 +1,6 @@
 <h3 class="heading">Game Result</h3>
 <md-dialog-content>
-  <span *ngIf="!(isConnected$ | async) && !isCoOrganizer">
+  <span *ngIf="!(isConnected$ | async) && !isCoOrganizer && !isAdmin">
       You cannot inserted your gameResult while offline!
       <md-icon class="offline_icon"
                mdTooltip="No Connection">
@@ -16,7 +16,11 @@
     </md-icon>
   </span>
   <ng-container *ngIf="isAdmin || (isConnected$ | async)">
-    <md-select class="full-width margin-top" placeholder="Winner" (change)="changeWinner()" [(ngModel)]="selectedWinner"
+    <md-select class="full-width margin-top"
+               tabIndex="1"
+               placeholder="Winner"
+               (change)="changeWinner()"
+               [(ngModel)]="selectedWinner"
                floatPlaceholder="always">
       <md-option [value]="1">{{givenGame.playerOnePlayerName | truncate: truncateMax}}</md-option>
       <md-option [value]="2">{{givenGame.playerTwoPlayerName | truncate: truncateMax}}</md-option>
@@ -39,12 +43,13 @@
         <td>
           <button
             mdPrefix
-            md-raised-button
+            md-mini-fab
             (click)="decreasePlayerOneCP()"
-            class="game-result-button remove-button">
-            <md-icon>remove_circle_outline</md-icon>
+            class=" remove-button">
+            <md-icon>remove</md-icon>
           </button>
           <input class="game-result-input"
+                 tabIndex="2"
                  mdInput
                  type="number"
                  min="0"
@@ -54,21 +59,22 @@
                  [(ngModel)]="gameModel.playerOneControlPoints">
           <button
             mdSuffix
-            md-raised-button
+            md-mini-fab
             (click)="increasePlayerOneCP()"
-            class="game-result-button add-button">
-            <md-icon> add_circle_outline</md-icon>
+            class=" add-button">
+            <md-icon> add</md-icon>
           </button>
         </td>
         <td>
           <button
             mdPrefix
-            md-raised-button
+            md-mini-fab
             (click)="decreasePlayerTwoCP()"
-            class="game-result-button remove-button">
-            <md-icon>remove_circle_outline</md-icon>
+            class=" remove-button">
+            <md-icon>remove</md-icon>
           </button>
           <input class="game-result-input"
+                 tabIndex="3"
                  mdInput
                  type="number"
                  min="0"
@@ -78,10 +84,10 @@
                  [(ngModel)]="gameModel.playerTwoControlPoints">
           <button
             mdSuffix
-            md-raised-button
+            md-mini-fab
             (click)="increasePlayerTwoCP()"
-            class="game-result-button add-button">
-            <md-icon> add_circle_outline</md-icon>
+            class=" add-button">
+            <md-icon> add</md-icon>
           </button>
         </td>
       </tr>
@@ -90,12 +96,13 @@
         <td>
           <button
             mdPrefix
-            md-raised-button
+            md-mini-fab
             (click)="decreasePlayerOneVP()"
-            class="game-result-button remove-button">
-            <md-icon>remove_circle_outline</md-icon>
+            class=" remove-button">
+            <md-icon>remove</md-icon>
           </button>
           <input class="game-result-input"
+                 tabIndex="4"
                  mdInput
                  type="number"
                  min="0"
@@ -105,21 +112,22 @@
                  [(ngModel)]="gameModel.playerOneVictoryPoints">
           <button
             mdSuffix
-            md-raised-button
+            md-mini-fab
             (click)="increasePlayerOneVP()"
-            class="game-result-button add-button">
-            <md-icon> add_circle_outline</md-icon>
+            class=" add-button">
+            <md-icon> add</md-icon>
           </button>
         </td>
         <td>
           <button
             mdPrefix
-            md-raised-button
+            md-mini-fab
             (click)="decreasePlayerTwoVP()"
-            class="game-result-button remove-button">
-            <md-icon>remove_circle_outline</md-icon>
+            class=" remove-button">
+            <md-icon>remove</md-icon>
           </button>
           <input class="game-result-input"
+                 tabIndex="5"
                  mdInput
                  type="number"
                  min="0"
@@ -129,10 +137,10 @@
                  [(ngModel)]="gameModel.playerTwoVictoryPoints">
           <button
             mdSuffix
-            md-raised-button
+            md-mini-fab
             (click)="increasePlayerTwoVP()"
-            class="game-result-button add-button">
-            <md-icon> add_circle_outline</md-icon>
+            class=" add-button">
+            <md-icon> add</md-icon>
           </button>
         </td>
       </tr>
@@ -170,6 +178,7 @@
       Really no winner?
     </button>
     <button *ngIf="nextUnfinishedGame && !sureButton && (isAdmin || isCoOrganizer)"
+            tabIndex="7"
             (click)="enterGameAndNextResultSubmitted()"
             class="right-align-button big-button"
             color="accent"
@@ -178,6 +187,7 @@
       Enter & Next
     </button>
     <button *ngIf="!sureButton  && ((isConnected$ | async) || isAdmin || isCoOrganizer)"
+            tabIndex="6"
             (click)="enterGameResultSubmitted()"
             class="right-align-button big-button"
             color="accent"

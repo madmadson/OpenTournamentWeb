@@ -12,14 +12,20 @@ import {
   LOAD_TOURNAMENT_TEAM_GAMES_FINISHED_ACTION,
   REMOVE_ACTUAL_TOURNAMENT_TEAM_GAME_ACTION
 } from './store/tournament-actions';
+import {Subscription} from 'rxjs/Subscription';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import * as _ from 'lodash';
 
 
 @Injectable()
 export class ActualTournamentTeamGamesService {
 
   tournamentTeamGamesRef: firebase.database.Reference;
+  private offlineSub: Subscription;
 
-  constructor(protected store: Store<AppState>) {}
+  constructor(protected store: Store<AppState>,
+              private afoDatabase: AngularFireOfflineDatabase) {
+  }
 
   unsubscribeOnFirebase() {
 
@@ -27,6 +33,49 @@ export class ActualTournamentTeamGamesService {
     if (this.tournamentTeamGamesRef) {
       this.tournamentTeamGamesRef.off();
     }
+
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+  public subscribeOnOfflineFirebase(tournamentId: string) {
+
+    const that = this;
+    const allTeamGames: TournamentGame[] = [];
+    let firstLoad = true;
+
+    this.offlineSub = this.afoDatabase.list('tournament-team-games/' + tournamentId)
+      .subscribe((tournamentGames) => {
+
+        if (firstLoad) {
+
+          console.log('tournamentGames: ' + JSON.stringify(tournamentGames));
+
+          _.forEach(tournamentGames, function (gameSnapshot) {
+            const tournamentGame: TournamentGame = TournamentGame.fromJson(gameSnapshot);
+            tournamentGame.id = gameSnapshot.$key;
+            console.log('tournamentGame: ' + JSON.stringify(tournamentGame));
+            allTeamGames.push(tournamentGame);
+          });
+
+          this.store.dispatch({type: LOAD_TOURNAMENT_TEAM_GAMES_FINISHED_ACTION});
+          this.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_TEAM_GAMES_ACTION, payload: allTeamGames});
+          firstLoad = false;
+          console.log('ALL LOADED!');
+        } else {
+
+          _.forEach(tournamentGames, function (gameSnapshot) {
+            const tournamentGame: TournamentGame = TournamentGame.fromJson(gameSnapshot);
+            tournamentGame.id = gameSnapshot.$key;
+
+            if (!_.find(allTeamGames, _.matches(tournamentGame))) {
+              console.log('changed game: ' + JSON.stringify(tournamentGame));
+              that.store.dispatch({type: CHANGE_ACTUAL_TOURNAMENT_TEAM_GAME_ACTION, payload: tournamentGame});
+            }
+          });
+        }
+      });
   }
 
 
@@ -89,7 +138,6 @@ export class ActualTournamentTeamGamesService {
       newItems = true;
     });
   }
-
 
 
 }

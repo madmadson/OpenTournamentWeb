@@ -1,7 +1,5 @@
 <h3 class="heading">Team {{team.teamName}}</h3>
-<h6 *ngIf="allTournamentPlayerForTeam.length === 0">
-  No Player found for Team
-</h6>
+
 <md-dialog-content>
   <md-input-container class="full-width ">
     <input mdInput
@@ -32,6 +30,10 @@
            [formControl]="metaFormControl">
     <md-hint align="end">{{metaFormControl.value.length}} / 50</md-hint>
   </md-input-container>
+
+  <h6 *ngIf="allTournamentPlayerForTeam.length === 0">
+    No Player found for Team
+  </h6>
 
   <md-list>
     <md-list-item

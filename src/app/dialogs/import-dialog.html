@@ -1,0 +1,39 @@
+<h3 md-dialog-title class="heading">Import Data</h3>
+
+<md-dialog-content>
+  <ng-container *ngIf="error">
+    <h3 class="heading color-negative">You cannot import that file. Don't manipulate it directly!</h3>
+  </ng-container>
+  <ng-container *ngIf="!error">
+  <li>
+    <ul>
+      TournamentRound: {{tournament?.actualRound}}
+    </ul>
+    <ul>
+      PlayerGames: {{playerGames?.length}}
+    </ul>
+    <ul>
+      PlayerRankings: {{playerRankings?.length}}
+    </ul>
+    <ul>
+      TeamGames: {{teamGames?.length}}
+    </ul>
+    <ul>
+      TeamRankings: {{teamRankings?.length}}
+    </ul>
+  </li>
+
+  <h3 class="heading color-negative">IMPORT will kill all other data!</h3>
+  </ng-container>
+</md-dialog-content>
+<div md-dialog-actions>
+  <div class="full-width">
+  <button type="button" class="big-button" color="primary" md-raised-button (click)="dialogRef.close()">
+    Close Dialog
+  </button>
+  <button *ngIf="!error" type="button" class="right-align-button big-button color-negative-background"
+          md-raised-button (click)="importData()">
+    Really Import?
+  </button>
+  </div>
+</div>

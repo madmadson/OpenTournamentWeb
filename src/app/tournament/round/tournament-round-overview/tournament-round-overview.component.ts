@@ -7,10 +7,10 @@ import {Subscription} from 'rxjs/Subscription';
 import {Player} from '../../../../../shared/model/player';
 import {MdDialog, MdSnackBar} from '@angular/material';
 import {TournamentService} from '../../actual-tournament.service';
-import {ActualTournamentPlayerService} from '../../actual-tournament-player.service';
+import {TournamentPlayersService} from '../../actual-tournament-players.service';
 import {ActualTournamentArmyListService} from '../../actual-tournament-army-list.service';
 import {ActualTournamentRankingService} from 'app/tournament/actual-tournament-ranking.service';
-import {ActualTournamentGamesService} from '../../actual-tournament-games.service';
+import {PlayerGamesService} from '../../player-games.service';
 import {AppState} from '../../../store/reducers/index';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
@@ -38,6 +38,9 @@ import {ActualTournamentTeamsService} from '../../actual-tournament-teams.servic
 import {ActualTournamentTeamRankingService} from '../../actual-tournament-team-ranking.service';
 import {TeamMatchClearModel} from '../../../../../shared/dto/player-match-team-clear-model';
 import {getArrayForNumber} from '../../../../../shared/utils';
+import {WindowRefService} from '../../../service/window-ref-service';
+import {AfoListObservable, AfoObjectObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {ImportDialogComponent} from '../../../dialogs/import-dialog';
 
 
 @Component({
@@ -57,7 +60,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   userPlayerData: Player;
 
   allTournamentPlayers$: Observable<TournamentPlayer[]>;
-  allActualTournamentPlayers: TournamentPlayer[];
+  allPlayers: TournamentPlayer[];
 
   allTeams$: Observable<TournamentTeam[]>;
   allTeams: TournamentTeam[];
@@ -65,7 +68,8 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   allPlayerGames$: Observable<TournamentGame[]>;
   allPlayerGamesFiltered$: Observable<TournamentGame[]>;
   allPlayerGames: TournamentGame[];
-  gamesForRound$: Observable<TournamentGame[]>;
+  playerGamesForRound$: Observable<TournamentGame[]>;
+  playerGamesForRound: TournamentGame[];
   finishedGamesForRound$: Observable<TournamentGame[]>;
   unfinishedGamesForRound$: Observable<TournamentGame[]>;
 
@@ -75,16 +79,19 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   allTeamGamesFiltered$: Observable<TournamentGame[]>;
   allTeamGames: TournamentGame[];
   teamGamesForRound$: Observable<TournamentGame[]>;
+  teamGamesForRound: TournamentGame[];
 
   loadTeamGames$: Observable<boolean>;
 
   allPlayerRankings$: Observable<TournamentRanking[]>;
-  allTournamentRankings: TournamentRanking[];
+  allPlayerRankings: TournamentRanking[];
   playerRankingsForRound$: Observable<TournamentRanking[]>;
+  playerRankingsForRound: TournamentRanking[];
 
-  allTournamentTeamRankings$: Observable<TournamentRanking[]>;
-  allTournamentTeamRankings: TournamentRanking[];
+  allTeamRankings$: Observable<TournamentRanking[]>;
+  allTeamRankings: TournamentRanking[];
   teamRankingsForRound$: Observable<TournamentRanking[]>;
+  teamRankingsForRound: TournamentRanking[];
 
   allArmyLists$: Observable<ArmyList[]>;
 
@@ -105,6 +112,12 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   private allActualTournamentRankingsSub: Subscription;
   private allActualTournamentTeamRankingsSub: Subscription;
 
+  private playerGamesForRoundSub: Subscription;
+  private teamGamesForRoundSub: Subscription;
+
+  private playerRankingsForRoundSub: Subscription;
+  private teamRankingsForRoundSub: Subscription;
+
   scenarios: string[];
   searchField$: Observable<string>;
   onlyMyGameFilter$: Observable<boolean>;
@@ -114,6 +127,12 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   onReachBottomOfPageEvent: EventEmitter<boolean>;
   onReachTopOfPageEvent: EventEmitter<boolean>;
 
+  isConnected$: Observable<boolean>;
+  private onlineSub: Subscription;
+
+  private blub$: AfoListObservable<any[]>;
+  private blub2$: AfoListObservable<any[]>;
+  private blub3$: AfoObjectObservable<any>;
 
 
   constructor(@Inject(DOCUMENT) private document: any,
@@ -121,11 +140,11 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
               private dialog: MdDialog,
               private tournamentService: TournamentService,
               private armyListService: ActualTournamentArmyListService,
-              private tournamentPlayerService: ActualTournamentPlayerService,
+              private tournamentPlayerService: TournamentPlayersService,
               private teamService: ActualTournamentTeamsService,
               private rankingService: ActualTournamentRankingService,
               private teamRankingService: ActualTournamentTeamRankingService,
-              private gamesService: ActualTournamentGamesService,
+              private gamesService: PlayerGamesService,
               private teamGamesService: ActualTournamentTeamGamesService,
               private pairingService: PairingService,
               private teamPairingService: TeamPairingService,
@@ -133,10 +152,21 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
               public router: Router,
-              private pageScrollService: PageScrollService) {
+              private pageScrollService: PageScrollService,
+              private winRef: WindowRefService,
+              private afoDatabase: AngularFireOfflineDatabase) {
 
     this.round = +this.activeRouter.snapshot.paramMap.get('round');
     this._tournamentId = this.activeRouter.snapshot.paramMap.get('id');
+
+    this.blub$ = this.afoDatabase.list('tournament-team-games/' + this._tournamentId);
+    this.blub2$ = this.afoDatabase.list('tournament-games/' + this._tournamentId);
+    this.blub3$ = this.afoDatabase.object('tournaments/' + this._tournamentId);
+
+    this.isConnected$ = Observable.merge(
+      Observable.of(this.winRef.nativeWindow.navigator.onLine),
+      Observable.fromEvent(window, 'online').map(() => true),
+      Observable.fromEvent(window, 'offline').map(() => false));
 
     // console.log('create round: ' + this.round + ' for tournament: ' + this._tournamentId);
 
@@ -148,7 +178,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.allTeams$ = this.store.select(state => state.actualTournamentTeams.teams);
 
     this.allPlayerRankings$ = this.store.select(state => state.actualTournamentRankings.rankings);
-    this.allTournamentTeamRankings$ = this.store.select(state => state.actualTournamentTeamRankings.teamRankings);
+    this.allTeamRankings$ = this.store.select(state => state.actualTournamentTeamRankings.teamRankings);
 
     this.allPlayerGames$ = this.store.select(state => state.actualTournamentGames.games);
     this.loadGames$ = this.store.select(state => state.actualTournamentGames.loadGames);
@@ -177,13 +207,13 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         if (incomingTournamentId !== this._tournamentId) {
           console.log('other tournament to display');
 
-          this.unsubscribeOnServices();
           this.subscribeOnServices(incomingTournamentId, incomingRound);
         } else if (incomingRound !== this.round) {
           console.log('other round to display');
 
           this.round = incomingRound;
 
+          this.subscribeOnServices(incomingTournamentId, incomingRound);
           this.createDataObservables(incomingRound);
         }
       }
@@ -196,28 +226,46 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       });
   }
 
-
   ngOnDestroy() {
 
     console.log('destroy round: ' + this.round + ' for tournament: ' + this._tournamentId);
 
-    this.unsubscribeOnServices();
+    this.unsubscribeServices();
+    this.unsubscribeObservables();
   }
 
   private subscribeOnServices(incomingTournamentId: string, incomingRound: number) {
 
-    this.tournamentService.subscribeOnFirebase(incomingTournamentId);
-    this.tournamentPlayerService.subscribeOnFirebase(incomingTournamentId);
-    this.armyListService.subscribeOnFirebase(incomingTournamentId);
+    this.tournamentService.subscribeOnOfflineFirebase(incomingTournamentId);
+    this.tournamentPlayerService.subscribeOnOfflineFirebase(incomingTournamentId);
+    this.armyListService.subscribeOnOfflineFirebase(incomingTournamentId);
+    this.teamService.subscribeOnOfflineFirebase(incomingTournamentId);
 
-    this.teamService.subscribeOnFirebase(incomingTournamentId);
+    this.rankingService.subscribeOnOfflineFirebase(incomingTournamentId);
+    this.teamRankingService.subscribeOnOfflineFirebase(incomingTournamentId);
 
-    this.rankingService.subscribeOnFirebase(incomingTournamentId);
-    this.teamRankingService.subscribeOnFirebase(incomingTournamentId);
+    this.gamesService.subscribeOnOfflineFirebase(incomingTournamentId);
+    this.teamGamesService.subscribeOnOfflineFirebase(incomingTournamentId);
 
+    this.onlineSub = this.isConnected$.subscribe(online => {
 
-    this.gamesService.subscribeOnFirebase(incomingTournamentId);
-    this.teamGamesService.subscribeOnFirebase(incomingTournamentId);
+      if (online) {
+        console.log('online');
+
+        this.snackBar.open('You are now online. Sync with server', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
+      } else {
+        console.log('offline');
+
+        this.snackBar.open('You are now offline. Write to browser DB', '', {
+          extraClasses: ['snackBar-fail'],
+          duration: 5000
+        });
+      }
+    });
+
 
     this.createDataObservables(incomingRound);
 
@@ -247,7 +295,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     });
 
     this.allActualTournamentPlayersSub = this.allTournamentPlayers$.subscribe((allTournamentPlayers: TournamentPlayer[]) => {
-      this.allActualTournamentPlayers = allTournamentPlayers;
+      this.allPlayers = allTournamentPlayers;
       this.setIsTournamentPlayer();
     });
 
@@ -262,23 +310,75 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       this.allPlayerGames = allTournamentGames;
     });
 
+    this.playerGamesForRoundSub = this.playerGamesForRound$.subscribe((gamesForRound: TournamentGame[]) => {
+      this.playerGamesForRound = gamesForRound;
+    });
+
+    this.playerRankingsForRoundSub = this.playerRankingsForRound$.subscribe((rankings: TournamentRanking[]) => {
+      this.playerRankingsForRound = rankings;
+    });
+
     this.allActualTournamentTeamGamesSub = this.allTeamGames$.subscribe((allTournamentTeamGames: TournamentGame[]) => {
       this.allTeamGames = allTournamentTeamGames;
     });
 
-    this.allActualTournamentRankingsSub = this.allPlayerRankings$.subscribe((rankings: TournamentRanking[]) => {
-      this.allTournamentRankings = rankings;
+    this.teamGamesForRoundSub = this.teamGamesForRound$.subscribe((gamesForRound: TournamentGame[]) => {
+      this.teamGamesForRound = gamesForRound;
     });
 
-    this.allActualTournamentTeamRankingsSub = this.allTournamentTeamRankings$.subscribe((teamRankings: TournamentRanking[]) => {
-      this.allTournamentTeamRankings = teamRankings;
+    this.teamRankingsForRoundSub = this.teamRankingsForRound$.subscribe((rankings: TournamentRanking[]) => {
+      this.teamRankingsForRound = rankings;
     });
+
+    this.allActualTournamentRankingsSub = this.allPlayerRankings$.subscribe((rankings: TournamentRanking[]) => {
+      this.allPlayerRankings = rankings;
+    });
+
+    this.allActualTournamentTeamRankingsSub = this.allTeamRankings$.subscribe((teamRankings: TournamentRanking[]) => {
+      this.allTeamRankings = teamRankings;
+    });
+  }
+
+  private unsubscribeServices() {
+
+    this.tournamentService.unsubscribeOnFirebase();
+    this.tournamentPlayerService.unsubscribeOnFirebase();
+    this.teamService.unsubscribeOnFirebase();
+    this.armyListService.unsubscribeOnFirebase();
+
+    this.rankingService.unsubscribeOnFirebase();
+    this.teamRankingService.unsubscribeOnFirebase();
+
+    this.gamesService.unsubscribeOnFirebase();
+    this.teamGamesService.unsubscribeOnFirebase();
+  }
+
+  private unsubscribeObservables() {
+
+    this.onlineSub.unsubscribe();
+
+    this.actualTournamentSub.unsubscribe();
+    this.userPlayerDataSub.unsubscribe();
+    this.allActualTournamentPlayersSub.unsubscribe();
+    this.allActualTournamentTeamSub.unsubscribe();
+
+    this.allActualTournamentGamesSub.unsubscribe();
+    this.allActualTournamentRankingsSub.unsubscribe();
+
+    this.allActualTournamentTeamGamesSub.unsubscribe();
+    this.allActualTournamentTeamRankingsSub.unsubscribe();
+
+    this.playerGamesForRoundSub.unsubscribe();
+    this.teamGamesForRoundSub.unsubscribe();
+
+    this.playerRankingsForRoundSub.unsubscribe();
+    this.teamRankingsForRoundSub.unsubscribe();
 
   }
 
   private createDataObservables(incomingRound: number) {
 
-    this.gamesForRound$ = this.allPlayerGames$.map(
+    this.playerGamesForRound$ = this.allPlayerGames$.map(
       games => games.filter((game: TournamentGame) => {
         return game.tournamentRound === incomingRound;
       }));
@@ -303,7 +403,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
           });
         } else if (onlyMyGameFilter) {
           return allTeamGames.filter(g => {
-            return (g.playerOnePlayerName === this.myTeam || g.playerTwoPlayerName ===  this.myTeam)
+            return (g.playerOnePlayerName === this.myTeam || g.playerTwoPlayerName === this.myTeam)
               && g.tournamentRound === incomingRound;
           });
         } else {
@@ -357,34 +457,10 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.playerRankingsForRound$ = this.allPlayerRankings$.map(
       rankings => rankings.filter(r => r.tournamentRound === incomingRound));
 
-    this.teamRankingsForRound$ = this.allTournamentTeamRankings$.map(
+    this.teamRankingsForRound$ = this.allTeamRankings$.map(
       rankings => rankings.filter(r => r.tournamentRound === incomingRound));
   }
 
-  private unsubscribeOnServices() {
-
-    this.tournamentService.unsubscribeOnFirebase();
-    this.tournamentPlayerService.unsubscribeOnFirebase();
-    this.teamService.unsubscribeOnFirebase();
-    this.armyListService.unsubscribeOnFirebase();
-
-    this.rankingService.unsubscribeOnFirebase();
-    this.teamRankingService.unsubscribeOnFirebase();
-
-    this.gamesService.unsubscribeOnFirebase();
-    this.teamGamesService.unsubscribeOnFirebase();
-
-    this.actualTournamentSub.unsubscribe();
-    this.userPlayerDataSub.unsubscribe();
-    this.allActualTournamentPlayersSub.unsubscribe();
-    this.allActualTournamentTeamSub.unsubscribe();
-
-    this.allActualTournamentGamesSub.unsubscribe();
-    this.allActualTournamentRankingsSub.unsubscribe();
-
-    this.allActualTournamentTeamGamesSub.unsubscribe();
-    this.allActualTournamentTeamRankingsSub.unsubscribe();
-  }
 
   changeScenario(): void {
 
@@ -404,7 +480,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
     this.store.dispatch({type: SHOW_ONLY_MY_GAME_ACTION, payload: show});
   }
-
 
 
   setIsAdmin(): void {
@@ -434,11 +509,11 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   setIsTournamentPlayer(): void {
     const that = this;
 
-    if (this.allActualTournamentPlayers && this.userPlayerData) {
+    if (this.allPlayers && this.userPlayerData) {
 
       this.isTournamentPlayer = false;
 
-      _.forEach(this.allActualTournamentPlayers, function (player: TournamentPlayer) {
+      _.forEach(this.allPlayers, function (player: TournamentPlayer) {
         if (that.userPlayerData && that.userPlayerData.id === player.playerId) {
           that.isTournamentPlayer = true;
         }
@@ -475,6 +550,14 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.router.navigate(['/tournament', this.actualTournament.id, 'round', (this.round ), 'rankings']);
   }
 
+  publishRound() {
+    this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
+    this.snackBar.open('Round ' + this.round + ' successfully published', '', {
+      extraClasses: ['snackBar-success'],
+      duration: 5000
+    });
+  }
+
   openKillRoundDialog() {
     const dialogRef = this.dialog.open(KillRoundDialogComponent, {
       data: {
@@ -489,10 +572,10 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
           config.tournamentId = this.actualTournament.id;
           config.round = this.round;
           if (this.isTeamTournament) {
-            this.teamPairingService.killTeamRankingsAndGames(config);
+            this.teamPairingService.killTeamRankingsAndGames(config, this.teamRankingsForRound, this.teamGamesForRound);
           }
 
-          this.pairingService.killRound(config);
+          this.pairingService.killRound(config, this.playerRankingsForRound, this.playerGamesForRound);
 
           this.snackBar.open('Round ' + config.round + ' successfully killed with fire!', '', {
             extraClasses: ['snackBar-success'],
@@ -519,14 +602,6 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   }
 
 
-  publishRound() {
-    this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
-    this.snackBar.open('Round ' + this.round + ' successfully published', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
-  }
-
   openPairAgainDialog() {
     const dialogRef = this.dialog.open(PairAgainDialogComponent, {
       data: {
@@ -543,11 +618,20 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
           config.round = this.round;
 
           if (!this.isTeamTournament) {
-            this.pairingService.pairRoundAgain(config, this.allActualTournamentPlayers, this.allTournamentRankings);
+            this.pairingService.pairRoundAgain(config,
+              this.playerRankingsForRound,
+              this.playerGamesForRound,
+              this.allPlayers,
+              this.allPlayerRankings);
           } else {
-            this.teamPairingService.pairTeamRound(config,
-              this.actualTournament, this.allTeams, this.allActualTournamentPlayers,
-              this.allTournamentRankings, this.allTournamentTeamRankings);
+            this.teamPairingService.pairTeamRoundAgain(config,
+              this.actualTournament,
+              this.teamRankingsForRound,
+              this.teamGamesForRound,
+              this.allTeams,
+              this.allPlayers,
+              this.allPlayerRankings,
+              this.allTeamRankings);
           }
 
           this.snackBar.open('Round created successfully again.', '', {
@@ -567,7 +651,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       data: {
         actualTournament: this.actualTournament,
         round: this.round,
-        allActualTournamentPlayers: this.allActualTournamentPlayers,
+        allActualTournamentPlayers: this.allPlayers,
         teamMatch: this.isTeamTournament
       },
       width: '600px',
@@ -577,15 +661,17 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         if (config !== undefined) {
 
           if (!this.isTeamTournament) {
-            this.pairingService.pairNewRound(config, this.allActualTournamentPlayers, this.allTournamentRankings);
+            this.pairingService.pairNewRound(config,
+              this.allPlayers,
+              this.allPlayerRankings);
           } else {
-            this.teamPairingService.pairTeamRound(
+            this.teamPairingService.pairNewTeamRound(
               config,
               this.actualTournament,
               this.allTeams,
-              this.allActualTournamentPlayers,
-              this.allTournamentRankings,
-              this.allTournamentTeamRankings);
+              this.allPlayers,
+              this.allPlayerRankings,
+              this.allTeamRankings);
           }
           this.snackBar.open('Round created successfully.', '', {
             extraClasses: ['snackBar-success'],
@@ -604,7 +690,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(FinishTournamentDialogComponent, {
       data: {
         round: this.round,
-        allActualTournamentPlayers: this.allActualTournamentPlayers
+        allActualTournamentPlayers: this.allPlayers
       },
       width: '600px',
     });
@@ -639,7 +725,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         gameAfter: clearedGame
       },
       this.actualTournament,
-      this.allTournamentRankings,
+      this.allPlayerRankings,
       this.allPlayerGames,
       true
     );
@@ -665,7 +751,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         gameAfter: clearedGame
       },
       this.actualTournament,
-      this.allTournamentRankings,
+      this.allPlayerRankings,
       this.allPlayerGames,
       true
     );
@@ -682,7 +768,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
     this.gameResultService.clearGameForTeamMatch(teamMatchClear.teamMatch);
     this.gameResultService.clearRankingForTeamMatch(teamMatchClear.teamMatch,
-      this.allTournamentTeamRankings);
+      this.allTeamRankings);
 
     _.forEach(teamMatchClear.playerMatchesForTeamOne, function (playerGame: TournamentGame) {
       const clearedGame = clearTournamentGame(playerGame);
@@ -693,7 +779,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
           gameAfter: clearedGame
         },
         that.actualTournament,
-        that.allTournamentRankings,
+        that.allPlayerRankings,
         that.allPlayerGames,
         true
       );
@@ -706,7 +792,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   handleGameResultEntered(gameResult: GameResult) {
 
-    if ( this.round > this.actualTournament.visibleRound) {
+    if (this.round > this.actualTournament.visibleRound) {
       this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
     }
 
@@ -717,7 +803,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.gameResultService.gameResultEntered(
       gameResult,
       this.actualTournament,
-      this.allTournamentRankings,
+      this.allPlayerRankings,
       this.allPlayerGames,
       false
     );
@@ -731,7 +817,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   handleTeamGameResultEntered(teamGameResult: GameResult) {
 
 
-    if( this.round > this.actualTournament.visibleRound) {
+    if (this.round > this.actualTournament.visibleRound) {
       this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
     }
 
@@ -748,14 +834,11 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         gameAfter: teamGameResult.gameAfter
       },
       this.actualTournament,
-      this.allTournamentRankings,
-      this.allTournamentTeamRankings,
+      this.allPlayerRankings,
+      this.allTeamRankings,
       this.allPlayerGames,
-      this.allTeamGames,
       false
     );
-
-
     this.snackBar.open('TeamGameResult entered successfully', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
@@ -767,11 +850,13 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
     const that = this;
 
+    let tempTeamOne: string;
+    let tempScoreTeamOne: number;
+    let tempScoreTeamTwo: number;
+
     _.forEach(this.allPlayerGames, function (game: TournamentGame) {
 
       if (!game.finished) {
-
-        console.log('update game: ' + game.playerOnePlayerName + ' VS ' + game.playerTwoPlayerName);
 
         const gameAfter = _.cloneDeep(game);
 
@@ -793,23 +878,37 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
               gameAfter: gameAfter,
             },
             that.actualTournament,
-            that.allTournamentRankings,
+            that.allPlayerRankings,
             that.allPlayerGames,
             false
           );
         } else {
-          that.gameResultService.teamGameResultEntered(
+
+          const tempTeamMatch = that.getTeamMatchForPlayerGame(game);
+
+          if (tempTeamMatch.playerOnePlayerName === tempTeamOne) {
+
+            tempScoreTeamOne = gameAfter.playerOneScore + tempScoreTeamOne;
+            tempScoreTeamTwo = gameAfter.playerTwoScore + tempScoreTeamTwo;
+
+            tempTeamMatch.playerOneIntermediateResult = tempScoreTeamOne;
+            tempTeamMatch.playerTwoIntermediateResult = tempScoreTeamTwo;
+          } else {
+            tempTeamOne = tempTeamMatch.playerOnePlayerName;
+            tempScoreTeamOne = 0;
+            tempScoreTeamTwo = 0;
+          }
+
+          that.gameResultService.generatedTeamGameResultEntered(
             {
-              teamMatch: that.getTeamMatchForPlayerGame(game),
+              teamMatch: tempTeamMatch,
               gameBefore: game,
               gameAfter: gameAfter,
             },
             that.actualTournament,
-            that.allTournamentRankings,
-            that.allTournamentTeamRankings,
-            that.allPlayerGames,
-            that.allTeamGames,
-            false
+            that.allPlayerRankings,
+            that.allTeamRankings,
+            that.allPlayerGames
           );
         }
       }
@@ -865,7 +964,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     this.pageScrollService.start(pageScrollInstance);
   }
 
-  getArrayForNumber (round: number) {
+  getArrayForNumber(round: number) {
     return getArrayForNumber(round);
   }
 
@@ -879,6 +978,103 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
         (game.playerOneTeamName === teamGame.playerOnePlayerName ||
           game.playerTwoTeamName === teamGame.playerTwoPlayerName);
     });
+  }
+
+  openDataExportDialog() {
+
+    let blob;
+
+    const actualTournament = '\"tournament\" : ' + JSON.stringify(this.actualTournament, null, 4) + ',';
+    const allPlayerGames = '\"playerGames\": ' + JSON.stringify(this.allPlayerGames, null, 4) + ',';
+    const allPlayerRankings = '\"playerRankings\": ' + JSON.stringify(this.allPlayerRankings, null, 4);
+
+    if (this.isTeamTournament) {
+      const allTeamGames = ',\"teamGames\": ' + JSON.stringify(this.allTeamGames, null, 4) + ',';
+      const allTeamRankings = '\"teamRankings\": ' + JSON.stringify(this.allTeamRankings, null, 4);
+      blob = new Blob(['{', actualTournament, allPlayerGames, allPlayerRankings, allTeamGames, allTeamRankings, '}'],
+        {type: 'application/json'});
+    } else {
+      blob = new Blob(['{', actualTournament, allPlayerGames, allPlayerRankings, '}'],
+        {type: 'application/json'});
+    }
+
+
+    const objectUrl = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = objectUrl;
+    a.download = this.actualTournament.name + '_Round_' + this.actualTournament.actualRound + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(objectUrl);
+
+  }
+
+  openDataImportDialog(event: any) {
+
+    const that = this;
+
+    const fileList: FileList = event.target.files;
+    if (fileList.length > 0) {
+      const file: File = fileList[0];
+
+      console.log('import test: ' + JSON.stringify(file));
+
+      const myReader: FileReader = new FileReader();
+      myReader.readAsText(file);
+
+      myReader.onloadend = function (e) {
+
+        const allData = JSON.parse(myReader.result);
+
+
+        const dialogRef = that.dialog.open(ImportDialogComponent, {
+          data: {
+            tournament: allData.tournament,
+            playerGames: allData.playerGames,
+            playerRankings: allData.playerRankings,
+            teamGames: allData.teamGames,
+            teamRankings: allData.teamRankings,
+            error: false
+          },
+          width: '600px',
+        });
+
+        const eventSubscribe = dialogRef.componentInstance.onImportData
+          .subscribe((blub) => {
+
+            that.tournamentService.newRound({
+              round: allData.tournament.actualRound,
+              tournamentId: allData.tournament.id,
+              countryRestriction: false,
+              metaRestriction: false,
+              teamRestriction: false,
+              originRestriction: false
+            });
+            that.pairingService.killPlayerRankings(that.allPlayerRankings);
+            that.pairingService.killPlayerGames(that.allPlayerGames);
+
+            that.pairingService.pushAllPlayerGames(allData.tournament.id, allData.playerGames);
+            that.pairingService.pushAllPlayerRankings(allData.tournament.id, allData.playerRankings);
+
+            that.snackBar.open('Import Data successfully.', '', {
+              extraClasses: ['snackBar-success'],
+              duration: 5000
+            });
+
+            that.router.navigate(['/tournament', allData.tournament.id, 'round', allData.tournament.actualRound]);
+
+            dialogRef.close();
+          });
+        dialogRef.afterClosed().subscribe(() => {
+
+          eventSubscribe.unsubscribe();
+        });
+      };
+    }
+
+
   }
 }
 

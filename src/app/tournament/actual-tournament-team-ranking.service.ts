@@ -14,13 +14,20 @@ import {
   REMOVE_ACTUAL_TOURNAMENT_TEAM_RANKING_ACTION,
 } from 'app/tournament/store/tournament-actions';
 
+import * as _ from 'lodash';
+import {Subscription} from 'rxjs/Subscription';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+
 
 @Injectable()
 export class ActualTournamentTeamRankingService {
 
   tournamentTeamRankingsRef: firebase.database.Reference;
+  private offlineSub: Subscription;
 
-  constructor(protected store: Store<AppState>) {}
+  constructor(protected store: Store<AppState>,
+              private afoDatabase: AngularFireOfflineDatabase,) {
+  }
 
   unsubscribeOnFirebase() {
 
@@ -28,6 +35,26 @@ export class ActualTournamentTeamRankingService {
     if (this.tournamentTeamRankingsRef) {
       this.tournamentTeamRankingsRef.off();
     }
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+  public subscribeOnOfflineFirebase(tournamentId: string) {
+
+    const that = this;
+
+    this.offlineSub = this.afoDatabase.list('tournament-team-rankings/' + tournamentId)
+      .subscribe((rankings) => {
+        const allTeamRankings: TournamentRanking[] = [];
+        _.forEach(rankings, function (rank) {
+          const ranking: TournamentRanking = TournamentRanking.fromJson(rank);
+          ranking.id = rank.$key;
+          allTeamRankings.push(ranking);
+        });
+        that.store.dispatch({type: LOAD_TOURNAMENT_TEAM_RANKINGS_FINISHED_ACTION});
+        that.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_TEAM_RANKINGS_ACTION, payload: allTeamRankings});
+      });
   }
 
   public subscribeOnFirebase(tournamentId: string) {

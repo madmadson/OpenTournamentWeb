@@ -14,11 +14,15 @@ import {
 import * as firebase from 'firebase';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import {Subscription} from 'rxjs/Subscription';
+import * as _ from 'lodash';
 
 @Injectable()
-export class ActualTournamentPlayerService {
+export class TournamentPlayersService {
 
   private tournamentPlayersRef: firebase.database.Reference;
+  private offlineSub: Subscription;
+
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<AppState>) {
@@ -30,6 +34,33 @@ export class ActualTournamentPlayerService {
     if (this.tournamentPlayersRef) {
       this.tournamentPlayersRef.off();
     }
+
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+
+  subscribeOnOfflineFirebase(tournamentId: string) {
+
+    const that = this;
+
+
+    this.offlineSub = this.afoDatabase.list('tournament-players/' + tournamentId)
+      .subscribe((players) => {
+        const allTournamentPlayers: TournamentPlayer[] = [];
+
+        _.forEach(players, function (tournamentPlayer) {
+          const newPlayer: TournamentPlayer = TournamentPlayer.fromJson(tournamentPlayer);
+          newPlayer.id = tournamentPlayer.$key;
+          allTournamentPlayers.push(newPlayer);
+        });
+
+        that.store.dispatch({type: LOAD_TOURNAMENT_PLAYERS_FINISHED_ACTION});
+        that.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_PLAYERS_ACTION, payload: allTournamentPlayers});
+
+
+      });
   }
 
   subscribeOnFirebase(tournamentId: string) {
@@ -107,4 +138,5 @@ export class ActualTournamentPlayerService {
     const tournamentPlayers = this.afoDatabase.list('tournament-players/' + tournamentPlayer.tournamentId);
     return tournamentPlayers.push(tournamentPlayer).getKey();
   }
+
 }

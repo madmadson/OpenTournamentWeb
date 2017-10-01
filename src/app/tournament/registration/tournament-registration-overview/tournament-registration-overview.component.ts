@@ -8,7 +8,7 @@ import {Tournament} from '../../../../../shared/model/tournament';
 import {Player} from '../../../../../shared/model/player';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
 import {Registration} from '../../../../../shared/model/registration';
-import {ActualTournamentPlayerService} from '../../actual-tournament-player.service';
+import {TournamentPlayersService} from '../../actual-tournament-players.service';
 import {ActualTournamentRegistrationService} from '../../actual-tournament-registration.service';
 import {TournamentService} from '../../actual-tournament.service';
 import {Subscription} from 'rxjs/Subscription';
@@ -90,7 +90,7 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
               private registrationService: ActualTournamentRegistrationService,
               private teamRegistrationService: ActualTournamentTeamRegistrationService,
               private teamsService: ActualTournamentTeamsService,
-              private tournamentPlayerService: ActualTournamentPlayerService,
+              private tournamentPlayerService: TournamentPlayersService,
               private armyListService: ActualTournamentArmyListService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute) {
@@ -318,6 +318,11 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
           if (this.isTeamTournament && this.myTeam) {
             this.armyListService.setTeamArmyListStatus(this.myTeam);
           }
+
+          this.snackBar.open('ArmyList uploaded successfully', '', {
+            extraClasses: ['snackBar-success'],
+            duration: 5000
+          });
         }
       });
     const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
@@ -327,6 +332,11 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
         if (this.isTeamTournament && this.myTeam) {
           this.armyListService.setTeamArmyListStatus(this.myTeam);
         }
+
+        this.snackBar.open('ArmyList deleted successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
       }
     });
 

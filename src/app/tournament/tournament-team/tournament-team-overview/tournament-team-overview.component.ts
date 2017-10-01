@@ -8,7 +8,7 @@ import {Tournament} from '../../../../../shared/model/tournament';
 import {Player} from '../../../../../shared/model/player';
 import {TournamentPlayer} from '../../../../../shared/model/tournament-player';
 import {Registration} from '../../../../../shared/model/registration';
-import {ActualTournamentPlayerService} from '../../actual-tournament-player.service';
+import {TournamentPlayersService} from '../../actual-tournament-players.service';
 import {ActualTournamentRegistrationService} from '../../actual-tournament-registration.service';
 import {TournamentService} from '../../actual-tournament.service';
 import {Subscription} from 'rxjs/Subscription';
@@ -36,6 +36,8 @@ import {ActualTournamentTeamRegistrationService} from '../../actual-tournament-t
 import {TeamPairingService} from '../../team-pairing.service';
 import {CreateTeamDialogComponent} from '../../../dialogs/create-team-dialog';
 import {ShowPlayerListDialogComponent} from '../../../dialogs/mini-dialog/show-player-list-dialog';
+import {WindowRefService} from '../../../service/window-ref-service';
+import {AfoListObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 
 @Component({
@@ -86,11 +88,16 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
 
   @ViewChild('searchField') searchField: ElementRef;
 
+  isConnected$: Observable<boolean>;
+  private onlineSub: Subscription;
+  private blub$: AfoListObservable<any[]>;
+  private blub2$: AfoListObservable<any[]>;
+
   constructor(private snackBar: MdSnackBar,
               private dialog: MdDialog,
               private tournamentService: TournamentService,
               private registrationService: ActualTournamentRegistrationService,
-              private tournamentPlayerService: ActualTournamentPlayerService,
+              private tournamentPlayerService: TournamentPlayersService,
               private tournamentTeamService: ActualTournamentTeamsService,
               private tournamentTeamRegService: ActualTournamentTeamRegistrationService,
               private armyListService: ActualTournamentArmyListService,
@@ -98,17 +105,18 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
               private teamPairingService: TeamPairingService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
-              public router: Router) {
+              public router: Router,
+              private winRef: WindowRefService,
+              private afoDatabase: AngularFireOfflineDatabase) {
+
+    this.isConnected$ = Observable.merge(
+      Observable.of(this.winRef.nativeWindow.navigator.onLine),
+      Observable.fromEvent(window, 'online').map(() => true),
+      Observable.fromEvent(window, 'offline').map(() => false));
 
     this.activeRouter.params.subscribe(
       params => {
-        this.tournamentService.subscribeOnFirebase(params['id']);
-        this.registrationService.subscribeOnFirebase(params['id']);
-        this.tournamentPlayerService.subscribeOnFirebase(params['id']);
-        this.armyListService.subscribeOnFirebase(params['id']);
-
-        this.tournamentTeamService.subscribeOnFirebase(params['id']);
-        this.tournamentTeamRegService.subscribeOnFirebase(params['id']);
+        this.subscribeOnServices(params);
       }
     );
 
@@ -127,10 +135,14 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     this.allTournamentTeamsFiltered$ = Observable.combineLatest(
       this.allTournamentTeams$,
       this.searchField$,
-      (allPlayers, searchField) => {
-        return allPlayers.filter((p: TournamentTeam) => {
-          const searchStr = p.teamName.toLowerCase();
-          return searchStr.startsWith(searchField.toLowerCase());
+      (allTeams, searchField) => {
+        return allTeams.filter((team: TournamentTeam) => {
+          if (team) {
+            const searchStr = team.teamName.toLowerCase();
+            return searchStr.startsWith(searchField.toLowerCase());
+          } else {
+            return team;
+          }
         }).sort(compareTeam);
       });
   }
@@ -189,12 +201,13 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.tournamentService.unsubscribeOnFirebase();
-    this.registrationService.unsubscribeOnFirebase();
-    this.tournamentPlayerService.unsubscribeOnFirebase();
-    this.armyListService.unsubscribeOnFirebase();
-    this.tournamentTeamService.unsubscribeOnFirebase();
-    this.tournamentTeamRegService.unsubscribeOnFirebase();
+    this.unsubscribeServices();
+    this.unsubscribeObservables();
+  }
+
+  private unsubscribeObservables() {
+
+    this.onlineSub.unsubscribe();
 
     this.actualTournamentSub.unsubscribe();
     this.allArmyListsSub.unsubscribe();
@@ -203,6 +216,49 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     this.allActualRegistrationsSub.unsubscribe();
     this.allActualTournamentTeamsSub.unsubscribe();
     this.allActualTournamentTeamRegsSub.unsubscribe();
+  }
+
+  private subscribeOnServices(params) {
+
+    this.tournamentService.subscribeOnOfflineFirebase(params['id']);
+    this.registrationService.subscribeOnOfflineFirebase(params['id']);
+    this.tournamentPlayerService.subscribeOnOfflineFirebase(params['id']);
+    this.armyListService.subscribeOnOfflineFirebase(params['id']);
+
+    this.tournamentTeamService.subscribeOnOfflineFirebase(params['id']);
+    this.tournamentTeamRegService.subscribeOnOfflineFirebase(params['id']);
+
+    this.blub$ = this.afoDatabase.list('tournament-team-games/' + params['id']);
+    this.blub2$ = this.afoDatabase.list('tournament-games/' + params['id']);
+
+    this.onlineSub = this.isConnected$.subscribe(online => {
+
+      if (online) {
+        console.log('online');
+
+
+        this.snackBar.open('You are now online. Sync with server', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
+      } else {
+        console.log('offline');
+
+        this.snackBar.open('You are now offline. Write to browser DB', '', {
+          extraClasses: ['snackBar-fail'],
+          duration: 5000
+        });
+      }
+    });
+  }
+
+  private unsubscribeServices() {
+    this.tournamentService.unsubscribeOnFirebase();
+    this.registrationService.unsubscribeOnFirebase();
+    this.tournamentPlayerService.unsubscribeOnFirebase();
+    this.armyListService.unsubscribeOnFirebase();
+    this.tournamentTeamService.unsubscribeOnFirebase();
+    this.tournamentTeamRegService.unsubscribeOnFirebase();
   }
 
   getArrayForNumber(round: number): number[] {
@@ -263,12 +319,22 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
 
         if (armyListForPlayer !== undefined) {
           this.armyListService.pushArmyListForTournamentPlayer(armyListForPlayer.armyList);
+
+          this.snackBar.open('Army List for Player saved successfully', '', {
+            extraClasses: ['snackBar-success'],
+            duration: 5000
+          });
         }
       });
     const deleteEventSubscribe = dialogRef.componentInstance.onDeleteArmyList.subscribe(armyList => {
 
       if (armyList !== undefined) {
         this.armyListService.killArmyList(armyList);
+
+        this.snackBar.open('ArmyList deleted successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
       }
     });
 
@@ -397,11 +463,11 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
         const newPlayerRankings: TournamentRanking[] =
           this.pairingService.pushRankingForRound(config, this.allActualTournamentPlayers, []);
 
-        const newRankings: TournamentRanking[] =
+        const newTeamRankings: TournamentRanking[] =
           this.teamPairingService.pushTeamRankingForRound(config, this.allTournamentTeams, []);
         const success: boolean = this.teamPairingService.createTeamGamesForRound(
           this.actualTournament, this.allActualTournamentPlayers, [], config,
-          newRankings, newPlayerRankings);
+          newTeamRankings, newPlayerRankings);
 
         if (success) {
           this.tournamentService.startTournament(config);
@@ -416,10 +482,8 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
             duration: 5000
           });
 
-          this.pairingService.killRankingsForRound(config);
-          this.teamPairingService.killTeamRankingsForRound(config);
-          this.pairingService.killGamesForRound(config);
-          this.teamPairingService.killTeamGamesForRound(config);
+          this.pairingService.killPlayerRankings(newPlayerRankings);
+          this.teamPairingService.killTeamRankingsForRound(config, newTeamRankings);
         }
 
 
@@ -431,22 +495,6 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  kill() {
-
-    const conf = {
-      tournamentId: this.actualTournament.id,
-      teamRestriction: false,
-      metaRestriction: false,
-      originRestriction: false,
-      countryRestriction: false,
-      round: 1
-    };
-
-    this.pairingService.killRankingsForRound(conf);
-    this.teamPairingService.killTeamRankingsForRound(conf);
-    this.pairingService.killGamesForRound(conf);
-    this.teamPairingService.killTeamGamesForRound(conf);
-  }
 
   createRandomTeams() {
 
@@ -476,6 +524,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     }
 
   }
+
 }
 
 

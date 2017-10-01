@@ -29,6 +29,9 @@
           <md-icon class="align-fix" md-tooltip="Already played against: {{ranking.opponentNames}}">info</md-icon>
           {{ranking.playerName | truncate:truncateMax}}
         </div>
+        <div>
+          {{ranking.teamName | truncate:truncateMax}}
+        </div>
         <div *ngIf="smallScreen">{{ranking.faction}}</div>
         <div class="color-negative" *ngIf="ranking.droppedInRound">Dropped in round {{ranking.droppedInRound}}</div>
         <div></div>

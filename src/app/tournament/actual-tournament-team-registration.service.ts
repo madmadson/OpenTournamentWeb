@@ -19,18 +19,17 @@ import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {TournamentTeam} from '../../../shared/model/tournament-team';
 import {TeamRegistrationPush} from '../../../shared/dto/team-registration-push';
 import {TeamRegistrationChange} from '../../../shared/dto/team-registration-change';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Injectable()
 export class ActualTournamentTeamRegistrationService {
 
   private tournamentTeamRegistrationsRef: firebase.database.Reference;
+  private offlineSub: Subscription;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              private store: Store<AppState>) {
-
-  }
-
+              private store: Store<AppState>) {}
 
   unsubscribeOnFirebase() {
 
@@ -38,6 +37,41 @@ export class ActualTournamentTeamRegistrationService {
     if (this.tournamentTeamRegistrationsRef) {
       this.tournamentTeamRegistrationsRef.off();
     }
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+  public subscribeOnOfflineFirebase(tournamentId: string) {
+
+    const that = this;
+    const allRegistrations: TournamentTeam[] = [];
+    let firstLoad = true;
+
+    this.offlineSub = this.afoDatabase.list('tournament-team-registrations/' + tournamentId)
+      .subscribe((registrations) => {
+
+        if (firstLoad) {
+          _.forEach(registrations, function (reg) {
+            const newTeamReg: TournamentTeam = TournamentTeam.fromJson(reg);
+            newTeamReg.id = reg.$key;
+            allRegistrations.push(newTeamReg);
+          });
+          that.store.dispatch({type: LOAD_TEAM_REGISTRATIONS_FINISHED_ACTION});
+          that.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_TEAM_REGISTRATIONS_ACTION, payload: allRegistrations});
+          firstLoad = false;
+        } else {
+
+          _.forEach(registrations, function (reg) {
+            const newTeamReg: TournamentTeam = TournamentTeam.fromJson(reg);
+            newTeamReg.id = reg.$key;
+
+            if (!_.find(allRegistrations, _.matches(newTeamReg))) {
+              that.store.dispatch({type: CHANGE_ACTUAL_TOURNAMENT_TEAM_REGISTRATION_ACTION, payload: newTeamReg});
+            }
+          });
+        }
+      });
   }
 
   subscribeOnFirebase(tournamentId: string) {

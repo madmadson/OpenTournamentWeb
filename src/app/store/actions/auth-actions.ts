@@ -54,15 +54,6 @@ export class SaveUserDataAction implements Action {
   }
 }
 
-export const DELETE_USERDATA_ACTION = 'DELETE_USERDATA_ACTION';
-
-export class DeleteUserDataAction implements Action {
-
-  readonly type = 'DELETE_USERDATA_ACTION';
-  constructor() {
-  }
-}
-
 export const SAVE_USER_PLAYER_DATA_ACTION = 'SAVE_USER_PLAYER_DATA_ACTION';
 export class SaveUserPlayerDataAction implements Action {
 
@@ -88,9 +79,4 @@ export class LogoutAction implements Action {
 }
 
 export const ADD_REDIRECT_LOGIN_ACTION = 'ADD_REDIRECT_LOGIN_ACTION';
-export class AddRedirectUrlAction implements Action {
 
-  readonly type = 'ADD_REDIRECT_LOGIN_ACTION';
-  constructor(public payload: string) {
-  }
-}

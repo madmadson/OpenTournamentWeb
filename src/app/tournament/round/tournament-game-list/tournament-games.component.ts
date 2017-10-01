@@ -72,7 +72,7 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
   smallScreen: boolean;
   truncateMax: number;
 
-  nextUnfinishedGame: TournamentGame;
+  openedGamesIds: string[] = [];
 
   constructor(private dialog: MdDialog,
               private snackBar: MdSnackBar,
@@ -104,11 +104,6 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
         const change = changes[propName];
         if (this.gamesDb && propName === 'gamesForRound') {
           this.gamesDb.resetDatabase(change.currentValue);
-
-          if (this.nextUnfinishedGame) {
-            console.log('open ' + JSON.stringify(this.nextUnfinishedGame));
-            this.openGameResultDialog(this.nextUnfinishedGame);
-          }
         }
       }
     }
@@ -160,13 +155,17 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
   openGameResultDialog(selectedGame: TournamentGame) {
 
+    const that  = this;
+
     if (!this.draggedTournamentPlayerId && ((this.isItMyGame(selectedGame) && !selectedGame.finished)
         || this.isAdmin || this.isCoOrganizer) && !this.actualTournament.finished) {
 
-      this.nextUnfinishedGame = undefined;
+      // this.nextUnfinishedGame = undefined;
+
+      this.openedGamesIds.push(selectedGame.id);
 
       const nextUnfinishedGame: TournamentGame = _.find(this.gamesForRound, function (game: TournamentGame) {
-        return !game.finished && game.id !== selectedGame.id;
+        return !game.finished && game.id !== selectedGame.id && !_.includes(that.openedGamesIds, game.id);
       });
 
       const dialogRef = this.dialog.open(GameResultDialogComponent, {
@@ -185,8 +184,8 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
           if (gameResult !== undefined) {
 
-            this.onGameResultEntered.emit(gameResult);
             dialogRef.close();
+            this.onGameResultEntered.emit(gameResult);
           }
         });
 
@@ -195,9 +194,9 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
           if (gameResult !== undefined) {
 
-            this.onGameResultEntered.emit(gameResult);
             dialogRef.close();
-            this.nextUnfinishedGame = nextUnfinishedGame;
+            this.onGameResultEntered.emit(gameResult);
+            this.openGameResultDialog(nextUnfinishedGame);
           }
         });
       dialogRef.afterClosed().subscribe(() => {

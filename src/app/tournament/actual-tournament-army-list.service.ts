@@ -11,21 +11,23 @@ import {
 
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
-import {MdSnackBar} from '@angular/material';
 import * as firebase from 'firebase';
 import {ArmyList} from '../../../shared/model/armyList';
 import {ArmyListRegistrationPush} from '../../../shared/dto/armyList-registration-push';
-import {TournamentTeam} from "../../../shared/model/tournament-team";
+import {TournamentTeam} from '../../../shared/model/tournament-team';
+
+import * as _ from 'lodash';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Injectable()
 export class ActualTournamentArmyListService {
 
   private armyListRef: firebase.database.Reference;
+  private offlineSub: Subscription;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              private store: Store<AppState>,
-              private snackBar: MdSnackBar) {}
+              private store: Store<AppState>) {}
 
   unsubscribeOnFirebase() {
 
@@ -33,6 +35,42 @@ export class ActualTournamentArmyListService {
     if (this.armyListRef) {
       this.armyListRef.off();
     }
+
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+  public subscribeOnOfflineFirebase(tournamentId: string) {
+
+    const that = this;
+    const allArmyLists: ArmyList[] = [];
+    let firstLoad = true;
+
+    this.offlineSub = this.afoDatabase.list('tournament-armyLists/' + tournamentId)
+      .subscribe((armyLists) => {
+
+        if (firstLoad) {
+          _.forEach(armyLists, function (list) {
+            const armyList: ArmyList = ArmyList.fromJson(list);
+            armyList.id = list.$key;
+            allArmyLists.push(armyList);
+          });
+
+          that.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_ARMY_LISTS_ACTION, payload: allArmyLists});
+          firstLoad = false;
+        } else {
+
+          _.forEach(armyLists, function (list) {
+            const armyList: ArmyList = ArmyList.fromJson(list);
+            armyList.id = list.$key;
+
+            if (!_.find(allArmyLists, _.matches(armyList))) {
+              that.store.dispatch({type: CHANGE_ACTUAL_TOURNAMENT_ARMY_LIST_ACTION, payload: armyList});
+            }
+          });
+        }
+      });
   }
 
   subscribeOnFirebase(tournamentId: string) {
@@ -105,33 +143,18 @@ export class ActualTournamentArmyListService {
       playerUploadedArmyLists: true,
       armyListsChecked: false
     });
-
-    this.snackBar.open('ArmyList uploaded successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
   }
 
   pushArmyListForTournamentPlayer(armyList: ArmyList) {
 
     const tournamentArmyListRef = this.afoDatabase.list('tournament-armyLists/' + armyList.tournamentId);
     tournamentArmyListRef.push(armyList);
-
-    this.snackBar.open('Army List for Player saved successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
   }
 
   killArmyList(armyList: ArmyList) {
     const armyListRef = this.afoDatabase
       .list('tournament-armyLists/' + armyList.tournamentId + '/' + armyList.id);
     armyListRef.remove();
-
-    this.snackBar.open('ArmyList deleted successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
   }
 
   setTeamArmyListStatus(team: TournamentTeam) {

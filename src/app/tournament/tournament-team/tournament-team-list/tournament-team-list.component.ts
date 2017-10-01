@@ -23,7 +23,7 @@ import {TournamentTeamDatabase, TournamentTeamsDataSource} from '../../../../../
 import {ShowTeamDialogComponent} from '../../../dialogs/show-team-dialog';
 import {TeamUpdate} from '../../../../../shared/dto/team-update';
 import {ActualTournamentTeamsService} from '../../actual-tournament-teams.service';
-import {ActualTournamentPlayerService} from 'app/tournament/actual-tournament-player.service';
+import {TournamentPlayersService} from 'app/tournament/actual-tournament-players.service';
 import {NewTournamentPlayerDialogComponent} from '../../../dialogs/add-tournament-player-dialog';
 import {ShowArmyListDialogComponent} from 'app/dialogs/show-army-lists-dialog';
 
@@ -63,7 +63,7 @@ export class TournamentTeamListComponent implements OnInit, OnChanges {
               private snackBar: MdSnackBar,
               private winRef: WindowRefService,
               private tournamentTeamService: ActualTournamentTeamsService,
-              private tournamentPlayerService: ActualTournamentPlayerService) {
+              private tournamentPlayerService: TournamentPlayersService) {
 
     if (this.winRef.nativeWindow.screen.width < 500) {
       this.smallScreen = true;
@@ -214,6 +214,11 @@ export class TournamentTeamListComponent implements OnInit, OnChanges {
   }
 
   checkTournamentFull(team: TournamentTeam) {
+
+    if (!this.actualTournament) {
+      return false;
+    }
+
     const allPlayersForTeam = this.getPlayersForTeam(team);
 
     return allPlayersForTeam.length === this.actualTournament.teamSize;

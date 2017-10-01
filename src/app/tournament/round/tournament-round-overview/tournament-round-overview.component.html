@@ -41,6 +41,7 @@
     </button>
   </md-menu>
 </div>
+
 <h3 class="heading" *ngIf="round > actualTournament?.actualRound">
   No data for round {{round}} found
 </h3>
@@ -50,6 +51,7 @@
     Round {{round}}
   </h2>
 
+  <!--TeamGames: {{(blub$ | async)?.length}} PlayerGames: {{(blub2$ | async)?.length}}-->
 
   <h3 class="heading padding" *ngIf="checkOrganizerIsParing()">
     Tournament Organizer is pairing.
@@ -131,6 +133,22 @@
         <md-icon>list</md-icon>
         FinalRankings
       </button>
+      <button *ngIf="userPlayerData?.id === '-KhS1c-TCch2ftWtTAMw'"
+              (click)="openDataExportDialog()"
+              class="color-primary-background action-button"
+              md-raised-button>
+        <md-icon>cloud_download</md-icon>
+        Export Data
+      </button>
+
+      <button *ngIf="userPlayerData?.id === '-KhS1c-TCch2ftWtTAMw'"
+              (click)="importData.click()"
+              class="color-primary-background action-button"
+              md-raised-button>
+        <md-icon>cloud_upload</md-icon>
+        Import Data
+      </button>
+      <input hidden type="file" #importData accept=".json" (change)="openDataImportDialog($event)"/>
     </md-card>
   </div>
 </ng-container>
@@ -229,16 +247,16 @@
                            [round]="round"
                            [actualTournament]="actualTournament"
                            [teamGamesForRound]="allTeamGamesFiltered$ | async"
-                           [playerGamesForRound]="gamesForRound$ | async"
-                           [playerGamesForRound$]="gamesForRound$"
+                           [playerGamesForRound]="playerGamesForRound$ | async"
+                           [playerGamesForRound$]="playerGamesForRound$"
                            [playerRankingsForRound]="playerRankingsForRound$ | async"
                            [allPlayerRankings]="allPlayerRankings$ | async"
                            [teamRankingsForRound]="teamRankingsForRound$ | async"
-                           [allTeamRankings]="allTournamentTeamRankings$ | async"
+                           [allTeamRankings]="allTeamRankings$ | async"
                            [armyLists]="allArmyLists$ | async"
                            [userPlayerData]="userPlayerData"
                            [actualTournamentTeams]="allTeams"
-                           [actualTournamentPlayers]="allActualTournamentPlayers"
+                           [actualTournamentPlayers]="allPlayers"
                            (onTeamMatchGameResult)="handleTeamGameResultEntered($event)"
                            (onClearTeamPlayerGameResult)="handleClearTeamPlayerGameResult($event)"
                            (onClearTeamGameResult)="handleClearTeamGameResult($event)">

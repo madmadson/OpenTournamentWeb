@@ -62,7 +62,6 @@ export class AppComponent implements OnDestroy {
 
     this.sideNavOpen = this.winRef.nativeWindow.screen.width >= 800;
 
-
     this.isConnected$ = Observable.merge(
       Observable.of(this.winRef.nativeWindow.navigator.onLine),
       Observable.fromEvent(window, 'online').map(() => true),
@@ -73,7 +72,6 @@ export class AppComponent implements OnDestroy {
     this.authSubscription = this.auth$.subscribe((auth: AuthenticationState) => {
       this.userPlayerData = auth.userPlayerData;
     });
-
   }
 
   ngOnDestroy(): void {

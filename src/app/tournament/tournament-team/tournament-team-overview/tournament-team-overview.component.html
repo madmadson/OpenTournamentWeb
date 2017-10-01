@@ -31,7 +31,14 @@
     </button>
   </md-menu>
 </div>
-<h2 class="heading">Teams ({{(allTournamentTeams$| async)?.length}})</h2>
+<h2 class="heading">Teams
+  ({{(allTournamentTeams$| async)?.length}})
+
+</h2>
+
+<!--Games: {{(blub$ | async)?.length}}-->
+<!--PlayerGames: {{(blub2$ | async)?.length}}-->
+
 
 <div class="action-card-container" *ngIf="isAdmin || isCoOrganizer">
   <md-card class="action-card action-button-wrapper">
@@ -56,15 +63,6 @@
             md-raised-button>
       <md-icon>play_arrow</md-icon>
       Start Tournament
-    </button>
-
-    <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
-            (click)="kill()"
-            type="button"
-            class=" color-negative-background action-button"
-            md-raised-button>
-      <md-icon>play_arrow</md-icon>
-      KILL
     </button>
     <button *ngIf="userPlayerData.id === '-KhS1c-TCch2ftWtTAMw'"
             (click)="createRandomTeams()"

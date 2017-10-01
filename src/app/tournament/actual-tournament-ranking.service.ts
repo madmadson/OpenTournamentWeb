@@ -14,14 +14,16 @@ import {
   LOAD_TOURNAMENT_RANKINGS_FINISHED_ACTION,
   REMOVE_ACTUAL_TOURNAMENT_RANKING_ACTION,
 } from 'app/tournament/store/tournament-actions';
-import {DropPlayerPush} from "../../../shared/dto/drop-player-push";
+import {DropPlayerPush} from '../../../shared/dto/drop-player-push';
+import {Subscription} from 'rxjs/Subscription';
+import * as _ from 'lodash';
 
 
 @Injectable()
 export class ActualTournamentRankingService {
 
   tournamentRankingsRef: firebase.database.Reference;
-
+  private offlineSub: Subscription;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<AppState>) {
@@ -34,6 +36,27 @@ export class ActualTournamentRankingService {
     if (this.tournamentRankingsRef) {
       this.tournamentRankingsRef.off();
     }
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+  public subscribeOnOfflineFirebase(tournamentId: string) {
+
+    const that = this;
+
+    this.offlineSub = this.afoDatabase.list('tournament-rankings/' + tournamentId)
+      .subscribe((rankings) => {
+        const allRankings: TournamentRanking[] = [];
+
+        _.forEach(rankings, function (rank) {
+          const ranking: TournamentRanking = TournamentRanking.fromJson(rank);
+          ranking.id = rank.$key;
+          allRankings.push(ranking);
+        });
+        that.store.dispatch({type: LOAD_TOURNAMENT_RANKINGS_FINISHED_ACTION});
+        that.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_RANKINGS_ACTION, payload: allRankings});
+      });
   }
 
   public subscribeOnFirebase(tournamentId: string) {

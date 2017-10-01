@@ -14,16 +14,19 @@ import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 import {Tournament} from '../../../shared/model/tournament';
 import {AppState} from '../store/reducers/index';
 import {CoOrganizatorPush} from '../../../shared/dto/co-organizator-push';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Injectable()
 export class TournamentService {
 
   private actualTournamentRef: firebase.database.Reference;
+  private offlineSub: Subscription;
 
   constructor(protected afoDatabase: AngularFireOfflineDatabase,
               protected store: Store<AppState>,
-              private snackBar: MdSnackBar) {}
+              private snackBar: MdSnackBar) {
+  }
 
 
   unsubscribeOnFirebase() {
@@ -33,6 +36,22 @@ export class TournamentService {
     if (this.actualTournamentRef) {
       this.actualTournamentRef.off();
     }
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+  subscribeOnOfflineFirebase(tournamentId: string) {
+
+    this.offlineSub = this.afoDatabase.object('tournaments/' + tournamentId)
+      .subscribe((tour) => {
+        const tournament: Tournament = Tournament.fromJson(tour);
+        tournament.id = tour.$key;
+
+        console.log('tournmanet: ' + JSON.stringify(tournament));
+
+        this.store.dispatch({type: SET_ACTUAL_TOURNAMENT_ACTION, payload: tournament});
+      });
   }
 
   subscribeOnFirebase(tournamentId: string) {
@@ -49,6 +68,7 @@ export class TournamentService {
     });
   }
 
+
   endTournament(tournament: Tournament) {
 
     const registrationRef = this.afoDatabase.object('tournaments/' + tournament.id);
@@ -56,6 +76,7 @@ export class TournamentService {
       {finished: true, visibleRound: (tournament.actualRound)}
     );
   }
+
   undoTournamentEnd(tournament: Tournament) {
     const registrationRef = this.afoDatabase.object('tournaments/' + tournament.id);
     registrationRef.update(
@@ -132,8 +153,11 @@ export class TournamentService {
   }
 
   newRound(config: TournamentManagementConfiguration) {
-    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
-    registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
+    const tournamentRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
+
+    console.log('update tournament: ' + JSON.stringify(config))
+
+    tournamentRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
   }
 
   wholeRoundScenarioSelected(scenarioSelected: ScenarioSelectedModel) {

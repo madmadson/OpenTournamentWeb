@@ -11,6 +11,8 @@ import * as firebase from 'firebase';
 import {AngularFireAuth} from 'angularfire2/auth';
 import {Observable} from 'rxjs/Observable';
 import {AppState} from '../store/reducers/index';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import * as _ from 'lodash';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +24,10 @@ export class AuthService {
   authState$: Observable<firebase.User>;
   private actualUser: firebase.User;
 
-  constructor(public afAuth: AngularFireAuth,
+  private offlineSub: Subscription;
+
+  constructor(protected afoDatabase: AngularFireOfflineDatabase,
+              public afAuth: AngularFireAuth,
               private store: Store<AppState>,
               private router: Router,
               private snackBar: MdSnackBar) {
@@ -36,6 +41,10 @@ export class AuthService {
 
     if (this.afAuth.auth) {
       this.afAuth.auth.signOut();
+    }
+
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
     }
   }
 
@@ -89,24 +98,41 @@ export class AuthService {
 
     const that = this;
 
-    const query = firebase.database().ref('players').orderByChild('userUid')
-      .equalTo(userUid).limitToFirst(1);
+    // const query = firebase.database().ref('players').orderByChild('userUid')
+    //   .equalTo(userUid).limitToFirst(1);
+    //
+    // query.once('child_added').then(function (snapshot) {
+    //   if (snapshot.val() != null) {
+    //
+    //     const player = Player.fromJson(snapshot.val());
+    //     player.id = snapshot.key;
+    //     that.store.dispatch(new SaveUserPlayerDataAction(player));
+    //   } else {
+    //     that.store.dispatch(new DeleteUserPlayerDataAction());
+    //   }
+    // });
+    //
+    // query.on('child_changed', function (snapshot) {
+    //   const player = Player.fromJson(snapshot.val());
+    //   player.id = snapshot.key;
+    //   that.store.dispatch(new SaveUserPlayerDataAction(player));
+    // });
 
-    query.once('child_added').then(function (snapshot) {
-      if (snapshot.val() != null) {
-
-        const player = Player.fromJson(snapshot.val());
-        player.id = snapshot.key;
-        that.store.dispatch(new SaveUserPlayerDataAction(player));
-      } else {
+    this.offlineSub = this.afoDatabase.list('players', {
+      query: {
+        orderByChild: 'userUid',
+        equalTo: userUid,
+        limitToFirst: 1
+      }
+    }).subscribe((players) => {
+      _.forEach(players, function (player) {
+        const newPlayer = Player.fromJson(player);
+        newPlayer.id = player.$key;
+        that.store.dispatch(new SaveUserPlayerDataAction(newPlayer));
+      });
+      if (!players || players.length === 0) {
         that.store.dispatch(new DeleteUserPlayerDataAction());
       }
-    });
-
-    query.on('child_changed', function (snapshot) {
-      const player = Player.fromJson(snapshot.val());
-      player.id = snapshot.key;
-      that.store.dispatch(new SaveUserPlayerDataAction(player));
     });
   }
 

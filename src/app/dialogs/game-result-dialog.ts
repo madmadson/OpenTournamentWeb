@@ -249,7 +249,7 @@ export class GameResultDialogComponent {
       this.gameModel.playerTwoScore = 0;
     }
 
-    console.log('gameAfter: ' + JSON.stringify(this.gameModel));
+    // console.log('gameAfter: ' + JSON.stringify(this.gameModel));
 
   }
 }

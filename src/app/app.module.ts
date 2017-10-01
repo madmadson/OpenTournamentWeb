@@ -114,12 +114,12 @@ import {GamesService} from './games/games.service';
 import {reducers} from './store/reducers/index';
 import {ActualTournamentRegistrationService} from './tournament/actual-tournament-registration.service';
 import {TournamentRegistrationOverviewComponent} from './tournament/registration/tournament-registration-overview/tournament-registration-overview.component';
-import {ActualTournamentPlayerService} from './tournament/actual-tournament-player.service';
+import {TournamentPlayersService} from './tournament/actual-tournament-players.service';
 import {ActualTournamentArmyListService} from './tournament/actual-tournament-army-list.service';
 import {TournamentPlayerOverviewComponent} from './tournament/tournament-player/tournament-player-overview/tournament-player-overview.component';
 import {StartTournamentDialogComponent} from './dialogs/actualTournament/start-tournament-dialog';
 import {ActualTournamentRankingService} from './tournament/actual-tournament-ranking.service';
-import {ActualTournamentGamesService} from './tournament/actual-tournament-games.service';
+import {PlayerGamesService} from './tournament/player-games.service';
 import {PairingService} from './tournament/pairing.service';
 import {GameMatchingService} from 'app/tournament/game-matching.service';
 import {GameResultService} from './tournament/game-result.service';
@@ -155,6 +155,7 @@ import {TournamentTeamRankingsComponent} from 'app/tournament/rankings/tournamen
 import {UploadTournamentDialogComponent} from './dialogs/upload-tournament-dialog';
 import {CreateTeamDialogComponent} from './dialogs/create-team-dialog';
 import {ShowPlayerListDialogComponent} from './dialogs/mini-dialog/show-player-list-dialog';
+import {ImportDialogComponent} from './dialogs/import-dialog';
 
 
 @NgModule({
@@ -256,7 +257,8 @@ import {ShowPlayerListDialogComponent} from './dialogs/mini-dialog/show-player-l
     AddArmyListsDialogComponent,
     NewTournamentPlayerDialogComponent,
     StartTournamentDialogComponent,
-    ShowPlayerListDialogComponent
+    ShowPlayerListDialogComponent,
+    ImportDialogComponent
   ],
   providers: [
     AuthService,
@@ -264,10 +266,10 @@ import {ShowPlayerListDialogComponent} from './dialogs/mini-dialog/show-player-l
     AuthGuard,
     TournamentService,
     ActualTournamentRegistrationService,
-    ActualTournamentPlayerService,
+    TournamentPlayersService,
     ActualTournamentArmyListService,
     ActualTournamentRankingService,
-    ActualTournamentGamesService,
+    PlayerGamesService,
     PlayersService,
     GamesService,
     MyGamesService,
@@ -313,7 +315,8 @@ import {ShowPlayerListDialogComponent} from './dialogs/mini-dialog/show-player-l
     AddCoOrganizatorDialogComponent,
     CreateTeamRegistrationDialogComponent,
     UploadTournamentDialogComponent,
-    ShowPlayerListDialogComponent
+    ShowPlayerListDialogComponent,
+    ImportDialogComponent
   ],
   bootstrap: [AppComponent]
 })

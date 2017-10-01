@@ -15,25 +15,22 @@ import {Registration} from '../../../shared/model/registration';
 import {RegistrationPush} from '../../../shared/dto/registration-push';
 import {AngularFireOfflineDatabase} from 'angularfire2-offline';
 
-import {MdSnackBar} from '@angular/material';
 
 import * as _ from 'lodash';
 import * as firebase from 'firebase';
 import {TournamentPlayer} from '../../../shared/model/tournament-player';
 import {PlayerRegistrationChange} from '../../../shared/dto/playerRegistration-change';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Injectable()
 export class ActualTournamentRegistrationService {
 
   private tournamentRegistrationsRef: firebase.database.Reference;
+  private offlineSub: Subscription;
 
   constructor(private afoDatabase: AngularFireOfflineDatabase,
-              private store: Store<AppState>,
-              private snackBar: MdSnackBar) {
-
-  }
-
+              private store: Store<AppState>) {}
 
   unsubscribeOnFirebase() {
 
@@ -41,6 +38,41 @@ export class ActualTournamentRegistrationService {
     if (this.tournamentRegistrationsRef) {
       this.tournamentRegistrationsRef.off();
     }
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+  public subscribeOnOfflineFirebase(tournamentId: string) {
+
+    const that = this;
+    const allRegistrations: Registration[] = [];
+    let firstLoad = true;
+
+    this.offlineSub = this.afoDatabase.list('tournament-registrations/' + tournamentId)
+      .subscribe((registrations) => {
+
+        if (firstLoad) {
+          _.forEach(registrations, function (registration) {
+            const newReg: Registration = Registration.fromJson(registration);
+            newReg.id = registration.$key;
+            allRegistrations.push(newReg);
+          });
+          that.store.dispatch({type: LOAD_REGISTRATIONS_FINISHED_ACTION});
+          that.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_REGISTRATIONS_ACTION, payload: allRegistrations});
+          firstLoad = false;
+        } else {
+
+          _.forEach(registrations, function (registration) {
+            const newReg: Registration = Registration.fromJson(registration);
+            newReg.id = registration.$key;
+
+            if (!_.find(allRegistrations, _.matches(newReg))) {
+              that.store.dispatch({type: CHANGE_ACTUAL_TOURNAMENT_REGISTRATION_ACTION, payload: registration});
+            }
+          });
+        }
+      });
   }
 
   subscribeOnFirebase(tournamentId: string) {

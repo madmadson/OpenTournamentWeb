@@ -33,6 +33,8 @@
 </div>
 <h2 class="heading">Players ({{(allTournamentPlayers$| async)?.length}})</h2>
 
+<!--PlayerGames: {{(blub$ | async)?.length}}-->
+
 <div class="action-card-container" *ngIf="isAdmin || isCoOrganizer">
   <md-card class="action-card action-button-wrapper">
     <button (click)="openPrintArmyListDialog()"

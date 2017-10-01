@@ -16,26 +16,25 @@ export class GameResultService {
   }
 
 
-  gameResultEntered(gameResult: GameResult,
-                    actualTournament: Tournament,
-                    allPlayerRankings: TournamentRanking[],
-                    allGames: TournamentGame[],
-                    clearGame: boolean) {
+  public gameResultEntered(gameResult: GameResult,
+                           actualTournament: Tournament,
+                           allPlayerRankings: TournamentRanking[],
+                           allGames: TournamentGame[],
+                           clearGame: boolean) {
 
     const afoGames = this.afoDatabase.object('/tournament-games/' + gameResult.gameAfter.tournamentId + '/' + gameResult.gameAfter.id);
     afoGames.update(gameResult.gameAfter);
 
-    this.updateRankingAfterGameResultEntered(gameResult, actualTournament.actualRound, clearGame, allPlayerRankings, allGames, true);
+    this.updatePlayerRankingAfterGameResultEntered(gameResult, actualTournament.actualRound, clearGame, allPlayerRankings, allGames, true);
 
   }
 
-  teamGameResultEntered(teamGameResult: TeamGameResult,
-                        actualTournament: Tournament,
-                        allPlayerRankings: TournamentRanking[],
-                        allTeamRankings: TournamentRanking[],
-                        allGames: TournamentGame[],
-                        allTeamGames: TournamentGame[],
-                        clearGame: boolean) {
+  public teamGameResultEntered(teamGameResult: TeamGameResult,
+                               actualTournament: Tournament,
+                               allPlayerRankings: TournamentRanking[],
+                               allTeamRankings: TournamentRanking[],
+                               allGames: TournamentGame[],
+                               clearGame: boolean) {
 
     console.log('team result entered');
 
@@ -45,12 +44,46 @@ export class GameResultService {
     const teamMatchState: TeamMatchState = this.determineTeamMatchState(teamGameResult, allGames);
 
     this.updateTeamMatchAfterGameResultEntered(teamMatchState, teamGameResult);
-    this.updateRankingAfterGameResultEntered({
+    this.updatePlayerRankingAfterGameResultEntered({
       gameBefore: teamGameResult.gameBefore,
       gameAfter: teamGameResult.gameAfter
     }, actualTournament.actualRound, clearGame, allPlayerRankings, allGames, false);
     this.updateTeamRankingAfterGameResultEntered(teamMatchState,
       teamGameResult, actualTournament.actualRound, clearGame,
+      allTeamRankings, true);
+  }
+
+  // USE THIS ONLY FOR Testing
+  public generatedTeamGameResultEntered(teamGameResult: TeamGameResult,
+                                        actualTournament: Tournament,
+                                        allPlayerRankings: TournamentRanking[],
+                                        allTeamRankings: TournamentRanking[],
+                                        allGames: TournamentGame[]) {
+
+    console.log('generated team result entered');
+
+    const afoGame = this.afoDatabase.object('/tournament-games/' + teamGameResult.gameAfter.tournamentId + '/' + teamGameResult.gameAfter.id);
+    afoGame.update(teamGameResult.gameAfter);
+
+    // HACKY <3
+    const teamMatchState: TeamMatchState = {
+      teamOneWon: teamGameResult.gameAfter.playerOneScore,
+      teamTwoWon: teamGameResult.gameAfter.playerTwoScore,
+      teamMatchFinished: true
+    };
+
+    this.updateTeamMatchAfterGameResultEntered(teamMatchState, teamGameResult);
+    this.updatePlayerRankingAfterGameResultEntered({
+      gameBefore: teamGameResult.gameBefore,
+      gameAfter: teamGameResult.gameAfter
+    }, actualTournament.actualRound, false, allPlayerRankings, allGames, false);
+
+    // HACKY <3
+    teamGameResult.gameAfter.playerOneScore = teamGameResult.teamMatch.playerOneIntermediateResult + teamGameResult.gameAfter.playerOneScore;
+    teamGameResult.gameAfter.playerTwoScore = teamGameResult.teamMatch.playerTwoIntermediateResult + teamGameResult.gameAfter.playerTwoScore;
+
+    this.updateTeamRankingAfterGameResultEntered(teamMatchState,
+      teamGameResult, actualTournament.actualRound, false,
       allTeamRankings, true);
   }
 
@@ -100,12 +133,12 @@ export class GameResultService {
 
   }
 
-  private updateRankingAfterGameResultEntered(gameResult: GameResult,
-                                              round: number,
-                                              clearGame: boolean,
-                                              allPlayerRankings: TournamentRanking[],
-                                              allGames: TournamentGame[],
-                                              debug: boolean) {
+  private updatePlayerRankingAfterGameResultEntered(gameResult: GameResult,
+                                                    round: number,
+                                                    clearGame: boolean,
+                                                    allPlayerRankings: TournamentRanking[],
+                                                    allGames: TournamentGame[],
+                                                    debug: boolean) {
 
     const that = this;
     const roundOfGameResult = gameResult.gameAfter.tournamentRound;

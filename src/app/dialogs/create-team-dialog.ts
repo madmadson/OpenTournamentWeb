@@ -37,9 +37,8 @@ export class CreateTeamDialogComponent implements OnInit {
     this.userPlayerData = data.userPlayerData;
     this.actualTournament = data.actualTournament;
 
-    this.actualTournament = data.actualTournament;
     this.tournamentTeamRegistrations = data.tournamentTeamRegistrations;
-    this.tournamentTeams = data.tournamentTeam;
+    this.tournamentTeams = data.tournamentTeams;
   }
 
   ngOnInit(): void {

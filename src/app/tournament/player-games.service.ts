@@ -15,14 +15,20 @@ import {
   ADD_ALL_ACTUAL_TOURNAMENT_GAMES_ACTION,
   LOAD_TOURNAMENT_GAMES_FINISHED_ACTION
 } from './store/tournament-actions';
+import {Subscription} from 'rxjs/Subscription';
+import {AngularFireOfflineDatabase} from 'angularfire2-offline';
+import * as _ from 'lodash';
 
 
 @Injectable()
-export class ActualTournamentGamesService {
+export class PlayerGamesService {
 
   tournamentGamesRef: firebase.database.Reference;
+  private offlineSub: Subscription;
 
-  constructor(protected store: Store<AppState>) {}
+  constructor(protected store: Store<AppState>,
+              private afoDatabase: AngularFireOfflineDatabase) {
+  }
 
   unsubscribeOnFirebase() {
 
@@ -30,6 +36,62 @@ export class ActualTournamentGamesService {
     if (this.tournamentGamesRef) {
       this.tournamentGamesRef.off();
     }
+
+    if (this.offlineSub) {
+      this.offlineSub.unsubscribe();
+    }
+  }
+
+  public subscribeOnOfflineFirebase(tournamentId: string) {
+
+
+    this.offlineSub = this.afoDatabase.list('tournament-games/' + tournamentId)
+      .subscribe((tournamentGames) => {
+
+      console.log('update games');
+
+        const allPlayerGames: TournamentGame[] = [];
+
+        _.forEach(tournamentGames, function (gameSnapshot) {
+          const tournamentGame: TournamentGame = TournamentGame.fromJson(gameSnapshot);
+          tournamentGame.id = gameSnapshot.$key;
+          allPlayerGames.push(tournamentGame);
+        });
+
+        this.store.dispatch({type: LOAD_TOURNAMENT_GAMES_FINISHED_ACTION});
+        this.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_GAMES_ACTION, payload: allPlayerGames});
+
+        // console.log('ALL LOADED!');
+        // } else {
+        //
+        //   const newPlayerGames: TournamentGame[] = [];
+        //   const newPlayerGamesIds: string[] = [];
+        //
+        //   _.forEach(tournamentGames, function (gameSnapshot) {
+        //     const newTournamentGame: TournamentGame = TournamentGame.fromJson(gameSnapshot);
+        //     newTournamentGame.id = gameSnapshot.$key;
+        //
+        //     newPlayerGamesIds.push(newTournamentGame.id);
+        //     newPlayerGames.push(newTournamentGame);
+        //
+        //     if (_.includes(playerGamesIds, newTournamentGame.id)) {
+        //       that.store.dispatch({type: CHANGE_ACTUAL_TOURNAMENT_GAME_ACTION, payload: newTournamentGame});
+        //     } else {
+        //       that.store.dispatch({type: ADD_ACTUAL_TOURNAMENT_GAME_ACTION, payload: newTournamentGame});
+        //     }
+        //   });
+        //
+        //   _.forEach(allPlayerGames, function (game: TournamentGame) {
+        //
+        //     if (!_.includes(newPlayerGamesIds, game.id)) {
+        //       that.store.dispatch({type: REMOVE_ACTUAL_TOURNAMENT_GAME_ACTION, payload: game.id});
+        //     }
+        //   });
+        //
+        //
+        //   allPlayerGames = newPlayerGames;
+        // }
+      });
   }
 
 

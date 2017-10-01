@@ -20,25 +20,12 @@
   vertical-align:middle;
 }
 
-.game-result-button {
-  min-width:36px;
-  max-width:36px;
-  padding: $halve_tick;
-}
-
-@media only screen and (min-width: 800px) {
-  .game-result-button {
-    min-width:48px;
-    max-width:48px;
-  }
-}
-
 .add-button{
-  background-color: $success_color;
+  background-color: $success_color !important;
 }
 
 .remove-button {
-  background-color: $fail_color;
+  background-color: $fail_color !important;
 }
 
 .game-result-input {

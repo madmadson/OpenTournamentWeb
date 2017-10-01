@@ -7,10 +7,11 @@
       </md-header-cell>
       <md-cell *cdkCellDef="let team" class="teamName-column">
         <md-icon *ngIf="!team?.isRegisteredTeam"
+                 class="align-fix"
                  md-tooltip="Offline Team">
           cloud_off
         </md-icon>
-        {{team.teamName | truncate:truncateMax}}
+        {{team.teamName | truncate:truncateMax}} ({{getPlayersForTeam(team)?.length}})
       </md-cell>
     </ng-container>
 
@@ -43,7 +44,8 @@
         Locality
       </md-header-cell>
       <md-cell *cdkCellDef="let team" class="locality-column">
-        {{team.meta}}
+        <div>{{team.meta}}</div>
+        <div>{{team.country}}</div>
       </md-cell>
     </ng-container>
 

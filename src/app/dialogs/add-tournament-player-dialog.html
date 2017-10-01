@@ -17,6 +17,15 @@
       </md-hint>
       <md-hint align="end">{{fullPlayerName.value.length}} / 50</md-hint>
     </md-input-container>
+    <md-select
+      class="full-width-select-box"
+      placeholder="Faction"
+      #faction
+      required
+      name="faction"
+      [(ngModel)]="tournamentPlayerModel.faction">
+      <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
+    </md-select>
     <md-input-container
       class="full-width">
       <input
@@ -49,15 +58,6 @@
                name="country"
                [(ngModel)]="tournamentPlayerModel.country">
       <md-option *ngFor="let country of countries" [value]="country">{{ country }}</md-option>
-    </md-select>
-    <md-select
-      class="full-width-select-box"
-      placeholder="Faction"
-      #faction
-      required
-      name="faction"
-      [(ngModel)]="tournamentPlayerModel.faction">
-      <md-option *ngFor="let faction of factions" [value]="faction">{{ faction }}</md-option>
     </md-select>
   </form>
 </md-dialog-content>

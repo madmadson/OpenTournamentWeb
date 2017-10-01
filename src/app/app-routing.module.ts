@@ -46,7 +46,7 @@ const routes: Routes = [
   {path: 'tournament/:id/round/:round/rankings', component: TournamentRankingsOverviewComponent},
   {path: 'player-profile', component: PlayerFormComponent},
   {path: 'game', component: GameEditComponent},
-  {path: 'tournaments', redirectTo: '/home', pathMatch: 'full'},
+  {path: '', redirectTo: '/tournaments', pathMatch: 'full'},
   {path: '**', component: PageNotFoundComponent}
 ];
 @NgModule({
