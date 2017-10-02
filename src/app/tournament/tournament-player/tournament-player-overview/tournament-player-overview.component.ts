@@ -363,6 +363,11 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
     const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
       if (tournament) {
         this.tournamentService.updateTournament(tournament);
+
+        this.snackBar.open('Tournament edited successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
       }
       dialogRef.close();
     });

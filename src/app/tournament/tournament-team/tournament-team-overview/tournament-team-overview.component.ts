@@ -137,7 +137,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
       this.searchField$,
       (allTeams, searchField) => {
         return allTeams.filter((team: TournamentTeam) => {
-          if (team) {
+          if (team.teamName) {
             const searchStr = team.teamName.toLowerCase();
             return searchStr.startsWith(searchField.toLowerCase());
           } else {
@@ -416,6 +416,11 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
       if (tournament) {
         this.tournamentService.updateTournament(tournament);
+
+        this.snackBar.open('Tournament edited successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
       }
       dialogRef.close();
     });

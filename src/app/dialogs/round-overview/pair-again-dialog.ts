@@ -18,6 +18,8 @@ export class PairAgainDialogComponent {
   teamMatch: boolean;
   round: number;
 
+  creatingRound: boolean;
+
   constructor(public dialogRef: MdDialogRef<PairAgainDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
     this.teamMatch = data.teamMatch;
@@ -26,14 +28,18 @@ export class PairAgainDialogComponent {
 
   pairRoundAgain() {
 
-    this.onPairAgain.emit({
-      tournamentId: '',
-      round: this.round,
-      teamRestriction: this.teamRestriction,
-      metaRestriction: this.metaRestriction,
-      originRestriction: this.originRestriction,
-      countryRestriction: this.countryRestriction,
-    });
-    this.dialogRef.close();
+    this.creatingRound = true;
+
+    setTimeout( () => {
+      this.onPairAgain.emit({
+        tournamentId: '',
+        round: this.round,
+        teamRestriction: this.teamRestriction,
+        metaRestriction: this.metaRestriction,
+        originRestriction: this.originRestriction,
+        countryRestriction: this.countryRestriction,
+      });
+      this.dialogRef.close();
+    }, 500);
   }
 }

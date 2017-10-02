@@ -33,6 +33,8 @@ function handleSetTournamentAction(state, action): ActualTournamentState {
 
   if (action.payload !== undefined) {
 
+    console.log('new Tournament: ' + JSON.stringify(action.payload));
+
     newState.actualTournament = action.payload;
   }
   return newState;

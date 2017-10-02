@@ -71,25 +71,27 @@ export class TournamentService {
 
   endTournament(tournament: Tournament) {
 
-    const registrationRef = this.afoDatabase.object('tournaments/' + tournament.id);
-    registrationRef.update(
-      {finished: true, visibleRound: (tournament.actualRound)}
-    );
+    const tournamentRef = this.afoDatabase.object('tournaments/' + tournament.id);
+    tournament.finished = true;
+    tournament.visibleRound = tournament.actualRound;
+
+    tournamentRef.set(tournament);
   }
 
   undoTournamentEnd(tournament: Tournament) {
-    const registrationRef = this.afoDatabase.object('tournaments/' + tournament.id);
-    registrationRef.update(
-      {finished: false}
-    );
+    const tournamentRef = this.afoDatabase.object('tournaments/' + tournament.id);
+    tournament.finished = false;
+
+    tournamentRef.set(tournament);
 
   }
 
-  uploadTournament(tournamentId: string) {
-    const registrationRef = this.afoDatabase.object('tournaments/' + tournamentId);
-    registrationRef.update(
-      {uploaded: true}
-    );
+  uploadTournament(tournament: Tournament) {
+    const tournamentRef = this.afoDatabase.object('tournaments/' +  tournament.id);
+
+    tournament.uploaded = true;
+
+    tournamentRef.set(tournament);
   }
 
 
@@ -97,10 +99,6 @@ export class TournamentService {
     const tournamentRef = this.afoDatabase.object('tournaments/' + tournament.id);
     tournamentRef.set(tournament);
 
-    this.snackBar.open('Tournament edited successfully', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
   }
 
   addCoOrganizer(coOrganizer: CoOrganizatorPush) {
@@ -155,7 +153,7 @@ export class TournamentService {
   newRound(config: TournamentManagementConfiguration) {
     const tournamentRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
 
-    console.log('update tournament: ' + JSON.stringify(config))
+    console.log('update tournament: ' + JSON.stringify(config));
 
     tournamentRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
   }

@@ -415,6 +415,11 @@ export class TournamentRegistrationOverviewComponent implements OnInit, OnDestro
     const saveEventSubscribe = dialogRef.componentInstance.onSaveTournament.subscribe(tournament => {
       if (tournament) {
         this.tournamentService.updateTournament(tournament);
+
+        this.snackBar.open('Tournament edited successfully', '', {
+          extraClasses: ['snackBar-success'],
+          duration: 5000
+        });
       }
       dialogRef.close();
     });

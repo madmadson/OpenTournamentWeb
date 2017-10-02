@@ -41,40 +41,21 @@ export class ActualTournamentTeamGamesService {
 
   public subscribeOnOfflineFirebase(tournamentId: string) {
 
-    const that = this;
-    const allTeamGames: TournamentGame[] = [];
-    let firstLoad = true;
+
 
     this.offlineSub = this.afoDatabase.list('tournament-team-games/' + tournamentId)
       .subscribe((tournamentGames) => {
 
-        if (firstLoad) {
+        const allTeamGames: TournamentGame[] = [];
 
-          console.log('tournamentGames: ' + JSON.stringify(tournamentGames));
+        _.forEach(tournamentGames, function (gameSnapshot) {
+          const tournamentGame: TournamentGame = TournamentGame.fromJson(gameSnapshot);
+          tournamentGame.id = gameSnapshot.$key;
 
-          _.forEach(tournamentGames, function (gameSnapshot) {
-            const tournamentGame: TournamentGame = TournamentGame.fromJson(gameSnapshot);
-            tournamentGame.id = gameSnapshot.$key;
-            console.log('tournamentGame: ' + JSON.stringify(tournamentGame));
-            allTeamGames.push(tournamentGame);
-          });
-
-          this.store.dispatch({type: LOAD_TOURNAMENT_TEAM_GAMES_FINISHED_ACTION});
-          this.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_TEAM_GAMES_ACTION, payload: allTeamGames});
-          firstLoad = false;
-          console.log('ALL LOADED!');
-        } else {
-
-          _.forEach(tournamentGames, function (gameSnapshot) {
-            const tournamentGame: TournamentGame = TournamentGame.fromJson(gameSnapshot);
-            tournamentGame.id = gameSnapshot.$key;
-
-            if (!_.find(allTeamGames, _.matches(tournamentGame))) {
-              console.log('changed game: ' + JSON.stringify(tournamentGame));
-              that.store.dispatch({type: CHANGE_ACTUAL_TOURNAMENT_TEAM_GAME_ACTION, payload: tournamentGame});
-            }
-          });
-        }
+          allTeamGames.push(tournamentGame);
+        });
+        this.store.dispatch({type: LOAD_TOURNAMENT_TEAM_GAMES_FINISHED_ACTION});
+        this.store.dispatch({type: ADD_ALL_ACTUAL_TOURNAMENT_TEAM_GAMES_ACTION, payload: allTeamGames});
       });
   }
 

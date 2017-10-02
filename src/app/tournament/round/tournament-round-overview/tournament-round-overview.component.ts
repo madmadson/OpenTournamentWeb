@@ -130,9 +130,9 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   isConnected$: Observable<boolean>;
   private onlineSub: Subscription;
 
-  private blub$: AfoListObservable<any[]>;
-  private blub2$: AfoListObservable<any[]>;
-  private blub3$: AfoObjectObservable<any>;
+  // private blub$: AfoListObservable<any[]>;
+  // private blub2$: AfoListObservable<any[]>;
+  // private blub3$: AfoObjectObservable<any>;
 
 
   constructor(@Inject(DOCUMENT) private document: any,
@@ -153,15 +153,14 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
               private activeRouter: ActivatedRoute,
               public router: Router,
               private pageScrollService: PageScrollService,
-              private winRef: WindowRefService,
-              private afoDatabase: AngularFireOfflineDatabase) {
+              private winRef: WindowRefService) {
 
     this.round = +this.activeRouter.snapshot.paramMap.get('round');
     this._tournamentId = this.activeRouter.snapshot.paramMap.get('id');
 
-    this.blub$ = this.afoDatabase.list('tournament-team-games/' + this._tournamentId);
-    this.blub2$ = this.afoDatabase.list('tournament-games/' + this._tournamentId);
-    this.blub3$ = this.afoDatabase.object('tournaments/' + this._tournamentId);
+    // this.blub$ = this.afoDatabase.list('tournament-team-games/' + this._tournamentId);
+    // this.blub2$ = this.afoDatabase.list('tournament-games/' + this._tournamentId);
+    // this.blub3$ = this.afoDatabase.object('tournaments/' + this._tournamentId);
 
     this.isConnected$ = Observable.merge(
       Observable.of(this.winRef.nativeWindow.navigator.onLine),
@@ -1026,51 +1025,64 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
       myReader.onloadend = function (e) {
 
-        const allData = JSON.parse(myReader.result);
+        try {
+          const allData = JSON.parse(myReader.result);
 
-
-        const dialogRef = that.dialog.open(ImportDialogComponent, {
-          data: {
-            tournament: allData.tournament,
-            playerGames: allData.playerGames,
-            playerRankings: allData.playerRankings,
-            teamGames: allData.teamGames,
-            teamRankings: allData.teamRankings,
-            error: false
-          },
-          width: '600px',
-        });
-
-        const eventSubscribe = dialogRef.componentInstance.onImportData
-          .subscribe((blub) => {
-
-            that.tournamentService.newRound({
-              round: allData.tournament.actualRound,
-              tournamentId: allData.tournament.id,
-              countryRestriction: false,
-              metaRestriction: false,
-              teamRestriction: false,
-              originRestriction: false
-            });
-            that.pairingService.killPlayerRankings(that.allPlayerRankings);
-            that.pairingService.killPlayerGames(that.allPlayerGames);
-
-            that.pairingService.pushAllPlayerGames(allData.tournament.id, allData.playerGames);
-            that.pairingService.pushAllPlayerRankings(allData.tournament.id, allData.playerRankings);
-
-            that.snackBar.open('Import Data successfully.', '', {
-              extraClasses: ['snackBar-success'],
-              duration: 5000
-            });
-
-            that.router.navigate(['/tournament', allData.tournament.id, 'round', allData.tournament.actualRound]);
-
-            dialogRef.close();
+          const dialogRef = that.dialog.open(ImportDialogComponent, {
+            data: {
+              tournament: allData.tournament,
+              playerGames: allData.playerGames,
+              playerRankings: allData.playerRankings,
+              teamGames: allData.teamGames,
+              teamRankings: allData.teamRankings,
+              error: false
+            },
+            width: '600px',
           });
-        dialogRef.afterClosed().subscribe(() => {
 
-          eventSubscribe.unsubscribe();
-        });
+          const eventSubscribe = dialogRef.componentInstance.onImportData
+            .subscribe((blub) => {
+
+              that.tournamentService.newRound({
+                round: allData.tournament.actualRound,
+                tournamentId: allData.tournament.id,
+                countryRestriction: false,
+                metaRestriction: false,
+                teamRestriction: false,
+                originRestriction: false
+              });
+              that.pairingService.killPlayerRankings(that.allPlayerRankings);
+              that.pairingService.killPlayerGames(that.allPlayerGames);
+
+              that.pairingService.pushAllPlayerGames(allData.tournament.id, allData.playerGames);
+              that.pairingService.pushAllPlayerRankings(allData.tournament.id, allData.playerRankings);
+
+              that.snackBar.open('Import Data successfully.', '', {
+                extraClasses: ['snackBar-success'],
+                duration: 5000
+              });
+
+              that.router.navigate(['/tournament', allData.tournament.id, 'round', allData.tournament.actualRound]);
+
+              dialogRef.close();
+            });
+          dialogRef.afterClosed().subscribe(() => {
+
+            eventSubscribe.unsubscribe();
+          });
+        } catch (err) {
+          that.dialog.open(ImportDialogComponent, {
+            data: {
+              tournament: {},
+              playerGames: [],
+              playerRankings: [],
+              teamGames: [],
+              teamRankings: [],
+              error: true
+            },
+            width: '600px',
+          });
+        }
       };
     }
 

@@ -28,12 +28,17 @@ export class Tournament {
                     maxParticipants, actualParticipants,
                     teamSize, actualRound, visibleRound, creatorUid, creatorMail,
                     dailyMail, finished, uploaded, payLink, description, coOrganizators}): Tournament {
-    return new Tournament(
+    const tournament =  new Tournament(
       name, location,
       beginDate, endDate,
       maxParticipants, actualParticipants, teamSize, actualRound,
       visibleRound, creatorUid, creatorMail, dailyMail,
       finished, uploaded, payLink, description, coOrganizators);
+
+    if (!coOrganizators) {
+      tournament.coOrganizators = [];
+    }
+    return tournament;
   }
 
 

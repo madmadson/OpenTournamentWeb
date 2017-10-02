@@ -133,7 +133,7 @@
         <md-icon>list</md-icon>
         FinalRankings
       </button>
-      <button *ngIf="userPlayerData?.id === '-KhS1c-TCch2ftWtTAMw'"
+      <button *ngIf="(isAdmin || isCoOrganizer)"
               (click)="openDataExportDialog()"
               class="color-primary-background action-button"
               md-raised-button>
@@ -141,7 +141,7 @@
         Export Data
       </button>
 
-      <button *ngIf="userPlayerData?.id === '-KhS1c-TCch2ftWtTAMw'"
+      <button *ngIf="(isAdmin || isCoOrganizer)"
               (click)="importData.click()"
               class="color-primary-background action-button"
               md-raised-button>

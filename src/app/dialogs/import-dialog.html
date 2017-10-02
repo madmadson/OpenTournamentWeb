@@ -1,10 +1,18 @@
 <h3 md-dialog-title class="heading">Import Data</h3>
 
 <md-dialog-content>
-  <ng-container *ngIf="error">
-    <h3 class="heading color-negative">You cannot import that file. Don't manipulate it directly!</h3>
+
+  <ng-container *ngIf="importingData">
+    <div class="heading">Import Data. Please be patient...</div>
+    <div class="loading-spinner-container">
+      <md-spinner></md-spinner>
+    </div>
   </ng-container>
-  <ng-container *ngIf="!error">
+
+  <ng-container *ngIf="error && !importingData">
+    <h3 class="heading color-negative">You can't import that file.</h3>
+  </ng-container>
+  <ng-container *ngIf="!error && !importingData">
   <li>
     <ul>
       TournamentRound: {{tournament?.actualRound}}
@@ -23,7 +31,7 @@
     </ul>
   </li>
 
-  <h3 class="heading color-negative">IMPORT will kill all other data!</h3>
+  <h3 class="heading color-negative">IMPORT will kill all other data and my take some time.</h3>
   </ng-container>
 </md-dialog-content>
 <div md-dialog-actions>

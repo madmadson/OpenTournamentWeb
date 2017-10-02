@@ -23,6 +23,7 @@ import {TournamentGame} from '../../../../../shared/model/tournament-game';
 import {ShowSoloRankingsComponent} from '../../../dialogs/mini-dialog/show-solo-rankings-dialog';
 import {ActualTournamentTeamRankingService} from '../../actual-tournament-team-ranking.service';
 import {UploadTournamentDialogComponent} from '../../../dialogs/upload-tournament-dialog';
+import {AfoObjectObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 
 @Component({
@@ -78,6 +79,8 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
 
   isTeamTournament: boolean;
 
+  private blub$: AfoObjectObservable<any>;
+
   constructor(private snackBar: MdSnackBar,
               private dialog: MdDialog,
               private tournamentService: TournamentService,
@@ -88,7 +91,10 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
               private eloService: EloService,
               private store: Store<AppState>,
               private activeRouter: ActivatedRoute,
-              public router: Router) {
+              public router: Router,
+              private afoDatabase: AngularFireOfflineDatabase) {
+
+    this.round = +this.activeRouter.snapshot.paramMap.get('round');
 
     this.activeRouter.params.subscribe(
       params => {
@@ -97,6 +103,8 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
         this.armyListService.subscribeOnOfflineFirebase(params['id']);
         this.rankingService.subscribeOnOfflineFirebase(params['id']);
         this.teamRankingService.subscribeOnOfflineFirebase(params['id']);
+
+        // this.blub$ = this.afoDatabase.object('tournaments/' + params['id']);
       }
     );
 
@@ -126,6 +134,8 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
   ngOnInit() {
 
     this.actualTournamentSub = this.actualTournament$.subscribe((actualTournament: Tournament) => {
+
+      console.log('actualTournament: ' + JSON.stringify(actualTournament));
       this.actualTournament = actualTournament;
       if (actualTournament) {
         this.round = actualTournament.actualRound;
@@ -246,7 +256,7 @@ export class TournamentFinalRankingsOverviewComponent implements OnInit, OnDestr
     const eventSubscribe = dialogRef.componentInstance.onUploadTournament
       .subscribe(() => {
 
-        this.tournamentService.uploadTournament(this.actualTournament.id);
+        this.tournamentService.uploadTournament(this.actualTournament);
         this.eloService.calculateEloForTournament(this.actualTournament, this.allRegistrations, this.allTournamentGames);
 
         this.snackBar.open('Upload Tournament successfully', '', {

@@ -20,6 +20,8 @@ export class NewRoundDialogComponent {
   teamMatch: boolean;
   actualTournament: Tournament;
 
+  creatingRound: boolean;
+
   @Output() onNewRound = new EventEmitter<TournamentManagementConfiguration>();
 
   constructor(public dialogRef: MdDialogRef<NewRoundDialogComponent>,
@@ -35,14 +37,18 @@ export class NewRoundDialogComponent {
 
   pairNewRound() {
 
-    this.onNewRound.emit({
-      tournamentId: this.actualTournament.id,
-      round: this.round + 1,
-      teamRestriction: this.teamRestriction,
-      metaRestriction: this.metaRestriction,
-      originRestriction: this.originRestriction,
-      countryRestriction: this.countryRestriction,
-    });
-    this.dialogRef.close();
+    this.creatingRound = true;
+
+    setTimeout( () => {
+      this.onNewRound.emit({
+        tournamentId: this.actualTournament.id,
+        round: this.round + 1,
+        teamRestriction: this.teamRestriction,
+        metaRestriction: this.metaRestriction,
+        originRestriction: this.originRestriction,
+        countryRestriction: this.countryRestriction,
+      });
+      this.dialogRef.close();
+    }, 500);
   }
 }

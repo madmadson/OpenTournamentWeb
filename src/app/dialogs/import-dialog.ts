@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Output, NgZone} from '@angular/core';
 import {Tournament} from '../../../shared/model/tournament';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
 import {TournamentGame} from '../../../shared/model/tournament-game';
@@ -19,6 +19,7 @@ export class ImportDialogComponent {
   teamGames: TournamentGame[];
   teamRankings: TournamentRanking[];
   error: boolean;
+  importingData: boolean;
 
   constructor(public dialogRef: MdDialogRef<ImportDialogComponent>,
               @Inject(MD_DIALOG_DATA) public data: any) {
@@ -33,6 +34,11 @@ export class ImportDialogComponent {
 
   importData() {
 
-    this.onImportData.emit(true);
+    this.importingData = true;
+
+    setTimeout( () => {
+      this.onImportData.emit(true);
+      this.dialogRef.close();
+    }, 500);
   }
 }
