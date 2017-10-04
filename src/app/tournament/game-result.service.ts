@@ -67,12 +67,19 @@ export class GameResultService {
 
     // HACKY <3
     const teamMatchState: TeamMatchState = {
-      teamOneWon: teamGameResult.gameAfter.playerOneScore,
-      teamTwoWon: teamGameResult.gameAfter.playerTwoScore,
+      teamOneWon: teamGameResult.teamMatch.playerOneIntermediateResult + teamGameResult.gameAfter.playerOneScore >
+                  teamGameResult.teamMatch.playerTwoIntermediateResult + teamGameResult.gameAfter.playerTwoScore ? 1 : 0,
+      teamTwoWon: teamGameResult.teamMatch.playerOneIntermediateResult + teamGameResult.gameAfter.playerOneScore <
+                  teamGameResult.teamMatch.playerTwoIntermediateResult + teamGameResult.gameAfter.playerTwoScore ? 1 : 0,
       teamMatchFinished: true
     };
 
-    this.updateTeamMatchAfterGameResultEntered(teamMatchState, teamGameResult);
+    const teamGameResult2 = _.cloneDeep(teamGameResult);
+
+    teamGameResult2.gameAfter.playerOneIntermediateResult = teamGameResult.teamMatch.playerOneIntermediateResult;
+    teamGameResult2.gameAfter.playerTwoIntermediateResult = teamGameResult.teamMatch.playerTwoIntermediateResult;
+
+    this.updateTeamMatchAfterGameResultEntered(teamMatchState, teamGameResult2);
     this.updatePlayerRankingAfterGameResultEntered({
       gameBefore: teamGameResult.gameBefore,
       gameAfter: teamGameResult.gameAfter
@@ -461,6 +468,10 @@ export class GameResultService {
                                         teamGameResult: TeamGameResult) {
 
     if (!teamGameResult.gameBefore.finished) {
+
+      // console.log('teamMatchState: ' + JSON.stringify(teamMatchState));
+      // console.log('team1: ' + teamGameResult.gameAfter.playerOneIntermediateResult);
+      // console.log('team2: ' + teamGameResult.gameAfter.playerTwoIntermediateResult);
 
       const teamMatchRef = this.afoDatabase.object('tournament-team-games/' + teamGameResult.teamMatch.tournamentId + '/' + teamGameResult.teamMatch.id);
       teamMatchRef.update({

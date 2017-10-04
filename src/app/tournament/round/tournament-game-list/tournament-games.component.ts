@@ -186,6 +186,10 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
 
             dialogRef.close();
             this.onGameResultEntered.emit(gameResult);
+
+            if (this.isTeamMatch && this.openedGamesIds.length >= this.actualTournament.teamSize) {
+              this.dialog.closeAll();
+            }
           }
         });
 
@@ -262,10 +266,12 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
   dropPossible(game: TournamentGame, playerId: string, playerTeam: string): boolean {
 
     if (this.isTeamMatch) {
-      return !game.finished && this.draggedTournamentPlayerId !== playerId &&
+      return !game.finished &&
+        this.draggedTournamentPlayerId !== playerId &&
         this.draggedTournamentTeamName === playerTeam;
     } else {
-      return !game.finished && !this.draggedTournamentPlayerOpponentIds[playerId] &&
+      return !game.finished &&
+        !_.includes(this.draggedTournamentPlayerOpponentIds, playerId) &&
         this.draggedTournamentPlayerCurrentOpponentId !== playerId &&
         this.draggedTournamentPlayerId !== playerId;
     }
@@ -274,12 +280,13 @@ export class TournamentGamesComponent implements OnInit, OnChanges {
   confirmDropPlayer(event: any,
                     droppedGame: TournamentGame,
                     droppedPlayerId: string,
+                    opponentDroppedPlayerId: string,
                     droppedPlayerTeam: string) {
 
-    if (this.draggedTournamentPlayerId && this.dropPossible(droppedGame, droppedPlayerId, droppedPlayerTeam)) {
+    if (this.draggedTournamentPlayerId && this.dropPossible(droppedGame, opponentDroppedPlayerId, droppedPlayerTeam)) {
       event.stopPropagation();
 
-      console.log('confirmDropPlayerOne');
+      // console.log('confirmDropPlayerOne');
 
       this.swappingService.swapPlayer(this.rankingsForRound, this.draggedGame, this.draggedTournamentPlayerId, droppedGame, droppedPlayerId);
 

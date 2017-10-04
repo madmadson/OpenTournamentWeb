@@ -104,7 +104,7 @@ export class PairingService {
     _.reverse(newGames);
 
     const tournamentGamesRef = this.afoDatabase
-      .list('tournament-games/' + config.tournamentId);
+      .list('tournament-games/' + config.tournament.id);
 
     const listOfTables = _.range(1, (newGames.length + 1));
 
@@ -200,17 +200,23 @@ export class PairingService {
     this.killPlayerRankings(playerRankingsForRound);
     this.killPlayerGames(playerGamesForRound);
 
-    const tournament = this.afoDatabase.object('tournaments/' + config.tournamentId);
-    tournament.update({actualRound: (config.round - 1), visibleRound: (config.round - 1)});
+    const tournamentRef = this.afoDatabase.object('tournaments/' + config.tournament.id);
 
+    const tournament = config.tournament;
+    tournament.visibleRound = (config.round - 1);
+    tournament.actualRound = (config.round - 1);
+
+    tournamentRef.set(tournament);
   }
 
   publishRound(publish: PublishRound) {
 
-    const gameRef = this.afoDatabase.object('tournaments/' + publish.tournamentId);
-    gameRef.update({visibleRound: publish.roundToPublish});
+    const tournamentRef = this.afoDatabase.object('tournaments/' + publish.tournament.id);
 
+    const tournament = publish.tournament;
+    tournament.visibleRound = publish.roundToPublish;
 
+    tournamentRef.set(tournament);
   }
 
   pairRoundAgain(config: TournamentManagementConfiguration,
@@ -246,7 +252,7 @@ export class PairingService {
       console.log('pairNewRound successfully');
 
       this.tournamentService.newRound(config);
-      this.router.navigate(['/tournament', config.tournamentId, 'round', config.round]);
+      this.router.navigate(['/tournament', config.tournament.id, 'round', config.round]);
     } else {
       this.killPlayerRankings(newRankings);
     }

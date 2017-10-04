@@ -83,9 +83,8 @@ export class GameMatchingService {
         const success = this.matchGame(config, newCopiedRankings, newGames, debug);
 
         if (success) {
-
           const newGame = new TournamentGame(
-            config.tournamentId,
+            config.tournament.id,
             ranking1.playerId, ranking1.tournamentPlayerId,
             ranking1.playerName, ranking1.teamName, ranking1.elo, ranking1.faction,
             0, 0, 0, '', 0, 0,
@@ -144,7 +143,7 @@ export class GameMatchingService {
 
         if (success) {
           const newGame = new TournamentGame(
-            config.tournamentId,
+            config.tournament.id,
             ranking1.playerId, ranking1.tournamentPlayerId,
             ranking1.playerName, ranking1.teamName, ranking1.elo, ranking1.faction,
             0, 0, 0, '', 0, 0,
@@ -201,7 +200,7 @@ export class GameMatchingService {
 
         if (success) {
           const newGame = new TournamentGame(
-            config.tournamentId,
+            config.tournament.id,
             ranking1.playerId, ranking1.tournamentPlayerId,
             ranking1.playerName, ranking1.teamName, ranking1.elo, ranking1.faction,
             0, 0, 0, '', 0, 0,

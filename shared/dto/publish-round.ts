@@ -1,9 +1,11 @@
 
 
 
+import {Tournament} from '../model/tournament';
+
 export class PublishRound {
 
-  tournamentId: string;
+  tournament: Tournament;
   roundToPublish: number;
 
 }

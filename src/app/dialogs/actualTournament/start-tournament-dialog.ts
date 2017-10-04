@@ -82,7 +82,7 @@ export class StartTournamentDialogComponent {
   startTournament() {
 
     this.onStartTournament.emit({
-      tournamentId: '',
+      tournament: this.actualTournament,
       round: 1,
       teamRestriction: this.teamRestriction,
       metaRestriction: this.metaRestriction,

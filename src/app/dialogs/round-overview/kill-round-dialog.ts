@@ -25,7 +25,7 @@ export class KillRoundDialogComponent {
 
     setTimeout( () => {
       this.onKillRound.emit({
-        tournamentId: '',
+        tournament: this.data.tournament,
         round: this.data.round,
         teamRestriction: false,
         metaRestriction: false,

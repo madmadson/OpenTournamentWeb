@@ -101,7 +101,7 @@ export class TeamPairingService {
     _.reverse(newTeamGames);
 
     const tournamentTeamGamesRef = this.afoDatabase
-      .list('tournament-team-games/' + config.tournamentId);
+      .list('tournament-team-games/' + config.tournament.id);
 
     const listOfTables = _.range(1, (newTeamGames.length + 1));
 
@@ -329,7 +329,7 @@ export class TeamPairingService {
       console.log('pairRound successfully');
 
       this.tournamentService.newRound(config);
-      this.router.navigate(['/tournament', config.tournamentId, 'round', config.round]);
+      this.router.navigate(['/tournament', config.tournament.id, 'round', config.round]);
     } else {
       this.pairingService.killPlayerRankings(newPlayerRankings);
       this.killTeamRankingsForRound(config, newTeamRankings);

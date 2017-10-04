@@ -140,22 +140,25 @@ export class TournamentService {
 
   startTournament(config: TournamentManagementConfiguration) {
 
+    const tournamentRef = this.afoDatabase.object('tournaments/' + config.tournament.id);
 
-    const registrationRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
-    registrationRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
-    this.snackBar.open('Tournament successfully started', '', {
-      extraClasses: ['snackBar-success'],
-      duration: 5000
-    });
+    const tournament = config.tournament;
+    tournament.actualRound = config.round;
+    tournament.visibleRound = (config.round - 1);
 
+    tournamentRef.set(tournament);
   }
 
   newRound(config: TournamentManagementConfiguration) {
-    const tournamentRef = this.afoDatabase.object('tournaments/' + config.tournamentId);
+    const tournamentRef = this.afoDatabase.object('tournaments/' +  config.tournament.id);
 
     console.log('update tournament: ' + JSON.stringify(config));
 
-    tournamentRef.update({actualRound: config.round, visibleRound: (config.round - 1 )});
+    const tournament = config.tournament;
+    tournament.actualRound = config.round;
+    tournament.visibleRound = (config.round - 1);
+
+    tournamentRef.set(tournament);
   }
 
   wholeRoundScenarioSelected(scenarioSelected: ScenarioSelectedModel) {

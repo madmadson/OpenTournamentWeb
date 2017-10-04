@@ -41,7 +41,7 @@ export class NewRoundDialogComponent {
 
     setTimeout( () => {
       this.onNewRound.emit({
-        tournamentId: this.actualTournament.id,
+        tournament: this.actualTournament,
         round: this.round + 1,
         teamRestriction: this.teamRestriction,
         metaRestriction: this.metaRestriction,

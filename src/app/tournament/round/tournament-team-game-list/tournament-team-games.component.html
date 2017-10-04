@@ -24,10 +24,10 @@
                'game-table-behind': (teamTwoLead(game)),
                'game-table-lost': (teamTwoWon(game)),
                'drag-started':  draggedTournamentPlayerId === game.playerOneTournamentPlayerId,
-               'drop-possible': draggedTournamentPlayerId && dropPossible(game, game.playerOneTournamentPlayerId),
-               'drop-not-possible':  draggedTournamentPlayerId && !dropPossible(game, game.playerOneTournamentPlayerId)
+               'drop-possible': draggedTournamentPlayerId && dropPossible(game, game.playerTwoTournamentPlayerId),
+               'drop-not-possible':  draggedTournamentPlayerId && !dropPossible(game, game.playerTwoTournamentPlayerId)
                }"
-               (click)="confirmDropTeam($event, game, game.playerOneTournamentPlayerId)">
+               (click)="confirmDropTeam($event, game, game.playerOneTournamentPlayerId, game.playerTwoTournamentPlayerId)">
         <div>{{game.playerOnePlayerName | truncate:truncateMax}}</div>
         <div class="small-text">
           (SC:{{game.playerOneScore}}/CP:{{game.playerOneControlPoints}}/VP:{{game.playerOneVictoryPoints}})
@@ -122,10 +122,10 @@
                'game-table-behind': (teamOneLead(game)),
                'game-table-lost': (teamOneWon(game)),
                'drag-started': draggedTournamentPlayerId === game.playerTwoTournamentPlayerId,
-               'drop-possible':draggedTournamentPlayerId && dropPossible(game, game.playerTwoTournamentPlayerId),
-               'drop-not-possible': draggedTournamentPlayerId && !dropPossible(game, game.playerTwoTournamentPlayerId)
+               'drop-possible':draggedTournamentPlayerId && dropPossible(game, game.playerOneTournamentPlayerId),
+               'drop-not-possible': draggedTournamentPlayerId && !dropPossible(game, game.playerOneTournamentPlayerId)
                }"
-               (click)="confirmDropTeam($event, game, game.playerTwoTournamentPlayerId)">
+               (click)="confirmDropTeam($event, game, game.playerTwoTournamentPlayerId, game.playerOneTournamentPlayerId)">
         <div>{{game.playerTwoPlayerName | truncate:truncateMax}}</div>
         <div class="small-text">
           (SC:{{game.playerTwoScore}}/CP:{{game.playerTwoControlPoints}}/VP:{{game.playerTwoVictoryPoints}})
@@ -140,24 +140,24 @@
       <md-cell *cdkCellDef="let game" class="actions-column">
         <div>
           <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer)  &&
-                         !requestClearGame && !actualTournament?.finished && actualTournament?.actualRound === round"
-                  (click)="requestClearGameResult($event, game)"
+                         !requestClearTeamGame && !actualTournament?.finished && actualTournament?.actualRound === round"
+                  (click)="requestClearTeamGameResult($event, game)"
                   class="color-negative-background"
                   [ngClass]="{'small-button': smallScreen}"
                   md-raised-button>
             <md-icon>clear</md-icon>
             <ng-container *ngIf="!smallScreen">Reset</ng-container>
           </button>
-          <button *ngIf="draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && requestClearGame === game.id"
-                  (click)="clearGameResultConfirm($event, game)"
+          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer) && requestClearTeamGame === game.id"
+                  (click)="clearTeamGameResultConfirm($event, game)"
                   class="color-positive-background"
                   [ngClass]="{'small-button': smallScreen}"
                   md-raised-button>
             <md-icon>check</md-icon>
             <ng-container *ngIf="!smallScreen">ok</ng-container>
           </button>
-          <button *ngIf="draggedTournamentPlayerId && (isAdmin || isCoOrganizer)  &&  requestClearGame === game.id"
-                  (click)="clearGameResultDecline($event, game)"
+          <button *ngIf="!draggedTournamentPlayerId && (isAdmin || isCoOrganizer)  &&  requestClearTeamGame === game.id"
+                  (click)="clearTeamGameResultDecline($event, game)"
                   class="color-negative-background"
                   [ngClass]="{'small-button': smallScreen}"
                   md-raised-button>

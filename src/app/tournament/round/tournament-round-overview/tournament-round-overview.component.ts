@@ -207,6 +207,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
           console.log('other tournament to display');
 
           this.subscribeOnServices(incomingTournamentId, incomingRound);
+          this.createDataObservables(incomingRound);
         } else if (incomingRound !== this.round) {
           console.log('other round to display');
 
@@ -251,14 +252,14 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       if (online) {
         console.log('online');
 
-        this.snackBar.open('You are now online. Sync with server', '', {
+        this.snackBar.open('You are online. Sync with server', '', {
           extraClasses: ['snackBar-success'],
           duration: 5000
         });
       } else {
         console.log('offline');
 
-        this.snackBar.open('You are now offline. Write to browser DB', '', {
+        this.snackBar.open('You are offline. Write to browser DB', '', {
           extraClasses: ['snackBar-fail'],
           duration: 5000
         });
@@ -550,7 +551,10 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   }
 
   publishRound() {
-    this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
+    this.pairingService.publishRound({
+      tournament: this.actualTournament,
+      roundToPublish: this.round
+    });
     this.snackBar.open('Round ' + this.round + ' successfully published', '', {
       extraClasses: ['snackBar-success'],
       duration: 5000
@@ -560,6 +564,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   openKillRoundDialog() {
     const dialogRef = this.dialog.open(KillRoundDialogComponent, {
       data: {
+        tournament: this.actualTournament,
         round: this.round
       },
       width: '600px',
@@ -568,7 +573,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       .subscribe((config: TournamentManagementConfiguration) => {
 
         if (config !== undefined) {
-          config.tournamentId = this.actualTournament.id;
+          config.tournament = this.actualTournament;
           config.round = this.round;
           if (this.isTeamTournament) {
             this.teamPairingService.killTeamRankingsAndGames(config, this.teamRankingsForRound, this.teamGamesForRound);
@@ -604,6 +609,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   openPairAgainDialog() {
     const dialogRef = this.dialog.open(PairAgainDialogComponent, {
       data: {
+        tournament: this.actualTournament,
         round: this.round,
         teamMatch: this.isTeamTournament
       },
@@ -613,7 +619,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
       .subscribe((config: TournamentManagementConfiguration) => {
 
         if (config !== undefined) {
-          config.tournamentId = this.actualTournament.id;
+          config.tournament = this.actualTournament;
           config.round = this.round;
 
           if (!this.isTeamTournament) {
@@ -792,7 +798,10 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
   handleGameResultEntered(gameResult: GameResult) {
 
     if (this.round > this.actualTournament.visibleRound) {
-      this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
+      this.pairingService.publishRound({
+        tournament: this.actualTournament,
+        roundToPublish: this.round
+      });
     }
 
     if (this.selectedScenario) {
@@ -815,9 +824,11 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
   handleTeamGameResultEntered(teamGameResult: GameResult) {
 
-
     if (this.round > this.actualTournament.visibleRound) {
-      this.pairingService.publishRound({tournamentId: this.actualTournament.id, roundToPublish: this.round});
+      this.pairingService.publishRound({
+        tournament: this.actualTournament,
+        roundToPublish: this.round
+      });
     }
 
     if (this.selectedScenario) {
@@ -853,7 +864,9 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
     let tempScoreTeamOne: number;
     let tempScoreTeamTwo: number;
 
-    _.forEach(this.allPlayerGames, function (game: TournamentGame) {
+    const sortedGames: TournamentGame[] = _.sortBy(this.playerGamesForRound, 'playerOneTeamName');
+
+    _.forEach(sortedGames, function (game: TournamentGame) {
 
       if (!game.finished) {
 
@@ -887,15 +900,18 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
           if (tempTeamMatch.playerOnePlayerName === tempTeamOne) {
 
+            tempTeamMatch.playerOneIntermediateResult = tempScoreTeamOne;
+            tempTeamMatch.playerTwoIntermediateResult = tempScoreTeamTwo;
+
             tempScoreTeamOne = gameAfter.playerOneScore + tempScoreTeamOne;
             tempScoreTeamTwo = gameAfter.playerTwoScore + tempScoreTeamTwo;
 
-            tempTeamMatch.playerOneIntermediateResult = tempScoreTeamOne;
-            tempTeamMatch.playerTwoIntermediateResult = tempScoreTeamTwo;
+            console.log('tempScoreTeamOne: ' + tempScoreTeamOne);
+            console.log('tempScoreTeamTwo: ' + tempScoreTeamTwo);
           } else {
             tempTeamOne = tempTeamMatch.playerOnePlayerName;
-            tempScoreTeamOne = 0;
-            tempScoreTeamTwo = 0;
+            tempScoreTeamOne = gameAfter.playerOneScore;
+            tempScoreTeamTwo = gameAfter.playerTwoScore;
           }
 
           that.gameResultService.generatedTeamGameResultEntered(
@@ -1045,7 +1061,7 @@ export class TournamentRoundOverviewComponent implements OnInit, OnDestroy {
 
               that.tournamentService.newRound({
                 round: allData.tournament.actualRound,
-                tournamentId: allData.tournament.id,
+                tournament: allData.tournament,
                 countryRestriction: false,
                 metaRestriction: false,
                 teamRestriction: false,

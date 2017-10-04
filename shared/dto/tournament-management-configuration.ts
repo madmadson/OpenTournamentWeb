@@ -1,8 +1,10 @@
 
 
+import {Tournament} from '../model/tournament';
+
 export class TournamentManagementConfiguration {
 
-  tournamentId: string;
+  tournament: Tournament;
   round: number;
   teamRestriction: boolean;
   metaRestriction: boolean;

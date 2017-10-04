@@ -31,7 +31,7 @@ import {TournamentManagementConfiguration} from '../../../../../shared/dto/tourn
 import {TournamentRanking} from '../../../../../shared/model/tournament-ranking';
 import {PairingService} from '../../pairing.service';
 import {getAllFactions} from '../../../../../shared/model/factions';
-import {WindowRefService} from "../../../service/window-ref-service";
+import {WindowRefService} from '../../../service/window-ref-service';
 import {AfoListObservable, AngularFireOfflineDatabase} from 'angularfire2-offline';
 
 
@@ -408,7 +408,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
     });
     const startTournamentSub = dialogRef.componentInstance.onStartTournament.subscribe((config: TournamentManagementConfiguration) => {
       if (config !== undefined) {
-        config.tournamentId = this.actualTournament.id;
+        config.tournament = this.actualTournament;
         config.round = 1;
 
         const newRankings: TournamentRanking[] =
@@ -420,7 +420,7 @@ export class TournamentPlayerOverviewComponent implements OnInit, OnDestroy {
 
           this.router.navigate(['/tournament', this.actualTournament.id, 'round', 1]);
 
-          this.snackBar.open('Round created successfully.', '', {
+          this.snackBar.open('Tournament successfully started', '', {
             extraClasses: ['snackBar-success'],
             duration: 5000
           });

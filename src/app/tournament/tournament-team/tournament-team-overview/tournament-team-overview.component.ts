@@ -461,7 +461,7 @@ export class TournamentTeamOverviewComponent implements OnInit, OnDestroy {
     });
     const startTournamentSub = dialogRef.componentInstance.onStartTournament.subscribe((config: TournamentManagementConfiguration) => {
       if (config !== undefined) {
-        config.tournamentId = this.actualTournament.id;
+        config.tournament = this.actualTournament;
         config.round = 1;
 
         // first player rankings

@@ -65,7 +65,7 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   @Output() onClearTeamGameResult = new EventEmitter<TeamMatchClearModel>();
   @Output() onClearTeamPlayerGameResult = new EventEmitter<TournamentGame>();
 
-  requestClearGame: string;
+  requestClearTeamGame: string;
 
   draggedTournamentPlayerCurrentOpponentId: string;
   draggedGame: TournamentGame;
@@ -149,17 +149,17 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
   }
 
 
-  requestClearGameResult(event: any, game: TournamentGame) {
+  requestClearTeamGameResult(event: any, game: TournamentGame) {
     event.stopPropagation();
 
-    this.requestClearGame = game.id;
+    this.requestClearTeamGame = game.id;
   }
 
-  clearGameResultConfirm(event: any, teamMatch: TournamentGame) {
+  clearTeamGameResultConfirm(event: any, teamMatch: TournamentGame) {
 
     event.stopPropagation();
 
-    this.requestClearGame = '';
+    this.requestClearTeamGame = '';
 
     this.onClearTeamGameResult.emit({
       teamMatch: teamMatch,
@@ -167,12 +167,16 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
     });
   }
 
-  clearGameResultDecline(event: any) {
+  clearTeamGameResultDecline(event: any) {
     event.stopPropagation();
-    this.requestClearGame = '';
+    this.requestClearTeamGame = '';
   }
 
   openTeamGameResultDialog(selectedTeamMatch: TournamentGame) {
+
+    if (this.draggedTournamentPlayerId) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(TeamMatchDialogComponent, {
       data: {
@@ -269,15 +273,19 @@ export class TournamentTeamGamesComponent implements OnInit, OnChanges {
 
   dropPossible(game: TournamentGame, playerId: string): boolean {
 
-    return !game.finished && !this.draggedTournamentPlayerOpponentIds[playerId] &&
+    return !game.finished &&
+      !_.includes(this.draggedTournamentPlayerOpponentIds, playerId) &&
       this.draggedTournamentPlayerCurrentOpponentId !== playerId &&
       this.draggedTournamentPlayerId !== playerId;
   }
 
-  confirmDropTeam(event: any, droppedGame: TournamentGame, droppedTournamentPlayerId: string) {
+  confirmDropTeam(event: any,
+                  droppedGame: TournamentGame,
+                  droppedTournamentPlayerId: string,
+                  opponentDroppedPlayerId: string) {
 
     if (this.draggedTournamentPlayerId &&
-        this.dropPossible(droppedGame, droppedTournamentPlayerId)) {
+        this.dropPossible(droppedGame, opponentDroppedPlayerId)) {
       event.stopPropagation();
 
       console.log('confirmDropTeam');

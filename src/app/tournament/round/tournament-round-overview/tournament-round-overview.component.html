@@ -53,6 +53,9 @@
 
   <!--TeamGames: {{(blub$ | async)?.length}} PlayerGames: {{(blub2$ | async)?.length}}-->
 
+  <!--VR: {{(actualTournament$ | async).visibleRound}}-->
+  <!--AR: {{(actualTournament$ | async).actualRound}}-->
+
   <h3 class="heading padding" *ngIf="checkOrganizerIsParing()">
     Tournament Organizer is pairing.
     Page will reload when he publish the new round.
@@ -61,7 +64,7 @@
     <md-card class="action-card action-button-wrapper">
       <ng-container *ngIf="(round === actualTournament?.actualRound) && (isAdmin || isCoOrganizer)">
 
-        <button *ngIf="(finishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
+        <button *ngIf="(finishedGamesForRound$ | async)?.length === 0 && !actualTournament?.finished"
                 (click)="openPairAgainDialog()"
                 type="button"
                 class="color-positive-background action-button"
@@ -69,7 +72,7 @@
           <md-icon>undo</md-icon>
           Pair Again
         </button>
-        <button *ngIf="(unfinishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
+        <button *ngIf="(unfinishedGamesForRound$ | async)?.length === 0 && !actualTournament?.finished"
                 (click)="openNewRoundDialog()"
                 type="button"
                 class="color-positive-background action-button"
@@ -77,7 +80,7 @@
           <md-icon>play_arrow</md-icon>
           New Round
         </button>
-        <button *ngIf="(unfinishedGamesForRound$ | async).length === 0 && !actualTournament?.finished"
+        <button *ngIf="(unfinishedGamesForRound$ | async)?.length === 0 && !actualTournament?.finished"
                 (click)="openFinishTournamentDialog()"
                 type="button"
                 class="color-positive-background action-button"
@@ -85,7 +88,7 @@
           <md-icon>flag</md-icon>
           End Tournament
         </button>
-        <button *ngIf="(actualTournament$ | async).visibleRound < (actualTournament$ | async).actualRound"
+        <button *ngIf="(actualTournament$ | async)?.visibleRound < (actualTournament$ | async)?.actualRound"
                 (click)="publishRound()"
                 type="button"
                 class="color-positive-background action-button"
@@ -123,7 +126,7 @@
               class="color-primary-background action-button"
               md-raised-button>
         <md-icon>list</md-icon>
-        NextRound
+        Show Next
       </button>
       <button *ngIf="actualTournament?.finished"
               (click)="router.navigate(['/tournament', actualTournament?.id, 'finalRankings']);"

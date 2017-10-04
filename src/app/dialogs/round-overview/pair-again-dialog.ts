@@ -32,7 +32,7 @@ export class PairAgainDialogComponent {
 
     setTimeout( () => {
       this.onPairAgain.emit({
-        tournamentId: '',
+        tournament: this.data.tournament,
         round: this.round,
         teamRestriction: this.teamRestriction,
         metaRestriction: this.metaRestriction,
